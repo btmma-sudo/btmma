@@ -76,6 +76,8 @@ export const site = {
   regionName: "Maryland",
   postalCode: "21117",
   country: "US",
+  mapUrl:
+    "https://www.google.com/maps?q=10210%20S%20Dolfield%20Rd%20Owings%20Mills%20MD%2021117",
   mapEmbedUrl:
     "https://www.google.com/maps?q=10210%20S%20Dolfield%20Rd%20Owings%20Mills%20MD%2021117&output=embed",
   primaryDomain: "https://www.burningtreemma.com",
@@ -109,14 +111,8 @@ export const categoryKeywords = [
 ];
 
 export const programInterestOptions = [
-  "Kids Martial Arts",
-  "Adult Martial Arts",
-  "Kids Jiu-Jitsu",
-  "Brazilian Jiu-Jitsu",
-  "Muay Thai",
-  "Birthday Parties",
-  "ChimpanGi",
-  "Health and Wellness"
+  "Adults Classes",
+  "Kids Classes"
 ];
 
 export const primaryPrograms: NavItem[] = [
@@ -340,7 +336,7 @@ export const programPages: ProgramPage[] = [
     intro:
       "Take the first step today, we will reach out to follow up with you",
     submitLabel: "Submit",
-    defaultProgram: "General Information"
+    defaultProgram: "Kids Classes"
   }
   },
   {
@@ -387,7 +383,7 @@ export const programPages: ProgramPage[] = [
     intro:
       "Take the first step today, we will reach out to follow up with you",
     submitLabel: "Submit",
-    defaultProgram: "General Information"
+    defaultProgram: "Adults Classes"
   }
   },
   {
@@ -433,7 +429,7 @@ export const programPages: ProgramPage[] = [
     intro:
       "Take the first step today, we will reach out to follow up with you",
     submitLabel: "Submit",
-    defaultProgram: "General Information"
+    defaultProgram: "Kids Classes"
   }
   },
   {
@@ -480,7 +476,7 @@ export const programPages: ProgramPage[] = [
     intro:
       "Take the first step today, we will reach out to follow up with you",
     submitLabel: "Submit",
-    defaultProgram: "General Information"
+    defaultProgram: "Adults Classes"
   }
   },
   {
@@ -527,7 +523,7 @@ export const programPages: ProgramPage[] = [
     intro:
       "Take the first step today, we will reach out to follow up with you",
     submitLabel: "Submit",
-    defaultProgram: "General Information"
+    defaultProgram: "Adults Classes"
   }
   },
   {
@@ -572,7 +568,8 @@ export const programPages: ProgramPage[] = [
       title: "Ask About Birthday Parties",
       intro:
         "Tell us your preferred date, age group, and party goals and we will follow up with details.",
-      defaultProgram: "Birthday Parties"
+      defaultProgram: "Birthday Parties",
+      hideProgramSelect: true
     }
   },
   {
@@ -664,6 +661,7 @@ export const programPages: ProgramPage[] = [
       title: "Ask About Wellness Services",
       intro:
         "Tell us what kind of support you are looking for and we will share the best next step.",
+      defaultProgram: "Health and Wellness",
       hideProgramSelect: true
     },
     accentTheme: "wellness"

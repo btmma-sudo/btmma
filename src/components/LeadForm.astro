@@ -11,7 +11,8 @@ const title = config?.title ?? "Start Your First Step";
 const intro = config?.intro ?? "Tell us what you are interested in and we will follow up with the best class option.";
 const defaultProgram = config?.defaultProgram ?? "";
 const submitLabel = config?.submitLabel ?? "Request Information";
-const webhookPath = config?.webhookPath ?? "";
+const webhookPath =
+  config?.webhookPath ?? "https://hook.eu2.make.com/7gx96x2faucgmcessddi71c6znfii3ro";
 const hideProgramSelect = config?.hideProgramSelect ?? false;
 const fields = config?.fields ?? "standard";
 ---
@@ -20,11 +21,18 @@ const fields = config?.fields ?? "standard";
   <h2>{title}</h2>
   <p>{intro}</p>
 
-  <form class="lead-form-compact" method="post" action={webhookPath || undefined} data-webhook={webhookPath || "pending"}>
+  <form
+    class="lead-form-compact"
+    method="post"
+    action={webhookPath || undefined}
+    data-webhook={webhookPath || "pending"}
+    data-submit-label={submitLabel}
+    data-lead-form>
     {fields === "emailOnly" ? (
       <>
         <input name="fullName" type="text" placeholder="Name (optional)" autocomplete="name" />
         <input name="email" type="email" placeholder="Email" autocomplete="email" required />
+        <input type="hidden" name="phone" value="" />
         <textarea
           name="comments"
           rows="4"
@@ -53,12 +61,93 @@ const fields = config?.fields ?? "standard";
       </>
     )}
 
-    <input name="source" type="hidden" value="website" />
+    <input name="source" type="hidden" value="" data-source-field />
     <input name="attribution" type="hidden" value="organic" />
 
     <p class="fine-print">
       By submitting, you accept our <a href="/privacy">Privacy Policy</a> and <a href="/terms">Terms of Service</a>.
     </p>
+    <p class="form-status" data-form-status aria-live="polite"></p>
     <button class="button" type="submit">{submitLabel}</button>
   </form>
 </section>
+
+<script is:inline>
+  const forms = document.querySelectorAll("[data-lead-form]");
+
+  for (const form of forms) {
+    if (!(form instanceof HTMLFormElement)) continue;
+
+    const status = form.querySelector("[data-form-status]");
+    const submitButton = form.querySelector('button[type="submit"]');
+    const defaultSubmitLabel = form.dataset.submitLabel ?? "Submit";
+    const sourceField = form.querySelector("[data-source-field]");
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const webhook = form.dataset.webhook;
+      if (!webhook || webhook === "pending") {
+        if (status instanceof HTMLElement) {
+          status.textContent = "The form destination is not configured yet.";
+          status.dataset.state = "error";
+        }
+        return;
+      }
+
+      const formData = new FormData(form);
+      const currentSource = window.location.pathname + window.location.search + window.location.hash;
+      formData.set("source", currentSource || "/");
+      if (sourceField instanceof HTMLInputElement) {
+        sourceField.value = currentSource || "/";
+      }
+      const payload = Object.fromEntries(formData.entries());
+
+      if (submitButton instanceof HTMLButtonElement) {
+        submitButton.disabled = true;
+        submitButton.textContent = "Sending...";
+      }
+
+      if (status instanceof HTMLElement) {
+        status.textContent = "Sending your request...";
+        status.dataset.state = "pending";
+      }
+
+      try {
+        const response = await fetch(webhook, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          throw new Error(`Request failed with status ${response.status}`);
+        }
+
+        form.reset();
+
+        const programField = form.querySelector('input[name="programInterest"][type="hidden"]');
+        if (programField instanceof HTMLInputElement && programField.defaultValue) {
+          programField.value = programField.defaultValue;
+        }
+
+        if (status instanceof HTMLElement) {
+          status.textContent = "Thanks. We received your information and will follow up soon.";
+          status.dataset.state = "success";
+        }
+      } catch (error) {
+        if (status instanceof HTMLElement) {
+          status.textContent = "We could not submit the form right now. Please try again or contact us directly.";
+          status.dataset.state = "error";
+        }
+      } finally {
+        if (submitButton instanceof HTMLButtonElement) {
+          submitButton.disabled = false;
+          submitButton.textContent = defaultSubmitLabel;
+        }
+      }
+    });
+  }
+</script>
