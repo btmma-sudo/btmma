@@ -1,0 +1,72 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import LeadForm from "../components/LeadForm.astro";
+import PageHero from "../components/PageHero.astro";
+import { faqPage, site } from "../data/site";
+---
+
+<BaseLayout
+  title={faqPage.seo.title}
+  description={faqPage.seo.description}
+  path="/faq"
+  keywords={faqPage.seo.keywords}
+  image={faqPage.hero.image}>
+  <PageHero hero={faqPage.hero} />
+
+  <section class="shell grid-two section-divider">
+    <div class="stack">
+      <article class="detail-card contact-card">
+        <p class="eyebrow">Contact and Hours</p>
+        <h2>Plan your first visit to Burning Tree MMA.</h2>
+        <p>{site.addressLine1}</p>
+        <p>
+          {site.city}, {site.regionName} {site.postalCode}
+        </p>
+        <p><a href={`tel:${site.phoneHref}`}>{site.phone}</a></p>
+        <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
+        <div class="benefit-list">
+          {site.hours.map((hour) => <p>{hour}</p>)}
+        </div>
+      </article>
+
+      <div class="detail-card map-card">
+        <iframe
+          title="Burning Tree MMA map"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          src={site.mapEmbedUrl}></iframe>
+      </div>
+    </div>
+
+    <LeadForm config={faqPage.leadForm} />
+  </section>
+
+  <section class="shell section-divider">
+    <div class="faq-list">
+      {faqPage.faqs.map((faq) => (
+        <article class="faq-card">
+          <h3>{faq.question}</h3>
+          <p>{faq.answer}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="shell section-divider">
+    <h2>Testimonials</h2>
+    <div class="card-grid" style="margin-top: 1rem;">
+      <blockquote class="quote-card">
+        <p>"Best place ever for mixed martial arts. My child is super happy there, come and try today!"</p>
+        <footer>Shoshana S.</footer>
+      </blockquote>
+      <blockquote class="quote-card">
+        <p>"Great place to be for the best experience in martial arts."</p>
+        <footer>Zainab A.</footer>
+      </blockquote>
+      <blockquote class="quote-card">
+        <p>"My grandson has learned discipline, confidence and martial arts techniques. I am so glad my husband made the decision to enroll him, it was the best choice."</p>
+        <footer>Kelly W.</footer>
+      </blockquote>
+    </div>
+  </section>
+</BaseLayout>

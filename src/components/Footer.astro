@@ -1,0 +1,46 @@
+---
+import { primaryPrograms, secondaryNav, site } from "../data/site";
+---
+
+<footer class="site-footer">
+  <div class="shell footer-grid">
+
+    <div>
+      <p class="footer-label">Contact</p>
+      <p>{site.addressLine1}</p>
+      <p>
+        {site.city}, {site.regionName} {site.postalCode}
+      </p>
+      <p><a href={`tel:${site.phoneHref}`}>{site.phone}</a></p>
+      <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
+    </div>
+
+    <div>
+      <p class="footer-label">Programs</p>
+      <ul class="footer-list">
+        {primaryPrograms.map((item) => (
+          <li><a href={item.href}>{item.label}</a></li>
+        ))}
+      </ul>
+    </div>
+
+    <div>
+      <p class="footer-label">Quick Links</p>
+      <ul class="footer-list">
+        <li><a href="/birthday-parties">Birthday Parties</a></li>
+        {secondaryNav.map((item) => (
+          <li><a href={item.href}>{item.label}</a></li>
+        ))}
+      </ul>
+    </div>
+  </div>
+
+  <div class="shell footer-bottom">
+    <p>&copy; 2026 Burning Tree Mixed Martial Arts. All rights reserved.</p>
+    <p>
+      <a href={site.social.instagram}>Instagram</a>
+      <span aria-hidden="true"> / </span>
+      <a href={site.social.facebook}>Facebook</a>
+    </p>
+  </div>
+</footer>

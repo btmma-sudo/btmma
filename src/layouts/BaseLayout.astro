@@ -1,0 +1,82 @@
+---
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import "../styles/global.css";
+import { site, type ThemeName } from "../data/site";
+
+type Props = {
+  title: string;
+  description: string;
+  path?: string;
+  keywords?: string[];
+  image?: string;
+  theme?: ThemeName;
+};
+
+const {
+  title,
+  description,
+  path = "/",
+  keywords = [],
+  image = "/images/home-hero.svg",
+  theme = "flame"
+} = Astro.props;
+
+const canonical = new URL(path, site.primaryDomain).toString();
+const bodyClass = site.themes[theme].bodyClass;
+const imageUrl = new URL(image, site.primaryDomain).toString();
+const schema = {
+  "@context": "https://schema.org",
+  "@type": ["LocalBusiness", "SportsActivityLocation"],
+  name: site.name,
+  alternateName: site.shortName,
+  description,
+  url: canonical,
+  telephone: site.phone,
+  email: site.email,
+  slogan: site.tagline,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: site.addressLine1,
+    addressLocality: site.city,
+    addressRegion: site.region,
+    postalCode: site.postalCode,
+    addressCountry: site.country
+  },
+  areaServed: ["Owings Mills", "Reisterstown", "Baltimore County"],
+  sameAs: [site.social.instagram, site.social.facebook]
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content={keywords.join(", ")} />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" href="/favicon.ico?v=1" sizes="any" type="image/x-icon" />
+    <link rel="shortcut icon" href="/favicon.ico?v=1" type="image/x-icon" />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:site_name" content={site.name} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
+  </head>
+  <body class={bodyClass}>
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

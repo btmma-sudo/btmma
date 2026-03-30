@@ -1,0 +1,64 @@
+---
+import { programInterestOptions, type LeadFormConfig } from "../data/site";
+
+type Props = {
+  config?: LeadFormConfig;
+};
+
+const { config } = Astro.props;
+
+const title = config?.title ?? "Start Your First Step";
+const intro = config?.intro ?? "Tell us what you are interested in and we will follow up with the best class option.";
+const defaultProgram = config?.defaultProgram ?? "";
+const submitLabel = config?.submitLabel ?? "Request Information";
+const webhookPath = config?.webhookPath ?? "";
+const hideProgramSelect = config?.hideProgramSelect ?? false;
+const fields = config?.fields ?? "standard";
+---
+
+<section class="lead-card-compact-card" id="lead-form">
+  <h2>{title}</h2>
+  <p>{intro}</p>
+
+  <form class="lead-form-compact" method="post" action={webhookPath || undefined} data-webhook={webhookPath || "pending"}>
+    {fields === "emailOnly" ? (
+      <>
+        <input name="fullName" type="text" placeholder="Name (optional)" autocomplete="name" />
+        <input name="email" type="email" placeholder="Email" autocomplete="email" required />
+        <textarea
+          name="comments"
+          rows="4"
+          placeholder="Anything you want us to know about size, interest, or drop updates? (optional)"></textarea>
+        <input type="hidden" name="programInterest" value={defaultProgram || "ChimpanGi"} />
+      </>
+    ) : (
+      <>
+        <div class="form-row">
+          <input name="fullName" type="text" placeholder="Name" autocomplete="name" required />
+          <input name="email" type="email" placeholder="Email" autocomplete="email" required />
+        </div>
+        <div class="form-row">
+          <input name="phone" type="tel" placeholder="Phone" autocomplete="tel" required />
+          {!hideProgramSelect && (
+            <select name="programInterest" required>
+              <option value="">Program</option>
+              {programInterestOptions.map((option) => (
+                <option value={option} selected={defaultProgram === option}>{option}</option>
+              ))}
+            </select>
+          )}
+          {hideProgramSelect && <input type="hidden" name="programInterest" value={defaultProgram} />}
+        </div>
+        <textarea name="comments" rows="5" placeholder="Comments (optional)"></textarea>
+      </>
+    )}
+
+    <input name="source" type="hidden" value="website" />
+    <input name="attribution" type="hidden" value="organic" />
+
+    <p class="fine-print">
+      By submitting, you accept our <a href="/privacy">Privacy Policy</a> and <a href="/terms">Terms of Service</a>.
+    </p>
+    <button class="button" type="submit">{submitLabel}</button>
+  </form>
+</section>

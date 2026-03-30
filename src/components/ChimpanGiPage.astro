@@ -1,0 +1,71 @@
+---
+import LeadForm from "./LeadForm.astro";
+import type { ProgramPage } from "../data/site";
+
+type Props = {
+  program: ProgramPage;
+};
+
+const { program } = Astro.props;
+---
+
+<section class="chimpangi-poster">
+  <div class="shell chimpangi-shell">
+    <aside class="chimpangi-sidebar">
+      <div class="chimpangi-logo-card">
+        <div class="chimpangi-logo-wrap">
+          <img src="/images/chimpangi-logo.png" alt="ChimpanGi logo" loading="eager" />
+        </div>
+      </div>
+      <LeadForm
+        config={{
+          title: "Join the ChimpanGi Troop",
+          intro:
+            "Be first in line for early access, limited releases, and the next drop announcement.",
+          submitLabel: "Notify Me",
+          hideProgramSelect: true,
+          defaultProgram: "ChimpanGi",
+          fields: "emailOnly"
+        }}
+      />
+    </aside>
+
+    <div class="chimpangi-copy">
+      <p class="chimpangi-tag">Burning Tree Exclusive</p>
+      <h1>{program.hero.title}</h1>
+      <p class="chimpangi-lead">
+        One roll and you will know it is different. ChimpanGi is built for practitioners who care
+        about performance, comfort, and a cleaner way to train.
+      </p>
+
+      <div class="chimpangi-actions">
+        <a class="button" href="#lead-form">Join the ChimpanGi Troop</a>
+      </div>
+
+      <div class="chimpangi-points">
+        <article>
+          <h2>Unmatched Durability</h2>
+          <p>Built to keep its shape and feel through hard rounds, repeated washes, and daily training.</p>
+        </article>
+        <article>
+          <h2>Natural Breathability</h2>
+          <p>Designed to stay light, move cleanly, and feel comfortable during long sessions on the mat.</p>
+        </article>
+        <article>
+          <h2>Sustainable Impact</h2>
+          <p>A gear story rooted in conscious materials and a product identity that stands apart from standard cotton gis.</p>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="shell chimpangi-gallery-section">
+  <div class="chimpangi-gallery">
+    {program.galleryImages.map((image) => (
+      <figure class="chimpangi-gallery-card">
+        <img src={image.src} alt={image.alt} loading="lazy" />
+      </figure>
+    ))}
+  </div>
+</section>

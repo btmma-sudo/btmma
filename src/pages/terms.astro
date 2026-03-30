@@ -1,0 +1,16 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import LegalPage from "../components/LegalPage.astro";
+
+const title = "Terms and Privacy | Burning Tree MMA";
+const description =
+  "Read the combined Burning Tree MMA Terms of Service and Privacy Policy.";
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  path="/terms"
+  keywords={["terms of service", "privacy policy", "Burning Tree MMA legal"]}>
+  <LegalPage title="Terms of Service and Privacy Policy" path="/terms" />
+</BaseLayout>

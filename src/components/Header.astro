@@ -1,0 +1,66 @@
+---
+import { primaryPrograms, site } from "../data/site";
+---
+
+<header class="site-header">
+  <div class="header-notice">
+    <div class="shell">
+      <span>
+        <a href={site.mapEmbedUrl} target="_blank" rel="noreferrer">
+          {site.addressLine1}, {site.city}, {site.region} {site.postalCode}
+        </a>
+      </span>
+      <span>Questions? Call us: <a href={`tel:${site.phoneHref}`}>{site.phone}</a></span>
+    </div>
+  </div>
+  
+  <div class="shell nav-shell">
+    <a class="brand" href="/" aria-label="Burning Tree MMA home">
+      <img src="/images/logo.png" alt="Burning Tree MMA" class="brand-logo" />
+    </a>
+
+    <nav class="top-nav desktop-nav" aria-label="Primary">
+      <details class="nav-group">
+        <summary>Classes</summary>
+        <div class="nav-dropdown">
+          {primaryPrograms.map((item) => (
+            <a href={item.href}>{item.label}</a>
+          ))}
+        </div>
+      </details>
+
+      <a href="/about">About</a>
+      <a href="/faq">FAQ</a>
+      <a href="/birthday-parties">Birthday Parties</a>
+      <a href="/chimpman-gi">ChimpanGi</a>
+      <a href="/health-and-wellness">Health and Wellness</a>
+    </nav>
+
+    <details class="mobile-menu">
+      <summary aria-label="Open navigation menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </summary>
+
+      <div class="mobile-menu-panel">
+        <details class="mobile-submenu" open>
+          <summary>Classes</summary>
+          <div class="mobile-submenu-links">
+            {primaryPrograms.map((item) => (
+              <a href={item.href}>{item.label}</a>
+            ))}
+          </div>
+        </details>
+
+        <div class="mobile-menu-links">
+          <a href="/about">About</a>
+          <a href="/faq">FAQ</a>
+          <a href="/birthday-parties">Birthday Parties</a>
+          <a href="/chimpman-gi">ChimpanGi</a>
+          <a href="/health-and-wellness">Health and Wellness</a>
+        </div>
+      </div>
+    </details>
+  </div>
+</header>

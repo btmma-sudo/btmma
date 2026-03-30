@@ -1,0 +1,141 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import { aboutPage } from "../data/site";
+
+const instructors = [
+  {
+    name: "David Sztajer",
+    title: "Co-Owner",
+    credentials: "Karate, Kung Fu, Kid-Jitsu, BS in Health Science and Behavior Change",
+    image: "/images/about-david.png",
+    imageAlt: "David Sztajer instructor portrait",
+    imageClass: "instructor-portrait-stand",
+    paragraphs: [
+      "David Sztajer began training in 1997 at age thirteen in Kenpo at American Kenpo Karate Studios in Reisterstown, Maryland. His commitment and natural ability helped him move quickly into the adult program, and by 2000 he had earned his First Degree Black Belt and started teaching full-time under Joe Palanzo.",
+      "He continued advancing through the ranks and earned his Seventh Degree Black Belt in March 2022, reflecting decades of steady dedication to the art and to teaching.",
+      "Along the way, David trained with martial artists including Karl Petro, Jeff Mendelsohn, Leslie Lichter-Mason, Stuart Hankin, Mike Guercio, Francisco Vigoroux, and Joe Palanzo. In 2014 he founded Sztajer's Martial Arts LLC and has continued building a school centered on discipline, respect, confidence, and community."
+    ]
+  },
+  {
+    name: "Xavier Agnelli",
+    title: "Co-Owner",
+    credentials:
+      "Karate, Jiu Jitsu, Certified ACE Personal Trainer, Health & Fitness Coach for Sports Nutrition and Behavior Change",
+    image: "/images/about-xavier.png",
+    imageAlt: "Xavier Agnelli instructor portrait",
+    imageClass: "instructor-portrait-certificate",
+    paragraphs: [
+      "Xavier is a certified Health and Fitness Instructor through the American Council on Exercise who specializes in sports training, weight loss, and behavior change. He is also a martial arts instructor, health and fitness trainer, and certified firearms instructor.",
+      "He brings more than thirty years of martial arts experience across Judo, Tae Kwon Do-Chun Do Kwan, Ed Parker's American Kenpo Karate, and Renzo Gracie and Cabrera Jiu Jitsu.",
+      "Xavier has served as a US Government Field Training Officer, firearms instructor, and defensive tactics instructor, with decades of experience teaching civilians, law enforcement, and active duty military personnel. He is also a lifetime member of the Fraternal Order of Police and the National Rifle Association."
+    ]
+  }
+];
+---
+
+<BaseLayout
+  title={aboutPage.seo.title}
+  description={aboutPage.seo.description}
+  path="/about"
+  keywords={aboutPage.seo.keywords}
+  image={aboutPage.hero.image}>
+  <PageHero hero={aboutPage.hero} leadForm={aboutPage.leadForm} />
+
+  <section class="shell section-divider">
+    <article class="detail-card narrative-section">
+      <h2>About Burning Tree MMA</h2>
+      <p>
+        At Burning Tree Mixed Martial Arts in Owings Mills, we combine tradition and
+        modern training to help students of all ages grow stronger in mind, body, and
+        spirit. Guided by respect, perseverance, and community, we aim to create a
+        place where families and individuals can train seriously while feeling supported.
+      </p>
+      <p>
+        Our mission is to help students build real confidence, strengthen both mind and
+        body, and develop discipline through martial training that is practical,
+        structured, and welcoming.
+      </p>
+    </article>
+  </section>
+
+  <section class="shell section-divider">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Meet Your Instructors</p>
+        <h2>Leadership shaped by decades of martial arts practice and teaching.</h2>
+      </div>
+    </div>
+
+    <div class="stack">
+      {instructors.map((instructor) => (
+        <article class="detail-card bio-split">
+          <div class="instructor-photo">
+            <img
+              class={instructor.imageClass}
+              src={instructor.image}
+              alt={instructor.imageAlt}
+              loading="lazy" />
+          </div>
+          <div>
+            <p class="eyebrow">{instructor.title}</p>
+            <h2>{instructor.name}</h2>
+            <p><strong>{instructor.credentials}</strong></p>
+            <div class="benefit-list">
+              {instructor.paragraphs.map((paragraph) => (
+                <p>{paragraph}</p>
+              ))}
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="shell section-divider">
+    <article class="detail-card tree-section">
+      <div class="tree-photo">
+        <img src="/images/about-tree.png" alt="Burning Tree symbol" loading="lazy" />
+      </div>
+      <div class="narrative-section">
+        <p class="eyebrow">Why the Tree?</p>
+        <h2>The tree stands for learning, connection, strength, and steady growth.</h2>
+        <p>
+          The tree has long been used as a symbol of learning and enlightenment across
+          religions, philosophies, and mythologies. It represents connection between what
+          is above, below, and within us, which is why it is so often tied to knowledge,
+          awareness, and understanding.
+        </p>
+        <p>
+          From the Bodhi Tree to the Tree of Life, trees have been associated with growth,
+          protection, strength, calmness, and the interconnectedness of everything. That
+          symbolism fits martial arts well: roots in tradition, growth through practice,
+          and the discipline to remain steady through every stage of development.
+        </p>
+        <p>
+          For Burning Tree MMA, the tree reflects the idea that martial arts are about more
+          than techniques. They are about awareness, character, resilience, and building a
+          stronger life through consistent training.
+        </p>
+      </div>
+    </article>
+  </section>
+
+  <section class="shell section-divider">
+    <h2>Testimonials</h2>
+    <div class="card-grid" style="margin-top: 1rem;">
+      <blockquote class="quote-card">
+        <p>"Best place ever for mixed martial arts. My child is super happy there, come and try today!"</p>
+        <footer>Shoshana S.</footer>
+      </blockquote>
+      <blockquote class="quote-card">
+        <p>"Great place to be for the best experience in martial arts."</p>
+        <footer>Zainab A.</footer>
+      </blockquote>
+      <blockquote class="quote-card">
+        <p>"My grandson has learned discipline, confidence and martial arts techniques. I am so glad my husband made the decision to enroll him, it was the best choice."</p>
+        <footer>Kelly W.</footer>
+      </blockquote>
+    </div>
+  </section>
+</BaseLayout>

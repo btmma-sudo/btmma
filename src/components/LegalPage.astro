@@ -1,0 +1,86 @@
+---
+type Props = {
+  title: string;
+  path: string;
+};
+
+const { title, path } = Astro.props;
+---
+
+<section class="shell section-divider">
+  <div class="stack">
+    <article class="detail-card">
+      <p class="eyebrow">Legal</p>
+      <h1>{title}</h1>
+      <p>
+        This page combines the Burning Tree MMA Privacy Policy and Terms of Service in
+        one place for easy reference. The same combined content is available at both
+        `/privacy` and `/terms`.
+      </p>
+      <p>
+        Current route:
+        <strong> {path}</strong>
+      </p>
+    </article>
+
+    <article class="detail-card">
+      <p class="eyebrow">Privacy Policy</p>
+      <h2>How we collect and use information</h2>
+      <div class="benefit-list">
+        <p>
+          Burning Tree MMA may collect information you submit through website forms,
+          including your name, phone number, program interest, and any optional comments.
+        </p>
+        <p>
+          We use this information to respond to inquiries, help you choose the right
+          program, follow up about class availability, and improve the customer experience.
+        </p>
+        <p>
+          We may store or process submitted information through trusted tools used for
+          website hosting, forms, analytics, or lead routing, including future Make.com
+          webhook integrations.
+        </p>
+        <p>
+          We do not sell your personal information. We only share it when needed to
+          operate the site, manage communications, comply with legal obligations, or
+          protect the business and our users.
+        </p>
+        <p>
+          If you would like your submitted information updated or removed, contact
+          Burning Tree MMA directly using the contact details listed on this site.
+        </p>
+      </div>
+    </article>
+
+    <article class="detail-card">
+      <p class="eyebrow">Terms of Service</p>
+      <h2>Using the website</h2>
+      <div class="benefit-list">
+        <p>
+          By using this website, you agree to use it only for lawful purposes and in a
+          way that does not interfere with the site, the business, or other users.
+        </p>
+        <p>
+          Website content, branding, logos, copy, and design elements belong to Burning
+          Tree MMA unless otherwise stated and may not be copied or reused without
+          permission.
+        </p>
+        <p>
+          Information on this site is provided for general informational and marketing
+          purposes. Program details, schedules, offers, and availability may change
+          without notice.
+        </p>
+        <p>
+          Submitting a form or contacting the business through the website does not
+          guarantee enrollment, availability, or any specific offer unless confirmed by
+          Burning Tree MMA directly.
+        </p>
+        <p>
+          Burning Tree MMA may update these terms and the privacy policy from time to
+          time. Continued use of the website after updates means you accept the revised
+          terms.
+        </p>
+      </div>
+    </article>
+  </div>
+</section>

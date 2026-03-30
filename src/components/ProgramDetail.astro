@@ -1,0 +1,61 @@
+---
+import type { ProgramPage } from "../data/site";
+
+type Props = {
+  program: ProgramPage;
+};
+
+const { program } = Astro.props;
+const showTestimonials = program.showTestimonials !== false;
+const curriculumBlocks = program.curriculum.copy.split("\n\n");
+---
+
+<section class="shell section-divider">
+  <div class="stack">
+    <article class="detail-card detail-card-feature">
+      <p class="eyebrow">{program.audience}</p>
+      <h2>{program.curriculum.title}</h2>
+      <div class="program-copy">
+        {curriculumBlocks.map((block) =>
+          block.startsWith("- ") ? (
+            <ul class="program-copy-list">
+              {block.split("\n").map((item) => (
+                <li>{item.replace(/^- /, "")}</li>
+              ))}
+            </ul>
+          ) : (
+            <p>{block}</p>
+          )
+        )}
+      </div>
+    </article>
+
+    <div class="gallery-grid">
+      {program.galleryImages.map((image) => (
+        <figure class="gallery-card">
+          <img src={image.src} alt={image.alt} loading="lazy" />
+        </figure>
+      ))}
+    </div>
+
+    {showTestimonials && (
+      <section class="testimonials-section">
+        <h2>Testimonials</h2>
+        <div class="card-grid">
+          <blockquote class="quote-card">
+            <p>"Best place ever for mixed martial arts. My child is super happy there, come and try today!"</p>
+            <footer>Shoshana S.</footer>
+          </blockquote>
+          <blockquote class="quote-card">
+            <p>"Great place to be for the best experience in martial arts."</p>
+            <footer>Zainab A.</footer>
+          </blockquote>
+          <blockquote class="quote-card">
+            <p>"My grandson has learned discipline, confidence and martial arts techniques. I am so glad my husband made the decision to enroll him, it was the best choice."</p>
+            <footer>Kelly W.</footer>
+          </blockquote>
+        </div>
+      </section>
+    )}
+  </div>
+</section>
