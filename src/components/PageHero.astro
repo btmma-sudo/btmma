@@ -18,8 +18,15 @@ const overlayClass = hero.overlay === "medium" ? "hero-overlay-medium" : "hero-o
     "hero-left",
     overlayClass,
     large && "hero-large"
-  ]}
-  style={`background-image: linear-gradient(180deg, rgba(0,0,0,0.24), rgba(0,0,0,0.9)), url('${hero.image}');`}>
+  ]}>
+  <div class="hero-media" aria-hidden="true">
+    <img
+      class="hero-image"
+      src={hero.image}
+      alt=""
+      decoding="async"
+      fetchpriority={large ? "high" : "auto"} />
+  </div>
   <div class="shell hero-shell hero-with-form">
     <div class="hero-content">
       <h1>{hero.title}</h1>

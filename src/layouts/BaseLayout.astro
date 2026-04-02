@@ -78,5 +78,42 @@ const schema = {
       <slot />
     </main>
     <Footer />
+    <script is:inline>
+      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        const revealSelectors = [
+          "main > section",
+          ".program-card",
+          ".detail-card",
+          ".quote-card",
+          ".faq-card",
+          ".gallery-card",
+          ".chimpangi-gallery-card",
+          ".lead-card-compact-card",
+          ".section-heading"
+        ];
+
+        const revealElements = document.querySelectorAll(revealSelectors.join(", "));
+        const observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              entry.target.classList.add("is-visible");
+              observer.unobserve(entry.target);
+            }
+          },
+          {
+            threshold: 0.14,
+            rootMargin: "0px 0px -8% 0px"
+          }
+        );
+
+        revealElements.forEach((element, index) => {
+          if (!(element instanceof HTMLElement)) return;
+          element.classList.add("reveal-on-scroll");
+          element.style.setProperty("--reveal-delay", `${Math.min(index % 6, 5) * 70}ms`);
+          observer.observe(element);
+        });
+      }
+    </script>
   </body>
 </html>

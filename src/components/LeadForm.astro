@@ -62,8 +62,6 @@ const fields = config?.fields ?? "standard";
     )}
 
     <input name="source" type="hidden" value="" data-source-field />
-    <input name="attribution" type="hidden" value="organic" />
-
     <p class="fine-print">
       By submitting, you accept our <a href="/privacy">Privacy Policy</a> and <a href="/terms">Terms of Service</a>.
     </p>
@@ -73,81 +71,88 @@ const fields = config?.fields ?? "standard";
 </section>
 
 <script is:inline>
-  const forms = document.querySelectorAll("[data-lead-form]");
+  if (!(window).__btmmaLeadFormsInitialized) {
+    (window).__btmmaLeadFormsInitialized = true;
 
-  for (const form of forms) {
-    if (!(form instanceof HTMLFormElement)) continue;
+    const forms = document.querySelectorAll("[data-lead-form]");
 
-    const status = form.querySelector("[data-form-status]");
-    const submitButton = form.querySelector('button[type="submit"]');
-    const defaultSubmitLabel = form.dataset.submitLabel ?? "Submit";
-    const sourceField = form.querySelector("[data-source-field]");
+    for (const form of forms) {
+      if (!(form instanceof HTMLFormElement) || form.dataset.bound === "true") continue;
+      form.dataset.bound = "true";
 
-    form.addEventListener("submit", async (event) => {
-      event.preventDefault();
+      const status = form.querySelector("[data-form-status]");
+      const submitButton = form.querySelector('button[type="submit"]');
+      const defaultSubmitLabel = form.dataset.submitLabel ?? "Submit";
+      const sourceField = form.querySelector("[data-source-field]");
 
-      const webhook = form.dataset.webhook;
-      if (!webhook || webhook === "pending") {
-        if (status instanceof HTMLElement) {
-          status.textContent = "The form destination is not configured yet.";
-          status.dataset.state = "error";
-        }
-        return;
-      }
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
 
-      const formData = new FormData(form);
-      const currentSource = window.location.pathname + window.location.search + window.location.hash;
-      formData.set("source", currentSource || "/");
-      if (sourceField instanceof HTMLInputElement) {
-        sourceField.value = currentSource || "/";
-      }
-      const payload = Object.fromEntries(formData.entries());
-
-      if (submitButton instanceof HTMLButtonElement) {
-        submitButton.disabled = true;
-        submitButton.textContent = "Sending...";
-      }
-
-      if (status instanceof HTMLElement) {
-        status.textContent = "Sending your request...";
-        status.dataset.state = "pending";
-      }
-
-      try {
-        const response = await fetch(webhook, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(payload)
-        });
-
-        if (!response.ok) {
-          throw new Error(`Request failed with status ${response.status}`);
+        const webhook = form.dataset.webhook;
+        if (!webhook || webhook === "pending") {
+          if (status instanceof HTMLElement) {
+            status.textContent = "The form destination is not configured yet.";
+            status.dataset.state = "error";
+          }
+          return;
         }
 
-        form.reset();
-
-        const programField = form.querySelector('input[name="programInterest"][type="hidden"]');
-        if (programField instanceof HTMLInputElement && programField.defaultValue) {
-          programField.value = programField.defaultValue;
+        const formData = new FormData(form);
+        const currentSource = window.location.pathname + window.location.search + window.location.hash;
+        formData.set("source", currentSource || "/");
+        if (sourceField instanceof HTMLInputElement) {
+          sourceField.value = currentSource || "/";
         }
 
-        if (status instanceof HTMLElement) {
-          status.textContent = "Thanks. We received your information and will follow up soon.";
-          status.dataset.state = "success";
+        const payload = Object.fromEntries(formData.entries());
+        const encodedPayload = new URLSearchParams();
+        for (const [key, value] of Object.entries(payload)) {
+          encodedPayload.set(key, String(value ?? ""));
         }
-      } catch (error) {
-        if (status instanceof HTMLElement) {
-          status.textContent = "We could not submit the form right now. Please try again or contact us directly.";
-          status.dataset.state = "error";
-        }
-      } finally {
+
         if (submitButton instanceof HTMLButtonElement) {
-          submitButton.disabled = false;
-          submitButton.textContent = defaultSubmitLabel;
+          submitButton.disabled = true;
+          submitButton.textContent = "Sending...";
         }
-      }
-    });
+
+        if (status instanceof HTMLElement) {
+          status.textContent = "Sending your request...";
+          status.dataset.state = "pending";
+        }
+
+        try {
+          await fetch(webhook, {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+            },
+            body: encodedPayload.toString()
+          });
+
+          form.reset();
+
+          const programField = form.querySelector('input[name="programInterest"][type="hidden"]');
+          if (programField instanceof HTMLInputElement && programField.defaultValue) {
+            programField.value = programField.defaultValue;
+          }
+
+          if (status instanceof HTMLElement) {
+            status.textContent = "Thanks. We received your information and will follow up soon.";
+            status.dataset.state = "success";
+          }
+        } catch (error) {
+          if (status instanceof HTMLElement) {
+            status.textContent = "We could not submit the form right now. Please try again or contact us directly.";
+            status.dataset.state = "error";
+          }
+        } finally {
+          if (submitButton instanceof HTMLButtonElement) {
+            submitButton.disabled = false;
+            submitButton.textContent = defaultSubmitLabel;
+          }
+        }
+      });
+    }
   }
 </script>

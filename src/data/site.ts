@@ -81,7 +81,7 @@ export const site = {
   mapEmbedUrl:
     "https://www.google.com/maps?q=10210%20S%20Dolfield%20Rd%20Owings%20Mills%20MD%2021117&output=embed",
   primaryDomain: "https://www.burningtreemma.com",
-  tagline: "Keepers of the Flame",
+  tagline: "Burning Tree MMA: Keepers of the Flame",
   hours: [
     "Monday - Friday: 5:00 PM - 9:00 PM",
     "Saturday: 9:30 AM - 11:30 AM",
@@ -116,10 +116,10 @@ export const programInterestOptions = [
 ];
 
 export const primaryPrograms: NavItem[] = [
-  { label: "Kids Martial Arts", href: "/kids-martial-arts" },
-  { label: "Adult Martial Arts", href: "/adult-martial-arts" },
+  { label: "Jr. Kenpo", href: "/kids-martial-arts" },
+  { label: "Adult Karate", href: "/adult-martial-arts" },
   { label: "Kids Jiu-Jitsu", href: "/kids-jiu-jitsu" },
-  { label: "Brazilian Jiu-Jitsu", href: "/brazilian-jiu-jitsu" },
+  { label: "Adult BJJ", href: "/brazilian-jiu-jitsu" },
   { label: "Muay Thai", href: "/muay-thai" }
 ];
 
@@ -133,17 +133,17 @@ export const secondaryNav: NavItem[] = [
 export const homepagePrograms: ProgramCard[] = [
   {
     eyebrow: "Jr. Kenpo",
-    title: "Kids Karate Martial Arts",
+    title: "Jr. Kenpo",
     href: "/kids-martial-arts",
     summary:
-      "American Kenpo for Jrs. ages 4 and up"
+      "Fun, focused karate training that builds confidence, respect, and self-control."
   },
   {
     eyebrow: "American Kenpo",
-    title: "Adult Kenpo Martial Arts",
+    title: "Adult Karate",
     href: "/adult-martial-arts",
     summary:
-      "Sharpening Skills, Strength, and Spirit ."
+      "Traditional training and practical application with fitness, focus, and steady progression."
   },
   {
     eyebrow: "Kids Jiu-Jitsu",
@@ -154,10 +154,10 @@ export const homepagePrograms: ProgramCard[] = [
   },
   {
     eyebrow: "Adult Jiu-Jitsu",
-    title: "Adult Brazilian Jiu-Jitsu",
+    title: "Adult BJJ",
     href: "/brazilian-jiu-jitsu",
     summary:
-      "Challenge the Body, Strengthen the Mind"
+      "Live grappling, sharper defense, and the patience and persistence only BJJ can teach."
   },
   {
     eyebrow: "Art of Eight Limbs",
@@ -171,7 +171,7 @@ export const homepagePrograms: ProgramCard[] = [
     title: "Birthday Parties",
     href: "/birthday-parties",
     summary:
-      "Active martial arts birthday parties in Owings Mills that create memorable, high-energy events for families."
+      "An unforgettable martial arts celebration full of fun, confidence, and movement."
   }
 ];
 
@@ -183,12 +183,12 @@ export const homePage: {
   seo: {
     title: "Martial Arts Classes in Owings Mills | Burning Tree MMA",
     description:
-      "Burning Tree MMA offers kids martial arts, adult martial arts, kids and adult Brazilian jiu-jitsu, Muay Thai, birthday parties, and wellness services in Owings Mills.",
+      "Burning Tree MMA offers Jr. Kenpo, Adult Karate, kids and adult Brazilian jiu-jitsu, Muay Thai, birthday parties, and wellness services in Owings Mills.",
     keywords: [
       ...categoryKeywords,
       "MMA Owings Mills",
-      "kids martial arts Owings Mills",
-      "adult martial arts Owings Mills",
+      "Jr. Kenpo Owings Mills",
+      "adult karate Owings Mills",
       "Brazilian jiu-jitsu Owings Mills",
       "Muay Thai Owings Mills",
       "karate classes near me",
@@ -197,7 +197,7 @@ export const homePage: {
     ]
   },
   hero: {
-    title: "Keepers of the flame",
+    title: "Burning Tree MMA: Keepers of the flame",
     image: "/images/home-hero.png",
     overlay: "strong"
   },
@@ -205,8 +205,7 @@ export const homePage: {
     title: "View Our Web Special & Access Our Schedule",
     intro:
       "Take the first step today, we will reach out to follow up with you",
-    submitLabel: "Submit",
-    defaultProgram: "General Information"
+    submitLabel: "Submit"
   }
 };
 
@@ -234,8 +233,7 @@ export const aboutPage: SupportingPage & {
     title: "View Our Web Special & Access Our Schedule",
     intro:
       "Take the first step today, we will reach out to follow up with you",
-    submitLabel: "Submit",
-    defaultProgram: "General Information"
+    submitLabel: "Submit"
   }
 };
 
@@ -274,7 +272,7 @@ export const faqPage: SupportingPage & {
     {
       question: "Do you offer classes for kids and adults?",
       answer:
-        "Yes. We offer kids martial arts, adult martial arts, kids jiu-jitsu, Brazilian jiu-jitsu, Muay Thai, birthday parties, and wellness-oriented services."
+        "Yes. We offer Jr. Kenpo, Adult Karate, kids jiu-jitsu, Brazilian jiu-jitsu, Muay Thai, birthday parties, and wellness-oriented services."
     },
     {
       question: "Where is Burning Tree MMA located?",
@@ -286,8 +284,7 @@ export const faqPage: SupportingPage & {
     title: "View Our Web Special & Access Our Schedule",
     intro:
       "Take the first step today, we will reach out to follow up with you",
-    submitLabel: "Submit",
-    defaultProgram: "General Information"
+    submitLabel: "Submit"
   }
 };
 
@@ -295,12 +292,12 @@ export const programPages: ProgramPage[] = [
   {
     slug: "kids-martial-arts",
     seo: {
-      title: "Kids Martial Arts in Owings Mills | Burning Tree MMA",
+      title: "Jr. Kenpo in Owings Mills | Burning Tree MMA",
       description:
-        "Jr. Kenpo kids martial arts classes in Owings Mills that build confidence, discipline, focus, and self-defense in a safe environment.",
+        "Jr. Kenpo in Owings Mills blends fun and discipline to help children build focus, respect, self-control, confidence, and real self-defense skills.",
       keywords: [
         ...categoryKeywords,
-        "kids karate Owings Mills",
+        "Jr. Kenpo Owings Mills",
         "Jr. Kenpo",
         "kids karate classes near me",
         "kids self-defense",
@@ -308,15 +305,15 @@ export const programPages: ProgramPage[] = [
       ]
     },
     hero: {
-      title: "Kids Karate Martial Arts",
-      image: "/images/kids-martial-arts-hero.jpg",
+      title: "Jr. Kenpo",
+      image: "/images/jr-kenpo-hero.jpg",
       overlay: "strong"
     },
     audience: "Kids",
     curriculum: {
       title: "A structured Jr. Kenpo path with real progression.",
       copy:
-        "Students learn age-appropriate American Kenpo fundamentals, striking drills, movement patterns, belt progression, and respectful classroom habits that transfer into everyday life."
+        "Our Kids Karate program blends fun and discipline to help children develop focus, respect, and self-control. Through structured drills, games, and partner work, students build confidence while learning real self-defense skills in a safe, supportive environment. Parents love seeing their kids grow stronger both on the mats and in school."
     },
     benefits: {
       title: "Why families choose this program",
@@ -327,9 +324,9 @@ export const programPages: ProgramPage[] = [
       ]
     },
     galleryImages: [
-      { src: "/images/kids-martial-arts-gallery-1.png", alt: "Kids martial arts gallery  1" },
-      { src: "/images/kids-martial-arts-gallery-2.jpg", alt: "Kids martial arts gallery  2" },
-      { src: "/images/kids-martial-arts-gallery-3.jpg", alt: "Kids martial arts gallery  3" }
+      { src: "/images/jr-kenpo-gallery-1.jpg", alt: "Jr. Kenpo gallery 1" },
+      { src: "/images/jr-kenpo-gallery-2.jpg", alt: "Jr. Kenpo gallery 2" },
+      { src: "/images/jr-kenpo-gallery-3.jpg", alt: "Jr. Kenpo gallery 3" }
     ],
     leadForm: {
     title: "View Our Web Special & Access Our Schedule",
@@ -342,9 +339,9 @@ export const programPages: ProgramPage[] = [
   {
     slug: "adult-martial-arts",
     seo: {
-      title: "Adult Martial Arts in Owings Mills | Burning Tree MMA",
+      title: "Adult Karate in Owings Mills | Burning Tree MMA",
       description:
-        "American Kenpo martial arts classes for adults in Owings Mills focused on self-defense, technique, fitness, and personal growth.",
+        "Adult Karate in Owings Mills balances traditional training and practical application with technique, self-defense, stress relief, fitness, and belt-rank progression.",
       keywords: [
         ...categoryKeywords,
         "adult karate Owings Mills",
@@ -355,7 +352,7 @@ export const programPages: ProgramPage[] = [
       ]
     },
     hero: {
-      title:  "Adult Kenpo Martial Arts",
+      title:  "Adult Karate",
       image: "/images/adult-martial-arts-hero.jpg",
       overlay: "strong"
     },
@@ -363,7 +360,7 @@ export const programPages: ProgramPage[] = [
     curriculum: {
       title: "Technical training with clear progression.",
       copy:
-        "Students work through American Kenpo concepts, combinations, forms, belt ranks, and partner drills that improve timing, awareness, confidence, and consistency."
+        "Adult Karate provides a balance of traditional training and practical application. Students sharpen striking techniques, forms, and self-defense while enjoying a full-body workout that relieves stress and improves fitness. It is an empowering way to challenge yourself mentally and physically while progressing through belt ranks."
     },
     benefits: {
       title: "What adult students gain",
@@ -435,9 +432,9 @@ export const programPages: ProgramPage[] = [
   {
     slug: "brazilian-jiu-jitsu",
     seo: {
-      title: "Brazilian Jiu-Jitsu in Owings Mills | Burning Tree MMA",
+      title: "Adult BJJ in Owings Mills | Burning Tree MMA",
       description:
-        "Adult Brazilian jiu-jitsu classes in Owings Mills with live practice, technique, escapes, submissions, and beginner-friendly coaching.",
+        "Adult BJJ in Owings Mills delivers a dynamic workout with escapes, sweeps, submissions, live sparring, stress relief, and lasting confidence.",
       keywords: [
         ...categoryKeywords,
         "adult Brazilian jiu-jitsu Owings Mills",
@@ -448,7 +445,7 @@ export const programPages: ProgramPage[] = [
       ]
     },
     hero: {
-      title: "Brazilian Jiu-Jitsu",
+      title: "Adult BJJ",
       image: "/images/brazilian-jiu-jitsu-hero.jpg",
       overlay: "strong"
     },
@@ -456,7 +453,7 @@ export const programPages: ProgramPage[] = [
     curriculum: {
       title: "Foundations, pressure, and steady progression.",
       copy:
-        "Training covers foundational movement, guard work, passes, escapes, submissions, and controlled sparring so students can build skill and confidence over time."
+        "Adult Brazilian Jiu-Jitsu offers a dynamic workout that sharpens the mind as much as the body. Students learn to defend themselves through escapes, sweeps, and submissions, testing skills through live sparring. The result is improved fitness, stress relief, and the patience and persistence that only BJJ can teach."
     },
     benefits: {
       title: "Why adults choose BJJ",
@@ -503,7 +500,7 @@ export const programPages: ProgramPage[] = [
     curriculum: {
       title: "The art of eight limbs with steady skill-building.",
       copy:
-        "Students train punches, kicks, elbows, knees, footwork, combinations, pad rounds, and clinch technique with strong coaching on form, balance, and control."
+        "Known as the art of eight limbs, Muay Thai combines punches, kicks, knees, and elbows for an intense full-body workout. Students practice striking, pad drills, and clinch techniques that build endurance, power, and precision. Whether for fitness, self-defense, or competition, Muay Thai develops both physical toughness and mental confidence."
     },
     benefits: {
       title: "Why students love Muay Thai",
@@ -548,7 +545,7 @@ export const programPages: ProgramPage[] = [
     curriculum: {
       title: "An event built around fun and movement.",
       copy:
-        "Each party is designed to keep kids engaged with age-appropriate martial arts activities, team games, and coach-led moments that feel exciting and organized."
+        "The Birthday Party Program at Burning Tree MMA in Owings Mills combines fun, fitness, and focus for an unforgettable celebration. Kids take part in exciting martial arts games, team challenges, and beginner-friendly lessons that build confidence, coordination, and respect. Whether it is their first time trying martial arts or they are already training, every child leaves smiling, energized, and proud of what they accomplished."
     },
     benefits: {
       title: "What families can expect",
@@ -605,7 +602,7 @@ export const programPages: ProgramPage[] = [
       ]
     },
     galleryImages: [
-      { src: "/images/chimpman-gi-gallery-1.png", alt: "ChimpanGi gallery  1" },
+      { src: "/images/chimpman-gi-gallery-1.jpg", alt: "ChimpanGi gallery  1" },
       { src: "/images/chimpman-gi-gallery-2.jpg", alt: "ChimpanGi gallery  2" },
       { src: "/images/chimpman-gi-gallery-3.jpg", alt: "ChimpanGi gallery  3" }
     ],
