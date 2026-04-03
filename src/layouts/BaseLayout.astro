@@ -18,13 +18,22 @@ const {
   description,
   path = "/",
   keywords = [],
-  image = "/images/home-hero.svg",
+  image = "/images/home-hero.jpg",
   theme = "flame"
 } = Astro.props;
 
 const canonical = new URL(path, site.primaryDomain).toString();
 const bodyClass = site.themes[theme].bodyClass;
 const imageUrl = new URL(image, site.primaryDomain).toString();
+const dayUrlMap = {
+  Monday: "https://schema.org/Monday",
+  Tuesday: "https://schema.org/Tuesday",
+  Wednesday: "https://schema.org/Wednesday",
+  Thursday: "https://schema.org/Thursday",
+  Friday: "https://schema.org/Friday",
+  Saturday: "https://schema.org/Saturday",
+  Sunday: "https://schema.org/Sunday"
+} as const;
 const schema = {
   "@context": "https://schema.org",
   "@type": ["LocalBusiness", "SportsActivityLocation"],
@@ -35,6 +44,8 @@ const schema = {
   telephone: site.phone,
   email: site.email,
   slogan: site.tagline,
+  image: imageUrl,
+  hasMap: site.mapUrl,
   address: {
     "@type": "PostalAddress",
     streetAddress: site.addressLine1,
@@ -43,7 +54,23 @@ const schema = {
     postalCode: site.postalCode,
     addressCountry: site.country
   },
-  areaServed: ["Owings Mills", "Reisterstown", "Baltimore County"],
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: site.latitude,
+    longitude: site.longitude
+  },
+  openingHoursSpecification: site.hours
+    .filter((entry) => entry.opens && entry.closes)
+    .map((entry) => ({
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: entry.days.map((day) => dayUrlMap[day as keyof typeof dayUrlMap]),
+      opens: entry.opens,
+      closes: entry.closes
+    })),
+  areaServed: {
+    "@type": "AdministrativeArea",
+    name: site.serviceArea
+  },
   sameAs: [site.social.instagram, site.social.facebook]
 };
 ---
@@ -57,6 +84,11 @@ const schema = {
     <meta name="description" content={description} />
     <meta name="keywords" content={keywords.join(", ")} />
     <meta name="generator" content={Astro.generator} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Oswald:wght@600;700&display=swap" />
     <link rel="icon" href="/favicon.ico?v=1" sizes="any" type="image/x-icon" />
     <link rel="shortcut icon" href="/favicon.ico?v=1" type="image/x-icon" />
     <link rel="canonical" href={canonical} />

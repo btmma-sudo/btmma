@@ -33,7 +33,13 @@ const curriculumBlocks = program.curriculum.copy.split("\n\n");
     <div class="gallery-grid">
       {program.galleryImages.map((image) => (
         <figure class="gallery-card">
-          <img src={image.src} alt={image.alt} loading="lazy" />
+          <img
+            src={image.src}
+            alt={image.alt}
+            loading="lazy"
+            decoding="async"
+            width="1600"
+            height="1100" />
         </figure>
       ))}
     </div>

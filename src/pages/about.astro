@@ -8,7 +8,7 @@ const instructors = [
     name: "David Sztajer",
     title: "Co-Owner",
     credentials: "Karate, Kung Fu, Kid-Jitsu, BS in Health Science and Behavior Change",
-    image: "/images/about-david.png",
+    image: "/images/about-david.jpg",
     imageAlt: "David Sztajer instructor portrait",
     imageClass: "instructor-portrait-stand",
     paragraphs: [
@@ -22,7 +22,7 @@ const instructors = [
     title: "Co-Owner",
     credentials:
       "Karate, Jiu Jitsu, Certified ACE Personal Trainer, Health & Fitness Coach for Sports Nutrition and Behavior Change",
-    image: "/images/about-xavier.png",
+    image: "/images/about-xavier.jpg",
     imageAlt: "Xavier Agnelli instructor portrait",
     imageClass: "instructor-portrait-certificate",
     paragraphs: [
@@ -75,7 +75,10 @@ const instructors = [
               class={instructor.imageClass}
               src={instructor.image}
               alt={instructor.imageAlt}
-              loading="lazy" />
+              loading="lazy"
+              decoding="async"
+              width={instructor.name === "David Sztajer" ? "1300" : "869"}
+              height={instructor.name === "David Sztajer" ? "1300" : "869"} />
           </div>
           <div>
             <p class="eyebrow">{instructor.title}</p>
@@ -95,7 +98,13 @@ const instructors = [
   <section class="shell section-divider">
     <article class="detail-card tree-section">
       <div class="tree-photo">
-        <img src="/images/about-tree.png" alt="Burning Tree symbol" loading="lazy" />
+        <img
+          src="/images/about-tree.jpg"
+          alt="Burning Tree symbol"
+          loading="lazy"
+          decoding="async"
+          width="707"
+          height="960" />
       </div>
       <div class="narrative-section">
         <p class="eyebrow">Why the Tree?</p>

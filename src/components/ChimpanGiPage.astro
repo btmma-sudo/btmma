@@ -14,7 +14,13 @@ const { program } = Astro.props;
     <aside class="chimpangi-sidebar">
       <div class="chimpangi-logo-card">
         <div class="chimpangi-logo-wrap">
-          <img src="/images/chimpangi-logo.png" alt="ChimpanGi logo" loading="eager" />
+          <img
+            src="/images/chimpangi-logo.jpg"
+            alt="ChimpanGi logo"
+            width="1284"
+            height="1828"
+            loading="eager"
+            decoding="async" />
         </div>
       </div>
       <LeadForm
@@ -64,7 +70,7 @@ const { program } = Astro.props;
   <div class="chimpangi-gallery">
     {program.galleryImages.map((image) => (
       <figure class="chimpangi-gallery-card">
-        <img src={image.src} alt={image.alt} loading="lazy" />
+        <img src={image.src} alt={image.alt} loading="lazy" decoding="async" width="1284" height="1605" />
       </figure>
     ))}
   </div>

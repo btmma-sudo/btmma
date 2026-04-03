@@ -76,16 +76,32 @@ export const site = {
   regionName: "Maryland",
   postalCode: "21117",
   country: "US",
+  latitude: 39.4120992,
+  longitude: -76.7795037,
   mapUrl:
-    "https://www.google.com/maps?q=10210%20S%20Dolfield%20Rd%20Owings%20Mills%20MD%2021117",
+    "https://www.google.com/maps/place/Burning+Tree+Mixed+Martial+Arts/@39.4120992,-76.7820786,17z/data=!3m1!4b1!4m6!3m5!1s0x89c80e0e89289fe3:0x7d12fd567c60fd1b!8m2!3d39.4120992!4d-76.7795037!16s%2Fg%2F11b70j0pvf?entry=ttu&g_ep=EgoyMDI2MDMzMC4wIKXMDSoASAFQAw%3D%3D",
   mapEmbedUrl:
     "https://www.google.com/maps?q=10210%20S%20Dolfield%20Rd%20Owings%20Mills%20MD%2021117&output=embed",
   primaryDomain: "https://www.burningtreemma.com",
   tagline: "Burning Tree MMA: Keepers of the Flame",
+  serviceArea: "Baltimore County",
   hours: [
-    "Monday - Friday: 5:00 PM - 9:00 PM",
-    "Saturday: 9:30 AM - 11:30 AM",
-    "Sunday: Closed"
+    {
+      label: "Monday - Friday: 5:00 PM - 9:00 PM",
+      days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      opens: "17:00",
+      closes: "21:00"
+    },
+    {
+      label: "Saturday: 9:30 AM - 11:30 AM",
+      days: ["Saturday"],
+      opens: "09:30",
+      closes: "11:30"
+    },
+    {
+      label: "Sunday: Closed",
+      days: ["Sunday"]
+    }
   ],
   social: {
     instagram: "https://www.instagram.com/burningtreemma/",
@@ -198,7 +214,7 @@ export const homePage: {
   },
   hero: {
     title: "Burning Tree MMA: Keepers of the flame",
-    image: "/images/home-hero.png",
+    image: "/images/home-hero.jpg",
     overlay: "strong"
   },
   leadForm: {
@@ -371,7 +387,7 @@ export const programPages: ProgramPage[] = [
       ]
     },
     galleryImages: [
-      { src: "/images/adult-martial-arts-gallery-1.png", alt: "Adult martial arts gallery  1" },
+      { src: "/images/adult-martial-arts-gallery-1.jpg", alt: "Adult martial arts gallery  1" },
       { src: "/images/adult-martial-arts-gallery-2.jpg", alt: "Adult martial arts gallery  2" },
       { src: "/images/adult-martial-arts-gallery-3.jpg", alt: "Adult martial arts gallery  3" }
     ],
@@ -418,7 +434,7 @@ export const programPages: ProgramPage[] = [
     },
     galleryImages: [
       { src: "/images/kids-jiu-jitsu-gallery-1.jpg", alt: "Kids jiu-jitsu gallery  1" },
-      { src: "/images/kids-jiu-jitsu-gallery-2.png", alt: "Kids jiu-jitsu gallery  2" },
+      { src: "/images/kids-jiu-jitsu-gallery-2.jpg", alt: "Kids jiu-jitsu gallery  2" },
       { src: "/images/kids-jiu-jitsu-gallery-3.jpg", alt: "Kids jiu-jitsu gallery  3" }
     ],
     leadForm: {
@@ -466,7 +482,7 @@ export const programPages: ProgramPage[] = [
     galleryImages: [
       { src: "/images/brazilian-jiu-jitsu-gallery-1.jpg", alt: "Brazilian jiu-jitsu gallery  1" },
       { src: "/images/brazilian-jiu-jitsu-gallery-2.jpg", alt: "Brazilian jiu-jitsu gallery  2" },
-      { src: "/images/brazilian-jiu-jitsu-gallery-3.png", alt: "Brazilian jiu-jitsu gallery  3" }
+      { src: "/images/brazilian-jiu-jitsu-gallery-3.jpg", alt: "Brazilian jiu-jitsu gallery  3" }
     ],
     leadForm: {
     title: "View Our Web Special & Access Our Schedule",
@@ -512,8 +528,8 @@ export const programPages: ProgramPage[] = [
     },
     galleryImages: [
       { src: "/images/muay-thai-gallery-1.jpg", alt: "Muay Thai gallery  1" },
-      { src: "/images/muay-thai-gallery-2.png", alt: "Muay Thai gallery  2" },
-      { src: "/images/muay-thai-gallery-3.png", alt: "Muay Thai gallery  3" }
+      { src: "/images/muay-thai-gallery-2.jpg", alt: "Muay Thai gallery  2" },
+      { src: "/images/muay-thai-gallery-3.jpg", alt: "Muay Thai gallery  3" }
     ],
     leadForm: {
     title: "View Our Web Special & Access Our Schedule",
