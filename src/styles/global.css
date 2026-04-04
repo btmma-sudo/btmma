@@ -769,24 +769,30 @@ button {
 
 .bio-split {
   display: grid;
-  gap: 1.25rem;
-  align-items: start;
+  gap: 0;
+  align-items: stretch;
+  padding: 0;
+}
+
+.bio-split > div:not(.instructor-photo) {
+  padding: 1.15rem;
+}
+
+.instructor-photo {
+  overflow: hidden;
 }
 
 .instructor-photo img {
   width: 100%;
-  max-width: 420px;
-  border: 1px solid var(--line);
-  object-fit: contain;
-  background: var(--surface-soft);
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
 }
 
-.instructor-portrait-stand {
-  max-height: 640px;
-}
-
+.instructor-portrait-stand,
 .instructor-portrait-certificate {
-  max-height: 520px;
+  max-height: none;
 }
 
 .tree-section {
