@@ -660,6 +660,79 @@ button {
 }
 
 
+.schedule-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.schedule-day {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--accent);
+  padding: 1.25rem;
+}
+
+.schedule-day-label {
+  font-family: "Oswald", sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent-soft);
+  margin: 0 0 1rem;
+}
+
+.schedule-slots {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+}
+
+.schedule-slot {
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.schedule-slot:first-child {
+  padding-top: 0;
+}
+
+.schedule-slot:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.schedule-time {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.schedule-class {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.schedule-note {
+  margin: 0.75rem 0 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.schedule-cta {
+  text-align: center;
+}
+
 .quote-card {
   margin: 0;
   border-left: 2px solid var(--accent);
@@ -678,6 +751,7 @@ button {
 }
 
 .lead-card-compact-card {
+  scroll-margin-top: 160px;
   width: 100%;
   max-width: 520px;
   padding: 1.35rem;
@@ -1047,6 +1121,10 @@ iframe {
   .lead-card {
     position: static;
   }
+
+  .schedule-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 760px) {
@@ -1174,7 +1252,8 @@ iframe {
   .grid-two,
   .footer-grid,
   .split-section,
-  .chimpangi-gallery {
+  .chimpangi-gallery,
+  .schedule-grid {
     grid-template-columns: 1fr;
   }
 

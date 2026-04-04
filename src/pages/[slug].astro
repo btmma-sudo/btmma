@@ -2,7 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHero from "../components/PageHero.astro";
 import ProgramDetail from "../components/ProgramDetail.astro";
-import ChimpanGiPage from "../components/ChimpanGiPage.astro";
+import ChimpmanGiPage from "../components/ChimpmanGiPage.astro";
 import { programPages } from "../data/site";
 
 export function getStaticPaths() {
@@ -13,7 +13,7 @@ export function getStaticPaths() {
 }
 
 const { program } = Astro.props;
-const isChimpanGi = program.slug === "chimpman-gi";
+const isChimpmanGi = program.slug === "chimpman-gi";
 ---
 
 <BaseLayout
@@ -23,8 +23,8 @@ const isChimpanGi = program.slug === "chimpman-gi";
   keywords={program.seo.keywords}
   image={program.hero.image}
   theme={program.accentTheme ?? "flame"}>
-  {isChimpanGi ? (
-    <ChimpanGiPage program={program} />
+  {isChimpmanGi ? (
+    <ChimpmanGiPage program={program} />
   ) : (
     <>
       <PageHero hero={program.hero} leadForm={program.leadForm} />

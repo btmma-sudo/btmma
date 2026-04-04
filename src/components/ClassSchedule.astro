@@ -1,0 +1,70 @@
+---
+type Props = {
+  ctaHref?: string;
+};
+
+const { ctaHref = "#lead-form" } = Astro.props;
+
+const schedule = [
+  {
+    days: "Mon & Wed",
+    slots: [
+      { time: "5:00 – 5:45 PM", cls: "Jr. Kenpo" },
+      { time: "6:00 – 6:45 PM", cls: "Jr. Kenpo" },
+      { time: "7:00 – 8:00 PM", cls: "Teens and Adults Kenpo" },
+    ],
+  },
+  {
+    days: "Tue & Thu",
+    slots: [
+      { time: "5:00 – 5:45 PM", cls: "Kids Jiu-Jitsu & Jr. Muay Thai" },
+      { time: "6:00 – 6:45 PM", cls: "Kids Jiu-Jitsu & Jr. Muay Thai" },
+      { time: "7:00 – 8:00 PM", cls: "Teens and Adults BJJ & Muay Thai" },
+    ],
+  },
+  {
+    days: "Saturday",
+    slots: [
+      { time: "9:30 – 10:15 AM", cls: "Jr. Sparring" },
+      { time: "10:30 – 11:15 AM", cls: "Teens and Adults Sparring" },
+    ],
+  },
+  {
+    days: "Sunday",
+    slots: [
+      { time: "", cls: "Special Events" },
+    ],
+    note: "Birthdays, seminars & more",
+  },
+];
+---
+
+<section class="shell section-divider">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">Weekly Schedule</p>
+      <h2>Find a class that fits your week.</h2>
+    </div>
+  </div>
+
+  <div class="schedule-grid">
+    {schedule.map((day) => (
+      <div class="schedule-day">
+        <p class="schedule-day-label">{day.days}</p>
+        <ul class="schedule-slots">
+          {day.slots.map((slot) => (
+            <li class="schedule-slot">
+              <span class="schedule-time">{slot.time}</span>
+              <span class="schedule-class">{slot.cls}</span>
+            </li>
+          ))}
+        </ul>
+        {day.note && <p class="schedule-note">{day.note}</p>}
+      </div>
+    ))}
+  </div>
+
+  <div class="schedule-cta">
+    <a class="button" href={ctaHref}>Try a Class</a>
+  </div>
+</section>
