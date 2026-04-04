@@ -76,35 +76,34 @@ export const site = {
   regionName: "Maryland",
   postalCode: "21117",
   country: "US",
-  latitude: 39.4120992,
-  longitude: -76.7795037,
   mapUrl:
-    "https://www.google.com/maps/place/Burning+Tree+Mixed+Martial+Arts/@39.4120992,-76.7820786,17z/data=!3m1!4b1!4m6!3m5!1s0x89c80e0e89289fe3:0x7d12fd567c60fd1b!8m2!3d39.4120992!4d-76.7795037!16s%2Fg%2F11b70j0pvf?entry=ttu&g_ep=EgoyMDI2MDMzMC4wIKXMDSoASAFQAw%3D%3D",
+    "https://www.google.com/maps?q=10210%20S%20Dolfield%20Rd%20Owings%20Mills%20MD%2021117",
   mapEmbedUrl:
     "https://www.google.com/maps?q=10210%20S%20Dolfield%20Rd%20Owings%20Mills%20MD%2021117&output=embed",
   primaryDomain: "https://www.burningtreemma.com",
   tagline: "Burning Tree MMA: Keepers of the Flame",
+  latitude: 39.4120992,
+  longitude: -76.7795037,
   serviceArea: "Baltimore County",
   hours: [
+    "Monday - Thursday: 5:00 PM - 9:00 PM",
+    "Saturday: 9:30 AM - 11:30 AM",
+    "Sunday: Closed"
+  ],
+  schemaHours: [
     {
-      label: "Monday - Friday: 5:00 PM - 9:00 PM",
-      days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      days: ["Monday", "Tuesday", "Wednesday", "Thursday"],
       opens: "17:00",
       closes: "21:00"
     },
     {
-      label: "Saturday: 9:30 AM - 11:30 AM",
       days: ["Saturday"],
       opens: "09:30",
       closes: "11:30"
-    },
-    {
-      label: "Sunday: Closed",
-      days: ["Sunday"]
     }
   ],
   social: {
-    instagram: "https://www.instagram.com/burningtreemma/",
+    instagram: "https://www.instagram.com/burningtree_mma/",
     facebook: "https://www.facebook.com/burningtreemma"
   },
   themes: {
@@ -123,12 +122,32 @@ export const categoryKeywords = [
   "martial arts academy",
   "self-defense",
   "martial arts classes",
-  "martial arts training"
+  "martial arts training",
+  "self-defence classes",
+  "self-defence training",
+  "karate classes",
+  "jiu-jitsu classes",
+  "muay thai classes",
+  "martial arts for kids",
+  "martial arts for adults",
+  "martial arts for beginners",
+  "karate for kids",
+  "karate for adults",
+  "karate for beginners",
+  "jiu-jitsu for kids",
+  "jiu-jitsu for adults",
+  "jiu-jitsu for beginners",
+  "muay thai for kids",
+  "muay thai for adults",
+  "muay thai for beginners"
 ];
 
 export const programInterestOptions = [
-  "Adults Classes",
-  "Kids Classes"
+  "Jr. Kenpo",
+  "Adult Karate",
+  "Kids Jiu-Jitsu",
+  "Adult BJJ",
+  "Muay Thai"
 ];
 
 export const primaryPrograms: NavItem[] = [
@@ -142,7 +161,7 @@ export const primaryPrograms: NavItem[] = [
 export const secondaryNav: NavItem[] = [
   { label: "About", href: "/about" },
   { label: "FAQ", href: "/faq" },
-  { label: "ChimpanGi", href: "/chimpman-gi" },
+  { label: "ChimpmanGi", href: "/chimpman-gi" },
   { label: "Health & Wellness", href: "/health-and-wellness" }
 ];
 
@@ -209,7 +228,7 @@ export const homePage: {
       "Muay Thai Owings Mills",
       "karate classes near me",
       "world-class instructors",
-      "safe and structured environment"
+      "safe and structured environment",
     ]
   },
   hero: {
@@ -218,7 +237,7 @@ export const homePage: {
     overlay: "strong"
   },
   leadForm: {
-    title: "View Our Web Special & Access Our Schedule",
+    title: "Try a Free Class",
     intro:
       "Take the first step today, we will reach out to follow up with you",
     submitLabel: "Submit"
@@ -246,7 +265,7 @@ export const aboutPage: SupportingPage & {
     overlay: "medium"
   },
   leadForm: {
-    title: "View Our Web Special & Access Our Schedule",
+    title: "Try a Free Class",
     intro:
       "Take the first step today, we will reach out to follow up with you",
     submitLabel: "Submit"
@@ -297,7 +316,7 @@ export const faqPage: SupportingPage & {
     }
   ],
   leadForm: {
-    title: "View Our Web Special & Access Our Schedule",
+    title: "Try a Free Class",
     intro:
       "Take the first step today, we will reach out to follow up with you",
     submitLabel: "Submit"
@@ -345,7 +364,7 @@ export const programPages: ProgramPage[] = [
       { src: "/images/jr-kenpo-gallery-3.jpg", alt: "Jr. Kenpo gallery 3" }
     ],
     leadForm: {
-    title: "View Our Web Special & Access Our Schedule",
+    title: "Try a Free Class",
     intro:
       "Take the first step today, we will reach out to follow up with you",
     submitLabel: "Submit",
@@ -392,7 +411,7 @@ export const programPages: ProgramPage[] = [
       { src: "/images/adult-martial-arts-gallery-3.jpg", alt: "Adult martial arts gallery  3" }
     ],
     leadForm: {
-    title: "View Our Web Special & Access Our Schedule",
+    title: "Try a Free Class",
     intro:
       "Take the first step today, we will reach out to follow up with you",
     submitLabel: "Submit",
@@ -438,7 +457,7 @@ export const programPages: ProgramPage[] = [
       { src: "/images/kids-jiu-jitsu-gallery-3.jpg", alt: "Kids jiu-jitsu gallery  3" }
     ],
     leadForm: {
-    title: "View Our Web Special & Access Our Schedule",
+    title: "Try a Free Class",
     intro:
       "Take the first step today, we will reach out to follow up with you",
     submitLabel: "Submit",
@@ -485,7 +504,7 @@ export const programPages: ProgramPage[] = [
       { src: "/images/brazilian-jiu-jitsu-gallery-3.jpg", alt: "Brazilian jiu-jitsu gallery  3" }
     ],
     leadForm: {
-    title: "View Our Web Special & Access Our Schedule",
+    title: "Try a Free Class",
     intro:
       "Take the first step today, we will reach out to follow up with you",
     submitLabel: "Submit",
@@ -532,7 +551,7 @@ export const programPages: ProgramPage[] = [
       { src: "/images/muay-thai-gallery-3.jpg", alt: "Muay Thai gallery  3" }
     ],
     leadForm: {
-    title: "View Our Web Special & Access Our Schedule",
+    title: "Try a Free Class",
     intro:
       "Take the first step today, we will reach out to follow up with you",
     submitLabel: "Submit",
@@ -588,11 +607,11 @@ export const programPages: ProgramPage[] = [
   {
     slug: "chimpman-gi",
     seo: {
-      title: "ChimpanGi Drop Sign Up | Burning Tree MMA",
+      title: "ChimpmanGi Drop Sign Up | Burning Tree MMA",
       description:
-        "Join the Burning Tree MMA ChimpanGi drop list to hear when the next custom gi release becomes available.",
+        "Join the Burning Tree MMA ChimpmanGi drop list to hear when the next custom gi release becomes available.",
       keywords: [
-        "ChimpanGi",
+        "ChimpmanGi",
         "custom gi drop",
         "Burning Tree gi",
         "martial arts apparel"
@@ -618,9 +637,9 @@ export const programPages: ProgramPage[] = [
       ]
     },
     galleryImages: [
-      { src: "/images/chimpman-gi-gallery-1.jpg", alt: "ChimpanGi gallery  1" },
-      { src: "/images/chimpman-gi-gallery-2.jpg", alt: "ChimpanGi gallery  2" },
-      { src: "/images/chimpman-gi-gallery-3.jpg", alt: "ChimpanGi gallery  3" }
+      { src: "/images/chimpman-gi-gallery-1.jpg", alt: "ChimpmanGi gallery  1" },
+      { src: "/images/chimpman-gi-gallery-2.jpg", alt: "ChimpmanGi gallery  2" },
+      { src: "/images/chimpman-gi-gallery-3.jpg", alt: "ChimpmanGi gallery  3" }
     ],
     showTestimonials: false,
     leadForm: {

@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHero from "../components/PageHero.astro";
+import ClassSchedule from "../components/ClassSchedule.astro";
 import { homePage, homepagePrograms } from "../data/site";
 ---
 
@@ -15,8 +16,7 @@ import { homePage, homepagePrograms } from "../data/site";
   <section class="shell section-divider">
     <div class="section-heading">
       <div>
-        <p class="eyebrow">Our Programs</p>
-        <h2>One academy. Multiple ways to train, grow, and belong.</h2>
+        <h2>Our Programs</h2>
       </div>
     </div>
 
@@ -31,6 +31,8 @@ import { homePage, homepagePrograms } from "../data/site";
       ))}
     </div>
   </section>
+
+  <ClassSchedule ctaHref="#lead-form" />
 
   <section class="shell section-divider">
     <article class="detail-card narrative-section">
@@ -48,7 +50,7 @@ import { homePage, homepagePrograms } from "../data/site";
       </p>
     </article>
   </section>
-  
+
   <section class="shell section-divider">
     <div class="section-heading">
       <div>

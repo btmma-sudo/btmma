@@ -1,5 +1,6 @@
 ---
 import type { ProgramPage } from "../data/site";
+import ClassSchedule from "./ClassSchedule.astro";
 
 type Props = {
   program: ProgramPage;
@@ -65,6 +66,8 @@ const curriculumBlocks = program.curriculum.copy.split("\n\n");
     )}
   </div>
 </section>
+
+<ClassSchedule ctaHref="#lead-form" />
 
 <div class="gallery-lightbox" data-gallery-lightbox aria-hidden="true" aria-modal="true" role="dialog">
   <button class="gallery-lightbox-close" data-gallery-close aria-label="Close">&#10005;</button>

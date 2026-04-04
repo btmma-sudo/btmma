@@ -59,14 +59,12 @@ const schema = {
     latitude: site.latitude,
     longitude: site.longitude
   },
-  openingHoursSpecification: site.hours
-    .filter((entry) => entry.opens && entry.closes)
-    .map((entry) => ({
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: entry.days.map((day) => dayUrlMap[day as keyof typeof dayUrlMap]),
-      opens: entry.opens,
-      closes: entry.closes
-    })),
+  openingHoursSpecification: site.schemaHours.map((entry) => ({
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: entry.days.map((day) => dayUrlMap[day as keyof typeof dayUrlMap]),
+    opens: entry.opens,
+    closes: entry.closes
+  })),
   areaServed: {
     "@type": "AdministrativeArea",
     name: site.serviceArea
