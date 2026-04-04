@@ -445,7 +445,6 @@ button {
 .card-grid,
 .grid-two,
 .split-section,
-.gallery-grid,
 .footer-grid {
   display: grid;
   gap: 1rem;
@@ -546,7 +545,9 @@ button {
 }
 
 .gallery-grid {
+  display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
 }
 
 .gallery-card {
@@ -554,13 +555,108 @@ button {
   overflow: hidden;
   border: 1px solid var(--line);
   background: var(--surface);
+  cursor: pointer;
 }
 
 .gallery-card img {
   width: 100%;
-  aspect-ratio: 16 / 11;
+  height: max(240px, 18vw);
   object-fit: cover;
   display: block;
+  transition: opacity 0.15s;
+}
+
+.gallery-card:hover img {
+  opacity: 0.85;
+}
+
+.gallery-lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.92);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.gallery-lightbox.is-open {
+  display: flex;
+}
+
+.gallery-lightbox-figure {
+  margin: 0;
+  flex: 1;
+  max-width: min(900px, 90vw);
+}
+
+.gallery-lightbox-img {
+  width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+  display: block;
+}
+
+.gallery-lightbox-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border: none;
+  width: 2.2rem;
+  height: 2.2rem;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  z-index: 2;
+}
+
+.gallery-lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.gallery-dots {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.4rem;
+  z-index: 2;
+}
+
+.gallery-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  border: none;
+  padding: 0.55rem 0.8rem;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  z-index: 2;
+}
+
+.gallery-btn:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.gallery-btn-prev { left: 0.5rem; }
+.gallery-btn-next { right: 0.5rem; }
+
+.gallery-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.gallery-dot.is-active {
+  background: #fff;
 }
 
 
