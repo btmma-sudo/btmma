@@ -1,0 +1,9 @@
+{
+  "name": "btmmawebsite",
+  "compatibility_date": "2026-04-08",
+  "main": "./dist/_worker.js",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS"
+  }
+}
