@@ -1,7 +1,11 @@
-export async function onRequestPost(context) {
-  const { request, env } = context;
+export const prerender = false;
 
-  let formData;
+import type { APIRoute } from "astro";
+
+export const POST: APIRoute = async ({ request, locals }) => {
+  const env = (locals as any).runtime?.env ?? {};
+
+  let formData: FormData;
   try {
     formData = await request.formData();
   } catch {
@@ -13,17 +17,22 @@ export async function onRequestPost(context) {
     return json({ error: "Missing verification token. Please refresh and try again." }, 400);
   }
 
+  const secretKey = env.TURNSTILE_SECRET_KEY;
+  if (!secretKey) {
+    return json({ error: "Server configuration error. Please contact us directly." }, 500);
+  }
+
   // Verify token with Cloudflare Turnstile
   const verifyRes = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({
-      secret: env.TURNSTILE_SECRET_KEY,
-      response: token,
+      secret: secretKey,
+      response: String(token),
     }),
   });
 
-  const verifyData = await verifyRes.json();
+  const verifyData = await verifyRes.json() as { success: boolean };
 
   if (!verifyData.success) {
     return json({ error: "Verification failed. Please refresh and try again." }, 403);
@@ -44,9 +53,9 @@ export async function onRequestPost(context) {
   });
 
   return json({ success: true }, 200);
-}
+};
 
-function json(data, status) {
+function json(data: object, status: number) {
   return new Response(JSON.stringify(data), {
     status,
     headers: { "Content-Type": "application/json" },
