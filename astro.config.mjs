@@ -6,5 +6,7 @@ export default defineConfig({
   site: "https://www.burningtreemma.com",
   integrations: [sitemap()],
   output: "static",
-  adapter: cloudflare(),
+  adapter: cloudflare({
+    imageService: "compile",
+  }),
 });
