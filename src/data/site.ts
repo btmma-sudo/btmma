@@ -202,6 +202,13 @@ export const homepagePrograms: ProgramCard[] = [
       "The Art of Eight Limbs, The Path to Power and Precision."
   },
   {
+    eyebrow: "Health & Wellness",
+    title: "Health and Wellness",
+    href: "/health-and-wellness",
+    summary:
+      "A wellness track built around sustainable support, recovery, and clean, aligned living."
+  },
+  {
     eyebrow: "Events",
     title: "Birthday Parties",
     href: "/birthday-parties",
