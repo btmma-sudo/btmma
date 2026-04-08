@@ -131,7 +131,13 @@ const fields = config?.fields ?? "standard";
             body: encodedPayload.toString()
           });
 
-          const result = await response.json();
+          let result;
+          try {
+            result = await response.json();
+          } catch {
+            throw new Error("We could not submit the form right now. Please try again or contact us directly.");
+          }
+
           if (!response.ok || !result.success) {
             throw new Error(result.error || "Submission failed.");
           }
