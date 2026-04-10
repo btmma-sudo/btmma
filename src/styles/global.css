@@ -91,6 +91,8 @@ h3 {
   font-weight: 600;
   line-height: 1.05;
   text-transform: uppercase;
+  color: var(--accent);
+  -webkit-text-stroke: 1.5px #ffffff;
 }
 
 h1 {
