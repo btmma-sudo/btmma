@@ -46,7 +46,12 @@ export const POST: APIRoute = async ({ request, locals }) => {
     encodedPayload.set(key, String(value ?? ""));
   }
 
-  await fetch("https://hook.eu2.make.com/7gx96x2faucgmcessddi71c6znfii3ro", {
+  const webhookUrl = env.MAKE_WEBHOOK_URL;
+  if (!webhookUrl) {
+    return json({ error: "Server configuration error. Please contact us directly." }, 500);
+  }
+
+  await fetch(webhookUrl, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
     body: encodedPayload.toString(),

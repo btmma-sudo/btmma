@@ -87,7 +87,7 @@ h1,
 h2,
 h3 {
   margin: 0 0 0.5rem;
-  font-family: "Oswald", sans-serif;
+  font-family: "Black Ops One", cursive;
   font-weight: 600;
   line-height: 1.05;
   text-transform: uppercase;
@@ -182,7 +182,7 @@ button {
   background: linear-gradient(180deg, #c31313, #830606);
   display: grid;
   place-items: center;
-  font-family: "Oswald", sans-serif;
+  font-family: "Black Ops One", cursive;
   font-weight: 700;
   color: #fff;
 }
@@ -195,7 +195,7 @@ button {
   gap: 0.85rem 1rem;
   font-size: 0.78rem;
   font-weight: 600;
-  font-family: "Oswald", sans-serif;
+  font-family: "Black Ops One", cursive;
   letter-spacing: 0.02em;
   text-transform: uppercase;
   margin-left: auto;
@@ -255,7 +255,7 @@ button {
   background: var(--accent);
   color: #fff;
   font-weight: 700;
-  font-family: "Oswald", sans-serif;
+  font-family: "Black Ops One", cursive;
   text-transform: uppercase;
   letter-spacing: 0.03em;
   box-shadow: none;
@@ -531,7 +531,7 @@ button {
   padding: 0.75rem;
   border: 1px solid var(--line);
   background: var(--surface-soft);
-  font-family: "Oswald", sans-serif;
+  font-family: "Black Ops One", cursive;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -675,7 +675,7 @@ button {
 }
 
 .schedule-day-label {
-  font-family: "Oswald", sans-serif;
+  font-family: "Black Ops One", cursive;
   font-weight: 700;
   font-size: 1rem;
   letter-spacing: 0.06em;
@@ -930,7 +930,7 @@ button {
   padding: 0.45rem 0.75rem;
   border: 1px solid rgba(255, 255, 255, 0.18);
   background: rgba(212, 18, 18, 0.22);
-  font-family: "Oswald", sans-serif;
+  font-family: "Black Ops One", cursive;
   font-size: 0.8rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -1195,7 +1195,7 @@ iframe {
     padding: 0.9rem 1rem;
     border: 1px solid var(--line);
     background: var(--surface);
-    font-family: "Oswald", sans-serif;
+    font-family: "Black Ops One", cursive;
     font-size: 0.95rem;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -1215,7 +1215,7 @@ iframe {
     padding: 0.95rem 1rem;
     cursor: pointer;
     list-style: none;
-    font-family: "Oswald", sans-serif;
+    font-family: "Black Ops One", cursive;
     font-size: 1rem;
     letter-spacing: 0.05em;
     text-transform: uppercase;

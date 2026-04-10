@@ -24,8 +24,6 @@ const fields = config?.fields ?? "standard";
   <form
     class="lead-form-compact"
     method="post"
-    action={webhookPath || undefined}
-    data-webhook={webhookPath || "pending"}
     data-submit-label={submitLabel}
     data-lead-form>
     {fields === "emailOnly" ? (
