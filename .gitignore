@@ -3,3 +3,4 @@ dist/
 .astro/
 BTTIMGS/
 .claude/
+.dev.vars

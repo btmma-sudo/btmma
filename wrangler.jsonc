@@ -6,5 +6,8 @@
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS"
+  },
+  "vars": {
+    "MAKE_WEBHOOK_URL": "https://hook.eu2.make.com/7gx96x2faucgmcessddi71c6znfii3ro"
   }
 }
