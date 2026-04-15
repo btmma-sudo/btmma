@@ -8,6 +8,7 @@ export type NavItem = {
 export type HeroContent = {
   title: string;
   image: string;
+  imageAlt?: string;
   overlay?: "medium" | "strong";
 };
 
@@ -38,6 +39,7 @@ export type ProgramCard = {
   summary: string;
   eyebrow: string;
   image?: string;
+  imageAlt?: string;
 };
 
 export type ProgramPage = {
@@ -172,6 +174,7 @@ export const homepagePrograms: ProgramCard[] = [
     title: "Jr. Kenpo",
     href: "/kids-martial-arts",
     image: "/images/jr-kenpo-gallery-1.jpg",
+    imageAlt: "Two Jr. Kenpo students in black gis with yellow belts sitting with their instructor at a tournament",
     summary:
       "Fun, focused karate training that builds confidence, respect, and self-control."
   },
@@ -180,6 +183,7 @@ export const homepagePrograms: ProgramCard[] = [
     title: "Adult Karate",
     href: "/adult-martial-arts",
     image: "/images/adult-martial-arts-gallery-1.jpg",
+    imageAlt: "Two adult students in black gis practicing a grappling control technique together in the Burning Tree MMA gym",
     summary:
       "Traditional training and practical application with fitness, focus, and steady progression."
   },
@@ -188,6 +192,7 @@ export const homepagePrograms: ProgramCard[] = [
     title: "Kids Jiu-Jitsu",
     href: "/kids-jiu-jitsu",
     image: "/images/kids-jiu-jitsu-gallery-1.jpg",
+    imageAlt: "Two young children in black gis with orange belts shaking hands and smiling on the mat after drilling",
     summary:
       "Confidence and Problem-Solving from the Ground Up"
   },
@@ -196,6 +201,7 @@ export const homepagePrograms: ProgramCard[] = [
     title: "Adult BJJ",
     href: "/brazilian-jiu-jitsu",
     image: "/images/brazilian-jiu-jitsu-gallery-1.jpg",
+    imageAlt: "Two adult BJJ students in gis grappling on the ground during live training",
     summary:
       "Live grappling, sharper defense, and the patience and persistence only BJJ can teach."
   },
@@ -204,6 +210,7 @@ export const homepagePrograms: ProgramCard[] = [
     title: "Muay Thai",
     href: "/muay-thai",
     image: "/images/muay-thai-gallery-1.jpg",
+    imageAlt: "Two Muay Thai students in full protective gear practicing a kick technique during class",
     summary:
       "The Art of Eight Limbs, The Path to Power and Precision."
   },
@@ -212,6 +219,7 @@ export const homepagePrograms: ProgramCard[] = [
     title: "Health and Wellness",
     href: "/health-and-wellness",
     image: "/images/health-and-wellness-gallery-1.jpg",
+    imageAlt: "Burning Tree MMA wellness room with a massage table, massage chair, and artwork on the walls",
     summary:
       "A wellness track built around sustainable support, recovery, and clean, aligned living."
   },
@@ -220,6 +228,7 @@ export const homepagePrograms: ProgramCard[] = [
     title: "Birthday Parties",
     href: "/birthday-parties",
     image: "/images/birthday-parties-gallery-1.jpg",
+    imageAlt: "Instructor leading children in a foam sword activity at a martial arts birthday party",
     summary:
       "An unforgettable martial arts celebration full of fun, confidence, and movement."
   }
@@ -249,6 +258,7 @@ export const homePage: {
   hero: {
     title: "Burning Tree MMA: Keepers of the flame",
     image: "/images/adult-martial-arts-hero.jpg",
+    imageAlt: "Large group of Burning Tree MMA adult students and instructors posing together on the gym mat",
     overlay: "strong"
   },
   leadForm: {
@@ -277,6 +287,7 @@ export const aboutPage: SupportingPage & {
   hero: {
     title: "About Burning Tree MMA",
     image: "/images/about-hero.jpg",
+    imageAlt: "The Burning Tree MMA training mat with mirrors, awards, and gym equipment in the background",
     overlay: "medium"
   },
   leadForm: {
@@ -306,6 +317,7 @@ export const faqPage: SupportingPage & {
   hero: {
     title: "FAQ",
     image: "/images/faq-hero.jpg",
+    imageAlt: "BJJ students practicing a throwing technique during live grappling with an American flag in the background",
     overlay: "medium"
   },
   faqs: [
@@ -357,6 +369,7 @@ export const programPages: ProgramPage[] = [
     hero: {
       title: "Jr. Kenpo",
       image: "/images/jr-kenpo-hero.jpg",
+      imageAlt: "Jr. Kenpo class group photo with children in black gis and yellow belts alongside four instructors",
       overlay: "strong"
     },
     audience: "Kids",
@@ -374,9 +387,9 @@ export const programPages: ProgramPage[] = [
       ]
     },
     galleryImages: [
-      { src: "/images/jr-kenpo-gallery-1.jpg", alt: "Jr. Kenpo gallery 1" },
-      { src: "/images/jr-kenpo-gallery-2.jpg", alt: "Jr. Kenpo gallery 2" },
-      { src: "/images/jr-kenpo-gallery-3.jpg", alt: "Jr. Kenpo gallery 3" }
+      { src: "/images/jr-kenpo-gallery-1.jpg", alt: "Two Jr. Kenpo students in black gis with yellow belts sitting with their instructor at a tournament, all smiling" },
+      { src: "/images/jr-kenpo-gallery-2.jpg", alt: "A junior student practicing striking technique with a younger classmate in the Burning Tree MMA gym" },
+      { src: "/images/jr-kenpo-gallery-3.jpg", alt: "A young Jr. Kenpo student in a black gi with yellow belt proudly holding up two medals at the DC Youth Classics competition" }
     ],
     leadForm: {
     title: "Try a Free Class",
@@ -404,6 +417,7 @@ export const programPages: ProgramPage[] = [
     hero: {
       title:  "Adult Karate",
       image: "/images/home-hero.jpg",
+      imageAlt: "Two adult students practicing hand-blocking techniques face to face with other training pairs in the background",
       overlay: "strong"
     },
     audience: "Adults",
@@ -421,9 +435,9 @@ export const programPages: ProgramPage[] = [
       ]
     },
     galleryImages: [
-      { src: "/images/adult-martial-arts-gallery-1.jpg", alt: "Adult martial arts gallery  1" },
-      { src: "/images/adult-martial-arts-gallery-2.jpg", alt: "Adult martial arts gallery  2" },
-      { src: "/images/adult-martial-arts-gallery-3.jpg", alt: "Adult martial arts gallery  3" }
+      { src: "/images/adult-martial-arts-gallery-1.jpg", alt: "Two adult students in black gis practicing a grappling control technique together while the full class trains in the background" },
+      { src: "/images/adult-martial-arts-gallery-2.jpg", alt: "An instructor demonstrating a palm strike technique on a student during a martial arts seminar with a group of students watching" },
+      { src: "/images/adult-martial-arts-gallery-3.jpg", alt: "Two adult students practicing hand-blocking techniques face to face with multiple training pairs visible in the background" }
     ],
     leadForm: {
     title: "Try a Free Class",
@@ -450,6 +464,7 @@ export const programPages: ProgramPage[] = [
     hero: {
       title: "Kids Jiu-Jitsu",
       image: "/images/kids-jiu-jitsu-hero.jpg",
+      imageAlt: "Two young children in black gis with yellow belts sitting on the mat laughing together during Kids Jiu-Jitsu class",
       overlay: "strong"
     },
     audience: "Kids",
@@ -467,9 +482,9 @@ export const programPages: ProgramPage[] = [
       ]
     },
     galleryImages: [
-      { src: "/images/kids-jiu-jitsu-gallery-1.jpg", alt: "Kids jiu-jitsu gallery  1" },
-      { src: "/images/kids-jiu-jitsu-gallery-2.jpg", alt: "Kids jiu-jitsu gallery  2" },
-      { src: "/images/kids-jiu-jitsu-gallery-3.jpg", alt: "Kids jiu-jitsu gallery  3" }
+      { src: "/images/kids-jiu-jitsu-gallery-1.jpg", alt: "Two young children in black gis with orange belts sitting on the mat shaking hands and smiling after drilling" },
+      { src: "/images/kids-jiu-jitsu-gallery-2.jpg", alt: "A young girl in a black gi with yellow belt doing a push-up on the gym floor during jiu-jitsu class" },
+      { src: "/images/kids-jiu-jitsu-gallery-3.jpg", alt: "Kids jiu-jitsu class group photo with children in black gis holding achievement certificates alongside two instructors in front of the Burning Tree MMA logo" }
     ],
     leadForm: {
     title: "Try a Free Class",
@@ -497,6 +512,7 @@ export const programPages: ProgramPage[] = [
     hero: {
       title: "Adult BJJ",
       image: "/images/brazilian-jiu-jitsu-hero.jpg",
+      imageAlt: "Two BJJ practitioners drilling a no-gi leg entanglement technique on the mat in black and white",
       overlay: "strong"
     },
     audience: "Adults",
@@ -514,9 +530,9 @@ export const programPages: ProgramPage[] = [
       ]
     },
     galleryImages: [
-      { src: "/images/brazilian-jiu-jitsu-gallery-1.jpg", alt: "Brazilian jiu-jitsu gallery  1" },
-      { src: "/images/brazilian-jiu-jitsu-gallery-2.jpg", alt: "Brazilian jiu-jitsu gallery  2" },
-      { src: "/images/brazilian-jiu-jitsu-gallery-3.jpg", alt: "Brazilian jiu-jitsu gallery  3" }
+      { src: "/images/brazilian-jiu-jitsu-gallery-1.jpg", alt: "Two adult BJJ students in gis grappling in a top mount position on the mat, black and white photo" },
+      { src: "/images/brazilian-jiu-jitsu-gallery-2.jpg", alt: "Two adult students sparring on the mat during live BJJ rolling, one passing guard in a patterned gi" },
+      { src: "/images/brazilian-jiu-jitsu-gallery-3.jpg", alt: "Two BJJ practitioners drilling a leg entanglement technique on the mat with the Burning Tree MMA logo visible" }
     ],
     leadForm: {
     title: "Try a Free Class",
@@ -544,6 +560,7 @@ export const programPages: ProgramPage[] = [
     hero: {
       title: "Muay Thai",
       image: "/images/muay-thai-hero.jpg",
+      imageAlt: "The Burning Tree MMA training mat with a heavy bag, award displays, and mirrors along the walls",
       overlay: "strong"
     },
     audience: "Teens & Adults",
@@ -561,9 +578,9 @@ export const programPages: ProgramPage[] = [
       ]
     },
     galleryImages: [
-      { src: "/images/muay-thai-gallery-1.jpg", alt: "Muay Thai gallery  1" },
-      { src: "/images/muay-thai-gallery-2.jpg", alt: "Muay Thai gallery  2" },
-      { src: "/images/muay-thai-gallery-3.jpg", alt: "Muay Thai gallery  3" }
+      { src: "/images/muay-thai-gallery-1.jpg", alt: "Two Muay Thai students in full protective headgear and shin guards practicing a kick technique during class" },
+      { src: "/images/muay-thai-gallery-2.jpg", alt: "An instructor demonstrating a wrist control technique to students in the gym with framed awards on the wall" },
+      { src: "/images/muay-thai-gallery-3.jpg", alt: "Two men in black training clothes practicing a striking combination in the gym, black and white photo" }
     ],
     leadForm: {
     title: "Try a Free Class",
@@ -589,6 +606,7 @@ export const programPages: ProgramPage[] = [
     hero: {
       title: "Birthday Parties",
       image: "/images/birthday-parties-hero.jpg",
+      imageAlt: "Instructor presenting a certificate to a child at a martial arts birthday party while other kids watch seated on the mat",
       overlay: "medium"
     },
     audience: "Families",
@@ -606,9 +624,9 @@ export const programPages: ProgramPage[] = [
       ]
     },
     galleryImages: [
-      { src: "/images/birthday-parties-gallery-1.jpg", alt: "Birthday parties gallery  1" },
-      { src: "/images/birthday-parties-gallery-2.jpg", alt: "Birthday parties gallery  2" },
-      { src: "/images/birthday-parties-gallery-3.jpg", alt: "Birthday parties gallery  3" }
+      { src: "/images/birthday-parties-gallery-1.jpg", alt: "Instructor leading a group of children in a foam sword activity at a martial arts birthday party with a ninja-themed Happy Birthday banner" },
+      { src: "/images/birthday-parties-gallery-2.jpg", alt: "Instructor presenting a certificate to a child at a birthday party while other guests sit and watch on the mat" },
+      { src: "/images/birthday-parties-gallery-3.jpg", alt: "Instructor standing in a circle of seated children leading a birthday party activity in the Burning Tree MMA gym" }
     ],
     showTestimonials: false,
     leadForm: {
@@ -635,6 +653,7 @@ export const programPages: ProgramPage[] = [
     hero: {
       title: "Home of the best Gi",
       image: "/images/chimpman-gi-hero.jpg",
+      imageAlt: "BJJ practitioners in gis training a throwing technique during live grappling with an American flag in the background",
       overlay: "medium"
     },
     audience: "Students & Supporters",
@@ -652,9 +671,9 @@ export const programPages: ProgramPage[] = [
       ]
     },
     galleryImages: [
-      { src: "/images/chimpman-gi-gallery-1.jpg", alt: "ChimpmanGi gallery  1" },
-      { src: "/images/chimpman-gi-gallery-2.jpg", alt: "ChimpmanGi gallery  2" },
-      { src: "/images/chimpman-gi-gallery-3.jpg", alt: "ChimpmanGi gallery  3" }
+      { src: "/images/chimpman-gi-gallery-1.jpg", alt: "Close-up of a white BJJ gi sleeve featuring the embroidered ChimpanGi chimp mascot patch" },
+      { src: "/images/chimpman-gi-gallery-2.jpg", alt: "BJJ practitioners in gis training a throwing technique during live grappling with an American flag in the background" },
+      { src: "/images/chimpman-gi-gallery-3.jpg", alt: "Two adult BJJ students in gis grappling in a top mount position on the mat, black and white photo" }
     ],
     showTestimonials: false,
     leadForm: {
@@ -681,6 +700,7 @@ export const programPages: ProgramPage[] = [
     hero: {
       title: "Health and Wellness",
       image: "/images/health-and-wellness-hero.jpg",
+      imageAlt: "Wellness Room door with bamboo leaf stencil artwork and an Available digital sign",
       overlay: "medium"
     },
     audience: "Adults & Families",
@@ -699,9 +719,9 @@ export const programPages: ProgramPage[] = [
       ]
     },
     galleryImages: [
-      { src: "/images/health-and-wellness-gallery-1.jpg", alt: "Health and wellness gallery  1"},
-      { src: "/images/health-and-wellness-gallery-2.jpg", alt: "Health and wellness gallery  2"},
-      { src: "/images/health-and-wellness-gallery-3.jpg", alt: "Health and wellness gallery  3" }
+      { src: "/images/health-and-wellness-gallery-1.jpg", alt: "Wellness room interior with a massage table, massage chair, whiteboard, and artwork on the walls" },
+      { src: "/images/health-and-wellness-gallery-2.jpg", alt: "Display shelves of wellness and supplement products alongside Burning Tree MMA merchandise in the lobby" },
+      { src: "/images/health-and-wellness-gallery-3.jpg", alt: "Wellness Room door with bamboo leaf stencil artwork and an Available digital sign" }
     ],
     showTestimonials: false,
     leadForm: {

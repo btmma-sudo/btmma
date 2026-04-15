@@ -19,11 +19,11 @@ const overlayClass = hero.overlay === "medium" ? "hero-overlay-medium" : "hero-o
     overlayClass,
     large && "hero-large"
   ]}>
-  <div class="hero-media" aria-hidden="true">
+  <div class="hero-media">
     <img
       class="hero-image"
       src={hero.image}
-      alt=""
+      alt={hero.imageAlt ?? ""}
       width="1600"
       height="900"
       loading={large ? "eager" : undefined}

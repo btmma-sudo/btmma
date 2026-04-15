@@ -33,7 +33,7 @@ import { homePage, homepagePrograms } from "../data/site";
         <article class="program-card">
           {program.image && (
             <div class="program-card-image">
-              <img src={program.image} alt={program.title} loading="lazy" decoding="async" width="600" height="400" />
+              <img src={program.image} alt={program.imageAlt ?? program.title} loading="lazy" decoding="async" width="600" height="400" />
             </div>
           )}
           <div class="program-card-body">
