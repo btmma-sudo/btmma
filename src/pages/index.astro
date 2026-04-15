@@ -2,6 +2,8 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHero from "../components/PageHero.astro";
 import ClassSchedule from "../components/ClassSchedule.astro";
+import LeadForm from "../components/LeadForm.astro";
+import GalleryCarousel from "../components/GalleryCarousel.astro";
 import { homePage, homepagePrograms } from "../data/site";
 ---
 
@@ -11,7 +13,13 @@ import { homePage, homepagePrograms } from "../data/site";
   path="/"
   keywords={homePage.seo.keywords}
   image={homePage.hero.image}>
-  <PageHero hero={homePage.hero} leadForm={homePage.leadForm} large />
+  <div class="hero-form-layout">
+    <PageHero hero={homePage.hero} large />
+    <GalleryCarousel />
+    <div class="hero-form-float">
+      <LeadForm config={homePage.leadForm} />
+    </div>
+  </div>
 
   <section class="shell section-divider">
     <div class="section-heading">
@@ -23,10 +31,17 @@ import { homePage, homepagePrograms } from "../data/site";
     <div class="card-grid program-grid">
       {homepagePrograms.map((program) => (
         <article class="program-card">
-          <p class="eyebrow">{program.eyebrow}</p>
-          <h3>{program.title}</h3>
-          <p>{program.summary}</p>
-          <a class="button" href={program.href}>View Program</a>
+          {program.image && (
+            <div class="program-card-image">
+              <img src={program.image} alt={program.title} loading="lazy" decoding="async" width="600" height="400" />
+            </div>
+          )}
+          <div class="program-card-body">
+            <p class="eyebrow">{program.eyebrow}</p>
+            <h3>{program.title}</h3>
+            <p>{program.summary}</p>
+            <a class="button" href={program.href}>View Program</a>
+          </div>
         </article>
       ))}
     </div>

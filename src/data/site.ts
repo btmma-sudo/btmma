@@ -37,6 +37,7 @@ export type ProgramCard = {
   href: string;
   summary: string;
   eyebrow: string;
+  image?: string;
 };
 
 export type ProgramPage = {
@@ -170,6 +171,7 @@ export const homepagePrograms: ProgramCard[] = [
     eyebrow: "Jr. Kenpo",
     title: "Jr. Kenpo",
     href: "/kids-martial-arts",
+    image: "/images/jr-kenpo-gallery-1.jpg",
     summary:
       "Fun, focused karate training that builds confidence, respect, and self-control."
   },
@@ -177,6 +179,7 @@ export const homepagePrograms: ProgramCard[] = [
     eyebrow: "American Kenpo",
     title: "Adult Karate",
     href: "/adult-martial-arts",
+    image: "/images/adult-martial-arts-gallery-1.jpg",
     summary:
       "Traditional training and practical application with fitness, focus, and steady progression."
   },
@@ -184,6 +187,7 @@ export const homepagePrograms: ProgramCard[] = [
     eyebrow: "Kids Jiu-Jitsu",
     title: "Kids Jiu-Jitsu",
     href: "/kids-jiu-jitsu",
+    image: "/images/kids-jiu-jitsu-gallery-1.jpg",
     summary:
       "Confidence and Problem-Solving from the Ground Up"
   },
@@ -191,6 +195,7 @@ export const homepagePrograms: ProgramCard[] = [
     eyebrow: "Adult Jiu-Jitsu",
     title: "Adult BJJ",
     href: "/brazilian-jiu-jitsu",
+    image: "/images/brazilian-jiu-jitsu-gallery-1.jpg",
     summary:
       "Live grappling, sharper defense, and the patience and persistence only BJJ can teach."
   },
@@ -198,6 +203,7 @@ export const homepagePrograms: ProgramCard[] = [
     eyebrow: "Art of Eight Limbs",
     title: "Muay Thai",
     href: "/muay-thai",
+    image: "/images/muay-thai-gallery-1.jpg",
     summary:
       "The Art of Eight Limbs, The Path to Power and Precision."
   },
@@ -205,6 +211,7 @@ export const homepagePrograms: ProgramCard[] = [
     eyebrow: "Health & Wellness",
     title: "Health and Wellness",
     href: "/health-and-wellness",
+    image: "/images/health-and-wellness-gallery-1.jpg",
     summary:
       "A wellness track built around sustainable support, recovery, and clean, aligned living."
   },
@@ -212,6 +219,7 @@ export const homepagePrograms: ProgramCard[] = [
     eyebrow: "Events",
     title: "Birthday Parties",
     href: "/birthday-parties",
+    image: "/images/birthday-parties-gallery-1.jpg",
     summary:
       "An unforgettable martial arts celebration full of fun, confidence, and movement."
   }
@@ -240,7 +248,7 @@ export const homePage: {
   },
   hero: {
     title: "Burning Tree MMA: Keepers of the flame",
-    image: "/images/home-hero.jpg",
+    image: "/images/adult-martial-arts-hero.jpg",
     overlay: "strong"
   },
   leadForm: {
@@ -395,7 +403,7 @@ export const programPages: ProgramPage[] = [
     },
     hero: {
       title:  "Adult Karate",
-      image: "/images/adult-martial-arts-hero.jpg",
+      image: "/images/home-hero.jpg",
       overlay: "strong"
     },
     audience: "Adults",

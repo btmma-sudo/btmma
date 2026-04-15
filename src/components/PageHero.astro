@@ -30,9 +30,12 @@ const overlayClass = hero.overlay === "medium" ? "hero-overlay-medium" : "hero-o
       decoding="async"
       fetchpriority={large ? "high" : "auto"} />
   </div>
-  <div class="shell hero-shell hero-with-form">
+  <div class:list={["shell", "hero-shell", leadForm && "hero-with-form"]}>
     <div class="hero-content">
       <h1>{hero.title}</h1>
+      {!leadForm && (
+        <a class="button hero-mobile-cta" href="#lead-form">Try a Free Class</a>
+      )}
     </div>
     {leadForm && (
       <div class="hero-lead-form">
