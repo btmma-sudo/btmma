@@ -28,7 +28,7 @@ const isChimpmanGi = program.slug === "chimpman-gi";
     <ChimpmanGiPage program={program} />
   ) : (
     <>
-      <div class="hero-form-layout">
+      <div class="hero-form-layout hero-form-layout--program">
         <PageHero hero={program.hero} />
         <div class="hero-form-float hero-form-float--program">
           <LeadForm config={program.leadForm} />

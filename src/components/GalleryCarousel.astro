@@ -12,32 +12,20 @@ const images = [
   "/images/Gallery/gallery10.jpeg",
   "/images/Gallery/gallery11.jpeg",
 ];
+
+// Duplicate the list so the second copy seamlessly replaces the first
+const doubled = [...images, ...images];
 ---
 
-<div class="carousel" data-carousel>
-  {images.map((src, i) => (
-    <img
-      src={src}
-      alt=""
-      class:list={["carousel-slide", i === 0 && "is-active"]}
-      loading={i === 0 ? "eager" : "lazy"}
-      decoding="async"
-      width="1600"
-      height="900"
-    />
-  ))}
+<div class="carousel" aria-hidden="true">
+  <div class="carousel-track">
+    {doubled.map((src, i) => (
+      <img
+        src={src}
+        alt=""
+        loading={i < images.length ? "eager" : "lazy"}
+        decoding="async"
+      />
+    ))}
+  </div>
 </div>
-
-<script is:inline>
-  (function () {
-    var carousel = document.querySelector("[data-carousel]");
-    if (!carousel) return;
-    var slides = Array.prototype.slice.call(carousel.querySelectorAll(".carousel-slide"));
-    var current = 0;
-    setInterval(function () {
-      slides[current].classList.remove("is-active");
-      current = (current + 1) % slides.length;
-      slides[current].classList.add("is-active");
-    }, 4000);
-  })();
-</script>

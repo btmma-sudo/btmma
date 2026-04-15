@@ -290,12 +290,6 @@ button {
   z-index: 0;
 }
 
-.hero-media::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.24), rgba(0, 0, 0, 0.9));
-}
 
 .hero-image {
   width: 100%;
@@ -391,31 +385,42 @@ button {
   -webkit-text-stroke: 0;
   border-radius: 0;
   font-size: clamp(2rem, 5vw, 3.6rem);
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.9),
+    0 4px 12px rgba(0, 0, 0, 0.7),
+    0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
-/* Auto-cycling gallery carousel */
+/* Rolling banner gallery carousel */
 .carousel {
-  position: relative;
   width: 100%;
-  height: clamp(240px, 38vw, 500px);
   overflow: hidden;
   background: #111;
+  padding: 6px 0;
 }
 
-.carousel-slide {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  opacity: 0;
-  transition: opacity 1.2s ease;
+.carousel-track {
+  display: flex;
+  gap: 8px;
+  width: max-content;
+  animation: carousel-scroll 80s linear infinite;
 }
 
-.carousel-slide.is-active {
-  opacity: 1;
+.carousel:hover .carousel-track {
+  animation-play-state: paused;
+}
+
+.carousel-track img {
+  height: clamp(180px, 28vw, 340px);
+  width: auto;
+  flex-shrink: 0;
+  display: block;
+  border-radius: 2px;
+}
+
+@keyframes carousel-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 /* Hero + detached form layout (homepage) */
@@ -438,7 +443,11 @@ button {
   }
 
   .hero-form-float--program {
-    top: 5rem;
+    top: 2rem;
+  }
+
+  .hero-form-layout--program {
+    padding-bottom: 5rem;
   }
 }
 
