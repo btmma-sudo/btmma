@@ -695,7 +695,8 @@ button {
 
 .gallery-card img {
   width: 100%;
-  height: max(240px, 18vw);
+  aspect-ratio: 4 / 3;
+  height: auto;
   object-fit: cover;
   display: block;
   transition: opacity 0.15s;
