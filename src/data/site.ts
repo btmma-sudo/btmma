@@ -59,6 +59,9 @@ export type ProgramPage = {
   leadForm: LeadFormConfig;
   accentTheme?: ThemeName;
   showTestimonials?: boolean;
+  showSchedule?: boolean;
+  showLeadForm?: boolean;
+  mobileCta?: string;
 };
 
 export type SupportingPage = {
@@ -629,6 +632,8 @@ export const programPages: ProgramPage[] = [
       { src: "/images/birthday-parties-gallery-3.jpg", alt: "Instructor standing in a circle of seated children leading a birthday party activity in the Burning Tree MMA gym" }
     ],
     showTestimonials: false,
+    showSchedule: false,
+    mobileCta: "Contact Us",
     leadForm: {
       title: "Ask About Birthday Parties",
       intro:
@@ -700,7 +705,7 @@ export const programPages: ProgramPage[] = [
     hero: {
       title: "Health and Wellness",
       image: "/images/health-and-wellness-hero.jpg",
-      imageAlt: "Wellness Room door with bamboo leaf stencil artwork and an Available digital sign",
+      imageAlt: "Wellness room interior with a massage table, massage chair, whiteboard, and artwork on the walls",
       overlay: "medium"
     },
     audience: "Adults & Families",
@@ -724,6 +729,8 @@ export const programPages: ProgramPage[] = [
       { src: "/images/health-and-wellness-gallery-3.jpg", alt: "Wellness Room door with bamboo leaf stencil artwork and an Available digital sign" }
     ],
     showTestimonials: false,
+    showSchedule: false,
+    showLeadForm: false,
     leadForm: {
       title: "Ask About Wellness Services",
       intro:
@@ -734,3 +741,12 @@ export const programPages: ProgramPage[] = [
     accentTheme: "wellness"
   }
 ];
+
+export const wellnessBooking = {
+  // Price per 45-minute session — update this to change the displayed price
+  price: 120,
+  services: ["Reiki", "Massage", "Acupuncture"] as const,
+  sessionDurationMinutes: 45,
+  // Add additional recipient emails to this array as needed
+  notificationEmails: ["kaleielendale@gmail.com"],
+};

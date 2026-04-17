@@ -4,6 +4,7 @@ import PageHero from "../components/PageHero.astro";
 import ProgramDetail from "../components/ProgramDetail.astro";
 import ChimpmanGiPage from "../components/ChimpmanGiPage.astro";
 import LeadForm from "../components/LeadForm.astro";
+import WellnessBooking from "../components/WellnessBooking.astro";
 import { programPages } from "../data/site";
 
 export function getStaticPaths() {
@@ -15,6 +16,8 @@ export function getStaticPaths() {
 
 const { program } = Astro.props;
 const isChimpmanGi = program.slug === "chimpman-gi";
+const isWellness   = program.slug === "health-and-wellness";
+const showLeadForm = program.showLeadForm !== false;
 ---
 
 <BaseLayout
@@ -29,12 +32,15 @@ const isChimpmanGi = program.slug === "chimpman-gi";
   ) : (
     <>
       <div class="hero-form-layout hero-form-layout--program">
-        <PageHero hero={program.hero} />
-        <div class="hero-form-float hero-form-float--program">
-          <LeadForm config={program.leadForm} />
-        </div>
+        <PageHero hero={program.hero} showMobileCta={showLeadForm} ctaLabel={program.mobileCta} />
+        {showLeadForm && (
+          <div class="hero-form-float hero-form-float--program">
+            <LeadForm config={program.leadForm} />
+          </div>
+        )}
       </div>
       <ProgramDetail program={program} />
+      {isWellness && <WellnessBooking />}
     </>
   )}
 </BaseLayout>

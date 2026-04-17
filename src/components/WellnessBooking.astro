@@ -1,0 +1,545 @@
+---
+import { wellnessBooking } from "../data/site";
+const { price, services } = wellnessBooking;
+---
+
+<section class="wb-section shell section-divider">
+  <div class="wb-container">
+
+    <div class="wb-intro">
+      <h2>Book a Session</h2>
+      <p class="wb-subtitle">45-minute sessions &middot; <strong class="wb-price-tag">${price}</strong></p>
+    </div>
+
+    <!-- Config passed to client script -->
+    <script type="application/json" id="wb-config" set:html={JSON.stringify({ price, services })}></script>
+
+    <!-- Step 1: Calendar -->
+    <div class="wb-card" id="wb-calendar">
+      <div class="wb-cal-header">
+        <button class="wb-nav-btn" id="wb-prev" type="button" aria-label="Previous month">&#8592;</button>
+        <span class="wb-month-title" id="wb-month-title"></span>
+        <button class="wb-nav-btn" id="wb-next" type="button" aria-label="Next month">&#8594;</button>
+      </div>
+      <div class="wb-weekdays" aria-hidden="true">
+        <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+      </div>
+      <div class="wb-days" id="wb-days"></div>
+      <p class="wb-hint">Select an available date to see open time slots.</p>
+    </div>
+
+    <!-- Step 2: Time slots (revealed after date pick) -->
+    <div class="wb-card" id="wb-slots-wrap" hidden>
+      <p class="wb-section-label" id="wb-date-label"></p>
+      <div class="wb-slots" id="wb-slots"></div>
+    </div>
+
+    <!-- Step 3: Booking form (revealed after slot pick) -->
+    <div class="wb-card" id="wb-form-wrap" hidden>
+      <p class="wb-booking-summary" id="wb-booking-summary"></p>
+      <form class="wb-form" id="wb-form" novalidate>
+        <div class="wb-field">
+          <label class="wb-label" for="wb-service">Service</label>
+          <select class="wb-input" id="wb-service" name="service" required></select>
+        </div>
+        <div class="wb-field">
+          <label class="wb-label" for="wb-name">Full Name</label>
+          <input class="wb-input" id="wb-name" name="name" type="text" placeholder="Your full name" required />
+        </div>
+        <div class="wb-field">
+          <label class="wb-label" for="wb-email">Email</label>
+          <input class="wb-input" id="wb-email" name="email" type="email" placeholder="your@email.com" required />
+        </div>
+        <div class="wb-field">
+          <label class="wb-label" for="wb-phone">Phone</label>
+          <input class="wb-input" id="wb-phone" name="phone" type="tel" placeholder="(555) 000-0000" required />
+        </div>
+        <p class="wb-error" id="wb-error" hidden></p>
+        <button class="button wb-submit" id="wb-submit" type="submit"></button>
+      </form>
+    </div>
+
+    <!-- Step 4: Success -->
+    <div class="wb-card wb-success-card" id="wb-success" hidden>
+      <div class="wb-success-check">&#10003;</div>
+      <h3>Booking Confirmed!</h3>
+      <p id="wb-success-msg"></p>
+      <button class="button wb-again-btn" id="wb-again" type="button">Book Another Session</button>
+    </div>
+
+  </div>
+</section>
+
+<script is:inline>
+(function () {
+  var configEl = document.getElementById('wb-config');
+  if (!configEl) return;
+  var cfg = JSON.parse(configEl.textContent || '{}');
+  var PRICE = cfg.price || 120;
+  var SERVICES = cfg.services || ['Reiki', 'Massage', 'Acupuncture'];
+  var MIN_DAYS = 3;
+  var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  var curYear, curMonth, selDate = null, selTime = null;
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function minDate() {
+    var d = new Date();
+    d.setDate(d.getDate() + MIN_DAYS);
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }
+
+  function isAvailable(date) {
+    var d = new Date(date);
+    d.setHours(0, 0, 0, 0);
+    var dow = d.getDay();
+    return d >= minDate() && dow !== 0;
+  }
+
+  function slots(dateStr) {
+    var dow = new Date(dateStr + 'T00:00:00').getDay();
+    if (dow === 0) return [];
+    var list = [], endMin = dow === 6 ? 660 : 1020, t = 540;
+    while (t + 45 <= endMin) {
+      list.push(pad(Math.floor(t / 60)) + ':' + pad(t % 60));
+      t += 45;
+    }
+    return list;
+  }
+
+  function fmtTime(t) {
+    var p = t.split(':'), h = parseInt(p[0]), m = p[1];
+    return (h > 12 ? h - 12 : h || 12) + ':' + m + ' ' + (h >= 12 ? 'PM' : 'AM');
+  }
+
+  function fmtDate(ds, opts) {
+    return new Date(ds + 'T00:00:00').toLocaleDateString('en-US', opts || { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+  }
+
+  function renderCal() {
+    var title = document.getElementById('wb-month-title');
+    var grid  = document.getElementById('wb-days');
+    if (!title || !grid) return;
+    title.textContent = MONTHS[curMonth] + ' ' + curYear;
+    grid.innerHTML = '';
+    var first = new Date(curYear, curMonth, 1).getDay();
+    var total = new Date(curYear, curMonth + 1, 0).getDate();
+    for (var i = 0; i < first; i++) {
+      var e = document.createElement('div');
+      e.className = 'wb-day wb-day-empty';
+      grid.appendChild(e);
+    }
+    for (var d = 1; d <= total; d++) {
+      var date = new Date(curYear, curMonth, d);
+      var ds   = curYear + '-' + pad(curMonth + 1) + '-' + pad(d);
+      var btn  = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = d;
+      if (isAvailable(date)) {
+        btn.className = 'wb-day wb-day-avail' + (ds === selDate ? ' wb-day-sel' : '');
+        (function (s) { btn.addEventListener('click', function () { pickDate(s); }); })(ds);
+      } else {
+        btn.className = 'wb-day wb-day-off';
+        btn.disabled = true;
+      }
+      grid.appendChild(btn);
+    }
+  }
+
+  function pickDate(ds) {
+    selDate = ds;
+    selTime = null;
+    renderCal();
+    var wrap  = document.getElementById('wb-slots-wrap');
+    var grid  = document.getElementById('wb-slots');
+    var label = document.getElementById('wb-date-label');
+    var fwrap = document.getElementById('wb-form-wrap');
+    if (!wrap || !grid || !label || !fwrap) return;
+    label.textContent = fmtDate(ds);
+    grid.innerHTML = '<p class="wb-loading">Checking availability\u2026</p>';
+    wrap.hidden = false;
+    fwrap.hidden = true;
+    fetch('/api/wellness/slots?date=' + ds)
+      .then(function (r) { return r.json(); })
+      .then(function (data) { renderSlots(ds, data.bookedSlots || []); })
+      .catch(function () { renderSlots(ds, []); });
+  }
+
+  function renderSlots(ds, booked) {
+    var grid = document.getElementById('wb-slots');
+    if (!grid) return;
+    grid.innerHTML = '';
+    var all = slots(ds);
+    if (!all.length) {
+      grid.innerHTML = '<p class="wb-loading">No slots available this day.</p>';
+      return;
+    }
+    all.forEach(function (t) {
+      var taken = booked.indexOf(t) !== -1;
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = fmtTime(t);
+      if (taken) {
+        btn.className = 'wb-slot wb-slot-taken';
+        btn.disabled = true;
+      } else {
+        btn.className = 'wb-slot wb-slot-open' + (t === selTime ? ' wb-slot-sel' : '');
+        (function (time, el) {
+          el.addEventListener('click', function () { pickSlot(time, el); });
+        })(t, btn);
+      }
+      grid.appendChild(btn);
+    });
+  }
+
+  function pickSlot(time, el) {
+    selTime = time;
+    document.querySelectorAll('.wb-slot').forEach(function (b) { b.classList.remove('wb-slot-sel'); });
+    el.classList.add('wb-slot-sel');
+    var fw   = document.getElementById('wb-form-wrap');
+    var summ = document.getElementById('wb-booking-summary');
+    var sub  = document.getElementById('wb-submit');
+    if (!fw || !summ || !sub) return;
+    summ.textContent = fmtDate(selDate, { weekday:'long', month:'long', day:'numeric' }) + ' \u00b7 ' + fmtTime(time) + ' \u00b7 45 min';
+    sub.textContent  = 'Book for $' + PRICE;
+    fw.hidden = false;
+    fw.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    var sub = document.getElementById('wb-submit');
+    var err = document.getElementById('wb-error');
+    var svc = document.getElementById('wb-service');
+    var nm  = document.getElementById('wb-name');
+    var em  = document.getElementById('wb-email');
+    var ph  = document.getElementById('wb-phone');
+    if (!sub || !err || !svc || !nm || !em || !ph) return;
+    err.hidden = true;
+    var data = {
+      date: selDate, time: selTime,
+      service: svc.value, name: nm.value.trim(),
+      email: em.value.trim(), phone: ph.value.trim()
+    };
+    sub.textContent = 'Booking\u2026';
+    sub.disabled = true;
+    fetch('/api/wellness/book', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, body: d }; }); })
+      .then(function (res) {
+        if (res.ok) {
+          document.getElementById('wb-calendar').style.display = 'none';
+          document.getElementById('wb-slots-wrap').hidden = true;
+          document.getElementById('wb-form-wrap').hidden  = true;
+          var s = document.getElementById('wb-success');
+          s.hidden = false;
+          document.getElementById('wb-success-msg').innerHTML =
+            'Your <strong>' + data.service + '</strong> session is booked for <strong>' +
+            fmtDate(data.date, { weekday:'long', month:'long', day:'numeric' }) + '</strong> at <strong>' +
+            fmtTime(data.time) + '</strong>.<br><small>A confirmation was sent to ' + data.email + '</small>';
+        } else {
+          err.textContent = res.body.error || 'Booking failed. Please try again.';
+          err.hidden = false;
+          sub.textContent = 'Book for $' + PRICE;
+          sub.disabled = false;
+        }
+      })
+      .catch(function () {
+        err.textContent = 'Something went wrong. Please try again.';
+        err.hidden = false;
+        sub.textContent = 'Book for $' + PRICE;
+        sub.disabled = false;
+      });
+  }
+
+  function init() {
+    var today = new Date();
+    curYear  = today.getFullYear();
+    curMonth = today.getMonth();
+
+    // Populate service select
+    var sel = document.getElementById('wb-service');
+    if (sel) SERVICES.forEach(function (s) {
+      var o = document.createElement('option');
+      o.value = s; o.textContent = s;
+      sel.appendChild(o);
+    });
+
+    renderCal();
+
+    var prev = document.getElementById('wb-prev');
+    var next = document.getElementById('wb-next');
+    var form = document.getElementById('wb-form');
+    var again = document.getElementById('wb-again');
+
+    if (prev) prev.addEventListener('click', function () {
+      if (--curMonth < 0) { curMonth = 11; curYear--; }
+      renderCal();
+    });
+    if (next) next.addEventListener('click', function () {
+      if (++curMonth > 11) { curMonth = 0; curYear++; }
+      renderCal();
+    });
+    if (form) form.addEventListener('submit', handleSubmit);
+    if (again) again.addEventListener('click', function () {
+      selDate = selTime = null;
+      document.getElementById('wb-calendar').style.display = '';
+      document.getElementById('wb-slots-wrap').hidden = true;
+      document.getElementById('wb-form-wrap').hidden  = true;
+      document.getElementById('wb-success').hidden    = true;
+      renderCal();
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+<style>
+  .wb-section { padding: 3rem 0 4rem; }
+
+  .wb-container {
+    max-width: 640px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .wb-intro { text-align: center; }
+  .wb-intro h2 { margin-bottom: 0.35rem; }
+  .wb-subtitle { color: var(--muted); font-size: 1rem; margin: 0; }
+  .wb-price-tag { color: var(--accent-soft); }
+
+  /* Card wrapper */
+  .wb-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 1.5rem;
+  }
+
+  /* Calendar header */
+  .wb-cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+  }
+
+  .wb-month-title {
+    font-family: "Black Ops One", cursive;
+    font-size: 1.05rem;
+    color: var(--accent-soft);
+    letter-spacing: 0.03em;
+  }
+
+  .wb-nav-btn {
+    background: none;
+    border: 1px solid var(--line);
+    color: var(--text);
+    cursor: pointer;
+    padding: 0.3rem 0.7rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .wb-nav-btn:hover {
+    background: var(--surface-strong);
+    border-color: var(--accent-soft);
+  }
+
+  /* Weekday headers */
+  .wb-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+    margin-bottom: 0.4rem;
+    text-align: center;
+  }
+  .wb-weekdays span {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--muted);
+    padding: 0.2rem 0;
+  }
+
+  /* Days grid */
+  .wb-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+  }
+
+  .wb-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    background: none;
+    color: var(--text);
+    transition: background 0.12s, border-color 0.12s, color 0.12s;
+  }
+  .wb-day-empty { pointer-events: none; }
+  .wb-day-off   { color: #3a3a3a; cursor: not-allowed; }
+  .wb-day-avail:hover {
+    background: var(--surface-strong);
+    border-color: var(--accent-soft);
+    color: var(--accent-soft);
+  }
+  .wb-day-sel {
+    background: var(--accent) !important;
+    border-color: var(--accent) !important;
+    color: #fff !important;
+  }
+
+  .wb-hint {
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-align: center;
+    margin: 1rem 0 0;
+  }
+
+  /* Slots */
+  .wb-section-label {
+    font-family: "Black Ops One", cursive;
+    font-size: 0.95rem;
+    color: var(--accent-soft);
+    letter-spacing: 0.03em;
+    margin: 0 0 1rem;
+  }
+
+  .wb-loading {
+    color: var(--muted);
+    font-size: 0.88rem;
+    margin: 0;
+  }
+
+  .wb-slots {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+    gap: 8px;
+  }
+
+  .wb-slot {
+    padding: 0.55rem 0.4rem;
+    font-size: 0.83rem;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-align: center;
+    background: none;
+    transition: all 0.12s;
+    font-family: inherit;
+  }
+  .wb-slot-open {
+    border-color: var(--accent);
+    color: var(--accent-soft);
+  }
+  .wb-slot-open:hover,
+  .wb-slot-sel {
+    background: var(--accent) !important;
+    border-color: var(--accent) !important;
+    color: #fff !important;
+  }
+  .wb-slot-taken {
+    border-color: #2a2a2a;
+    color: #3d3d3d;
+    cursor: not-allowed;
+    text-decoration: line-through;
+  }
+
+  /* Booking form */
+  .wb-booking-summary {
+    font-family: "Black Ops One", cursive;
+    font-size: 0.9rem;
+    color: var(--accent-soft);
+    letter-spacing: 0.03em;
+    margin: 0 0 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .wb-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .wb-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .wb-label {
+    font-size: 0.73rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--muted);
+  }
+
+  .wb-input {
+    background: var(--surface-strong);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    color: var(--text);
+    padding: 0.6rem 0.8rem;
+    font-size: 0.93rem;
+    font-family: inherit;
+    width: 100%;
+    transition: border-color 0.15s;
+    appearance: auto;
+  }
+  .wb-input:focus {
+    outline: none;
+    border-color: var(--accent-soft);
+  }
+  .wb-input option { background: var(--surface-strong); }
+
+  .wb-submit {
+    background: var(--accent);
+    border-color: var(--accent);
+    margin-top: 0.25rem;
+    width: 100%;
+  }
+  .wb-submit:hover:not(:disabled) { background: #006060; border-color: #006060; }
+  .wb-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  .wb-error {
+    color: #f87171;
+    font-size: 0.88rem;
+    margin: 0;
+  }
+
+  /* Success */
+  .wb-success-card { text-align: center; border-color: var(--accent); }
+  .wb-success-check {
+    font-size: 2.5rem;
+    color: var(--accent-soft);
+    margin-bottom: 0.5rem;
+  }
+  .wb-success-card h3 { color: var(--accent-soft); margin-bottom: 0.75rem; }
+  .wb-success-card p  { color: var(--muted); line-height: 1.7; margin-bottom: 1.5rem; }
+  .wb-success-card small { font-size: 0.82rem; color: #666; }
+  .wb-again-btn {
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent-soft);
+  }
+  .wb-again-btn:hover { background: var(--accent); color: #fff; }
+</style>
