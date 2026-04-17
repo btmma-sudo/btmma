@@ -187,7 +187,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: "Burning Tree MMA <onboarding@resend.dev>",
+          from: "Burning Tree MMA <noreply@burningtreemma.com>",
           to: wellnessBooking.notificationEmails,
           subject: `New ${service} Booking – ${formatDateTime(date, time)}`,
           html: ownerEmail(bookingData),
@@ -201,7 +201,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: "Burning Tree MMA <onboarding@resend.dev>",
+          from: "Burning Tree MMA <noreply@burningtreemma.com>",
           to: [email],
           subject: `Your ${service} Appointment – Burning Tree MMA`,
           html: customerEmail({ service, date, time, name }),

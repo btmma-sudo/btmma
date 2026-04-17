@@ -203,7 +203,7 @@ const { price, services } = wellnessBooking;
     var sub  = document.getElementById('wb-submit');
     if (!fw || !summ || !sub) return;
     summ.textContent = fmtDate(selDate, { weekday:'long', month:'long', day:'numeric' }) + ' \u00b7 ' + fmtTime(time) + ' \u00b7 45 min';
-    sub.textContent  = 'Book for $' + PRICE;
+    sub.textContent  = 'Book';
     fw.hidden = false;
     fw.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
@@ -245,14 +245,14 @@ const { price, services } = wellnessBooking;
         } else {
           err.textContent = res.body.error || 'Booking failed. Please try again.';
           err.hidden = false;
-          sub.textContent = 'Book for $' + PRICE;
+          sub.textContent = 'Book';
           sub.disabled = false;
         }
       })
       .catch(function () {
         err.textContent = 'Something went wrong. Please try again.';
         err.hidden = false;
-        sub.textContent = 'Book for $' + PRICE;
+        sub.textContent = 'Book';
         sub.disabled = false;
       });
   }
