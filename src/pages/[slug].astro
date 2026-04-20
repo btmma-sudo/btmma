@@ -15,9 +15,11 @@ export function getStaticPaths() {
 }
 
 const { program } = Astro.props;
-const isChimpmanGi = program.slug === "chimpman-gi";
-const isWellness   = program.slug === "health-and-wellness";
-const showLeadForm = program.showLeadForm !== false;
+const isChimpmanGi  = program.slug === "chimpman-gi";
+const isWellness    = program.slug === "health-and-wellness";
+const isBirthday    = program.slug === "birthday-parties";
+const showLeadForm  = program.showLeadForm !== false;
+const centerContent = !isWellness && !isBirthday;
 ---
 
 <BaseLayout
@@ -32,7 +34,7 @@ const showLeadForm = program.showLeadForm !== false;
   ) : (
     <>
       <div class="hero-form-layout hero-form-layout--program">
-        <PageHero hero={program.hero} showMobileCta={showLeadForm} ctaLabel={program.mobileCta} />
+        <PageHero hero={program.hero} showMobileCta={showLeadForm} ctaLabel={program.mobileCta} centerMobile={isWellness} centerContent={centerContent} />
         {showLeadForm && (
           <div class="hero-form-float hero-form-float--program">
             <LeadForm config={program.leadForm} />

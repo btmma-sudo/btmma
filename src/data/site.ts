@@ -42,6 +42,14 @@ export type ProgramCard = {
   imageAlt?: string;
 };
 
+export type SeoCopy = {
+  tagline: string;
+  intro: string;
+  bulletHeading: string;
+  bullets: string[];
+  closing: string;
+};
+
 export type ProgramPage = {
   slug: string;
   seo: SEOData;
@@ -62,6 +70,7 @@ export type ProgramPage = {
   showSchedule?: boolean;
   showLeadForm?: boolean;
   mobileCta?: string;
+  seoCopy?: SeoCopy;
 };
 
 export type SupportingPage = {
@@ -400,6 +409,19 @@ export const programPages: ProgramPage[] = [
       "Take the first step today, we will reach out to follow up with you",
     submitLabel: "Submit",
     defaultProgram: "Kids Classes"
+  },
+  seoCopy: {
+    tagline: "Your Kid Will Be Different After 30 Days. In the Best Way.",
+    intro: "Jr. Kenpo is not babysitting with kicks. It is a structured martial arts program that builds real skills, real discipline, and real confidence in kids who are still figuring out who they are.",
+    bulletHeading: "What they gain on the mat:",
+    bullets: [
+      "Self-defense awareness they can actually use",
+      "Focus and discipline that carries into school",
+      "Confidence to stand up for themselves without aggression",
+      "Belt rank progression that teaches goal-setting and follow-through",
+      "A positive community of peers and coaches who hold them accountable"
+    ],
+    closing: "Most parents sign up for the self-defense. They stay because their kid stopped backing down from hard things. Bully prevention is built into everything we teach. Kids who train in martial arts carry themselves differently. That confidence is the real deterrent."
   }
   },
   {
@@ -448,6 +470,19 @@ export const programPages: ProgramPage[] = [
       "Take the first step today, we will reach out to follow up with you",
     submitLabel: "Submit",
     defaultProgram: "Adults Classes"
+  },
+  seoCopy: {
+    tagline: "You Do Not Need to Be Fit to Start. You Will Be Fit Because You Started.",
+    intro: "Adult Karate at Burning Tree MMA is the program for people who want a real challenge, a transferable skill, and a reason to show up consistently.",
+    bulletHeading: "What you build in this program:",
+    bullets: [
+      "Practical self-defense skills rooted in American Kenpo",
+      "Full-body strength and conditioning through technique-driven training",
+      "Stress relief that actually works",
+      "Accountability through belt rank progression and coaching",
+      "Weight loss and fitness results without the monotony of a standard gym"
+    ],
+    closing: "Complete beginners. People returning after years off. Adults who are bored with the gym and want something that demands more from them. The community here trains with purpose."
   }
   },
   {
@@ -495,6 +530,19 @@ export const programPages: ProgramPage[] = [
       "Take the first step today, we will reach out to follow up with you",
     submitLabel: "Submit",
     defaultProgram: "Kids Classes"
+  },
+  seoCopy: {
+    tagline: "The Martial Art That Teaches Kids to Stay Calm When It Matters Most",
+    intro: "Jiu-jitsu is a problem-solving sport. Kids who learn to think under physical pressure learn to think under every other kind of pressure too.",
+    bulletHeading: "What kids develop in this program:",
+    bullets: [
+      "Calm, technique-based responses to conflict",
+      "Body awareness and coordination that improves all sports",
+      "Resilience through consistent drilling and live practice",
+      "Discipline built through repetition and progression",
+      "A real bully prevention foundation, not theory"
+    ],
+    closing: "Kids who train BJJ do not need to panic when a situation gets physical. More importantly, the confidence they carry changes how they present themselves in the first place. Bullies look for easy targets. A kid who trains jiu-jitsu does not look like one."
   }
   },
   {
@@ -543,6 +591,19 @@ export const programPages: ProgramPage[] = [
       "Take the first step today, we will reach out to follow up with you",
     submitLabel: "Submit",
     defaultProgram: "Adults Classes"
+  },
+  seoCopy: {
+    tagline: "Tap Out on Day One. Be Dangerous by Month Six.",
+    intro: "That is the BJJ experience. And it is one of the most rewarding things you can do with your time.",
+    bulletHeading: "What you get from training BJJ:",
+    bullets: [
+      "A full-body workout that burns calories and builds real strength",
+      "Practical self-defense for real-world situations",
+      "Problem-solving and mental sharpness under pressure",
+      "Steady skill development with no ceiling on how good you can get",
+      "A community of training partners who challenge and support you"
+    ],
+    closing: "Rolling is cardiovascular, strength-building, and mentally demanding all at once. Students see noticeable weight loss and conditioning improvements fast because they actually enjoy showing up. BJJ rewards patience and consistency more than any other martial art."
   }
   },
   {
@@ -591,6 +652,19 @@ export const programPages: ProgramPage[] = [
       "Take the first step today, we will reach out to follow up with you",
     submitLabel: "Submit",
     defaultProgram: "Adults Classes"
+  },
+  seoCopy: {
+    tagline: "Eight Limbs. Zero Boredom. Real Results.",
+    intro: "Muay Thai is the most complete striking art in the world, and training it will push you harder than anything you have done in a gym.",
+    bulletHeading: "What you develop in Muay Thai:",
+    bullets: [
+      "Striking technique using punches, kicks, elbows, and knees",
+      "Full-body conditioning and explosive power",
+      "Weight loss and lean muscle through high-output training",
+      "Confidence and self-defense awareness built into every session",
+      "Skill progression from beginner combinations to advanced clinch work"
+    ],
+    closing: "It does not feel like working out. It feels like learning something. That is the reason students show up consistently, stay accountable, and get results that a treadmill never produced."
   }
   },
   {

@@ -8,7 +8,18 @@ type Props = {
 
 const { program } = Astro.props;
 const showTestimonials = program.showTestimonials !== false;
+const showSchedule = program.showSchedule !== false;
+const showLeadForm = program.showLeadForm !== false;
 const curriculumBlocks = program.curriculum.copy.split("\n\n");
+const { seoCopy } = program;
+
+// Repeat 4x so the seamless -50% loop has enough width
+const carouselImages = [
+  ...program.galleryImages,
+  ...program.galleryImages,
+  ...program.galleryImages,
+  ...program.galleryImages,
+];
 ---
 
 <section class="shell section-divider">
@@ -30,25 +41,39 @@ const curriculumBlocks = program.curriculum.copy.split("\n\n");
         )}
       </div>
     </article>
-
-    <div class="gallery-grid" data-gallery-grid>
-      {program.galleryImages.map((image, i) => (
-        <figure class="gallery-card" data-gallery-index={i} role="button" tabindex="0" aria-label={`View ${image.alt}`}>
-          <img
-            src={image.src}
-            alt={image.alt}
-            loading="lazy"
-            decoding="async"
-            width="1600"
-            height="1100" />
-        </figure>
-      ))}
-    </div>
-
   </div>
 </section>
 
-<ClassSchedule ctaHref="#lead-form" />
+<div class="carousel" aria-hidden="true">
+  <div class="carousel-track page-carousel-track">
+    {carouselImages.map((image, i) => (
+      <img
+        src={image.src}
+        alt={image.alt}
+        loading={i < program.galleryImages.length ? "eager" : "lazy"}
+        decoding="async"
+      />
+    ))}
+  </div>
+</div>
+
+{seoCopy && (
+  <section class="seo-copy-section">
+    <div class="seo-copy-inner">
+      <div class="seo-copy-header">
+        <h2 class="seo-copy-tagline">{seoCopy.tagline}</h2>
+      </div>
+      <div class="seo-copy-bullets-block">
+        <p class="seo-bullet-heading">{seoCopy.bulletHeading}</p>
+        <ul class="seo-copy-bullets">
+          {seoCopy.bullets.map((b) => <li><span class="seo-bullet-icon">&#9656;</span>{b}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+)}
+
+{showSchedule && <ClassSchedule ctaHref="#lead-form" />}
 
 <section class="shell section-divider">
   <div class="stack">
@@ -73,76 +98,3 @@ const curriculumBlocks = program.curriculum.copy.split("\n\n");
     )}
   </div>
 </section>
-
-<div class="gallery-lightbox" data-gallery-lightbox aria-hidden="true" aria-modal="true" role="dialog">
-  <button class="gallery-lightbox-close" data-gallery-close aria-label="Close">&#10005;</button>
-  <button class="gallery-btn gallery-btn-prev" data-gallery-prev aria-label="Previous image">&#8592;</button>
-  <figure class="gallery-lightbox-figure">
-    <img src="" alt="" class="gallery-lightbox-img" data-gallery-img loading="lazy" decoding="async" />
-  </figure>
-  <button class="gallery-btn gallery-btn-next" data-gallery-next aria-label="Next image">&#8594;</button>
-  <div class="gallery-dots" aria-hidden="true">
-    {program.galleryImages.map(() => (
-      <span class="gallery-dot"></span>
-    ))}
-  </div>
-</div>
-
-<script is:inline>
-  (function () {
-    var grid = document.querySelector("[data-gallery-grid]");
-    var lightbox = document.querySelector("[data-gallery-lightbox]");
-    if (!grid || !lightbox || lightbox.dataset.bound === "true") return;
-    lightbox.dataset.bound = "true";
-
-    var thumbs = Array.prototype.slice.call(grid.querySelectorAll("[data-gallery-index]"));
-    var lbImg = lightbox.querySelector("[data-gallery-img]");
-    var dots = Array.prototype.slice.call(lightbox.querySelectorAll(".gallery-dot"));
-    var current = 0;
-
-    var images = thumbs.map(function (thumb) {
-      var img = thumb.querySelector("img");
-      return { src: img.getAttribute("src"), alt: img.getAttribute("alt") };
-    });
-
-    function show(n) {
-      current = ((n % images.length) + images.length) % images.length;
-      lbImg.setAttribute("src", images[current].src);
-      lbImg.setAttribute("alt", images[current].alt);
-      dots.forEach(function (d, i) { d.classList.toggle("is-active", i === current); });
-    }
-
-    function open(n) {
-      show(n);
-      lightbox.removeAttribute("aria-hidden");
-      lightbox.classList.add("is-open");
-      document.body.style.overflow = "hidden";
-    }
-
-    function close() {
-      lightbox.setAttribute("aria-hidden", "true");
-      lightbox.classList.remove("is-open");
-      document.body.style.overflow = "";
-    }
-
-    thumbs.forEach(function (thumb) {
-      thumb.addEventListener("click", function () {
-        open(parseInt(thumb.dataset.galleryIndex, 10));
-      });
-      thumb.addEventListener("keydown", function (e) {
-        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(parseInt(thumb.dataset.galleryIndex, 10)); }
-      });
-    });
-
-    lightbox.querySelector("[data-gallery-prev]").addEventListener("click", function () { show(current - 1); });
-    lightbox.querySelector("[data-gallery-next]").addEventListener("click", function () { show(current + 1); });
-    lightbox.querySelector("[data-gallery-close]").addEventListener("click", close);
-    lightbox.addEventListener("click", function (e) { if (e.target === lightbox) close(); });
-    document.addEventListener("keydown", function (e) {
-      if (!lightbox.classList.contains("is-open")) return;
-      if (e.key === "Escape") close();
-      if (e.key === "ArrowLeft") show(current - 1);
-      if (e.key === "ArrowRight") show(current + 1);
-    });
-  })();
-</script>

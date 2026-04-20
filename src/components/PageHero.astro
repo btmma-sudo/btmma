@@ -6,9 +6,13 @@ type Props = {
   hero: HeroContent;
   large?: boolean;
   leadForm?: LeadFormConfig;
+  showMobileCta?: boolean;
+  ctaLabel?: string;
+  centerMobile?: boolean;
+  centerContent?: boolean;
 };
 
-const { hero, large = false, leadForm } = Astro.props;
+const { hero, large = false, leadForm, showMobileCta = true, ctaLabel = "Try a Free Class", centerMobile = false, centerContent = false } = Astro.props;
 const overlayClass = hero.overlay === "medium" ? "hero-overlay-medium" : "hero-overlay-strong";
 ---
 
@@ -17,7 +21,10 @@ const overlayClass = hero.overlay === "medium" ? "hero-overlay-medium" : "hero-o
     "hero-banner",
     "hero-left",
     overlayClass,
-    large && "hero-large"
+    large && "hero-large",
+    showMobileCta && "hero-bottom-mobile",
+    centerMobile && "hero-mobile-center",
+    centerContent && "hero-content-center"
   ]}>
   <div class="hero-media">
     <img
@@ -33,8 +40,8 @@ const overlayClass = hero.overlay === "medium" ? "hero-overlay-medium" : "hero-o
   <div class:list={["shell", "hero-shell", leadForm && "hero-with-form"]}>
     <div class="hero-content">
       <h1>{hero.title}</h1>
-      {!leadForm && (
-        <a class="button hero-mobile-cta" href="#lead-form">Try a Free Class</a>
+      {!leadForm && showMobileCta && (
+        <a class="button hero-mobile-cta" href="#lead-form">{ctaLabel}</a>
       )}
     </div>
     {leadForm && (

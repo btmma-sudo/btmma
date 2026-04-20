@@ -372,6 +372,35 @@ button {
   }
 }
 
+.hero-bottom-mobile {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-bottom: 0;
+}
+
+.hero-bottom-mobile .hero-shell {
+  padding-bottom: 1.5rem;
+}
+
+@media (max-width: 1050px) {
+  .hero-bottom-mobile {
+    min-height: clamp(280px, 60vw, 460px);
+  }
+
+  .hero-mobile-center .hero-shell {
+    display: flex;
+    justify-content: center;
+  }
+
+  .hero-mobile-center .hero-content {
+    text-align: center !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
 .hero-content {
   max-width: 44rem;
   padding: 3rem 0 2.5rem;
@@ -423,7 +452,11 @@ button {
   100% { transform: translateX(-50%); }
 }
 
-/* Hero + detached form layout (homepage) */
+.page-carousel-track {
+  animation-duration: 30s;
+}
+
+/* Hero + detached form layout */
 .hero-form-layout {
   position: relative;
 }
@@ -433,32 +466,14 @@ button {
   margin: 0;
 }
 
-@media (min-width: 1051px) {
-  .hero-form-float {
-    position: absolute;
-    top: 3rem;
-    right: max(1rem, calc((100vw - 1180px) / 2));
-    width: 460px;
-    z-index: 10;
-  }
-
-  .hero-form-float--program {
-    top: 2rem;
-  }
-
-  .hero-form-layout--program {
-    padding-bottom: 5rem;
-  }
+.hero-form-float {
+  padding: 2rem 1rem;
+  max-width: 500px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 @media (max-width: 1050px) {
-  .hero-form-float {
-    padding: 2rem 1rem;
-    max-width: 500px;
-    margin: 0 auto;
-    width: 100%;
-  }
-
   .hero-mobile-cta {
     display: inline-block;
     margin-top: 1.25rem;
@@ -481,6 +496,23 @@ button {
   .hero-mobile-cta {
     display: none;
   }
+}
+
+.hero-content-center .hero-shell {
+  display: flex;
+  justify-content: center;
+}
+
+.hero-content-center .hero-content {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Show CTA at all breakpoints for centered hero pages */
+.hero-content-center .hero-mobile-cta {
+  display: inline-block;
 }
 
 .hero-center .hero-content {
@@ -649,6 +681,83 @@ button {
 
 .detail-card-feature {
   border-left: 2px solid var(--accent);
+}
+
+.seo-cta-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0 0.5rem;
+}
+
+.seo-cta-wrap--below-schedule {
+  padding: 0.5rem 0 2.5rem;
+}
+
+.seo-copy-section {
+  background: var(--surface-strong);
+  border-top: 3px solid var(--accent);
+  border-bottom: 3px solid var(--accent);
+}
+
+.seo-copy-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+}
+
+@media (min-width: 800px) {
+  .seo-copy-inner {
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 4rem;
+  }
+}
+
+.seo-copy-tagline {
+  font-family: "Black Ops One", cursive;
+  font-size: clamp(2.2rem, 5.5vw, 3.5rem);
+  line-height: 1.1;
+  color: #fff;
+  -webkit-text-stroke: 0;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+
+.seo-bullet-heading {
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin: 0 0 1rem;
+}
+
+.seo-copy-bullets {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.85rem;
+  margin: 0;
+}
+
+.seo-copy-bullets li {
+  color: var(--text);
+  line-height: 1.5;
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-size: 1rem;
+}
+
+.seo-bullet-icon {
+  color: var(--accent);
+  flex-shrink: 0;
+  font-size: 0.7rem;
 }
 
 .association-row {
@@ -889,33 +998,34 @@ button {
 .lead-card-compact-card {
   scroll-margin-top: 160px;
   width: 100%;
-  max-width: 520px;
-  padding: 1.35rem;
-  border: 1px solid var(--line);
-  border-top: 3px solid var(--accent);
+  max-width: 420px;
+  padding: 1.75rem 1.5rem;
+  border: 3px solid var(--accent);
   background: linear-gradient(180deg, rgba(31, 31, 31, 0.98), rgba(20, 20, 20, 0.98));
   box-shadow: var(--shadow);
+  text-align: center;
 }
 
 .lead-card-compact-card h2 {
-  font-size: 1.45rem;
-  margin: 0 0 0.45rem;
+  font-size: 1.6rem;
+  margin: 0 0 0.5rem;
 }
 
-.lead-card-compact-card p {
-  font-size: 0.98rem;
-  margin: 0 0 0.8rem;
+.lead-card-compact-card > p {
+  font-size: 0.95rem;
+  margin: 0 0 1.2rem;
   color: var(--muted);
 }
 
 .lead-form-compact {
   display: grid;
   gap: 0.65rem;
+  text-align: left;
 }
 
 .lead-form-compact .form-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 0.65rem;
 }
 
@@ -943,9 +1053,10 @@ button {
 
 .lead-form-compact button {
   margin-top: 0.45rem;
-  min-height: 2.7rem;
+  min-height: 2.9rem;
   padding: 0.65rem 1rem;
   font-size: 1rem;
+  width: 100%;
 }
 
 .cf-turnstile {
