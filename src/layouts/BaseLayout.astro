@@ -149,7 +149,7 @@ const schema = {
         revealElements.forEach((element, index) => {
           if (!(element instanceof HTMLElement)) return;
           element.classList.add("reveal-on-scroll");
-          element.style.setProperty("--reveal-delay", `${Math.min(index % 6, 5) * 70}ms`);
+          element.style.setProperty("--reveal-delay", `${Math.min(index % 6, 5) * 20}ms`);
           observer.observe(element);
         });
       }

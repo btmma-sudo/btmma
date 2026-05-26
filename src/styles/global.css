@@ -9,6 +9,8 @@
   --line-strong: rgba(163, 10, 10, 0.7);
   --accent: #a30a0a;
   --accent-soft: #ff5a36;
+  --heading: #FEDE17;
+  --heading-stroke: #a30a0a;
   --radius: 4px;
   --shell: min(1180px, calc(100vw - 2rem));
   --shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
@@ -91,8 +93,8 @@ h3 {
   font-weight: 600;
   line-height: 1.05;
   text-transform: uppercase;
-  color: var(--accent);
-  -webkit-text-stroke: 0.20px #ffffff;
+  color: var(--heading);
+  -webkit-text-stroke: 0.20px var(--heading-stroke);
 }
 
 h1 {
@@ -370,6 +372,11 @@ button {
     height: auto;
     max-height: none;
   }
+
+  .hero-image {
+    object-fit: contain;
+    object-position: center top;
+  }
 }
 
 .hero-bottom-mobile {
@@ -432,11 +439,7 @@ button {
   display: flex;
   gap: 8px;
   width: max-content;
-  animation: carousel-scroll 80s linear infinite;
-}
-
-.carousel:hover .carousel-track {
-  animation-play-state: paused;
+  animation: carousel-scroll 50s linear infinite;
 }
 
 .carousel-track img {
@@ -463,7 +466,7 @@ button {
 
 .hero-form-float .lead-card-compact-card {
   background: linear-gradient(180deg, rgba(31, 31, 31, 0.98), rgba(20, 20, 20, 0.98));
-  margin: 0;
+  margin: 0 auto;
 }
 
 .hero-form-float {
