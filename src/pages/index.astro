@@ -30,7 +30,7 @@ import { homePage, homepagePrograms } from "../data/site";
 
     <div class="card-grid program-grid">
       {homepagePrograms.map((program) => (
-        <article class="program-card">
+        <a class="program-card" href={program.href}>
           {program.image && (
             <div class="program-card-image">
               <img src={program.image} alt={program.imageAlt ?? program.title} loading="lazy" decoding="async" width="600" height="400" />
@@ -40,9 +40,9 @@ import { homePage, homepagePrograms } from "../data/site";
             <p class="eyebrow">{program.eyebrow}</p>
             <h3>{program.title}</h3>
             <p>{program.summary}</p>
-            <a class="button" href={program.href}>View Program</a>
+            <span class="button program-card-btn">View Program</span>
           </div>
-        </article>
+        </a>
       ))}
     </div>
   </section>

@@ -50,6 +50,22 @@ export type SeoCopy = {
   closing: string;
 };
 
+export type ProgramVariant = {
+  label: string;
+  audience: string;
+  programInterest?: string;
+  curriculum: {
+    title: string;
+    copy: string;
+  };
+  benefits: {
+    title: string;
+    items: string[];
+  };
+  galleryImages: GalleryImage[];
+  seoCopy?: SeoCopy;
+};
+
 export type ProgramPage = {
   slug: string;
   seo: SEOData;
@@ -71,6 +87,7 @@ export type ProgramPage = {
   showLeadForm?: boolean;
   mobileCta?: string;
   seoCopy?: SeoCopy;
+  variants?: ProgramVariant[];
 };
 
 export type SupportingPage = {
@@ -78,6 +95,8 @@ export type SupportingPage = {
   seo: SEOData;
   hero: HeroContent;
 };
+
+// ─── Site config ──────────────────────────────────────────────────────────────
 
 export const site = {
   name: "Burning Tree Mixed Martial Arts",
@@ -131,6 +150,8 @@ export const site = {
   }
 };
 
+// ─── Shared keyword base ───────────────────────────────────────────────────────
+
 export const categoryKeywords = [
   "martial arts",
   "martial arts school",
@@ -141,7 +162,6 @@ export const categoryKeywords = [
   "self-defence classes",
   "self-defence training",
   "karate classes",
-  "jiu-jitsu classes",
   "muay thai classes",
   "martial arts for kids",
   "martial arts for adults",
@@ -149,82 +169,72 @@ export const categoryKeywords = [
   "karate for kids",
   "karate for adults",
   "karate for beginners",
-  "jiu-jitsu for kids",
-  "jiu-jitsu for adults",
-  "jiu-jitsu for beginners",
   "muay thai for kids",
   "muay thai for adults",
   "muay thai for beginners"
 ];
 
+// ─── Lead form options ─────────────────────────────────────────────────────────
+
 export const programInterestOptions = [
   "Jr. Kenpo",
   "Adult Karate",
-  "Kids Jiu-Jitsu",
-  "Adult BJJ",
-  "Muay Thai"
+  "Muay Thai",
+  "Jr. Muay Thai",
+  "Wing Chun",
+  "Jr. Wing Chun",
+  "Women's Defense"
 ];
 
+// ─── Navigation ────────────────────────────────────────────────────────────────
+
 export const primaryPrograms: NavItem[] = [
-  { label: "Jr. Kenpo", href: "/kids-martial-arts" },
-  { label: "Adult Karate", href: "/adult-martial-arts" },
-  { label: "Kids Jiu-Jitsu", href: "/kids-jiu-jitsu" },
-  { label: "Adult BJJ", href: "/brazilian-jiu-jitsu" },
-  { label: "Muay Thai", href: "/muay-thai" }
+  { label: "Kenpo Karate", href: "/kenpo-karate" },
+  { label: "Muay Thai", href: "/muay-thai" },
+  { label: "Wing Chun", href: "/wing-chun" },
+  { label: "Women's Defense", href: "/womens-defense" }
 ];
 
 export const secondaryNav: NavItem[] = [
   { label: "About", href: "/about" },
   { label: "FAQ", href: "/faq" },
-  { label: "ChimpmanGi", href: "/chimpman-gi" },
-  { label: "Health & Wellness", href: "/health-and-wellness" }
+  { label: "ChimpmanGi", href: "/chimpman-gi" }
 ];
 
+// ─── Homepage program cards ────────────────────────────────────────────────────
+
 export const homepagePrograms: ProgramCard[] = [
-  {
-    eyebrow: "Jr. Kenpo",
-    title: "Jr. Kenpo",
-    href: "/kids-martial-arts",
-    image: "/images/jr-kenpo-gallery-1.jpg",
-    imageAlt: "Two Jr. Kenpo students in black gis with yellow belts sitting with their instructor at a tournament",
-    summary:
-      "Fun, focused karate training that builds confidence, respect, and self-control."
-  },
-  {
-    eyebrow: "American Kenpo",
-    title: "Adult Karate",
-    href: "/adult-martial-arts",
-    image: "/images/adult-martial-arts-gallery-1.jpg",
-    imageAlt: "Two adult students in black gis practicing a grappling control technique together in the Burning Tree MMA gym",
-    summary:
-      "Traditional training and practical application with fitness, focus, and steady progression."
-  },
-  {
-    eyebrow: "Kids Jiu-Jitsu",
-    title: "Kids Jiu-Jitsu",
-    href: "/kids-jiu-jitsu",
-    image: "/images/kids-jiu-jitsu-gallery-1.jpg",
-    imageAlt: "Two young children in black gis with orange belts shaking hands and smiling on the mat after drilling",
-    summary:
-      "Confidence and Problem-Solving from the Ground Up"
-  },
-  {
-    eyebrow: "Adult Jiu-Jitsu",
-    title: "Adult BJJ",
-    href: "/brazilian-jiu-jitsu",
-    image: "/images/brazilian-jiu-jitsu-gallery-1.jpg",
-    imageAlt: "Two adult BJJ students in gis grappling on the ground during live training",
-    summary:
-      "Live grappling, sharper defense, and the patience and persistence only BJJ can teach."
-  },
   {
     eyebrow: "Art of Eight Limbs",
     title: "Muay Thai",
     href: "/muay-thai",
     image: "/images/muay-thai-gallery-1.jpg",
     imageAlt: "Two Muay Thai students in full protective gear practicing a kick technique during class",
-    summary:
-      "The Art of Eight Limbs, The Path to Power and Precision."
+    summary: "The Art of Eight Limbs, The Path to Power and Precision."
+  },
+  {
+    eyebrow: "American Kenpo",
+    title: "Kenpo Karate",
+    href: "/kenpo-karate",
+    image: "/images/jr-kenpo-gallery-1.jpg",
+    imageAlt: "Jr. Kenpo students in black gis with yellow belts sitting with their instructor at a tournament",
+    summary: "Traditional Kenpo for kids and adults. Discipline, self-defense, and real progression."
+  },
+  {
+    eyebrow: "Wing Chun",
+    title: "Wing Chun",
+    href: "/wing-chun",
+    image: "/images/wing-chun-gallery-1.jpg",
+    imageAlt: "Wing Chun students practicing centerline striking technique at Burning Tree MMA",
+    summary: "The traditional Chinese martial art of Ip Man and Bruce Lee. Close-quarters combat built on precision, not power."
+  },
+  {
+    eyebrow: "Sanuces Ryu Jiu-Jitsu",
+    title: "Women's Defense",
+    href: "/womens-defense",
+    image: "/images/womens-defense-hero.jpg",
+    imageAlt: "Women's self-defense class at Burning Tree MMA in Owings Mills",
+    summary: "Real-world self-defense for real-world situations. Practical, powerful, and built for women."
   },
   {
     eyebrow: "Health & Wellness",
@@ -232,8 +242,7 @@ export const homepagePrograms: ProgramCard[] = [
     href: "/health-and-wellness",
     image: "/images/health-and-wellness-gallery-1.jpg",
     imageAlt: "Burning Tree MMA wellness room with a massage table, massage chair, and artwork on the walls",
-    summary:
-      "A wellness track built around sustainable support, recovery, and clean, aligned living."
+    summary: "A wellness track built around sustainable support, recovery, and clean, aligned living."
   },
   {
     eyebrow: "Events",
@@ -241,10 +250,11 @@ export const homepagePrograms: ProgramCard[] = [
     href: "/birthday-parties",
     image: "/images/birthday-parties-gallery-1.jpg",
     imageAlt: "Instructor leading children in a foam sword activity at a martial arts birthday party",
-    summary:
-      "An unforgettable martial arts celebration full of fun, confidence, and movement."
+    summary: "An unforgettable martial arts celebration full of fun, confidence, and movement."
   }
 ];
+
+// ─── Supporting pages ──────────────────────────────────────────────────────────
 
 export const homePage: {
   seo: SEOData;
@@ -254,17 +264,17 @@ export const homePage: {
   seo: {
     title: "Martial Arts Classes in Owings Mills | Burning Tree MMA",
     description:
-      "Burning Tree MMA offers Jr. Kenpo, Adult Karate, kids and adult Brazilian jiu-jitsu, Muay Thai, birthday parties, and wellness services in Owings Mills.",
+      "Burning Tree MMA offers Jr. Kenpo, Adult Karate, Muay Thai, Wing Chun, birthday parties, and wellness services in Owings Mills.",
     keywords: [
       ...categoryKeywords,
       "MMA Owings Mills",
       "Jr. Kenpo Owings Mills",
       "adult karate Owings Mills",
-      "Brazilian jiu-jitsu Owings Mills",
       "Muay Thai Owings Mills",
+      "Wing Chun Owings Mills",
       "karate classes near me",
       "world-class instructors",
-      "safe and structured environment",
+      "safe and structured environment"
     ]
   },
   hero: {
@@ -275,8 +285,7 @@ export const homePage: {
   },
   leadForm: {
     title: "Try a Free Class",
-    intro:
-      "Take the first step today, we will reach out to follow up with you",
+    intro: "Take the first step today, we will reach out to follow up with you",
     submitLabel: "Submit"
   }
 };
@@ -304,8 +313,7 @@ export const aboutPage: SupportingPage & {
   },
   leadForm: {
     title: "Try a Free Class",
-    intro:
-      "Take the first step today, we will reach out to follow up with you",
+    intro: "Take the first step today, we will reach out to follow up with you",
     submitLabel: "Submit"
   }
 };
@@ -329,7 +337,7 @@ export const faqPage: SupportingPage & {
   hero: {
     title: "FAQ",
     image: "/images/faq-hero.jpg",
-    imageAlt: "BJJ students practicing a throwing technique during live grappling with an American flag in the background",
+    imageAlt: "Martial arts students practicing technique during live training with an American flag in the background",
     overlay: "medium"
   },
   faqs: [
@@ -346,7 +354,7 @@ export const faqPage: SupportingPage & {
     {
       question: "Do you offer classes for kids and adults?",
       answer:
-        "Yes. We offer Jr. Kenpo, Adult Karate, kids jiu-jitsu, Brazilian jiu-jitsu, Muay Thai, birthday parties, and wellness-oriented services."
+        "Yes. We offer Jr. Kenpo, Adult Karate, Muay Thai, Wing Chun, birthday parties, and wellness-oriented services."
     },
     {
       question: "Where is Burning Tree MMA located?",
@@ -356,256 +364,15 @@ export const faqPage: SupportingPage & {
   ],
   leadForm: {
     title: "Try a Free Class",
-    intro:
-      "Take the first step today, we will reach out to follow up with you",
+    intro: "Take the first step today, we will reach out to follow up with you",
     submitLabel: "Submit"
   }
 };
 
+// ─── Program pages ─────────────────────────────────────────────────────────────
+
 export const programPages: ProgramPage[] = [
-  {
-    slug: "kids-martial-arts",
-    seo: {
-      title: "Jr. Kenpo in Owings Mills | Burning Tree MMA",
-      description:
-        "Jr. Kenpo in Owings Mills blends fun and discipline to help children build focus, respect, self-control, confidence, and real self-defense skills.",
-      keywords: [
-        ...categoryKeywords,
-        "Jr. Kenpo Owings Mills",
-        "Jr. Kenpo",
-        "kids karate classes near me",
-        "kids self-defense",
-        "confidence for children"
-      ]
-    },
-    hero: {
-      title: "Jr. Kenpo",
-      image: "/images/jr-kenpo-hero.jpg",
-      imageAlt: "Jr. Kenpo class group photo with children in black gis and yellow belts alongside four instructors",
-      overlay: "strong"
-    },
-    audience: "Kids",
-    curriculum: {
-      title: "A structured Jr. Kenpo path with real progression.",
-      copy:
-        "Our Kids Karate program blends fun and discipline to help children develop focus, respect, and self-control. Through structured drills, games, and partner work, students build confidence while learning real self-defense skills in a safe, supportive environment. Parents love seeing their kids grow stronger both on the mats and in school."
-    },
-    benefits: {
-      title: "Why families choose this program",
-      items: [
-        "Confidence, focus, and communication skills that support success at school and at home.",
-        "Healthy routines, coordination, and safe self-defense practice in a structured martial arts academy.",
-        "A positive culture that reinforces discipline, humility, perseverance, and respect."
-      ]
-    },
-    galleryImages: [
-      { src: "/images/jr-kenpo-gallery-1.jpg", alt: "Two Jr. Kenpo students in black gis with yellow belts sitting with their instructor at a tournament, all smiling" },
-      { src: "/images/jr-kenpo-gallery-2.jpg", alt: "A junior student practicing striking technique with a younger classmate in the Burning Tree MMA gym" },
-      { src: "/images/jr-kenpo-gallery-3.jpg", alt: "A young Jr. Kenpo student in a black gi with yellow belt proudly holding up two medals at the DC Youth Classics competition" }
-    ],
-    leadForm: {
-    title: "Try a Free Class",
-    intro:
-      "Take the first step today, we will reach out to follow up with you",
-    submitLabel: "Submit",
-    defaultProgram: "Kids Classes"
-  },
-  seoCopy: {
-    tagline: "Your Kid Will Be Different After 30 Days. In the Best Way.",
-    intro: "Jr. Kenpo is not babysitting with kicks. It is a structured martial arts program that builds real skills, real discipline, and real confidence in kids who are still figuring out who they are.",
-    bulletHeading: "What they gain on the mat:",
-    bullets: [
-      "Self-defense awareness they can actually use",
-      "Focus and discipline that carries into school",
-      "Confidence to stand up for themselves without aggression",
-      "Belt rank progression that teaches goal-setting and follow-through",
-      "A positive community of peers and coaches who hold them accountable"
-    ],
-    closing: "Most parents sign up for the self-defense. They stay because their kid stopped backing down from hard things. Bully prevention is built into everything we teach. Kids who train in martial arts carry themselves differently. That confidence is the real deterrent."
-  }
-  },
-  {
-    slug: "adult-martial-arts",
-    seo: {
-      title: "Adult Karate in Owings Mills | Burning Tree MMA",
-      description:
-        "Adult Karate in Owings Mills balances traditional training and practical application with technique, self-defense, stress relief, fitness, and belt-rank progression.",
-      keywords: [
-        ...categoryKeywords,
-        "adult karate Owings Mills",
-        "American Kenpo",
-        "karate for adults",
-        "adult self-defense",
-        "full-body workout"
-      ]
-    },
-    hero: {
-      title:  "Adult Karate",
-      image: "/images/home-hero.jpg",
-      imageAlt: "Two adult students practicing hand-blocking techniques face to face with other training pairs in the background",
-      overlay: "strong"
-    },
-    audience: "Adults",
-    curriculum: {
-      title: "Technical training with clear progression.",
-      copy:
-        "Adult Karate provides a balance of traditional training and practical application. Students sharpen striking techniques, forms, and self-defense while enjoying a full-body workout that relieves stress and improves fitness. It is an empowering way to challenge yourself mentally and physically while progressing through belt ranks."
-    },
-    benefits: {
-      title: "What adult students gain",
-      items: [
-        "Useful self-defense skills paired with stress relief and full-body conditioning.",
-        "A clear progression path with technical coaching, accountability, and steady growth.",
-        "A welcoming martial arts school culture for beginners and experienced students alike."
-      ]
-    },
-    galleryImages: [
-      { src: "/images/adult-martial-arts-gallery-1.jpg", alt: "Two adult students in black gis practicing a grappling control technique together while the full class trains in the background" },
-      { src: "/images/adult-martial-arts-gallery-2.jpg", alt: "An instructor demonstrating a palm strike technique on a student during a martial arts seminar with a group of students watching" },
-      { src: "/images/adult-martial-arts-gallery-3.jpg", alt: "Two adult students practicing hand-blocking techniques face to face with multiple training pairs visible in the background" }
-    ],
-    leadForm: {
-    title: "Try a Free Class",
-    intro:
-      "Take the first step today, we will reach out to follow up with you",
-    submitLabel: "Submit",
-    defaultProgram: "Adults Classes"
-  },
-  seoCopy: {
-    tagline: "You Do Not Need to Be Fit to Start. You Will Be Fit Because You Started.",
-    intro: "Adult Karate at Burning Tree MMA is the program for people who want a real challenge, a transferable skill, and a reason to show up consistently.",
-    bulletHeading: "What you build in this program:",
-    bullets: [
-      "Practical self-defense skills rooted in American Kenpo",
-      "Full-body strength and conditioning through technique-driven training",
-      "Stress relief that actually works",
-      "Accountability through belt rank progression and coaching",
-      "Weight loss and fitness results without the monotony of a standard gym"
-    ],
-    closing: "Complete beginners. People returning after years off. Adults who are bored with the gym and want something that demands more from them. The community here trains with purpose."
-  }
-  },
-  {
-    slug: "kids-jiu-jitsu",
-    seo: {
-      title: "Kids Jiu-Jitsu in Owings Mills | Burning Tree MMA",
-      description:
-        "Kids Brazilian jiu-jitsu classes in Owings Mills that build resilience, body awareness, teamwork, and calm problem-solving.",
-      keywords: [
-        ...categoryKeywords,
-        "kids jiu-jitsu Owings Mills",
-        "kids BJJ",
-        "children's grappling",
-        "problem-solving martial arts kids"
-      ]
-    },
-    hero: {
-      title: "Kids Jiu-Jitsu",
-      image: "/images/kids-jiu-jitsu-hero.jpg",
-      imageAlt: "Two young children in black gis with yellow belts sitting on the mat laughing together during Kids Jiu-Jitsu class",
-      overlay: "strong"
-    },
-    audience: "Kids",
-    curriculum: {
-      title: "Technique-first grappling for growing students.",
-      copy:
-        "Students learn takedowns, movement patterns, positional control, and beginner submissions through structured Brazilian jiu-jitsu instruction and guided repetition."
-    },
-    benefits: {
-      title: "What makes kids jiu-jitsu valuable",
-      items: [
-        "Problem-solving and resilience built through technical grappling practice.",
-        "Body awareness, teamwork, and respect in a controlled martial arts training environment.",
-        "Confidence that comes from learning calm responses under pressure."
-      ]
-    },
-    galleryImages: [
-      { src: "/images/kids-jiu-jitsu-gallery-1.jpg", alt: "Two young children in black gis with orange belts sitting on the mat shaking hands and smiling after drilling" },
-      { src: "/images/kids-jiu-jitsu-gallery-2.jpg", alt: "A young girl in a black gi with yellow belt doing a push-up on the gym floor during jiu-jitsu class" },
-      { src: "/images/kids-jiu-jitsu-gallery-3.jpg", alt: "Kids jiu-jitsu class group photo with children in black gis holding achievement certificates alongside two instructors in front of the Burning Tree MMA logo" }
-    ],
-    leadForm: {
-    title: "Try a Free Class",
-    intro:
-      "Take the first step today, we will reach out to follow up with you",
-    submitLabel: "Submit",
-    defaultProgram: "Kids Classes"
-  },
-  seoCopy: {
-    tagline: "The Martial Art That Teaches Kids to Stay Calm When It Matters Most",
-    intro: "Jiu-jitsu is a problem-solving sport. Kids who learn to think under physical pressure learn to think under every other kind of pressure too.",
-    bulletHeading: "What kids develop in this program:",
-    bullets: [
-      "Calm, technique-based responses to conflict",
-      "Body awareness and coordination that improves all sports",
-      "Resilience through consistent drilling and live practice",
-      "Discipline built through repetition and progression",
-      "A real bully prevention foundation, not theory"
-    ],
-    closing: "Kids who train BJJ do not need to panic when a situation gets physical. More importantly, the confidence they carry changes how they present themselves in the first place. Bullies look for easy targets. A kid who trains jiu-jitsu does not look like one."
-  }
-  },
-  {
-    slug: "brazilian-jiu-jitsu",
-    seo: {
-      title: "Adult BJJ in Owings Mills | Burning Tree MMA",
-      description:
-        "Adult BJJ in Owings Mills delivers a dynamic workout with escapes, sweeps, submissions, live sparring, stress relief, and lasting confidence.",
-      keywords: [
-        ...categoryKeywords,
-        "adult Brazilian jiu-jitsu Owings Mills",
-        "adult BJJ",
-        "BJJ classes near me",
-        "ground fighting",
-        "escapes and submissions"
-      ]
-    },
-    hero: {
-      title: "Adult BJJ",
-      image: "/images/brazilian-jiu-jitsu-hero.jpg",
-      imageAlt: "Two BJJ practitioners drilling a no-gi leg entanglement technique on the mat in black and white",
-      overlay: "strong"
-    },
-    audience: "Adults",
-    curriculum: {
-      title: "Foundations, pressure, and steady progression.",
-      copy:
-        "Adult Brazilian Jiu-Jitsu offers a dynamic workout that sharpens the mind as much as the body. Students learn to defend themselves through escapes, sweeps, and submissions, testing skills through live sparring. The result is improved fitness, stress relief, and the patience and persistence that only BJJ can teach."
-    },
-    benefits: {
-      title: "Why adults choose BJJ",
-      items: [
-        "A practical martial arts system that rewards patience, technique, and adaptability.",
-        "A demanding workout that improves body awareness, stress relief, and focus.",
-        "Progressive coaching that supports complete beginners as well as experienced grapplers."
-      ]
-    },
-    galleryImages: [
-      { src: "/images/brazilian-jiu-jitsu-gallery-1.jpg", alt: "Two adult BJJ students in gis grappling in a top mount position on the mat, black and white photo" },
-      { src: "/images/brazilian-jiu-jitsu-gallery-2.jpg", alt: "Two adult students sparring on the mat during live BJJ rolling, one passing guard in a patterned gi" },
-      { src: "/images/brazilian-jiu-jitsu-gallery-3.jpg", alt: "Two BJJ practitioners drilling a leg entanglement technique on the mat with the Burning Tree MMA logo visible" }
-    ],
-    leadForm: {
-    title: "Try a Free Class",
-    intro:
-      "Take the first step today, we will reach out to follow up with you",
-    submitLabel: "Submit",
-    defaultProgram: "Adults Classes"
-  },
-  seoCopy: {
-    tagline: "Tap Out on Day One. Be Dangerous by Month Six.",
-    intro: "That is the BJJ experience. And it is one of the most rewarding things you can do with your time.",
-    bulletHeading: "What you get from training BJJ:",
-    bullets: [
-      "A full-body workout that burns calories and builds real strength",
-      "Practical self-defense for real-world situations",
-      "Problem-solving and mental sharpness under pressure",
-      "Steady skill development with no ceiling on how good you can get",
-      "A community of training partners who challenge and support you"
-    ],
-    closing: "Rolling is cardiovascular, strength-building, and mentally demanding all at once. Students see noticeable weight loss and conditioning improvements fast because they actually enjoy showing up. BJJ rewards patience and consistency more than any other martial art."
-  }
-  },
+  // ── Muay Thai (Kids / Adults variant) ───────────────────────────────────────
   {
     slug: "muay-thai",
     seo: {
@@ -627,46 +394,366 @@ export const programPages: ProgramPage[] = [
       imageAlt: "The Burning Tree MMA training mat with a heavy bag, award displays, and mirrors along the walls",
       overlay: "strong"
     },
-    audience: "Teens & Adults",
+    audience: "",
+    curriculum: { title: "", copy: "" },
+    benefits: { title: "", items: [] },
+    galleryImages: [],
+    leadForm: {
+      title: "Try a Free Class",
+      intro: "Take the first step today, we will reach out to follow up with you",
+      submitLabel: "Submit"
+    },
+    variants: [
+      {
+        label: "Kids",
+        programInterest: "Jr. Muay Thai",
+        audience: "Kids & Teens",
+        curriculum: {
+          title: "Striking fundamentals built for young athletes.",
+          copy: "Jr. Muay Thai introduces kids and teens to the art of eight limbs in a safe, structured, and age-appropriate environment. Students develop punching and kicking technique, footwork, and pad work through drills and partner exercises that build coordination, discipline, and real striking ability. Classes are designed to challenge students at every level while keeping training fun and confidence-building."
+        },
+        benefits: {
+          title: "What young students gain",
+          items: [
+            "Striking fundamentals, coordination, and athletic development through disciplined Muay Thai training.",
+            "Confidence and self-defense awareness built through structured partner drills and pad work.",
+            "A healthy, active outlet that builds focus, perseverance, and physical fitness."
+          ]
+        },
+        galleryImages: [
+          { src: "/images/jr-muay-thai-gallery-1.jpg", alt: "Jr. Muay Thai students training at Burning Tree MMA" },
+          { src: "/images/jr-muay-thai-gallery-2.jpg", alt: "Young student practicing Muay Thai striking technique at Burning Tree MMA" },
+          { src: "/images/jr-muay-thai-gallery-3.jpg", alt: "Jr. Muay Thai class at Burning Tree MMA in Owings Mills" }
+        ],
+        seoCopy: {
+          tagline: "The Same Art That Builds Champions. Sized Right for Kids.",
+          intro: "Muay Thai is one of the most effective striking arts in the world. Jr. Muay Thai brings those same fundamentals to younger students in a structured, age-appropriate format that builds real skills without shortcuts.",
+          bulletHeading: "What kids develop in Jr. Muay Thai:",
+          bullets: [
+            "Punching, kicking, and footwork fundamentals",
+            "Coordination and full-body athleticism",
+            "Discipline and focus through structured pad work",
+            "Confidence and self-defense awareness",
+            "A bully prevention foundation built on real striking ability"
+          ],
+          closing: "Kids who train Muay Thai carry themselves differently. The confidence, coordination, and discipline they build on the mats show up everywhere else in their lives."
+        }
+      },
+      {
+        label: "Adults",
+        programInterest: "Muay Thai",
+        audience: "Teens & Adults",
+        curriculum: {
+          title: "The art of eight limbs with steady skill-building.",
+          copy: "Known as the art of eight limbs, Muay Thai combines punches, kicks, knees, and elbows for an intense full-body workout. Students practice striking, pad drills, and clinch techniques that build endurance, power, and precision. Whether for fitness, self-defense, or competition, Muay Thai develops both physical toughness and mental confidence."
+        },
+        benefits: {
+          title: "Why students love Muay Thai",
+          items: [
+            "Technical striking built on the art of eight limbs and disciplined coaching habits.",
+            "Challenging classes that improve conditioning, coordination, and confidence.",
+            "A motivating environment for beginners, returning students, and experienced strikers."
+          ]
+        },
+        galleryImages: [
+          { src: "/images/muay-thai-gallery-1.jpg", alt: "Two Muay Thai students in full protective headgear and shin guards practicing a kick technique during class" },
+          { src: "/images/muay-thai-gallery-2.jpg", alt: "An instructor demonstrating a wrist control technique to students in the gym with framed awards on the wall" },
+          { src: "/images/muay-thai-gallery-3.jpg", alt: "Two men in black training clothes practicing a striking combination in the gym, black and white photo" }
+        ],
+        seoCopy: {
+          tagline: "Eight Limbs. Zero Boredom. Real Results.",
+          intro: "Muay Thai is the most complete striking art in the world, and training it will push you harder than anything you have done in a gym.",
+          bulletHeading: "What you develop in Muay Thai:",
+          bullets: [
+            "Striking technique using punches, kicks, elbows, and knees",
+            "Full-body conditioning and explosive power",
+            "Weight loss and lean muscle through high-output training",
+            "Confidence and self-defense awareness built into every session",
+            "Skill progression from beginner combinations to advanced clinch work"
+          ],
+          closing: "It does not feel like working out. It feels like learning something. That is the reason students show up consistently, stay accountable, and get results that a treadmill never produced."
+        }
+      }
+    ]
+  },
+
+  // ── Kenpo Karate (Kids / Adults variant) ────────────────────────────────────
+  {
+    slug: "kenpo-karate",
+    seo: {
+      title: "Kenpo Karate in Owings Mills | Burning Tree MMA",
+      description:
+        "Kenpo Karate classes for kids and adults in Owings Mills. Jr. Kenpo builds confidence and discipline in children while Adult Kenpo delivers real self-defense, fitness, and belt progression.",
+      keywords: [
+        ...categoryKeywords,
+        "Kenpo Karate Owings Mills",
+        "Jr. Kenpo",
+        "adult karate",
+        "kids karate classes near me",
+        "adult self-defense",
+        "karate for kids",
+        "karate for adults"
+      ]
+    },
+    hero: {
+      title: "Kenpo Karate",
+      image: "/images/karate-hero.jpg",
+      imageAlt: "Karate students training at Burning Tree MMA in Owings Mills",
+      overlay: "strong"
+    },
+    audience: "",
+    curriculum: { title: "", copy: "" },
+    benefits: { title: "", items: [] },
+    galleryImages: [],
+    leadForm: {
+      title: "Try a Free Class",
+      intro: "Take the first step today, we will reach out to follow up with you",
+      submitLabel: "Submit"
+    },
+    variants: [
+      {
+        label: "Kids",
+        programInterest: "Jr. Kenpo",
+        audience: "Ages 5–12",
+        curriculum: {
+          title: "A structured Jr. Kenpo path with real progression.",
+          copy: "Our Kids Karate program blends fun and discipline to help children develop focus, respect, and self-control. Through structured drills, games, and partner work, students build confidence while learning real self-defense skills in a safe, supportive environment. Parents love seeing their kids grow stronger both on the mats and in school."
+        },
+        benefits: {
+          title: "Why families choose this program",
+          items: [
+            "Confidence, focus, and communication skills that support success at school and at home.",
+            "Healthy routines, coordination, and safe self-defense practice in a structured martial arts academy.",
+            "A positive culture that reinforces discipline, humility, perseverance, and respect."
+          ]
+        },
+        galleryImages: [
+          { src: "/images/jr-kenpo-gallery-1.jpg", alt: "Two Jr. Kenpo students in black gis with yellow belts sitting with their instructor at a tournament, all smiling" },
+          { src: "/images/jr-kenpo-gallery-2.jpg", alt: "A junior student practicing striking technique with a younger classmate in the Burning Tree MMA gym" },
+          { src: "/images/jr-kenpo-gallery-3.jpg", alt: "A young Jr. Kenpo student in a black gi with yellow belt proudly holding up two medals at the DC Youth Classics competition" }
+        ],
+        seoCopy: {
+          tagline: "Your Kid Will Be Different After 30 Days. In the Best Way.",
+          intro: "Jr. Kenpo is not babysitting with kicks. It is a structured martial arts program that builds real skills, real discipline, and real confidence in kids who are still figuring out who they are.",
+          bulletHeading: "What they gain on the mat:",
+          bullets: [
+            "Self-defense awareness they can actually use",
+            "Focus and discipline that carries into school",
+            "Confidence to stand up for themselves without aggression",
+            "Belt rank progression that teaches goal-setting and follow-through",
+            "A positive community of peers and coaches who hold them accountable"
+          ],
+          closing: "Most parents sign up for the self-defense. They stay because their kid stopped backing down from hard things."
+        }
+      },
+      {
+        label: "Adults",
+        programInterest: "Adult Karate",
+        audience: "Teens & Adults",
+        curriculum: {
+          title: "Technical training with clear progression.",
+          copy: "Adult Karate provides a balance of traditional training and practical application. Students sharpen striking techniques, forms, and self-defense while enjoying a full-body workout that relieves stress and improves fitness. It is an empowering way to challenge yourself mentally and physically while progressing through belt ranks."
+        },
+        benefits: {
+          title: "What adult students gain",
+          items: [
+            "Useful self-defense skills paired with stress relief and full-body conditioning.",
+            "A clear progression path with technical coaching, accountability, and steady growth.",
+            "A welcoming martial arts school culture for beginners and experienced students alike."
+          ]
+        },
+        galleryImages: [
+          { src: "/images/adult-martial-arts-gallery-1.jpg", alt: "Two adult students in black gis practicing a grappling control technique together while the full class trains in the background" },
+          { src: "/images/adult-martial-arts-gallery-2.jpg", alt: "An instructor demonstrating a palm strike technique on a student during a martial arts seminar with a group of students watching" },
+          { src: "/images/adult-martial-arts-gallery-3.jpg", alt: "Two adult students practicing hand-blocking techniques face to face with multiple training pairs visible in the background" }
+        ],
+        seoCopy: {
+          tagline: "You Do Not Need to Be Fit to Start. You Will Be Fit Because You Started.",
+          intro: "Adult Karate at Burning Tree MMA is the program for people who want a real challenge, a transferable skill, and a reason to show up consistently.",
+          bulletHeading: "What you build in this program:",
+          bullets: [
+            "Practical self-defense skills rooted in American Kenpo",
+            "Full-body strength and conditioning through technique-driven training",
+            "Stress relief that actually works",
+            "Accountability through belt rank progression and coaching",
+            "Weight loss and fitness results without the monotony of a standard gym"
+          ],
+          closing: "Complete beginners. People returning after years off. Adults who are bored with the gym and want something that demands more from them."
+        }
+      }
+    ]
+  },
+
+  // ── Wing Chun (Kids / Adults variant) ───────────────────────────────────────
+  {
+    slug: "wing-chun",
+    seo: {
+      title: "Wing Chun in Owings Mills | Burning Tree MMA",
+      description:
+        "Wing Chun classes in Owings Mills. Learn the traditional martial art of Ip Man and Bruce Lee. Close-quarters combat, self-defense, and precision-based striking every Wednesday.",
+      keywords: [
+        ...categoryKeywords,
+        "Wing Chun Owings Mills",
+        "Wing Chun classes near me",
+        "Ip Man martial art",
+        "close quarters combat",
+        "traditional Chinese martial arts",
+        "self-defense adults"
+      ]
+    },
+    hero: {
+      title: "Wing Chun",
+      image: "/images/wing-chun-hero.jpg",
+      imageAlt: "Wing Chun students practicing centerline striking technique at Burning Tree MMA",
+      overlay: "strong"
+    },
+    audience: "",
+    curriculum: { title: "", copy: "" },
+    benefits: { title: "", items: [] },
+    galleryImages: [],
+    leadForm: {
+      title: "Try a Free Class",
+      intro: "Take the first step today, we will reach out to follow up with you",
+      submitLabel: "Submit"
+    },
+    variants: [
+      {
+        label: "Kids",
+        programInterest: "Jr. Wing Chun",
+        audience: "Kids & Teens",
+        curriculum: {
+          title: "Traditional technique for young, sharp minds.",
+          copy: "Jr. Wing Chun introduces kids and teens to one of the most intelligent martial arts systems in the world. Students learn centerline theory, economy of motion, and the simultaneous defense and attack principles that make Wing Chun uniquely effective for smaller and younger practitioners. Classes combine structured drilling, partner work, and progressive technique to build focus, precision, and real self-defense confidence."
+        },
+        benefits: {
+          title: "What young students gain",
+          items: [
+            "Precision, focus, and structural body mechanics through traditional Wing Chun training.",
+            "Self-defense skills built on technique and intelligence rather than size or strength.",
+            "Discipline, patience, and goal-setting through a structured progression path."
+          ]
+        },
+        galleryImages: [
+          { src: "/images/jr-wing-chun-gallery-1.jpg", alt: "Jr. Wing Chun students training at Burning Tree MMA" },
+          { src: "/images/jr-wing-chun-gallery-2.jpg", alt: "Young student practicing Wing Chun technique at Burning Tree MMA" },
+          { src: "/images/jr-wing-chun-gallery-3.jpg", alt: "Jr. Wing Chun class at Burning Tree MMA in Owings Mills" }
+        ],
+        seoCopy: {
+          tagline: "The Martial Art That Teaches Kids to Fight Smarter, Not Harder.",
+          intro: "Wing Chun does not reward size or aggression. It rewards focus, precision, and intelligent technique, which makes it one of the best martial arts for kids who are still growing into their bodies.",
+          bulletHeading: "What Jr. Wing Chun develops:",
+          bullets: [
+            "Centerline awareness and structural self-defense technique",
+            "Simultaneous attack and defense: block and strike in the same motion",
+            "Precision and economy of motion over brute force",
+            "Focus and discipline through progressive drilling",
+            "Confidence and bully prevention grounded in real skill"
+          ],
+          closing: "Kids who train Wing Chun learn that skill beats strength. That lesson carries far beyond the mat."
+        }
+      },
+      {
+        label: "Adults",
+        programInterest: "Wing Chun",
+        audience: "Teens & Adults",
+        curriculum: {
+          title: "The science of close-quarters combat.",
+          copy: "Wing Chun is a traditional, concept-based Southern Chinese martial art built for efficiency, self-defense, and close-quarters combat. Students learn to protect and attack the centerline simultaneously, redirect force rather than absorb it, and deliver fast, direct strikes with minimal wasted motion. Made famous by Grandmaster Ip Man and his student Bruce Lee, Wing Chun is a system that rewards intelligence and technique over size and strength."
+        },
+        benefits: {
+          title: "Core principles students master",
+          items: [
+            "Centerline Theory: protect your vital targets while attacking your opponent's in the same motion.",
+            "Economy of Motion: direct, efficient striking and footwork with nothing wasted.",
+            "Deflection over force: redirect an attacker's energy rather than meeting it head-on."
+          ]
+        },
+        galleryImages: [
+          { src: "/images/wing-chun-gallery-1.jpg", alt: "Wing Chun students practicing simultaneous block and strike technique at Burning Tree MMA" },
+          { src: "/images/wing-chun-gallery-2.jpg", alt: "Instructor demonstrating centerline control during Wing Chun class at Burning Tree MMA" },
+          { src: "/images/wing-chun-gallery-3.jpg", alt: "Wing Chun students drilling chain punches and close-range striking combinations" }
+        ],
+        seoCopy: {
+          tagline: "The Martial Art Built for People Who Fight Smart, Not Big.",
+          intro: "Wing Chun does not ask how strong you are. It asks how precisely you can move, how efficiently you can strike, and how quickly you can redirect what comes at you.",
+          bulletHeading: "What Wing Chun develops:",
+          bullets: [
+            "Close-quarters self-defense designed for real-world situations",
+            "Simultaneous attack and defense: block and strike in the same motion",
+            "Centerline control and structural body mechanics",
+            "Economy of motion: direct, efficient technique with nothing wasted",
+            "The ability to redirect an attacker's force instead of absorbing it"
+          ],
+          closing: "This is the system that shaped Bruce Lee. Developed for practicality, refined over centuries, and now taught at Burning Tree MMA every Wednesday. If you want a martial art built on intelligence, precision, and adaptability, Wing Chun is it."
+        }
+      }
+    ]
+  },
+
+  // ── Women's Defense ──────────────────────────────────────────────────────────
+  {
+    slug: "womens-defense",
+    seo: {
+      title: "Women's Self-Defense in Owings Mills | Burning Tree MMA",
+      description:
+        "Women's self-defense classes in Owings Mills using Sanuces Ryu Jiu-Jitsu. Learn practical techniques for real-world situations including bear hugs, chokes, hair pulling, and ground defense.",
+      keywords: [
+        ...categoryKeywords,
+        "women's self-defense Owings Mills",
+        "women's self-defense classes near me",
+        "Sanuces Ryu Jiu-Jitsu",
+        "self-defense for women Maryland",
+        "real world self-defense",
+        "women's safety classes"
+      ]
+    },
+    hero: {
+      title: "Women's Defense",
+      image: "/images/womens-defense-hero.jpg",
+      imageAlt: "Women's self-defense class at Burning Tree MMA in Owings Mills",
+      overlay: "strong"
+    },
+    audience: "Women",
     curriculum: {
-      title: "The art of eight limbs with steady skill-building.",
+      title: "Real-world self-defense for real-world situations.",
       copy:
-        "Known as the art of eight limbs, Muay Thai combines punches, kicks, knees, and elbows for an intense full-body workout. Students practice striking, pad drills, and clinch techniques that build endurance, power, and precision. Whether for fitness, self-defense, or competition, Muay Thai develops both physical toughness and mental confidence."
+        "This program is built around the threats women actually face. Not hypothetical scenarios, but the real attacks that happen in everyday life. Every technique is practical, every drill is pressure-tested, and every session builds the physical skill and mental readiness to respond when it matters.\n\n- Defense against bear hugs\n- Defense against hair pulling\n- Defense against choking\n- Defense against wall attacks\n- Defense against ground assaults\n- Situational, environmental, and anatomy awareness"
     },
     benefits: {
-      title: "Why students love Muay Thai",
+      title: "What you take away from this program",
       items: [
-        "Technical striking built on the art of eight limbs and disciplined coaching habits.",
-        "Challenging classes that improve conditioning, coordination, and confidence.",
-        "A motivating environment for beginners, returning students, and experienced strikers."
+        "Practical techniques that work under real pressure, not choreographed gym moves.",
+        "Situational awareness training that helps you recognize and avoid danger before it escalates.",
+        "Confidence grounded in real skill, so you carry yourself differently every day."
       ]
     },
     galleryImages: [
-      { src: "/images/muay-thai-gallery-1.jpg", alt: "Two Muay Thai students in full protective headgear and shin guards practicing a kick technique during class" },
-      { src: "/images/muay-thai-gallery-2.jpg", alt: "An instructor demonstrating a wrist control technique to students in the gym with framed awards on the wall" },
-      { src: "/images/muay-thai-gallery-3.jpg", alt: "Two men in black training clothes practicing a striking combination in the gym, black and white photo" }
+      { src: "/images/womens-defense-gallery-1.jpeg", alt: "Women's self-defense class drilling escape technique at Burning Tree MMA" },
+      { src: "/images/womens-defense-gallery-2.jpeg", alt: "Instructor demonstrating a defense technique during Women's Defense class at Burning Tree MMA" },
+      { src: "/images/womens-defense-gallery-3.jpeg", alt: "Women's self-defense students practicing ground defense at Burning Tree MMA in Owings Mills" }
     ],
     leadForm: {
-    title: "Try a Free Class",
-    intro:
-      "Take the first step today, we will reach out to follow up with you",
-    submitLabel: "Submit",
-    defaultProgram: "Adults Classes"
+      title: "Join a Women's Defense Class",
+      intro: "Take the first step today. We will reach out to follow up with you.",
+      submitLabel: "Submit",
+      defaultProgram: "Women's Defense"
+    },
+    seoCopy: {
+      tagline: "The System Built to Protect. Sanuces Ryu Jiu-Jitsu.",
+      intro: "Sanuces Ryu Jiu-Jitsu is a close-quarters combat system developed by Dr. Moses Powell and designed specifically for real-world self-defense. Unlike sport-based martial arts, Sanuces is not built for competition. It is built for survival. Every technique is designed to work against a larger, stronger attacker in unpredictable environments. It teaches practitioners to neutralize threats quickly and decisively using joint manipulation, pressure points, throws, and ground control.",
+      bulletHeading: "What makes Sanuces different:",
+      bullets: [
+        "Developed by Dr. Moses Powell specifically for real-world self-defense, not sport",
+        "Techniques designed to work against larger and stronger attackers",
+        "Close-quarters focus that applies directly to the situations women face most",
+        "Combines joint manipulation, pressure points, throws, and ground control",
+        "Taught here by Hanshi Daryl King, 10th Dan and Chief Instructor of all KNS Schools of Sanuces Ryu Jiu-Jitsu"
+      ],
+      closing: "Most self-defense courses teach women to survive an attack. This one teaches them to end it. If you want training that is honest about the threat and serious about the solution, this is where you start."
+    }
   },
-  seoCopy: {
-    tagline: "Eight Limbs. Zero Boredom. Real Results.",
-    intro: "Muay Thai is the most complete striking art in the world, and training it will push you harder than anything you have done in a gym.",
-    bulletHeading: "What you develop in Muay Thai:",
-    bullets: [
-      "Striking technique using punches, kicks, elbows, and knees",
-      "Full-body conditioning and explosive power",
-      "Weight loss and lean muscle through high-output training",
-      "Confidence and self-defense awareness built into every session",
-      "Skill progression from beginner combinations to advanced clinch work"
-    ],
-    closing: "It does not feel like working out. It feels like learning something. That is the reason students show up consistently, stay accountable, and get results that a treadmill never produced."
-  }
-  },
+
+  // ── Birthday Parties ─────────────────────────────────────────────────────────
   {
     slug: "birthday-parties",
     seo: {
@@ -710,12 +797,13 @@ export const programPages: ProgramPage[] = [
     mobileCta: "Contact Us",
     leadForm: {
       title: "Ask About Birthday Parties",
-      intro:
-        "Tell us your preferred date, age group, and party goals and we will follow up with details.",
+      intro: "Tell us your preferred date, age group, and party goals and we will follow up with details.",
       defaultProgram: "Birthday Parties",
       hideProgramSelect: true
     }
   },
+
+  // ── ChimpmanGi ───────────────────────────────────────────────────────────────
   {
     slug: "chimpman-gi",
     seo: {
@@ -756,13 +844,14 @@ export const programPages: ProgramPage[] = [
     ],
     showTestimonials: false,
     leadForm: {
-    title: "Home of the Best Gi You’ll Have Ever Owned",
-    intro:
-      "Join our waitlist to be the first to know when our custom gi drops and secure your spot in the first release.",
-    submitLabel: "Submit",
-    hideProgramSelect: true
-  }
+      title: "Home of the Best Gi You'll Have Ever Owned",
+      intro: "Join our waitlist to be the first to know when our custom gi drops and secure your spot in the first release.",
+      submitLabel: "Submit",
+      hideProgramSelect: true
+    }
   },
+
+  // ── Health & Wellness ────────────────────────────────────────────────────────
   {
     slug: "health-and-wellness",
     seo: {
@@ -805,22 +894,23 @@ export const programPages: ProgramPage[] = [
     showTestimonials: false,
     showSchedule: false,
     showLeadForm: false,
+    accentTheme: "wellness",
     leadForm: {
       title: "Ask About Wellness Services",
-      intro:
-        "Tell us what kind of support you are looking for and we will share the best next step.",
+      intro: "Tell us what kind of support you are looking for and we will share the best next step.",
       defaultProgram: "Health and Wellness",
       hideProgramSelect: true
-    },
-    accentTheme: "wellness"
+    }
   }
 ];
 
+// ─── Wellness booking ──────────────────────────────────────────────────────────
+
 export const wellnessBooking = {
-  // Price per 45-minute session — update this to change the displayed price
+  // Price per 45-minute session. Update this to change the displayed price
   price: 120,
   services: ["Reiki", "Massage", "Acupuncture"] as const,
   sessionDurationMinutes: 45,
   // Add additional recipient emails to this array as needed
-  notificationEmails: ["kaleielendale@gmail.com"],
+  notificationEmails: ["kaleielendale@gmail.com"]
 };

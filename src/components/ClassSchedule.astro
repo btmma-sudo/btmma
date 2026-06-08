@@ -7,7 +7,7 @@ const { ctaHref = "#lead-form" } = Astro.props;
 
 const schedule = [
   {
-    days: "Mon & Wed",
+    days: "Monday",
     slots: [
       { time: "5:00 – 5:45 PM", cls: "Jr. Kenpo" },
       { time: "6:00 – 6:45 PM", cls: "Jr. Kenpo" },
@@ -15,11 +15,19 @@ const schedule = [
     ],
   },
   {
+    days: "Wednesday",
+    slots: [
+      { time: "5:00 – 5:45 PM", cls: "Wing Chun Kids" },
+      { time: "6:00 – 6:45 PM", cls: "Wing Chun Teens" },
+      { time: "7:00 – 8:00 PM", cls: "Wing Chun Adults" },
+    ],
+  },
+  {
     days: "Tue & Thu",
     slots: [
-      { time: "5:00 – 5:45 PM", cls: "Kids Jiu-Jitsu & Jr. Muay Thai" },
-      { time: "6:00 – 6:45 PM", cls: "Kids Jiu-Jitsu & Jr. Muay Thai" },
-      { time: "7:00 – 8:00 PM", cls: "Teens and Adults BJJ & Muay Thai" },
+      { time: "5:00 – 5:45 PM", cls: "Jr. Muay Thai" },
+      { time: "6:00 – 6:45 PM", cls: "Jr. Muay Thai" },
+      { time: "7:00 – 8:00 PM", cls: "Teens and Adults Muay Thai" },
     ],
   },
   {
@@ -27,12 +35,12 @@ const schedule = [
     slots: [
       { time: "9:30 – 10:15 AM", cls: "Jr. Sparring" },
       { time: "10:30 – 11:15 AM", cls: "Teens and Adults Sparring" },
-      { time: "11:30 AM – 12:30 PM", cls: "Adults Jiu-Jitsu" },
     ],
   },
   {
     days: "Sunday",
     slots: [
+      { time: "11:00 AM – 12:00 PM", cls: "Women's Defense" },
       { time: "", cls: "Special Events" },
     ],
     note: "Birthdays, seminars & more",

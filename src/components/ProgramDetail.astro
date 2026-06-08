@@ -4,9 +4,10 @@ import ClassSchedule from "./ClassSchedule.astro";
 
 type Props = {
   program: ProgramPage;
+  showCurriculum?: boolean;
 };
 
-const { program } = Astro.props;
+const { program, showCurriculum = true } = Astro.props;
 const showTestimonials = program.showTestimonials !== false;
 const showSchedule = program.showSchedule !== false;
 const showLeadForm = program.showLeadForm !== false;
@@ -22,6 +23,7 @@ const carouselImages = [
 ];
 ---
 
+{showCurriculum && (
 <section class="shell section-divider">
   <div class="stack">
     <article class="detail-card detail-card-feature">
@@ -43,6 +45,7 @@ const carouselImages = [
     </article>
   </div>
 </section>
+)}
 
 <div class="carousel" aria-hidden="true">
   <div class="carousel-track page-carousel-track">

@@ -31,6 +31,19 @@ const instructors = [
       "In addition to his martial arts background, Xavier is a certified Health and Fitness Instructor through the American Council on Exercise (ACE), specializing in sports performance, weight loss, and behavior change. He is also a certified firearms instructor.",
       "He is a lifetime member of the Fraternal Order of Police and the National Rifle Association."
     ]
+  },
+  {
+    name: "Hanshi Daryl King",
+    title: "Women's Defense Instructor",
+    credentials: "10th Dan | Chief Instructor, KNS Schools of Sanuces Ryu Jiu-Jitsu | Direct Student of Dr. Moses Powell",
+    image: null,
+    imageAlt: null,
+    imageClass: null,
+    paragraphs: [
+      "Hanshi Daryl King 10th Dan is a direct student of Dr. Moses Powell, the founder of Sanuces Ryu Jiu-Jitsu. He is a former United States Marine and ex-corrections officer with over 40 years of teaching experience in the martial arts field.",
+      "As Chief Instructor of all KNS Schools of Sanuces Ryu Jiu-Jitsu, Hanshi King brings a lifetime of real-world experience to every class. His background in military service and corrections work has shaped an approach to self-defense that is direct, pressure-tested, and built for the situations that actually happen outside a gym.",
+      "At Burning Tree MMA, Hanshi King leads the Women's Defense program, bringing the principles of Sanuces Ryu Jiu-Jitsu to women who want practical skills and the confidence to use them."
+    ]
   }
 ];
 ---
@@ -71,16 +84,18 @@ const instructors = [
     <div class="stack">
       {instructors.map((instructor) => (
         <article class="detail-card bio-split">
-          <div class="instructor-photo">
-            <img
-              class={instructor.imageClass}
-              src={instructor.image}
-              alt={instructor.imageAlt}
-              loading="lazy"
-              decoding="async"
-              width={instructor.name === "David Sztajer" ? "1300" : "869"}
-              height={instructor.name === "David Sztajer" ? "1300" : "869"} />
-          </div>
+          {instructor.image && (
+            <div class="instructor-photo">
+              <img
+                class={instructor.imageClass}
+                src={instructor.image}
+                alt={instructor.imageAlt}
+                loading="lazy"
+                decoding="async"
+                width={instructor.name === "David Sztajer" ? "1300" : "869"}
+                height={instructor.name === "David Sztajer" ? "1300" : "869"} />
+            </div>
+          )}
           <div>
             <p class="eyebrow">{instructor.title}</p>
             <h2>{instructor.name}</h2>

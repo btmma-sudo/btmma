@@ -459,6 +459,83 @@ button {
   animation-duration: 30s;
 }
 
+/* Variant page header (no hero image) */
+.variant-page-header {
+  background: var(--surface-strong);
+  border-bottom: 3px solid var(--accent);
+  padding: 3rem 0 2.5rem;
+}
+
+.variant-page-header h1 {
+  margin: 0 0 1.25rem;
+}
+
+/* Variant tab switcher */
+.variant-tabs-bar {
+  display: flex;
+  gap: 0.5rem;
+  padding-top: 2.5rem;
+  padding-bottom: 0;
+}
+
+.variant-tab-btn {
+  padding: 0.65rem 2.5rem;
+  border: 2px solid var(--line);
+  background: var(--surface);
+  color: var(--muted);
+  font-family: "Black Ops One", cursive;
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: border-color 150ms ease, color 150ms ease, background 150ms ease;
+}
+
+.variant-tab-btn.is-active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--surface-strong);
+}
+
+.variant-tab-btn:hover:not(.is-active) {
+  border-color: var(--muted);
+  color: #fff;
+}
+
+.variant-panel--hidden {
+  display: none;
+}
+
+/* Program split layout: curriculum left, form right */
+.program-split {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.program-split-right {
+  min-width: 0;
+}
+
+.program-split-left .lead-card-compact-card {
+  margin: 0;
+  max-width: none;
+}
+
+@media (max-width: 700px) {
+  .program-split {
+    grid-template-columns: 1fr;
+  }
+  .program-split-left {
+    display: flex;
+    justify-content: center;
+  }
+  .program-split-left .lead-card-compact-card {
+    max-width: 420px;
+    width: 100%;
+  }
+}
+
 /* Hero + detached form layout */
 .hero-form-layout {
   position: relative;
@@ -616,6 +693,9 @@ button {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
 }
 
 .program-card-image {
@@ -644,6 +724,13 @@ button {
   flex: 1;
 }
 
+.program-card-btn {
+  margin-top: auto;
+  padding-top: 0.8rem;
+  display: inline-block;
+  align-self: flex-start;
+}
+
 .program-card p,
 .detail-card p,
 .lead-card p,
@@ -653,10 +740,6 @@ button {
   color: var(--muted);
 }
 
-.program-card-body a {
-  margin-top: auto;
-  padding-top: 0.8rem;
-}
 
 .split-section {
   align-items: start;
@@ -910,7 +993,7 @@ button {
 
 .schedule-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 1rem;
   margin-bottom: 1.75rem;
 }
@@ -1045,7 +1128,7 @@ button {
 }
 
 .lead-form-compact textarea {
-  min-height: 4.3rem;
+  min-height: 2.8rem;
   resize: vertical;
 }
 

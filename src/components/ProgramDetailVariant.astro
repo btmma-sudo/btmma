@@ -1,0 +1,142 @@
+---
+import type { ProgramPage } from "../data/site";
+import ClassSchedule from "./ClassSchedule.astro";
+import LeadForm from "./LeadForm.astro";
+
+type Props = {
+  program: ProgramPage;
+};
+
+const { program } = Astro.props;
+const variants = program.variants!;
+const showTestimonials = program.showTestimonials !== false;
+const showSchedule = program.showSchedule !== false;
+
+const variantCarousels = variants.map((v) => [
+  ...v.galleryImages,
+  ...v.galleryImages,
+  ...v.galleryImages,
+  ...v.galleryImages,
+]);
+---
+
+<div class="variant-tabs-bar shell">
+  {variants.map((v, i) => (
+    <button
+      class:list={["variant-tab-btn", i === 0 && "is-active"]}
+      data-variant-tab={String(i)}
+      type="button"
+    >
+      {v.label}
+    </button>
+  ))}
+</div>
+
+{variants.map((v, i) => (
+  <div
+    class:list={["variant-panel", i !== 0 && "variant-panel--hidden"]}
+    data-variant-panel={String(i)}
+  >
+    <section class="shell section-divider">
+      <div class="program-split">
+        <div class="program-split-left">
+          <LeadForm config={{ ...program.leadForm, defaultProgram: v.programInterest ?? program.leadForm.defaultProgram }} />
+        </div>
+        <article class="detail-card detail-card-feature program-split-right">
+          <p class="eyebrow">{v.audience}</p>
+          <h2>{v.curriculum.title}</h2>
+          <div class="program-copy">
+            {v.curriculum.copy.split("\n\n").map((block) =>
+              block.startsWith("- ") ? (
+                <ul class="program-copy-list">
+                  {block.split("\n").map((item) => (
+                    <li>{item.replace(/^- /, "")}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p>{block}</p>
+              )
+            )}
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <div class="carousel" aria-hidden="true">
+      <div class="carousel-track page-carousel-track">
+        {variantCarousels[i].map((image, idx) => (
+          <img
+            src={image.src}
+            alt={image.alt}
+            loading={idx < v.galleryImages.length ? "eager" : "lazy"}
+            decoding="async"
+          />
+        ))}
+      </div>
+    </div>
+
+    {v.seoCopy && (
+      <section class="seo-copy-section">
+        <div class="seo-copy-inner">
+          <div class="seo-copy-header">
+            <h2 class="seo-copy-tagline">{v.seoCopy.tagline}</h2>
+          </div>
+          <div class="seo-copy-bullets-block">
+            <p class="seo-bullet-heading">{v.seoCopy.bulletHeading}</p>
+            <ul class="seo-copy-bullets">
+              {v.seoCopy.bullets.map((b) => (
+                <li><span class="seo-bullet-icon">&#9656;</span>{b}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+    )}
+  </div>
+))}
+
+{showSchedule && <ClassSchedule ctaHref="#lead-form" />}
+
+{showTestimonials && (
+  <section class="shell section-divider">
+    <div class="stack">
+      <section class="testimonials-section">
+        <h2>Testimonials</h2>
+        <div class="card-grid">
+          <blockquote class="quote-card">
+            <p>"Best place ever for mixed martial arts. My child is super happy there, come and try today!"</p>
+            <footer>Shoshana S.</footer>
+          </blockquote>
+          <blockquote class="quote-card">
+            <p>"Great place to be for the best experience in martial arts."</p>
+            <footer>Zainab A.</footer>
+          </blockquote>
+          <blockquote class="quote-card">
+            <p>"My grandson has learned discipline, confidence and martial arts techniques. I am so glad my husband made the decision to enroll him, it was the best choice."</p>
+            <footer>Kelly W.</footer>
+          </blockquote>
+        </div>
+      </section>
+    </div>
+  </section>
+)}
+
+<script>
+  const tabs = document.querySelectorAll<HTMLElement>("[data-variant-tab]");
+  const panels = document.querySelectorAll<HTMLElement>("[data-variant-panel]");
+
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const target = tab.dataset.variantTab;
+      tabs.forEach((t) => t.classList.remove("is-active"));
+      tab.classList.add("is-active");
+      panels.forEach((panel) => {
+        if (panel.dataset.variantPanel === target) {
+          panel.classList.remove("variant-panel--hidden");
+        } else {
+          panel.classList.add("variant-panel--hidden");
+        }
+      });
+    });
+  });
+</script>

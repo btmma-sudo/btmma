@@ -141,15 +141,15 @@ const schema = {
             }
           },
           {
-            threshold: 0.14,
-            rootMargin: "0px 0px -8% 0px"
+            threshold: 0,
+            rootMargin: "0px 0px 100px 0px"
           }
         );
 
         revealElements.forEach((element, index) => {
           if (!(element instanceof HTMLElement)) return;
           element.classList.add("reveal-on-scroll");
-          element.style.setProperty("--reveal-delay", `${Math.min(index % 6, 5) * 20}ms`);
+          element.style.setProperty("--reveal-delay", `0ms`);
           observer.observe(element);
         });
       }

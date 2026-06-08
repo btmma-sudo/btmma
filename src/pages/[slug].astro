@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHero from "../components/PageHero.astro";
 import ProgramDetail from "../components/ProgramDetail.astro";
+import ProgramDetailVariant from "../components/ProgramDetailVariant.astro";
 import ChimpmanGiPage from "../components/ChimpmanGiPage.astro";
 import LeadForm from "../components/LeadForm.astro";
 import WellnessBooking from "../components/WellnessBooking.astro";
@@ -18,8 +19,12 @@ const { program } = Astro.props;
 const isChimpmanGi  = program.slug === "chimpman-gi";
 const isWellness    = program.slug === "health-and-wellness";
 const isBirthday    = program.slug === "birthday-parties";
+const hasVariants   = !!program.variants?.length;
 const showLeadForm  = program.showLeadForm !== false;
 const centerContent = !isWellness && !isBirthday;
+const useSplitLayout = !isChimpmanGi && !isWellness && !isBirthday && !hasVariants && showLeadForm;
+
+const curriculumBlocks = !hasVariants ? program.curriculum.copy.split("\n\n") : [];
 ---
 
 <BaseLayout
@@ -33,15 +38,53 @@ const centerContent = !isWellness && !isBirthday;
     <ChimpmanGiPage program={program} />
   ) : (
     <>
-      <div class="hero-form-layout hero-form-layout--program">
-        <PageHero hero={program.hero} showMobileCta={showLeadForm} ctaLabel={program.mobileCta} centerMobile={isWellness} centerContent={centerContent} />
-        {showLeadForm && (
-          <div class="hero-form-float hero-form-float--program">
-            <LeadForm config={program.leadForm} />
+      {hasVariants ? (
+        <div class="variant-page-header">
+          <div class="shell">
+            <h1>{program.hero.title}</h1>
+            <a class="button" href="#lead-form">Try a Free Class</a>
           </div>
-        )}
-      </div>
-      <ProgramDetail program={program} />
+        </div>
+      ) : (
+        <PageHero hero={program.hero} showMobileCta={showLeadForm} ctaLabel={program.mobileCta} centerMobile={isWellness} centerContent={centerContent} />
+      )}
+
+      {useSplitLayout ? (
+        <section class="shell section-divider">
+          <div class="program-split">
+            <div class="program-split-left">
+              <LeadForm config={program.leadForm} />
+            </div>
+            <article class="detail-card detail-card-feature program-split-right">
+              <p class="eyebrow">{program.audience}</p>
+              <h2>{program.curriculum.title}</h2>
+              <div class="program-copy">
+                {curriculumBlocks.map((block) =>
+                  block.startsWith("- ") ? (
+                    <ul class="program-copy-list">
+                      {block.split("\n").map((item) => (
+                        <li>{item.replace(/^- /, "")}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>{block}</p>
+                  )
+                )}
+              </div>
+            </article>
+          </div>
+        </section>
+      ) : showLeadForm && !hasVariants ? (
+        <div class="hero-form-float">
+          <LeadForm config={program.leadForm} />
+        </div>
+      ) : null}
+
+      {hasVariants ? (
+        <ProgramDetailVariant program={program} />
+      ) : (
+        <ProgramDetail program={program} showCurriculum={!useSplitLayout} />
+      )}
       {isWellness && <WellnessBooking />}
     </>
   )}

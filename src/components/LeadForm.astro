@@ -33,7 +33,7 @@ const fields = config?.fields ?? "standard";
         <input type="hidden" name="phone" value="" />
         <textarea
           name="comments"
-          rows="4"
+          rows="2"
           placeholder="Anything you want us to know about size, interest, or drop updates? (optional)"></textarea>
         <input type="hidden" name="programInterest" value={defaultProgram || "ChimpmanGi"} />
       </>
@@ -55,7 +55,7 @@ const fields = config?.fields ?? "standard";
           )}
           {hideProgramSelect && <input type="hidden" name="programInterest" value={defaultProgram} />}
         </div>
-        <textarea name="comments" rows="5" placeholder="Comments (optional)"></textarea>
+        <textarea name="comments" rows="2" placeholder="Comments (optional)"></textarea>
       </>
     )}
 
