@@ -1,8 +1,7 @@
 ---
 // Landing page: /lp/jr-ninjas
 // Not linked in nav or sitemap. noindex meta tag prevents search indexing.
-// Posts directly to Make — no Cloudflare Turnstile on this flow.
-const MAKE_WEBHOOK = "https://hook.eu2.make.com/7gx96x2faucgmcessddi71c6znfii3ro";
+// Posts via /api/submit-ninja-lead — no Cloudflare Turnstile on this flow.
 ---
 
 <!doctype html>
@@ -13,6 +12,9 @@ const MAKE_WEBHOOK = "https://hook.eu2.make.com/7gx96x2faucgmcessddi71c6znfii3ro
     <meta name="robots" content="noindex, nofollow" />
     <title>Claim Your Free Week + Summer Special | Burning Tree MMA</title>
     <link rel="icon" href="/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Black+Ops+One&display=swap" />
     <style>
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -32,9 +34,14 @@ const MAKE_WEBHOOK = "https://hook.eu2.make.com/7gx96x2faucgmcessddi71c6znfii3ro
       body {
         background: var(--bg);
         color: #ffffff;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-family: "Open Sans", -apple-system, BlinkMacSystemFont, sans-serif;
         -webkit-font-smoothing: antialiased;
         padding-bottom: 100px;
+      }
+
+      h1, h2, .step-q, .all-set-title, .sched-heading, .day-label {
+        font-family: "Black Ops One", "Open Sans", sans-serif;
+        font-weight: 400;
       }
 
       /* ── Header ── */
@@ -44,10 +51,33 @@ const MAKE_WEBHOOK = "https://hook.eu2.make.com/7gx96x2faucgmcessddi71c6znfii3ro
         padding: 1.5rem 1rem 0.5rem;
       }
 
+      .lp-logo-link {
+        display: inline-block;
+        line-height: 0;
+        border-radius: 4px;
+        transition: opacity 0.15s;
+      }
+
+      .lp-logo-link[style*="pointer-events: none"] {
+        cursor: default;
+      }
+
       .lp-logo {
         height: 56px;
         width: auto;
         filter: brightness(0) invert(1);
+      }
+
+      /* ── Address ── */
+      .lp-address {
+        text-align: center;
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #cccccc;
+        padding: 0 1rem 1rem;
+        max-width: 480px;
+        margin: 0 auto;
+        letter-spacing: 0.02em;
       }
 
       /* ── Hero copy ── */
@@ -403,7 +433,9 @@ const MAKE_WEBHOOK = "https://hook.eu2.make.com/7gx96x2faucgmcessddi71c6znfii3ro
   <body>
     <!-- Header -->
     <header class="lp-header">
-      <img src="/images/logo.png" alt="Burning Tree MMA" class="lp-logo" />
+      <a href="/" id="logo-link" class="lp-logo-link" aria-label="Burning Tree MMA home" tabindex="-1" style="pointer-events: none;">
+        <img src="/images/logo.png" alt="Burning Tree MMA" class="lp-logo" />
+      </a>
     </header>
 
     <!-- Hero copy -->
@@ -411,6 +443,9 @@ const MAKE_WEBHOOK = "https://hook.eu2.make.com/7gx96x2faucgmcessddi71c6znfii3ro
       <h1 class="lp-headline">Claim Your <span>Free Week</span> + Summer Special</h1>
       <p class="lp-desc">Fill in your details and we will reach out to schedule your first class</p>
     </div>
+
+    <!-- Address -->
+    <p class="lp-address">10210 S Dolfield Rd, Owings Mills, MD 21117</p>
 
     <!-- Form card -->
     <div class="form-wrap">
@@ -514,7 +549,7 @@ const MAKE_WEBHOOK = "https://hook.eu2.make.com/7gx96x2faucgmcessddi71c6znfii3ro
       <button class="claim-btn" id="claim-btn" type="button">Claim Offer</button>
     </div>
 
-    <script is:inline define:vars={{ MAKE_WEBHOOK }}>
+    <script is:inline>
       let selectedKids = null;
       let submitted = false;
 
@@ -555,17 +590,17 @@ const MAKE_WEBHOOK = "https://hook.eu2.make.com/7gx96x2faucgmcessddi71c6znfii3ro
         submitBtn.textContent = 'Sending...';
 
         try {
-          await fetch(MAKE_WEBHOOK, {
+          await fetch('/api/submit-ninja-lead', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-            body: new URLSearchParams({
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
               fullName: name,
               phone: phone,
               email: '',
               programInterest: "Jr. Ninjas Summer Special",
               comments: `Number of kids: ${selectedKids}`,
               source: window.location.href
-            }).toString()
+            })
           });
         } catch (_) {
           // Fail silently — don't block the user experience
@@ -576,6 +611,11 @@ const MAKE_WEBHOOK = "https://hook.eu2.make.com/7gx96x2faucgmcessddi71c6znfii3ro
         document.getElementById('step-3').classList.remove('hidden');
         document.getElementById('claim-bar').classList.remove('visible');
         document.getElementById('form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        // Enable logo link to home now that form is done
+        const logoLink = document.getElementById('logo-link');
+        logoLink.style.pointerEvents = 'auto';
+        logoLink.removeAttribute('tabindex');
       });
 
       // ── Scroll hint arrow ─────────────────────────────────────────────────────
