@@ -1,0 +1,602 @@
+---
+// Landing page: /lp/jr-ninjas
+// Not linked in nav or sitemap. noindex meta tag prevents search indexing.
+// Posts directly to Make — no Cloudflare Turnstile on this flow.
+const MAKE_WEBHOOK = "https://hook.eu2.make.com/7gx96x2faucgmcessddi71c6znfii3ro";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Claim Your Free Week + Summer Special | Burning Tree MMA</title>
+    <link rel="icon" href="/favicon.ico" />
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      :root {
+        --accent: #e05a00;
+        --accent-hover: #c74f00;
+        --bg: #0d0d0d;
+        --card: #ffffff;
+        --text-dark: #111111;
+        --text-muted: #555555;
+        --border: #e0e0e0;
+        --sched-bg: #161616;
+        --sched-card: #1f1f1f;
+        --sched-border: #2a2a2a;
+      }
+
+      body {
+        background: var(--bg);
+        color: #ffffff;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        padding-bottom: 100px;
+      }
+
+      /* ── Header ── */
+      .lp-header {
+        display: flex;
+        justify-content: center;
+        padding: 1.5rem 1rem 0.5rem;
+      }
+
+      .lp-logo {
+        height: 56px;
+        width: auto;
+        filter: brightness(0) invert(1);
+      }
+
+      /* ── Hero copy ── */
+      .lp-hero {
+        text-align: center;
+        padding: 1.25rem 1.25rem 1.5rem;
+        max-width: 480px;
+        margin: 0 auto;
+      }
+
+      .lp-headline {
+        font-size: clamp(1.5rem, 6vw, 2rem);
+        font-weight: 800;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+        margin-bottom: 0.625rem;
+      }
+
+      .lp-headline span {
+        color: var(--accent);
+      }
+
+      .lp-desc {
+        font-size: 0.95rem;
+        color: #aaaaaa;
+        line-height: 1.5;
+      }
+
+      /* ── Form card ── */
+      .form-wrap {
+        padding: 0 1rem 1.5rem;
+        max-width: 480px;
+        margin: 0 auto;
+      }
+
+      .form-card {
+        background: var(--card);
+        border-radius: 20px;
+        padding: 1.75rem 1.5rem 1.5rem;
+        box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+      }
+
+      /* ── Step dots ── */
+      .step-dots {
+        display: flex;
+        gap: 6px;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--border);
+        transition: background 0.25s;
+      }
+
+      .dot.active {
+        background: var(--accent);
+      }
+
+      /* ── Question ── */
+      .step-q {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        text-align: center;
+        margin-bottom: 1.25rem;
+        line-height: 1.3;
+      }
+
+      /* ── Choice buttons ── */
+      .choices {
+        display: flex;
+        flex-direction: column;
+        gap: 0.625rem;
+        margin-bottom: 1.25rem;
+      }
+
+      .choice-btn {
+        width: 100%;
+        padding: 1rem 1.25rem;
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        background: #fafafa;
+        color: var(--text-dark);
+        font-size: 1.05rem;
+        font-weight: 600;
+        cursor: pointer;
+        text-align: left;
+        transition: border-color 0.15s, background 0.15s, color 0.15s;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .choice-btn:active {
+        transform: scale(0.98);
+      }
+
+      .choice-btn.selected {
+        border-color: var(--accent);
+        background: #fff4ee;
+        color: var(--accent);
+      }
+
+      /* ── Next / Submit button ── */
+      .next-btn {
+        width: 100%;
+        padding: 1rem;
+        border: none;
+        border-radius: 12px;
+        background: var(--accent);
+        color: #ffffff;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background 0.15s, opacity 0.15s;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .next-btn:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+      }
+
+      .next-btn:not(:disabled):active {
+        background: var(--accent-hover);
+        transform: scale(0.98);
+      }
+
+      /* ── Step 2 fields ── */
+      .field-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-bottom: 1.25rem;
+      }
+
+      .field-group input {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        font-size: 1rem;
+        color: var(--text-dark);
+        background: #fafafa;
+        outline: none;
+        transition: border-color 0.15s;
+        -webkit-appearance: none;
+      }
+
+      .field-group input:focus {
+        border-color: var(--accent);
+        background: #fff;
+      }
+
+      .field-group input::placeholder {
+        color: #aaa;
+      }
+
+      .form-error {
+        color: #c00;
+        font-size: 0.85rem;
+        text-align: center;
+        margin-top: 0.5rem;
+      }
+
+      /* ── Step 3 confirmation ── */
+      .step-3-inner {
+        text-align: center;
+        padding: 0.5rem 0;
+      }
+
+      .check-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: #e8f5e9;
+        color: #2e7d32;
+        font-size: 1.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+      }
+
+      .all-set-title {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--text-dark);
+        margin-bottom: 0.625rem;
+      }
+
+      .all-set-sub {
+        font-size: 0.95rem;
+        color: var(--text-muted);
+        line-height: 1.5;
+        margin-bottom: 1.5rem;
+      }
+
+      .scroll-hint {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.25rem;
+        cursor: pointer;
+        color: var(--accent);
+        font-size: 0.875rem;
+        font-weight: 600;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .arrow-down {
+        font-size: 1.5rem;
+        animation: bounce 1.4s ease infinite;
+      }
+
+      @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(6px); }
+      }
+
+      /* ── Hidden util ── */
+      .hidden { display: none !important; }
+
+      /* ── Schedule section ── */
+      .sched-section {
+        background: var(--sched-bg);
+        padding: 2.5rem 1.25rem;
+        border-top: 1px solid #222;
+      }
+
+      .sched-eyebrow {
+        text-align: center;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 0.5rem;
+      }
+
+      .sched-heading {
+        text-align: center;
+        font-size: 1.35rem;
+        font-weight: 800;
+        margin-bottom: 1.75rem;
+        line-height: 1.3;
+      }
+
+      .sched-list {
+        max-width: 480px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .sched-day {
+        background: var(--sched-card);
+        border: 1px solid var(--sched-border);
+        border-radius: 12px;
+        padding: 1rem 1.125rem;
+      }
+
+      .day-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 0.625rem;
+      }
+
+      .sched-day ul {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.375rem;
+      }
+
+      .sched-day li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+      }
+
+      .sched-time {
+        color: #888;
+        white-space: nowrap;
+        flex-shrink: 0;
+        font-size: 0.8rem;
+      }
+
+      .sched-cls {
+        color: #e8e8e8;
+        font-weight: 500;
+        text-align: right;
+      }
+
+      .sched-note {
+        font-size: 0.78rem;
+        color: #555;
+        margin-top: 0.5rem;
+      }
+
+      /* ── Claim bar ── */
+      .claim-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        padding: 0.875rem 1.25rem calc(0.875rem + env(safe-area-inset-bottom));
+        background: linear-gradient(to top, #0d0d0d 60%, transparent);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+      }
+
+      .claim-bar.visible {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .claim-btn {
+        display: block;
+        width: 100%;
+        max-width: 480px;
+        margin: 0 auto;
+        padding: 1rem;
+        border: none;
+        border-radius: 14px;
+        background: var(--accent);
+        color: #fff;
+        font-size: 1rem;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        cursor: pointer;
+        box-shadow: 0 4px 20px rgba(224, 90, 0, 0.45);
+        -webkit-tap-highlight-color: transparent;
+        transition: background 0.15s;
+      }
+
+      .claim-btn:active {
+        background: var(--accent-hover);
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Header -->
+    <header class="lp-header">
+      <img src="/images/logo.png" alt="Burning Tree MMA" class="lp-logo" />
+    </header>
+
+    <!-- Hero copy -->
+    <div class="lp-hero">
+      <h1 class="lp-headline">Claim Your <span>Free Week</span> + Summer Special</h1>
+      <p class="lp-desc">Fill in your details and we will reach out to schedule your first class</p>
+    </div>
+
+    <!-- Form card -->
+    <div class="form-wrap">
+      <div class="form-card" id="form-card">
+
+        <!-- Step 1: How many Jr. Ninjas? -->
+        <div id="step-1">
+          <div class="step-dots">
+            <span class="dot active"></span>
+            <span class="dot"></span>
+          </div>
+          <p class="step-q">How many Jr. Ninjas?</p>
+          <div class="choices">
+            <button class="choice-btn" data-value="1" type="button">1</button>
+            <button class="choice-btn" data-value="2" type="button">2</button>
+            <button class="choice-btn" data-value="2+" type="button">2+</button>
+          </div>
+          <button class="next-btn" id="next-1" type="button" disabled>Next</button>
+        </div>
+
+        <!-- Step 2: Name + Phone -->
+        <div id="step-2" class="hidden">
+          <div class="step-dots">
+            <span class="dot active"></span>
+            <span class="dot active"></span>
+          </div>
+          <p class="step-q">How do we reach you?</p>
+          <div class="field-group">
+            <input id="lp-name" type="text" placeholder="Full Name" autocomplete="name" inputmode="text" />
+            <input id="lp-phone" type="tel" placeholder="Phone Number" autocomplete="tel" inputmode="tel" />
+          </div>
+          <button class="next-btn" id="submit-btn" type="button">Submit</button>
+          <p class="form-error hidden" id="form-error">Please fill in both fields.</p>
+        </div>
+
+        <!-- Step 3: Confirmation -->
+        <div id="step-3" class="hidden">
+          <div class="step-3-inner">
+            <div class="check-icon">&#10003;</div>
+            <h2 class="all-set-title">You're All Set!</h2>
+            <p class="all-set-sub">We will reach out within the day to get your first class scheduled.</p>
+            <div class="scroll-hint" id="scroll-to-sched">
+              <span>See our schedule</span>
+              <span class="arrow-down">&#8595;</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Schedule -->
+    <section class="sched-section" id="schedule">
+      <p class="sched-eyebrow">Weekly Schedule</p>
+      <h2 class="sched-heading">Find a class that fits your week.</h2>
+      <div class="sched-list">
+        <div class="sched-day">
+          <p class="day-label">Monday</p>
+          <ul>
+            <li><span class="sched-time">5:00 - 5:45 PM</span><span class="sched-cls">Jr. Kenpo</span></li>
+            <li><span class="sched-time">6:00 - 6:45 PM</span><span class="sched-cls">Jr. Kenpo</span></li>
+            <li><span class="sched-time">7:00 - 8:00 PM</span><span class="sched-cls">Teens and Adults Kenpo</span></li>
+          </ul>
+        </div>
+        <div class="sched-day">
+          <p class="day-label">Tuesday &amp; Thursday</p>
+          <ul>
+            <li><span class="sched-time">5:00 - 5:45 PM</span><span class="sched-cls">Jr. Muay Thai</span></li>
+            <li><span class="sched-time">6:00 - 6:45 PM</span><span class="sched-cls">Jr. Muay Thai</span></li>
+            <li><span class="sched-time">7:00 - 8:00 PM</span><span class="sched-cls">Teens and Adults Muay Thai</span></li>
+          </ul>
+        </div>
+        <div class="sched-day">
+          <p class="day-label">Wednesday</p>
+          <ul>
+            <li><span class="sched-time">5:00 - 5:45 PM</span><span class="sched-cls">Wing Chun Kids</span></li>
+            <li><span class="sched-time">6:00 - 6:45 PM</span><span class="sched-cls">Wing Chun Teens</span></li>
+            <li><span class="sched-time">7:00 - 8:00 PM</span><span class="sched-cls">Wing Chun Adults</span></li>
+          </ul>
+        </div>
+        <div class="sched-day">
+          <p class="day-label">Saturday</p>
+          <ul>
+            <li><span class="sched-time">9:30 - 10:15 AM</span><span class="sched-cls">Jr. Sparring</span></li>
+            <li><span class="sched-time">10:30 - 11:15 AM</span><span class="sched-cls">Teens and Adults Sparring</span></li>
+          </ul>
+        </div>
+        <div class="sched-day">
+          <p class="day-label">Sunday</p>
+          <ul>
+            <li><span class="sched-time">11:00 AM - 12:00 PM</span><span class="sched-cls">Women's Defense</span></li>
+            <li><span class="sched-time"></span><span class="sched-cls">Special Events</span></li>
+          </ul>
+          <p class="sched-note">Birthdays, seminars &amp; more</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Fixed claim bar -->
+    <div class="claim-bar" id="claim-bar">
+      <button class="claim-btn" id="claim-btn" type="button">Claim Offer</button>
+    </div>
+
+    <script is:inline define:vars={{ MAKE_WEBHOOK }}>
+      let selectedKids = null;
+      let submitted = false;
+
+      // ── Step 1: choice selection ──────────────────────────────────────────────
+      const choiceBtns = document.querySelectorAll('.choice-btn');
+      const next1 = document.getElementById('next-1');
+
+      choiceBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          choiceBtns.forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          selectedKids = btn.dataset.value;
+          next1.disabled = false;
+        });
+      });
+
+      next1.addEventListener('click', () => {
+        document.getElementById('step-1').classList.add('hidden');
+        document.getElementById('step-2').classList.remove('hidden');
+        document.getElementById('form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+
+      // ── Step 2: submit ────────────────────────────────────────────────────────
+      const submitBtn = document.getElementById('submit-btn');
+      const formError = document.getElementById('form-error');
+
+      submitBtn.addEventListener('click', async () => {
+        const name = document.getElementById('lp-name').value.trim();
+        const phone = document.getElementById('lp-phone').value.trim();
+
+        if (!name || !phone) {
+          formError.classList.remove('hidden');
+          return;
+        }
+        formError.classList.add('hidden');
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending...';
+
+        try {
+          await fetch(MAKE_WEBHOOK, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+            body: new URLSearchParams({
+              fullName: name,
+              phone: phone,
+              email: '',
+              programInterest: "Jr. Ninjas Summer Special",
+              comments: `Number of kids: ${selectedKids}`,
+              source: window.location.href
+            }).toString()
+          });
+        } catch (_) {
+          // Fail silently — don't block the user experience
+        }
+
+        submitted = true;
+        document.getElementById('step-2').classList.add('hidden');
+        document.getElementById('step-3').classList.remove('hidden');
+        document.getElementById('claim-bar').classList.remove('visible');
+        document.getElementById('form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+
+      // ── Scroll hint arrow ─────────────────────────────────────────────────────
+      document.getElementById('scroll-to-sched').addEventListener('click', () => {
+        document.getElementById('schedule').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+
+      // ── Claim bar visibility ──────────────────────────────────────────────────
+      const claimBar = document.getElementById('claim-bar');
+      const formCard = document.getElementById('form-card');
+
+      const io = new IntersectionObserver(([entry]) => {
+        if (submitted) return;
+        claimBar.classList.toggle('visible', !entry.isIntersecting);
+      }, { threshold: 0.2 });
+
+      io.observe(formCard);
+
+      document.getElementById('claim-btn').addEventListener('click', () => {
+        formCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    </script>
+  </body>
+</html>
