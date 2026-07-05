@@ -32,13 +32,15 @@ const schedule = [
   },
   {
     days: "Saturday",
-    note: "Birthdays, seminars & special events!",
+    slots: [
+      { time: "", cls: "Special Events" },
+    ],
+    note: "Birthdays, seminars & more",
   },
   {
     days: "Sunday",
     slots: [
-      { time: "12:00 PM – 2:00 PM", cls: "Women's Defense" },
-      { time: "", cls: "Special Events" },
+      { time: "12:00 PM – 2:00 PM", cls: "Women's Defense" }
     ],
   },
 ];
