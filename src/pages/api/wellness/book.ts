@@ -152,27 +152,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
     });
   }
 
-  // KV: check + persist
-  const kv = env.BOOKINGS_KV;
-  const kvKey = `slot:${date}_${time}`;
-
-  if (kv) {
-    const existing = await kv.get(kvKey);
-    if (existing) {
-      return new Response(
-        JSON.stringify({
-          error: "This slot was just booked. Please choose another time.",
-        }),
-        { status: 409, headers: { "Content-Type": "application/json" } }
-      );
-    }
-    await kv.put(
-      kvKey,
-      JSON.stringify({ date, time, service, name, email, phone, bookedAt: new Date().toISOString() }),
-      { expirationTtl: 60 * 60 * 24 * 180 } // 180 days
-    );
-  }
-
   // Send emails via Resend
   const resendKey = env.RESEND_API_KEY;
   if (resendKey) {
