@@ -94,7 +94,7 @@ function customerEmail(d: {
         </tr>
         <tr>
           <td style="padding:10px 8px;color:#666;">Duration</td>
-          <td style="padding:10px 8px;">45 minutes · $${wellnessBooking.price}</td>
+          <td style="padding:10px 8px;">45 minutes · ${wellnessBooking.price}</td>
         </tr>
       </table>
       <p style="margin-top:20px;color:#888;font-size:13px;">
