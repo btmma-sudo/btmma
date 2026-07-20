@@ -9,11 +9,5 @@
   },
   "vars": {
     "MAKE_WEBHOOK_URL": "https://hook.eu2.make.com/148pw2jrjro999olsiy0up1i54rixtj2"
-  },
-  "kv_namespaces": [
-    {
-      "binding": "BOOKINGS_KV",
-      "id": "7cc1684ea83048c88c922b6cb43b55ce"
-    }
-  ]
+  }
 }

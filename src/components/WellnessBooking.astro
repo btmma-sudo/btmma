@@ -8,7 +8,7 @@ const { price, services } = wellnessBooking;
 
     <div class="wb-intro">
       <h2>Book a Session</h2>
-      <p class="wb-subtitle">45-minute sessions &middot; <strong class="wb-price-tag">${price}</strong></p>
+      <p class="wb-subtitle">45-minute sessions &middot; <strong class="wb-price-tag">\$${price}</strong></p>
     </div>
 
     <!-- Config passed to client script -->
@@ -25,7 +25,7 @@ const { price, services } = wellnessBooking;
         <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
       </div>
       <div class="wb-days" id="wb-days"></div>
-      <p class="wb-hint">Select an available date to see open time slots.</p>
+      <p class="wb-hint">Select a date to see open time slots.</p>
     </div>
 
     <!-- Step 2: Time slots (revealed after date pick) -->
@@ -158,16 +158,12 @@ const { price, services } = wellnessBooking;
     var fwrap = document.getElementById('wb-form-wrap');
     if (!wrap || !grid || !label || !fwrap) return;
     label.textContent = fmtDate(ds);
-    grid.innerHTML = '<p class="wb-loading">Checking availability\u2026</p>';
-    wrap.hidden = false;
     fwrap.hidden = true;
-    fetch('/api/wellness/slots?date=' + ds)
-      .then(function (r) { return r.json(); })
-      .then(function (data) { renderSlots(ds, data.bookedSlots || []); })
-      .catch(function () { renderSlots(ds, []); });
+    renderSlots(ds);
+    wrap.hidden = false;
   }
 
-  function renderSlots(ds, booked) {
+  function renderSlots(ds) {
     var grid = document.getElementById('wb-slots');
     if (!grid) return;
     grid.innerHTML = '';
@@ -177,19 +173,13 @@ const { price, services } = wellnessBooking;
       return;
     }
     all.forEach(function (t) {
-      var taken = booked.indexOf(t) !== -1;
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.textContent = fmtTime(t);
-      if (taken) {
-        btn.className = 'wb-slot wb-slot-taken';
-        btn.disabled = true;
-      } else {
-        btn.className = 'wb-slot wb-slot-open' + (t === selTime ? ' wb-slot-sel' : '');
-        (function (time, el) {
-          el.addEventListener('click', function () { pickSlot(time, el); });
-        })(t, btn);
-      }
+      btn.className = 'wb-slot wb-slot-open' + (t === selTime ? ' wb-slot-sel' : '');
+      (function (time, el) {
+        el.addEventListener('click', function () { pickSlot(time, el); });
+      })(t, btn);
       grid.appendChild(btn);
     });
   }
@@ -455,12 +445,6 @@ const { price, services } = wellnessBooking;
     background: var(--accent) !important;
     border-color: var(--accent) !important;
     color: #fff !important;
-  }
-  .wb-slot-taken {
-    border-color: #2a2a2a;
-    color: #3d3d3d;
-    cursor: not-allowed;
-    text-decoration: line-through;
   }
 
   /* Booking form */
