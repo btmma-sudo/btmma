@@ -1,5 +1,5 @@
 {
-  "name": "btmmawebsite",
+  "name": "burningtreemma",
   "compatibility_date": "2026-04-08",
   "compatibility_flags": ["nodejs_compat"],
   "main": "./dist/_worker.js/index.js",
