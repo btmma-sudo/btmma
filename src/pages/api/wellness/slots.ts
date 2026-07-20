@@ -14,24 +14,8 @@ export const GET: APIRoute = async ({ request, locals }) => {
     });
   }
 
-  const kv = env.BOOKINGS_KV;
-  if (!kv) {
-    return new Response(JSON.stringify({ bookedSlots: [] }), {
-      headers: { "Content-Type": "application/json" },
-    });
-  }
-
-  try {
-    const { keys } = await kv.list({ prefix: `slot:${date}_` });
-    const bookedSlots = (keys as { name: string }[]).map(
-      (k) => k.name.split("_")[1]
-    );
-    return new Response(JSON.stringify({ bookedSlots }), {
-      headers: { "Content-Type": "application/json" },
-    });
-  } catch {
-    return new Response(JSON.stringify({ bookedSlots: [] }), {
-      headers: { "Content-Type": "application/json" },
-    });
-  }
+  // Return empty booked slots - all slots are always available
+  return new Response(JSON.stringify({ bookedSlots: [] }), {
+    headers: { "Content-Type": "application/json" },
+  });
 };
