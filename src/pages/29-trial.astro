@@ -1,1 +1,89 @@
 
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="$29 New Student Special | Burning Tree MMA"
+  description="Start your martial arts journey at Burning Tree Mixed Martial Arts in Owings Mills. Enjoy 2 classes and a free uniform for just $29."
+>
+  <main class="trial-page">
+    <section class="trial-offer">
+      <p class="eyebrow">BURNING TREE MIXED MARTIAL ARTS</p>
+
+      <h1>YOUR CHILD IS CAPABLE OF MORE!</h1>
+
+      <p class="intro">
+        Build confidence, discipline, and respect
+        through martial arts.
+      </p>
+
+      <div class="offer">
+        <h2>NEW STUDENT SPECIAL</h2>
+        <div class="price">$29</div>
+        <p>2 Martial Arts Classes + FREE Uniform</p>
+      </div>
+
+      <p>One Tree. One Family.</p>
+
+      <p class="contact">
+        Questions? Call
+        <a href="tel:4102180894">410-218-0894</a>
+      </p>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .trial-page {
+    background: white;
+    color: #171717;
+    min-height: 75vh;
+    padding: 70px 20px;
+    text-align: center;
+  }
+
+  .trial-offer {
+    max-width: 780px;
+    margin: auto;
+  }
+
+  .eyebrow {
+    color: #b91c1c;
+    font-weight: 800;
+    letter-spacing: 2px;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 6vw, 3.8rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin: 24px 0;
+  }
+
+  .intro {
+    font-size: 1.2rem;
+  }
+
+  .offer {
+    border: 2px solid #b91c1c;
+    border-radius: 16px;
+    margin: 32px auto;
+    padding: 30px 18px;
+  }
+
+  .offer h2 {
+    font-size: 1.4rem;
+  }
+
+  .price {
+    color: #c1121f;
+    font-size: 5rem;
+    font-weight: 900;
+  }
+
+  .contact {
+    margin-top: 25px;
+  }
+</style>
+  
