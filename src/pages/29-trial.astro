@@ -1,6 +1,7 @@
 
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import LeadForm from "../components/LeadForm.astro";
 ---
 
 <BaseLayout
@@ -23,7 +24,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         <div class="price">$29</div>
         <p>2 Martial Arts Classes + FREE Uniform</p>
       </div>
-
+<LeadForm />
 <a
   href="https://buy.stripe.com/aFa3cvaLf06hfc869V73G03"
   class="payment-button"
@@ -92,7 +93,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   .contact {
     margin-top: 25px;
   }
-
 .payment-button {
   display: inline-block;
   background: #c1121f;
