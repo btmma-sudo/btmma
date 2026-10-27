@@ -25,7 +25,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <section class="registration" id="registration">
       <h2>Student Registration</h2>
       <p>Register one student at a time. Parents can use the same contact information for multiple children.</p>
-      <form id="student-registration" class="form" onsubmit="return false;">
+      <form id="student-registration" class="form">
         <div class="cf-turnstile" data-sitekey="0x4AAAAAAD6Ievu-t0Ll1euh"></div>
         <label for="studentType">Who are you registering for?</label>
         <select id="studentType" name="studentType" required>
@@ -53,7 +53,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <option>Wing Chun</option>
         </select>
         <p class="fine-print">By submitting, you agree to our <a href="/privacy">Privacy Policy</a> and <a href="/terms">Terms of Service</a>.</p>
-        <button type="submit" onclick="document.getElementById('setup-note').textContent='Checking form...'">CHECK TRIAL ELIGIBILITY</button>
+        <button type="submit">CHECK TRIAL ELIGIBILITY</button>
         <p id="setup-note" class="notice" role="status">We will check the student’s eligibility before payment. Online checkout is not enabled yet.</p>
       </form>
     </section>
@@ -67,52 +67,70 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 </BaseLayout>
 <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script is:inline>
-  const type = document.querySelector("#studentType");
-  const guardian = document.querySelector("#guardianFields");
-  const guardianName = document.querySelector("#guardianName");
-  function syncGuardian() {
-    const isMinor = type?.value === "minor";
-    if (guardian) guardian.hidden = !isMinor;
-    if (guardianName) {
-      guardianName.required = isMinor;
-      if (!isMinor) guardianName.value = "";
-    }
+(() => {
+  function initializeTrialForm() {
+    const form = document.getElementById("student-registration");
+    const notice = document.getElementById("setup-note");
+    const type = document.getElementById("studentType");
+    const guardian = document.getElementById("guardianFields");
+    const guardianName = document.getElementById("guardianName");
+    const submit = form?.querySelector('button[type="submit"]');
+    if (!form || !notice || !submit) return;
+    const syncGuardian = () => {
+      const isMinor = type?.value === "minor";
+      if (guardian) guardian.hidden = !isMinor;
+      if (guardianName) {
+        guardianName.required = isMinor;
+        if (!isMinor) guardianName.value = "";
+      }
+    };
+    type?.addEventListener("change", syncGuardian);
+    syncGuardian();
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      notice.textContent = "Validating registration...";
+      if (!form.reportValidity()) {
+        notice.textContent = "Please complete all required fields.";
+        return;
+      }
+      const values = new FormData(form);
+      const token = values.get("cf-turnstile-response");
+      if (!token) {
+        notice.textContent = "Please complete the security check before continuing.";
+        return;
+      }
+      const payload = Object.fromEntries(values.entries());
+      delete payload["cf-turnstile-response"];
+      submit.disabled = true;
+      notice.textContent = "Checking trial eligibility...";
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 15000);
+      try {
+        const response = await fetch("/api/trial-eligibility", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ ...payload, turnstileToken: token }),
+          signal: controller.signal
+        });
+        const result = await response.json();
+        notice.textContent = result.message || result.error || "Please contact the studio to verify eligibility.";
+      } catch (error) {
+        notice.textContent = error?.name === "AbortError"
+          ? "Verification timed out. Please try again or call 410-218-0894."
+          : "Eligibility verification is unavailable. Please call 410-218-0894.";
+      } finally {
+        clearTimeout(timeout);
+        submit.disabled = false;
+        window.turnstile?.reset();
+      }
+    });
   }
-  type?.addEventListener("change", syncGuardian);
-  syncGuardian();
-  const form = document.querySelector("#student-registration");
-  if (form) form.onsubmit = (event) => { event.preventDefault(); return false; };
-  const notice = document.querySelector("#setup-note");
-  const submit = form?.querySelector('button[type="submit"]');
-  form?.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    if (!form.reportValidity()) { if (notice) notice.textContent = "Please complete all required fields."; return; }
-    const values = new FormData(form);
-    const token = values.get("cf-turnstile-response");
-    if (!token) {
-      if (notice) notice.textContent = "Please complete the security check before continuing.";
-      return;
-    }
-    const payload = Object.fromEntries(values.entries());
-    delete payload["cf-turnstile-response"];
-    if (submit) submit.disabled = true;
-    if (notice) notice.textContent = "Checking trial eligibility...";
-    try {
-      const response = await fetch("/api/trial-eligibility", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ ...payload, turnstileToken: token })
-      });
-      const result = await response.json();
-      if (notice) notice.textContent = result.message || result.error || "Please contact the studio to verify eligibility.";
-    } catch {
-      if (notice) notice.textContent = "Eligibility verification is unavailable. Please call 410-218-0894.";
-    } finally {
-      if (submit) submit.disabled = false;
-      const turnstile = window.turnstile;
-      turnstile?.reset();
-    }
-  });
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initializeTrialForm, { once: true });
+  } else {
+    initializeTrialForm();
+  }
+})();
 </script>
 <style>
   .trial-page{color:var(--text);text-align:center}
