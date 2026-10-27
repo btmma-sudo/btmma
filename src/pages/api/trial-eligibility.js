@@ -53,6 +53,21 @@ export async function POST({ request, locals }) {
         try { details = await response.json(); } catch {}
         const airtableType = String(details?.error?.type || "UNKNOWN").replace(/[^A-Z0-9_]/gi, "").slice(0, 60);
         const requestId = response.headers.get("x-airtable-request-id") || "";
+        // Independently verify the token itself; do not disclose credentials or record data.
+        let tokenStatus = "unavailable";
+        let tokenHasReadScope = false;
+        try {
+          const identity = await fetch("https://api.airtable.com/v0/meta/whoami", {
+            headers: { Authorization: "Bearer " + env.AIRTABLE_API_TOKEN }
+          });
+          tokenStatus = identity.ok ? "valid" : "HTTP_" + identity.status;
+          if (identity.ok) {
+            const identityData = await identity.json();
+            tokenHasReadScope = Array.isArray(identityData.scopes) && identityData.scopes.includes("data.records:read");
+          }
+        } catch {}
+        const baseIdShapeValid = /^app[A-Za-z0-9]{14}$/.test(String(env.AIRTABLE_BASE_ID || ""));
+        console.error("Trial Airtable identity diagnostics", { tokenStatus, tokenHasReadScope, baseIdShapeValid });
         console.error("Trial eligibility Airtable failure", {
           status: response.status,
           type: airtableType,
@@ -63,7 +78,8 @@ export async function POST({ request, locals }) {
         return json({
           success: false,
           error: "Airtable verification failed (HTTP " + response.status + ", code " + airtableType + "). Please contact the studio.",
-          diagnosticCode: airtableType
+          diagnosticCode: airtableType,
+          diagnostics: { tokenStatus, tokenHasReadScope, baseIdShapeValid, table: "Leads" }
         }, 503);
       }
       const page = await response.json();
