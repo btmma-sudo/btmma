@@ -82,7 +82,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   syncGuardian();
   const form = document.querySelector("#student-registration");
   if (form) form.onsubmit = (event) => { event.preventDefault(); return false; };
-  const notice = document.querySelector<HTMLElement>("#setup-note");
+  const notice = document.querySelector("#setup-note");
   const submit = form?.querySelector('button[type="submit"]');
   form?.addEventListener("submit", async (event) => {
     event.preventDefault();
