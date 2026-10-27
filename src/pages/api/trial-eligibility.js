@@ -46,7 +46,7 @@ export async function POST({ request, locals }) {
       const response = await fetch("https://api.airtable.com/v0/" + encodeURIComponent(env.AIRTABLE_BASE_ID) + "/Leads?" + params, {
         headers: { Authorization: "Bearer " + env.AIRTABLE_API_TOKEN }
       });
-      if (!response.ok) throw new Error("Airtable unavailable");
+      if (!response.ok) throw new Error(response.status === 401 ? "AIRTABLE_AUTH" : response.status === 403 ? "AIRTABLE_ACCESS" : response.status === 404 ? "AIRTABLE_BASE_OR_TABLE" : "AIRTABLE_OTHER");
       const page = await response.json();
       for (const record of page.records || []) {
         const fields = record.fields || {};
@@ -61,7 +61,14 @@ export async function POST({ request, locals }) {
       }
       offset = page.offset;
     } while (offset);
-  } catch { return json({ success: false, error: "We couldn't verify eligibility right now. Please contact the studio." }, 503); }
+  } catch (error) {
+    const code = error instanceof Error ? error.message : "";
+    const message = code === "AIRTABLE_AUTH" ? "Airtable token authentication failed. Please contact the studio." :
+      code === "AIRTABLE_ACCESS" ? "Airtable token needs permission to read the Leads table. Please contact the studio." :
+      code === "AIRTABLE_BASE_OR_TABLE" ? "Airtable base or Leads table was not found. Please contact the studio." :
+      "We couldn't verify eligibility right now. Please contact the studio.";
+    return json({ success: false, error: message }, 503);
+  }
   // Do not return a public Stripe Payment Link: this precheck cannot lock eligibility.
   return json({ success: true, eligible: true, message: "Student details verified. Online checkout is being connected. Please contact the studio to complete registration." });
 }
