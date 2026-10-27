@@ -8,8 +8,10 @@ const normalize = (value) => String(value || "").trim().replace(/\s+/g, " ").toL
 export const prerender = false;
 export async function POST({ request, locals }) {
   const env = locals?.runtime?.env ?? {};
-  if (!env.AIRTABLE_API_TOKEN || !env.AIRTABLE_BASE_ID || !env.TURNSTILE_SECRET_KEY) {
-    return json({ success: false, error: "Registration verification is not available yet. Please contact the studio." }, 503);
+  const required = ["AIRTABLE_API_TOKEN", "AIRTABLE_BASE_ID", "TURNSTILE_SECRET_KEY"];
+  const missing = required.filter((name) => !env[name]);
+  if (missing.length) {
+    return json({ success: false, error: "Registration verification is not available yet. Missing Worker settings: " + missing.join(", ") + ". Please contact the studio." }, 503);
   }
   let data;
   try { data = await request.json(); } catch { return json({ success: false, error: "Invalid registration." }, 400); }
