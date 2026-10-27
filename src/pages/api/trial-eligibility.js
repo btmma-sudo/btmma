@@ -45,7 +45,7 @@ export async function POST({ request, locals }) {
   try {
     do {
       if (offset) params.set("offset", offset); else params.delete("offset");
-      const response = await fetch("https://api.airtable.com/v0/" + encodeURIComponent(env.AIRTABLE_BASE_ID) + "/Leads?" + params, {
+      const response = await fetch("https://api.airtable.com/v0/" + encodeURIComponent(env.AIRTABLE_BASE_ID) + "/tblZCXEuRKXiPZlc7?" + params, {
         headers: { Authorization: "Bearer " + env.AIRTABLE_API_TOKEN }
       });
       if (!response.ok) {
