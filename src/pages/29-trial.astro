@@ -7,7 +7,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   path="/29-trial"
   image="/images/jr-kenpo-gallery-1.jpg"
 >
-  <main class="trial-page">
+  <div class="trial-page">
     <section class="hero">
       <img src="/images/logo.png" alt="Burning Tree Mixed Martial Arts" width="90" height="122" />
       <p class="eyebrow">BURNING TREE MIXED MARTIAL ARTS</p>
@@ -25,7 +25,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <section class="registration" id="registration">
       <h2>Student Registration</h2>
       <p>Register one student at a time. Parents can use the same contact information for multiple children.</p>
-      <form id="student-registration" class="form">
+      <form id="student-registration" class="form" onsubmit="return false;">
         <div class="cf-turnstile" data-sitekey="0x4AAAAAAD6Ievu-t0Ll1euh"></div>
         <label for="studentType">Who are you registering for?</label>
         <select id="studentType" name="studentType" required>
@@ -63,13 +63,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       <p>10210 S. Dolfield Road, Suite C · Owings Mills, MD 21117</p>
       <p><strong>One Tree. One Family.</strong></p>
     </section>
-  </main>
+  </div>
 </BaseLayout>
 <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-<script>
-  const type = document.querySelector<HTMLSelectElement>("#studentType");
-  const guardian = document.querySelector<HTMLElement>("#guardianFields");
-  const guardianName = document.querySelector<HTMLInputElement>("#guardianName");
+<script is:inline>
+  const type = document.querySelector("#studentType");
+  const guardian = document.querySelector("#guardianFields");
+  const guardianName = document.querySelector("#guardianName");
   function syncGuardian() {
     const isMinor = type?.value === "minor";
     if (guardian) guardian.hidden = !isMinor;
@@ -80,9 +80,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
   type?.addEventListener("change", syncGuardian);
   syncGuardian();
-  const form = document.querySelector<HTMLFormElement>("#student-registration");
+  const form = document.querySelector("#student-registration");
   const notice = document.querySelector<HTMLElement>("#setup-note");
-  const submit = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
+  const submit = form?.querySelector('button[type="submit"]');
   form?.addEventListener("submit", async (event) => {
     event.preventDefault();
     if (!form.reportValidity()) return;
@@ -108,7 +108,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       if (notice) notice.textContent = "Eligibility verification is unavailable. Please call 410-218-0894.";
     } finally {
       if (submit) submit.disabled = false;
-      const turnstile = (window as Window & { turnstile?: { reset: () => void } }).turnstile;
+      const turnstile = window.turnstile;
       turnstile?.reset();
     }
   });
