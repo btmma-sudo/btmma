@@ -25,7 +25,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <section class="registration" id="registration">
       <h2>Student Registration</h2>
       <p>Register one student at a time. Parents can use the same contact information for multiple children.</p>
-      <form id="student-registration" class="form">
+      <form id="student-registration" class="form">\n        <div class="cf-turnstile" data-sitekey="0x4AAAAAAD6Ievu-t0Ll1euh"></div>
         <label for="studentType">Who is registering?</label>
         <select id="studentType" name="studentType" required>
           <option value="">Select student type</option>
@@ -52,8 +52,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <option>Wing Chun</option>
         </select>
         <p class="fine-print">By submitting, you agree to our <a href="/privacy">Privacy Policy</a> and <a href="/terms">Terms of Service</a>.</p>
-        <button type="button" disabled aria-describedby="setup-note">CHECK ELIGIBILITY & CONTINUE TO PAYMENT</button>
-        <p id="setup-note" class="notice" role="status">Registration is being connected to our secure eligibility check. Online checkout is not available through this form yet. Call 410-218-0894 to get started.</p>
+        <button type="submit">CHECK TRIAL ELIGIBILITY</button>
+        <p id="setup-note" class="notice" role="status">We will check the student’s eligibility before payment. Online checkout is not enabled yet.</p>
       </form>
     </section>
     <section class="contact">
