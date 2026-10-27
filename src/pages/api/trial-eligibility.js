@@ -48,7 +48,24 @@ export async function POST({ request, locals }) {
       const response = await fetch("https://api.airtable.com/v0/" + encodeURIComponent(env.AIRTABLE_BASE_ID) + "/Leads?" + params, {
         headers: { Authorization: "Bearer " + env.AIRTABLE_API_TOKEN }
       });
-      if (!response.ok) throw new Error(response.status === 401 ? "AIRTABLE_AUTH" : response.status === 403 ? "AIRTABLE_ACCESS" : response.status === 404 ? "AIRTABLE_BASE_OR_TABLE" : "AIRTABLE_OTHER");
+      if (!response.ok) {
+        let details = {};
+        try { details = await response.json(); } catch {}
+        const airtableType = String(details?.error?.type || "UNKNOWN").replace(/[^A-Z0-9_]/gi, "").slice(0, 60);
+        const requestId = response.headers.get("x-airtable-request-id") || "";
+        console.error("Trial eligibility Airtable failure", {
+          status: response.status,
+          type: airtableType,
+          requestId,
+          baseIdPresent: Boolean(env.AIRTABLE_BASE_ID),
+          tokenPresent: Boolean(env.AIRTABLE_API_TOKEN)
+        });
+        return json({
+          success: false,
+          error: "Airtable verification failed (HTTP " + response.status + ", code " + airtableType + "). Please contact the studio.",
+          diagnosticCode: airtableType
+        }, 503);
+      }
       const page = await response.json();
       for (const record of page.records || []) {
         const fields = record.fields || {};
