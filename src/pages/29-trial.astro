@@ -65,6 +65,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     </section>
   </main>
 </BaseLayout>
+<script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script>
   const type = document.querySelector<HTMLSelectElement>("#studentType");
   const guardian = document.querySelector<HTMLElement>("#guardianFields");
@@ -79,6 +80,38 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
   type?.addEventListener("change", syncGuardian);
   syncGuardian();
+  const form = document.querySelector<HTMLFormElement>("#student-registration");
+  const notice = document.querySelector<HTMLElement>("#setup-note");
+  const submit = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
+  form?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!form.reportValidity()) return;
+    const values = new FormData(form);
+    const token = values.get("cf-turnstile-response");
+    if (!token) {
+      if (notice) notice.textContent = "Please complete the security check before continuing.";
+      return;
+    }
+    const payload = Object.fromEntries(values.entries());
+    delete payload["cf-turnstile-response"];
+    if (submit) submit.disabled = true;
+    if (notice) notice.textContent = "Checking trial eligibility...";
+    try {
+      const response = await fetch("/api/trial-eligibility", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ ...payload, turnstileToken: token })
+      });
+      const result = await response.json();
+      if (notice) notice.textContent = result.message || result.error || "Please contact the studio to verify eligibility.";
+    } catch {
+      if (notice) notice.textContent = "Eligibility verification is unavailable. Please call 410-218-0894.";
+    } finally {
+      if (submit) submit.disabled = false;
+      const turnstile = (window as Window & { turnstile?: { reset: () => void } }).turnstile;
+      turnstile?.reset();
+    }
+  });
 </script>
 <style>
   .trial-page{color:var(--text);text-align:center}
