@@ -70,6 +70,30 @@ export async function POST({ request, locals }) {
             }
           }
         } catch {}
+        // Check whether the configured token can enumerate the expected base.
+        let baseListStatus = "unavailable";
+        let expectedBaseVisible = null;
+        try {
+          const listResponse = await fetch("https://api.airtable.com/v0/meta/bases", {
+            headers: { Authorization: "Bearer " + env.AIRTABLE_API_TOKEN }
+          });
+          baseListStatus = "HTTP_" + listResponse.status;
+          if (listResponse.ok) {
+            let listData = await listResponse.json();
+            expectedBaseVisible = Array.isArray(listData.bases) && listData.bases.some((base) => base.id === env.AIRTABLE_BASE_ID);
+            let nextOffset = listData.offset;
+            for (let page = 0; nextOffset && !expectedBaseVisible && page < 20; page++) {
+              const next = await fetch("https://api.airtable.com/v0/meta/bases?offset=" + encodeURIComponent(nextOffset), {
+                headers: { Authorization: "Bearer " + env.AIRTABLE_API_TOKEN }
+              });
+              if (!next.ok) { baseListStatus = "HTTP_" + next.status; expectedBaseVisible = null; break; }
+              listData = await next.json();
+              expectedBaseVisible = Array.isArray(listData.bases) && listData.bases.some((base) => base.id === env.AIRTABLE_BASE_ID);
+              nextOffset = listData.offset;
+            }
+            if (nextOffset && !expectedBaseVisible) expectedBaseVisible = null;
+          }
+        } catch {}
         // Probe base visibility separately from record-reading permission.
         // Never return Airtable credentials, record contents, or personal information.
         let baseMetadataStatus = "unavailable";
@@ -105,7 +129,7 @@ export async function POST({ request, locals }) {
             ? "metadata_scope_or_base_access_unconfirmed" :
           "verify_token_base_access_and_table";
         const baseIdShapeValid = /^app[A-Za-z0-9]{14}$/.test(String(env.AIRTABLE_BASE_ID || ""));
-        console.error("Trial Airtable identity diagnostics", { tokenStatus, tokenHasReadScope, baseIdShapeValid, baseMetadataStatus, tableMetadataStatus, permissionHint });
+        console.error("Trial Airtable identity diagnostics", { tokenStatus, tokenHasReadScope, baseIdShapeValid, baseListStatus, expectedBaseVisible, baseMetadataStatus, tableMetadataStatus, permissionHint });
         console.error("Trial eligibility Airtable failure", {
           status: response.status,
           type: airtableType,
@@ -117,7 +141,7 @@ export async function POST({ request, locals }) {
           success: false,
           error: "Airtable verification failed (HTTP " + response.status + ", code " + airtableType + "). Please contact the studio.",
           diagnosticCode: airtableType,
-          diagnostics: { tokenStatus, tokenHasReadScope, reportedScopes, baseIdShapeValid, table: "Leads", airtableHttpStatus: response.status, baseMetadataStatus, tableMetadataStatus, baseMetadataErrorType, tableMetadataErrorType, permissionHint }
+          diagnostics: { tokenStatus, tokenHasReadScope, reportedScopes, baseIdShapeValid, table: "Leads", airtableHttpStatus: response.status, baseListStatus, expectedBaseVisible, baseMetadataStatus, tableMetadataStatus, baseMetadataErrorType, tableMetadataErrorType, permissionHint }
         }, 503);
       }
       const page = await response.json();
