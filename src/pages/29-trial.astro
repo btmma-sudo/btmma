@@ -53,7 +53,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <option>Wing Chun</option>
         </select>
         <p class="fine-print">By submitting, you agree to our <a href="/privacy">Privacy Policy</a> and <a href="/terms">Terms of Service</a>.</p>
-        <button type="submit">CHECK TRIAL ELIGIBILITY</button>
+        <button type="submit" onclick="document.getElementById('setup-note').textContent='Checking form...'">CHECK TRIAL ELIGIBILITY</button>
         <p id="setup-note" class="notice" role="status">We will check the student’s eligibility before payment. Online checkout is not enabled yet.</p>
       </form>
     </section>
@@ -81,11 +81,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   type?.addEventListener("change", syncGuardian);
   syncGuardian();
   const form = document.querySelector("#student-registration");
+  if (form) form.onsubmit = (event) => { event.preventDefault(); return false; };
   const notice = document.querySelector<HTMLElement>("#setup-note");
   const submit = form?.querySelector('button[type="submit"]');
   form?.addEventListener("submit", async (event) => {
     event.preventDefault();
-    if (!form.reportValidity()) return;
+    if (!form.reportValidity()) { if (notice) notice.textContent = "Please complete all required fields."; return; }
     const values = new FormData(form);
     const token = values.get("cf-turnstile-response");
     if (!token) {
