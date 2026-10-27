@@ -55,7 +55,8 @@ export async function POST({ request, locals }) {
         const requestId = response.headers.get("x-airtable-request-id") || "";
         // Independently verify the token itself; do not disclose credentials or record data.
         let tokenStatus = "unavailable";
-        let tokenHasReadScope = false;
+        let tokenHasReadScope = null;
+        let reportedScopes = "not_provided";
         try {
           const identity = await fetch("https://api.airtable.com/v0/meta/whoami", {
             headers: { Authorization: "Bearer " + env.AIRTABLE_API_TOKEN }
@@ -63,7 +64,10 @@ export async function POST({ request, locals }) {
           tokenStatus = identity.ok ? "valid" : "HTTP_" + identity.status;
           if (identity.ok) {
             const identityData = await identity.json();
-            tokenHasReadScope = Array.isArray(identityData.scopes) && identityData.scopes.includes("data.records:read");
+            if (Array.isArray(identityData.scopes)) {
+              reportedScopes = "provided";
+              tokenHasReadScope = identityData.scopes.includes("data.records:read");
+            }
           }
         } catch {}
         const baseIdShapeValid = /^app[A-Za-z0-9]{14}$/.test(String(env.AIRTABLE_BASE_ID || ""));
@@ -79,7 +83,7 @@ export async function POST({ request, locals }) {
           success: false,
           error: "Airtable verification failed (HTTP " + response.status + ", code " + airtableType + "). Please contact the studio.",
           diagnosticCode: airtableType,
-          diagnostics: { tokenStatus, tokenHasReadScope, baseIdShapeValid, table: "Leads" }
+          diagnostics: { tokenStatus, tokenHasReadScope, reportedScopes, baseIdShapeValid, table: "Leads", airtableHttpStatus: response.status }
         }, 503);
       }
       const page = await response.json();
