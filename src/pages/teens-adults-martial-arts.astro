@@ -6,9 +6,14 @@ import { site } from "../data/site";
 const adultSchedule = weeklySchedule
   .map((day) => ({
     day: day.day,
-    slots: day.slots.filter((slot) => slot.cls.startsWith("Teens & Adults"))
+    slots: day.slots.filter((slot) => slot.cls.startsWith("Teens & Adults") || slot.cls.startsWith("Women's Self-Defense"))
   }))
   .filter((day) => day.slots.length > 0);
+
+const womensClass = weeklySchedule
+  .flatMap((day) => day.slots
+    .filter((slot) => slot.cls.startsWith("Women's Self-Defense"))
+    .map((slot) => ({ day: day.day, ...slot })))[0];
 
 const faqs = [
   {
@@ -61,7 +66,15 @@ const faqs = [
   },
   {
     question: "Do you offer women's self-defense classes as well?",
-    answer: "Yes. Burning Tree also lists a separate Women's Self-Defense / Sanuces class on Sundays. Ask us about that program or explore its dedicated page."
+    answer: "Yes. Burning Tree offers a separate Women's Self-Defense / Sanuces program with Coach Dana Marable II on Sundays. Classes focus on awareness, escape fundamentals, and practical self-defense skills. Current times appear in the weekly schedule above."
+  },
+  {
+    question: "Do I need previous training to join women's self-defense?",
+    answer: "No prior martial arts experience is needed to ask about joining. Contact us to discuss class placement, your goals, and any physical limitations before you begin."
+  },
+  {
+    question: "What does the women's self-defense class teach?",
+    answer: "Our Sanuces-focused women's self-defense training emphasizes situational awareness, movement, practical escapes, and responding to common grabs or holds. Specific drills are supervised and adapted to the class."
   },
   {
     question: "Where can I take adult karate or Muay Thai near Owings Mills?",
@@ -72,9 +85,9 @@ const faqs = [
 const serviceSchema = {
   "@context": "https://schema.org",
   "@type": "Service",
-  name: "Teen and Adult Martial Arts Classes in Owings Mills, Maryland",
-  description: "Beginner-friendly American Kenpo Karate, Muay Thai, and Wing Chun training for teens and adults at Burning Tree Mixed Martial Arts.",
-  serviceType: "Teen and adult martial arts instruction",
+  name: "Teen, Adult and Women's Self-Defense Classes in Owings Mills, Maryland",
+  description: "Beginner-friendly American Kenpo Karate, Muay Thai, Wing Chun and women's self-defense / Sanuces training at Burning Tree Mixed Martial Arts.",
+  serviceType: ["Teen and adult martial arts instruction", "Women's self-defense instruction"],
   url: new URL("/teens-adults-martial-arts/", site.primaryDomain).toString(),
   inLanguage: "en-US",
   areaServed: [
@@ -120,9 +133,9 @@ const breadcrumbSchema = {
 ---
 
 <BaseLayout
-  title="Teen & Adult Martial Arts in Owings Mills | Burning Tree MMA"
-  description="Looking for adult karate or teen martial arts in Owings Mills, MD? Explore beginner-friendly Kenpo, Muay Thai and Wing Chun. Try 2 classes + a uniform for $29."
-  keywords={["adult martial arts Owings Mills", "adult karate Owings Mills MD", "martial arts for teens Owings Mills", "beginner adult karate classes Baltimore County", "Muay Thai classes Owings Mills", "Wing Chun classes Owings Mills", "adult self-defense classes Owings Mills", "martial arts beginners near Reisterstown", "evening martial arts classes Owings Mills"]}
+  title="Teen & Adult Martial Arts and Women's Self-Defense | Owings Mills"
+  description="Explore adult karate, teen martial arts, Muay Thai, Wing Chun and women's self-defense in Owings Mills, MD. Beginner-friendly training at Burning Tree MMA."
+  keywords={["adult martial arts Owings Mills", "adult karate Owings Mills MD", "martial arts for teens Owings Mills", "beginner adult karate classes Baltimore County", "Muay Thai classes Owings Mills", "Wing Chun classes Owings Mills", "adult self-defense classes Owings Mills", "women's self-defense Owings Mills", "Sanuces women's self-defense Baltimore County", "martial arts beginners near Reisterstown", "evening martial arts classes Owings Mills"]}
   path="/teens-adults-martial-arts/"
   image="/images/adult-martial-arts-hero.jpg">
   <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
@@ -197,6 +210,34 @@ const breadcrumbSchema = {
             <a href="/wing-chun">Explore Wing Chun <span aria-hidden="true">→</span></a>
           </div>
         </article>
+      </div>
+    </section>
+
+    <section class="ta-womens" id="womens-self-defense" aria-labelledby="ta-womens-heading">
+      <div class="shell ta-womens-grid">
+        <div class="ta-womens-image">
+          <img src="/images/womens-defense-hero.jpg" alt="Women's self-defense martial arts training at Burning Tree Mixed Martial Arts in Owings Mills" width="900" height="680" loading="lazy" decoding="async" />
+        </div>
+        <div class="ta-womens-copy">
+          <p class="ta-eyebrow">WOMEN'S SELF-DEFENSE • SANUCES RYU JUJITSU</p>
+          <h2 id="ta-womens-heading">Women's Self-Defense Classes in Owings Mills</h2>
+          <p class="ta-womens-intro">Feel more prepared, more aware, and more confident. Our dedicated women's self-defense program teaches practical martial arts skills for everyday situations in a supportive learning environment.</p>
+          <p>Led by <strong>Coach Dana Marable II</strong>, a 2nd Degree Black Belt in Sanuces Ryu Jujitsu and retired U.S. Army veteran, these sessions focus on building skills through supervised practice—not competition.</p>
+          <ul class="ta-womens-benefits">
+            <li>Situational awareness and recognizing potential danger</li>
+            <li>Foundational escapes from grabs and holds</li>
+            <li>Balance, movement, control and practical defensive options</li>
+            <li>Confidence, personal boundaries and continued skill-building</li>
+          </ul>
+          {womensClass && (
+            <p class="ta-womens-time"><strong>{womensClass.day} Women's Self-Defense / Sanuces</strong><span>{formatClassTime(womensClass.start, womensClass.end)}</span></p>
+          )}
+          <div class="ta-womens-actions">
+            <a class="ta-button" href="/womens-defense">Explore Women's Self-Defense</a>
+            <a class="ta-text-link" href={"tel:" + site.phoneHref}>Questions? Call {site.phone}</a>
+          </div>
+          <p class="ta-womens-note">Beginners can contact us about joining; ask about class suitability and current enrollment before attending.</p>
+        </div>
       </div>
     </section>
 
@@ -282,7 +323,7 @@ const breadcrumbSchema = {
     <section class="ta-schedule" aria-labelledby="ta-schedule-heading">
       <div class="shell">
         <p class="ta-eyebrow">FIND YOUR TRAINING TIME</p>
-        <h2 id="ta-schedule-heading">Teen & adult martial arts class schedule</h2>
+        <h2 id="ta-schedule-heading">Teen, adult & women's self-defense class schedule</h2>
         <p class="ta-intro">These class times come from our shared school schedule, so updates to the schedule carry through to this page.</p>
         <div class="ta-schedule-grid">
           {adultSchedule.map((day) => (
@@ -454,7 +495,7 @@ const breadcrumbSchema = {
   .ta-steps h3 { font-size:1.17rem; margin:.05rem 0 .25rem; }
   .ta-steps p { margin:0; color:#484848; }
   .ta-schedule { background:#f5f5f5; padding:4.1rem 0; }
-  .ta-schedule-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:.9rem; margin:1.5rem 0 1.6rem; }
+  .ta-schedule-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.9rem; margin:1.5rem 0 1.6rem; }
   .ta-schedule-day { background:#fff; border-top:4px solid #b20d16; padding:1.05rem; min-width:0; }
   .ta-schedule-day h3 { margin:.1rem 0 .7rem; font-size:1.13rem; }
   .ta-schedule-day ul { margin:0; padding:0; list-style:none; }
@@ -505,6 +546,18 @@ const breadcrumbSchema = {
   .ta-final .ta-small { font-size:.86rem; margin:1.2rem auto; }
   .ta-final .ta-small a { font-weight:800; text-decoration:underline; }
   .ta-final .ta-tagline { font-family:"Black Ops One",cursive; font-size:1.12rem; margin:1.2rem auto 0; }
+  .ta-womens { background:#f5f5f5; padding:4.3rem 0; border-top:1px solid #dedede; border-bottom:1px solid #dedede; }
+  .ta-womens-grid { display:grid; grid-template-columns:.92fr 1.08fr; gap:clamp(1.5rem,4vw,3.7rem); align-items:center; }
+  .ta-womens-image img { display:block; width:100%; height:clamp(350px,36vw,510px); object-fit:cover; object-position:center 35%; border-radius:8px; }
+  .ta-womens-copy h2 { margin-bottom:.9rem; }
+  .ta-womens-copy p { color:#393939; margin:.5rem 0 .8rem; }
+  .ta-womens-copy .ta-womens-intro { color:#222; font-size:1.08rem; font-weight:600; }
+  .ta-womens-benefits { margin:1rem 0; padding-left:1.25rem; color:#292929; }
+  .ta-womens-benefits li { margin:.45rem 0; line-height:1.5; }
+  .ta-womens-time { display:flex; align-items:center; flex-wrap:wrap; gap:.5rem 1rem; background:#fff; border-left:4px solid #b20d16; padding:.85rem 1rem; }
+  .ta-womens-time strong { color:#202020; }.ta-womens-time span { color:#940812; font-weight:900; white-space:nowrap; }
+  .ta-womens-actions { display:flex; flex-wrap:wrap; align-items:center; gap:1rem; margin-top:1.15rem; }
+  .ta-womens .ta-womens-note { color:#575757; font-size:.87rem; margin-top:.85rem; }
   .ta-compare,.ta-start-paths { padding-top:4rem; padding-bottom:4rem; border-top:1px solid #ebebeb; }
   .ta-compare-grid,.ta-paths-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1rem; }
   .ta-compare-grid article,.ta-paths-grid article { background:#fafafa; border:1px solid #e2e2e2; border-radius:7px; padding:1.45rem; min-width:0; }
@@ -520,7 +573,11 @@ const breadcrumbSchema = {
     .ta-compare,.ta-start-paths { padding-top:3rem; padding-bottom:3rem; }
     .ta-compare-grid,.ta-paths-grid { grid-template-columns:1fr; }
     .ta-hero { padding:1.7rem 0 3.1rem; }
-    .ta-hero-grid,.ta-chooser-inner,.ta-first-grid,.ta-community-grid,.ta-local-grid { grid-template-columns:1fr; }
+    .ta-hero-grid,.ta-chooser-inner,.ta-first-grid,.ta-community-grid,.ta-local-grid,.ta-womens-grid { grid-template-columns:1fr; }
+    .ta-womens { padding:3.1rem 0; }
+    .ta-womens-image img { height:300px; }
+    .ta-womens-actions { align-items:stretch; flex-direction:column; }
+    .ta-womens-actions .ta-text-link { text-align:center; }
     .ta-hero h1 { font-size:clamp(2.35rem,9.1vw,3.45rem); }
     .ta-breadcrumb { margin-bottom:1.15rem; }
     .ta-hero-photo { margin:.8rem .5rem 0; }
