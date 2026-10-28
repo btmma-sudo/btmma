@@ -31,7 +31,8 @@ export async function POST({ request, locals }) {
   const liveEnv = {
     ...env,
     TRIAL_DB: env.LIVE_TRIAL_DB,
-    STRIPE_WEBHOOK_SECRET: env.STRIPE_LIVE_WEBHOOK_SECRET
+    STRIPE_WEBHOOK_SECRET: env.STRIPE_LIVE_WEBHOOK_SECRET,
+    TRIAL_REGISTRATION_CONTEXT: "live"
   };
   const liveLocals = { ...locals, runtime: { ...locals.runtime, env: liveEnv } };
   return checkRegistration({ request, locals: liveLocals });
