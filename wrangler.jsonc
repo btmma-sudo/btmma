@@ -22,6 +22,11 @@
       "binding": "TRIAL_DB",
       "database_name": "burningtree-trial-payments",
       "database_id": "d2422ebf-13fe-4834-ab5f-586eb94121d3"
+    },
+    {
+      "binding": "LIVE_TRIAL_DB",
+      "database_name": "burningtree-live-payments",
+      "database_id": "b7b87f5b-560a-4e92-b7e7-0b3959025c4f"
     }
   ],
   "vars": {
