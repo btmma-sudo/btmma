@@ -55,6 +55,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </select>
         <p class="fine-print">By submitting, you agree to our <a href="/privacy">Privacy Policy</a> and <a href="/terms">Terms of Service</a>.</p>
         <button type="submit">CHECK TRIAL ELIGIBILITY</button>
+        <button id="checkout-button" type="button" hidden disabled>PAY $29 NOW</button>
         <p id="setup-note" class="notice" role="status">We will check the student’s eligibility before payment. Online checkout is not enabled yet.</p>
       </form>
     </section>
@@ -75,6 +76,26 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     const type = document.getElementById("studentType");
     const guardian = document.getElementById("guardianFields");
     const guardianName = document.getElementById("guardianName");
+    const checkoutButton = document.getElementById("checkout-button");
+    let grant = null;
+    checkoutButton?.addEventListener("click", async () => {
+      if (!grant || !checkoutButton) return;
+      checkoutButton.disabled = true;
+      notice.textContent = "Preparing secure Stripe test checkout...";
+      try {
+        const response = await fetch("/api/create-checkout", {
+          method: "POST", headers: { "content-type": "application/json" },
+          body: JSON.stringify({ grant })
+        });
+        const result = await response.json();
+        if (!response.ok || !result.url || !/^https:\/\/checkout\.stripe\.com\//.test(result.url))
+          throw new Error(result.error || "Checkout is unavailable.");
+        window.location.assign(result.url);
+      } catch (error) {
+        notice.textContent = error?.message || "Checkout is unavailable. Please contact the studio.";
+        checkoutButton.disabled = false;
+      }
+    });
     const submit = form?.querySelector('button[type="submit"]');
     if (!form || !notice || !submit) return;
     const syncGuardian = () => {
@@ -89,6 +110,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     syncGuardian();
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
+      grant = null;
+      if (checkoutButton) { checkoutButton.hidden = true; checkoutButton.disabled = true; }
       notice.textContent = "Validating registration...";
       if (!form.reportValidity()) {
         notice.textContent = "Please complete all required fields.";
@@ -115,6 +138,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         });
         const result = await response.json();
         notice.textContent = result.message || result.error || "Please contact the studio to verify eligibility.";
+        if (result.success && result.eligible && result.registrationSaved && result.checkoutGrant && checkoutButton) {
+          grant = result.checkoutGrant;
+          checkoutButton.hidden = false;
+          checkoutButton.disabled = false;
+          notice.textContent += " You may now continue to secure Stripe TEST checkout. No real payment will be collected.";
+        }
       } catch (error) {
         notice.textContent = error?.name === "AbortError"
           ? "Verification timed out. Please try again or call 410-218-0894."
