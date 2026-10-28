@@ -35,8 +35,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </select>
         <label for="studentName">Student's full name</label>
         <input id="studentName" name="studentName" type="text" autocomplete="off" maxlength="120" required />
-        <label for="studentAge">Student's age</label>
-        <input id="studentAge" name="studentAge" type="number" min="3" max="110" required />
+        <label for="studentDob">Student's date of birth</label>
+        <input id="studentDob" name="studentDob" type="date" required />
+        <p class="fine-print">Used to help verify each student's eligibility, including siblings sharing contact details.</p>
         <div id="guardianFields" hidden>
           <label for="guardianName">Parent / guardian full name</label>
           <input id="guardianName" name="guardianName" type="text" autocomplete="name" maxlength="120" />
