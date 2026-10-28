@@ -8,11 +8,13 @@ type Props = {
   leadForm?: LeadFormConfig;
   showMobileCta?: boolean;
   ctaLabel?: string;
+  ctaHref?: string;
+  ctaDescription?: string;
   centerMobile?: boolean;
   centerContent?: boolean;
 };
 
-const { hero, large = false, leadForm, showMobileCta = true, ctaLabel = "Try a Free Class", centerMobile = false, centerContent = false } = Astro.props;
+const { hero, large = false, leadForm, showMobileCta = true, ctaLabel = "Ask About Classes", ctaHref = "#lead-form", ctaDescription, centerMobile = false, centerContent = false } = Astro.props;
 const overlayClass = hero.overlay === "medium" ? "hero-overlay-medium" : "hero-overlay-strong";
 ---
 
@@ -40,8 +42,9 @@ const overlayClass = hero.overlay === "medium" ? "hero-overlay-medium" : "hero-o
   <div class:list={["shell", "hero-shell", leadForm && "hero-with-form"]}>
     <div class="hero-content">
       <h1>{hero.title}</h1>
+      {ctaDescription && <p class="hero-cta-description">{ctaDescription}</p>}
       {!leadForm && showMobileCta && (
-        <a class="button hero-mobile-cta" href="#lead-form">{ctaLabel}</a>
+        <a class="button hero-mobile-cta" href={ctaHref}>{ctaLabel}</a>
       )}
     </div>
     {leadForm && (

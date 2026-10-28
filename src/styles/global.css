@@ -1648,3 +1648,88 @@ iframe {
     will-change: auto;
   }
 }
+
+
+/* Always-visible $29 trial registration links */
+.header-trial-nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem 0.75rem;
+  background: var(--accent);
+  border: 1px solid var(--accent-soft);
+  color: #fff !important;
+  font-weight: 800;
+  text-align: center;
+  white-space: nowrap;
+}
+.header-trial-nav:hover,
+.header-trial-nav:focus-visible,
+.header-mobile-offer:hover,
+.header-mobile-offer:focus-visible {
+  background: #c82419;
+}
+.header-mobile-offer {
+  display: none;
+}
+.hero-cta-description {
+  color: #fff;
+  font-size: clamp(1rem, 2.2vw, 1.35rem);
+  font-weight: 700;
+  max-width: 38rem;
+  margin: 1rem auto 0;
+  line-height: 1.5;
+  text-shadow: 0 3px 9px rgba(0,0,0,.95);
+}
+.home-trial-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  border: 2px solid var(--accent);
+  background: var(--surface-strong);
+}
+.home-trial-banner .eyebrow {
+  color: var(--accent-soft);
+}
+.home-trial-banner h2 {
+  font-size: clamp(1.2rem, 3vw, 1.9rem);
+}
+.home-trial-banner p:last-child {
+  margin: .5rem 0 0;
+}
+.home-trial-banner .button {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+@media (max-width: 760px) {
+  .header-mobile-offer {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: .55rem .7rem;
+    font-family: "Black Ops One", cursive;
+    font-size: .8rem;
+    line-height: 1.2;
+    font-weight: 700;
+    background: var(--accent);
+    color: #fff;
+  }
+  .nav-shell {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: .65rem;
+  }
+  .home-trial-banner {
+    flex-direction: column;
+    text-align: center;
+    align-items: stretch;
+    padding: 1.25rem;
+  }
+  .home-trial-banner .button {
+    width: 100%;
+    white-space: normal;
+  }
+}

@@ -14,8 +14,23 @@ import { homePage, homepagePrograms } from "../data/site";
   keywords={homePage.seo.keywords}
   image={homePage.hero.image}>
   <div class="hero-form-layout">
-    <PageHero hero={homePage.hero} large centerContent />
+    <PageHero
+      hero={homePage.hero}
+      large
+      centerContent
+      ctaLabel="Claim the $29 Special"
+      ctaHref="/29-trial"
+      ctaDescription="2 beginner classes + a FREE uniform for just $29. New students only."
+    />
     <GalleryCarousel />
+    <section class="home-trial-banner shell" aria-label="$29 new student special">
+      <div class="home-trial-banner-copy">
+        <p class="eyebrow">New Student Special</p>
+        <h2>$29 — 2 Beginner Classes + FREE Uniform</h2>
+        <p>Ready to get on the mats? Register for our new student special today.</p>
+      </div>
+      <a class="button" href="/29-trial">Claim Your $29 Special</a>
+    </section>
     <div class="hero-form-float">
       <LeadForm config={homePage.leadForm} />
     </div>
@@ -47,7 +62,7 @@ import { homePage, homepagePrograms } from "../data/site";
     </div>
   </section>
 
-  <ClassSchedule ctaHref="#lead-form" />
+  <ClassSchedule ctaHref="/29-trial" ctaLabel="Claim the $29 Special" />
 
   <section class="shell section-divider">
     <article class="detail-card narrative-section">

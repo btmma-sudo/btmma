@@ -4,9 +4,10 @@ import { weeklySchedule, formatClassTime } from "../data/schedule";
 
 type Props = {
   ctaHref?: string;
+  ctaLabel?: string;
 };
 
-const { ctaHref = "/29-trial" } = Astro.props;
+const { ctaHref = "/29-trial", ctaLabel = "Try a Class" } = Astro.props;
 ---
 
 <section class="shell section-divider">
@@ -40,7 +41,7 @@ const { ctaHref = "/29-trial" } = Astro.props;
 
   <div class="schedule-cta">
     <a class="button" href={ctaHref}>
-      Try a Class
+      {ctaLabel}
     </a>
   </div>
 </section>

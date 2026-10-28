@@ -280,9 +280,9 @@ export const homePage: {
     overlay: "strong"
   },
   leadForm: {
-    title: "Try a Free Class",
-    intro: "Take the first step today, we will reach out to follow up with you",
-    submitLabel: "Submit"
+    title: "Questions About the $29 Special?",
+    intro: "Interested in 2 beginner classes and a FREE uniform for $29? Share your information and we will help you get started. Or use the offer button above to register.",
+    submitLabel: "Contact Me"
   }
 };
 
@@ -308,7 +308,7 @@ export const aboutPage: SupportingPage & {
     overlay: "medium"
   },
   leadForm: {
-    title: "Try a Free Class",
+    title: "Ask About Classes",
     intro: "Take the first step today, we will reach out to follow up with you",
     submitLabel: "Submit"
   }
@@ -359,7 +359,7 @@ export const faqPage: SupportingPage & {
     }
   ],
   leadForm: {
-    title: "Try a Free Class",
+    title: "Ask About Classes",
     intro: "Take the first step today, we will reach out to follow up with you",
     submitLabel: "Submit"
   }
@@ -395,7 +395,7 @@ export const programPages: ProgramPage[] = [
     benefits: { title: "", items: [] },
     galleryImages: [],
     leadForm: {
-      title: "Try a Free Class",
+      title: "Ask About Classes",
       intro: "Take the first step today, we will reach out to follow up with you",
       submitLabel: "Submit"
     },
@@ -502,7 +502,7 @@ export const programPages: ProgramPage[] = [
     benefits: { title: "", items: [] },
     galleryImages: [],
     leadForm: {
-      title: "Try a Free Class",
+      title: "Ask About Classes",
       intro: "Take the first step today, we will reach out to follow up with you",
       submitLabel: "Submit"
     },
@@ -608,7 +608,7 @@ export const programPages: ProgramPage[] = [
     benefits: { title: "", items: [] },
     galleryImages: [],
     leadForm: {
-      title: "Try a Free Class",
+      title: "Ask About Classes",
       intro: "Take the first step today, we will reach out to follow up with you",
       submitLabel: "Submit"
     },
