@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHero from "../components/PageHero.astro";
 import ProgramDetail from "../components/ProgramDetail.astro";
 import ProgramDetailVariant from "../components/ProgramDetailVariant.astro";
+import ProgramLocalSEO from "../components/ProgramLocalSEO.astro";
 import ChimpmanGiPage from "../components/ChimpmanGiPage.astro";
 import LeadForm from "../components/LeadForm.astro";
 import WellnessBooking from "../components/WellnessBooking.astro";
@@ -85,6 +86,7 @@ const curriculumBlocks = !hasVariants ? program.curriculum.copy.split("\n\n") : 
       ) : (
         <ProgramDetail program={program} showCurriculum={!useSplitLayout} />
       )}
+      <ProgramLocalSEO program={program} />
       {["kenpo-karate", "muay-thai", "wing-chun"].includes(program.slug) && (
         <section class="shell section-divider">
           <article class="detail-card narrative-section">
