@@ -37,12 +37,12 @@ export async function POST({ request, locals }) {
     });
     if (!verified.ok) return json({ error: "Could not verify existing checkout." }, 503);
     const session = await verified.json();
-    if (session.livemode === true && session.status === "open" && session.payment_status !== "paid" && session.url)
+    if (session.livemode === true && session.mode === "payment" && session.currency === "usd" && session.amount_total === 2900 && session.client_reference_id === row.id && session.status === "open" && session.payment_status !== "paid" && session.url)
       return json({ url: session.url });
     return json({ error: "Existing checkout requires review." }, 409);
   }
   const claim = await env.LIVE_TRIAL_DB.prepare(
-    "UPDATE trial_registrations SET state='checkout_open', updated_at=CURRENT_TIMESTAMP WHERE id=? AND stripe_session_id IS NULL AND state='reserved'"
+    "UPDATE trial_registrations SET state='checkout_open', updated_at=CURRENT_TIMESTAMP WHERE id=? AND stripe_session_id IS NULL AND (state='reserved' OR (state='checkout_open' AND updated_at < datetime('now', '-60 seconds')))"
   ).bind(row.id).run();
   if (claim.meta?.changes !== 1) return json({ error: "Checkout already being prepared." }, 409);
   const origin = new URL(request.url).origin;
