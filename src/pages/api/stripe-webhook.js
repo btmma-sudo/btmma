@@ -59,7 +59,6 @@ export async function POST({ request, locals }) {
       const current = await fetch(url, { headers: { Authorization: "Bearer " + env.AIRTABLE_API_TOKEN } });
       if (!current.ok) return reply("Airtable verification unavailable", 503);
       const student = await current.json();
-      if (student.fields?.["$29 Trial Used"] && student.fields?.["Payment Status"] !== "Paid") return reply("Student requires manual review", 503);
       // Resolve canonical Airtable field IDs instead of relying on visible labels.
       // The existing checkbox may be spelled "Trial" or "Trail" in the base.
       const schemaResponse = await fetch(
@@ -84,6 +83,8 @@ export async function POST({ request, locals }) {
         });
         return reply("Airtable payment fields require review", 503);
       }
+      if (student.fields?.[trialField.name] && student.fields?.[paymentField.name] !== "Paid")
+        return reply("Student requires manual review", 503);
       const updated = await fetch(url, {
         method: "PATCH",
         headers: { Authorization: "Bearer " + env.AIRTABLE_API_TOKEN, "Content-Type": "application/json" },
