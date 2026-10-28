@@ -292,6 +292,43 @@ export async function POST({ request, locals }) {
       "Student Date of Birth": studentDob,
       "Email": email.trim()
     };
+    // For LIVE registrations, preserve the phone and program details needed
+    // for the studio to schedule the correct student's first class. Use
+    // canonical Airtable field IDs, so display-label changes fail safely.
+    if (env.TRIAL_REGISTRATION_CONTEXT === "live") {
+      const schemaResponse = await fetch(
+        "https://api.airtable.com/v0/meta/bases/" + encodeURIComponent(env.AIRTABLE_BASE_ID) + "/tables",
+        { headers: { Authorization: "Bearer " + env.AIRTABLE_API_TOKEN } }
+      );
+      if (!schemaResponse.ok) {
+        console.error("Live registration schema unavailable", { status: schemaResponse.status });
+        return json({ success: false, error: "Registration setup needs verification. Please contact the studio." }, 503);
+      }
+      const schema = await schemaResponse.json();
+      const leadFields = schema.tables?.find(t => t.id === "tblZCXEuRKXiPZlc7")?.fields || [];
+      const byName = name => leadFields.find(f => f.name.trim().toLowerCase() === name);
+      const phoneField = byName("phone number");
+      const notesField = byName("additional notes");
+      if (!phoneField || phoneField.type !== "phoneNumber" ||
+          !notesField || !["multilineText", "singleLineText"].includes(notesField.type)) {
+        console.error("Live registration contact fields require review", {
+          phoneReady: phoneField?.type === "phoneNumber",
+          notesReady: Boolean(notesField && ["multilineText", "singleLineText"].includes(notesField.type))
+        });
+        return json({ success: false, error: "Registration contact details need verification. Please call 410-218-0894." }, 503);
+      }
+      fields[phoneField.id] = phone.trim();
+      fields[notesField.id] = "Requested program: " + programInterest + ". Submitted through the $29 New Student Special.";
+      const guardianField = byName("parent/guardian");
+      if (studentType === "minor" && guardianField && ["singleLineText", "multilineText"].includes(guardianField.type)) {
+        fields[guardianField.id] = guardianName.trim();
+      }
+      const programField = byName("program of interest");
+      if (programField?.type === "singleSelect" &&
+          programField.options?.choices?.some(choice => choice.name === programInterest)) {
+        fields[programField.id] = programInterest;
+      }
+    }
     // Do not set Student ID: Airtable's Autonumber field assigns it.
     const created = await fetch(
       "https://api.airtable.com/v0/" + encodeURIComponent(env.AIRTABLE_BASE_ID) + "/tblZCXEuRKXiPZlc7",
