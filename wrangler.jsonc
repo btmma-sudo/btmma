@@ -5,6 +5,14 @@
     "nodejs_compat"
   ],
   "main": "./dist/_worker.js/index.js",
+  "observability": {
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 1,
+      "invocation_logs": true,
+      "persist": true
+    }
+  },
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS"
