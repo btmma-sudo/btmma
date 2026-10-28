@@ -85,6 +85,20 @@ const curriculumBlocks = !hasVariants ? program.curriculum.copy.split("\n\n") : 
       ) : (
         <ProgramDetail program={program} showCurriculum={!useSplitLayout} />
       )}
+      {["kenpo-karate", "muay-thai", "wing-chun"].includes(program.slug) && (
+        <section class="shell section-divider">
+          <article class="detail-card narrative-section">
+            <p class="eyebrow">Looking for classes for your child?</p>
+            <h2>Kids Martial Arts in Owings Mills</h2>
+            <p>
+              Explore our beginner-friendly junior Kenpo Karate, Muay Thai, and Wing Chun programs.
+              See the kids class schedule, learn what to expect at the first class,
+              and find out how to start with our $29 new student special.
+            </p>
+            <a class="button" href="/kids-martial-arts">Explore Kids Martial Arts Classes</a>
+          </article>
+        </section>
+      )}
       {isWellness && <WellnessBooking />}
     </>
   )}
