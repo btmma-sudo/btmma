@@ -44,6 +44,26 @@ const faqs = [
     answer: "New students can start with two beginner classes and a free uniform for $29. Contact Burning Tree to discuss ongoing training and the program that best fits your goals."
   },
   {
+    question: "Can I join adult martial arts classes if I am over 40 or returning after years away?",
+    answer: "Many people begin or return to martial arts as adults. You can discuss your goals, experience, and any physical limitations with an instructor to decide whether a class is suitable for you."
+  },
+  {
+    question: "Are there evening martial arts classes after work or school?",
+    answer: "Yes. Our teens and adults Kenpo class meets Monday evening, Muay Thai meets Tuesday and Thursday evenings, and Wing Chun meets Wednesday evening. The up-to-date class times appear in the schedule on this page."
+  },
+  {
+    question: "What is the difference between adult Kenpo Karate and Muay Thai?",
+    answer: "American Kenpo includes structured self-defense techniques, striking, forms, and progression through a curriculum. Muay Thai places more emphasis on active striking combinations, kicks, footwork, and pad work. Both welcome beginners."
+  },
+  {
+    question: "Can teenagers attend the same martial arts classes as adults?",
+    answer: "Our published schedule includes combined Teens & Adults classes for Kenpo, Muay Thai, and Wing Chun. Contact us if you're unsure about the right placement for a specific teenager."
+  },
+  {
+    question: "Do you offer women's self-defense classes as well?",
+    answer: "Yes. Burning Tree also lists a separate Women's Self-Defense / Sanuces class on Sundays. Ask us about that program or explore its dedicated page."
+  },
+  {
     question: "Where can I take adult karate or Muay Thai near Owings Mills?",
     answer: "Burning Tree Mixed Martial Arts is located at 10210 S Dolfield Rd, Owings Mills, MD 21117. We welcome teens and adults from Owings Mills, Reisterstown, Pikesville, Randallstown, and surrounding Baltimore County communities."
   }
@@ -55,10 +75,12 @@ const serviceSchema = {
   name: "Teen and Adult Martial Arts Classes in Owings Mills, Maryland",
   description: "Beginner-friendly American Kenpo Karate, Muay Thai, and Wing Chun training for teens and adults at Burning Tree Mixed Martial Arts.",
   serviceType: "Teen and adult martial arts instruction",
-  areaServed: {
-    "@type": "Place",
-    name: "Owings Mills, Maryland"
-  },
+  url: new URL("/teens-adults-martial-arts/", site.primaryDomain).toString(),
+  inLanguage: "en-US",
+  areaServed: [
+    { "@type": "City", name: "Owings Mills" },
+    { "@type": "AdministrativeArea", name: "Baltimore County", containedInPlace: { "@type": "State", name: "Maryland" } }
+  ],
   provider: {
     "@type": "SportsActivityLocation",
     name: site.name,
@@ -99,8 +121,8 @@ const breadcrumbSchema = {
 
 <BaseLayout
   title="Teen & Adult Martial Arts in Owings Mills | Burning Tree MMA"
-  description="Adult karate, Muay Thai and Wing Chun in Owings Mills, MD. Beginner-friendly martial arts and self-defense classes for teens and adults. Start for $29."
-  keywords={["adult martial arts Owings Mills", "adult karate Owings Mills MD", "martial arts for teens Owings Mills", "beginner martial arts adults Baltimore County", "Muay Thai classes Owings Mills", "Wing Chun classes Owings Mills", "adult self-defense classes Owings Mills"]}
+  description="Looking for adult karate or teen martial arts in Owings Mills, MD? Explore beginner-friendly Kenpo, Muay Thai and Wing Chun. Try 2 classes + a uniform for $29."
+  keywords={["adult martial arts Owings Mills", "adult karate Owings Mills MD", "martial arts for teens Owings Mills", "beginner adult karate classes Baltimore County", "Muay Thai classes Owings Mills", "Wing Chun classes Owings Mills", "adult self-defense classes Owings Mills", "martial arts beginners near Reisterstown", "evening martial arts classes Owings Mills"]}
   path="/teens-adults-martial-arts/"
   image="/images/adult-martial-arts-hero.jpg">
   <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
@@ -116,7 +138,7 @@ const breadcrumbSchema = {
           <p class="ta-eyebrow">TEEN & ADULT MARTIAL ARTS • OWINGS MILLS, MD</p>
           <h1 id="ta-heading">Teen &amp; Adult Martial Arts in Owings Mills. <em>Discover what you're capable of.</em></h1>
           <p class="ta-hero-subhead">Beginner-friendly martial arts classes for teens and adults in Owings Mills—built around real skills, stronger confidence, and steady progress.</p>
-          <p class="ta-hero-lead">Maybe you've always wanted to learn self-defense. Maybe you're ready for a challenge beyond the gym. Or maybe you just want to feel more confident in yourself. Whatever brings you here, you don't need experience to take the first step.</p>
+          <p class="ta-hero-lead">Maybe you've always wanted to learn self-defense. Maybe you're ready for a challenge beyond the gym. Or maybe you just want to feel more confident in yourself. Whether you're a teen trying your first class, an adult beginner, or someone returning after a break, you don't need experience to take the first step.</p>
           <div class="ta-hero-actions">
             <a class="ta-button" href="/29-trial">Try 2 Classes + a FREE Uniform for $29</a>
             <a class="ta-text-link ta-text-link-light" href="#ta-programs">Explore Our Classes →</a>
@@ -153,7 +175,7 @@ const breadcrumbSchema = {
           <div class="ta-program-body">
             <p class="ta-program-label">MONDAY EVENINGS</p>
             <h3>American Kenpo Karate</h3>
-            <p>Learn self-defense concepts, striking, forms, and the discipline of a structured belt-progression system. Kenpo combines traditional training with practical applications.</p>
+            <p>Our American Kenpo Karate classes for teens and adults introduce practical self-defense concepts, striking combinations, forms, and the discipline of a structured belt-progression system. You can begin with basic movements and build toward more detailed techniques through guided practice.</p>
             <a href="/kenpo-karate">Explore Kenpo Karate <span aria-hidden="true">→</span></a>
           </div>
         </article>
@@ -162,7 +184,7 @@ const breadcrumbSchema = {
           <div class="ta-program-body">
             <p class="ta-program-label">TUESDAY & THURSDAY EVENINGS</p>
             <h3>Muay Thai</h3>
-            <p>Train punches, kicks, footwork, and combinations through striking drills. Muay Thai is a great option if you want active sessions that challenge both your focus and conditioning.</p>
+            <p>Adult Muay Thai classes focus on punches, kicks, footwork, pad work, and combinations through controlled striking drills. It's an active option for students looking to build coordination, work on conditioning, and learn practical striking fundamentals.</p>
             <a href="/muay-thai">Explore Muay Thai <span aria-hidden="true">→</span></a>
           </div>
         </article>
@@ -171,11 +193,38 @@ const breadcrumbSchema = {
           <div class="ta-program-body">
             <p class="ta-program-label">WEDNESDAY EVENINGS</p>
             <h3>Wing Chun</h3>
-            <p>Explore centerline theory, efficient movement, timing, and controlled partner practice. Wing Chun is a thoughtful approach to martial arts that emphasizes technique over brute force.</p>
+            <p>Our teen and adult Wing Chun classes explore centerline theory, efficient movement, timing, and close-range defensive techniques through controlled partner practice. Students develop precision and awareness while learning a system that emphasizes skill over brute force.</p>
             <a href="/wing-chun">Explore Wing Chun <span aria-hidden="true">→</span></a>
           </div>
         </article>
       </div>
+    </section>
+
+    <section class="ta-compare shell" aria-labelledby="ta-compare-heading">
+      <p class="ta-eyebrow">COMPARE YOUR OPTIONS</p>
+      <h2 id="ta-compare-heading">Adult karate vs. Muay Thai vs. Wing Chun: which class should you try?</h2>
+      <p class="ta-intro">There's no one-size-fits-all answer. The right martial arts class depends on whether you enjoy structured karate training, energetic striking practice, or technical close-range drills. Here's what to expect from each program at Burning Tree.</p>
+      <div class="ta-compare-grid">
+        <article>
+          <h3>Kenpo Karate</h3>
+          <p><strong>A good starting point if you want:</strong> a traditional martial arts path with progressive techniques, forms, and self-defense applications.</p>
+          <p><strong>Practice includes:</strong> strikes, blocks, movement patterns, and guided partner technique.</p>
+          <a href="/kenpo-karate">Learn more about Kenpo Karate →</a>
+        </article>
+        <article>
+          <h3>Muay Thai</h3>
+          <p><strong>A good starting point if you want:</strong> an active striking class that also challenges your conditioning and coordination.</p>
+          <p><strong>Practice includes:</strong> punches, kicks, footwork, combinations, and pad drills.</p>
+          <a href="/muay-thai">Learn more about Muay Thai →</a>
+        </article>
+        <article>
+          <h3>Wing Chun</h3>
+          <p><strong>A good starting point if you want:</strong> a technique-focused art centered on timing, distance, and precise movements.</p>
+          <p><strong>Practice includes:</strong> centerline fundamentals, close-range drills, and controlled partner work.</p>
+          <a href="/wing-chun">Learn more about Wing Chun →</a>
+        </article>
+      </div>
+      <p class="ta-compare-note">Still undecided? <a href={"tel:" + site.phoneHref}>Call {site.phone}</a> and tell us what you're looking for. We'll help you choose a class to try first.</p>
     </section>
 
     <section class="ta-chooser" aria-labelledby="ta-chooser-heading">
@@ -193,6 +242,26 @@ const breadcrumbSchema = {
           <p><strong>Real progress, one class at a time</strong><span>Give yourself the chance to learn something new.</span></p>
         </div>
       </div>
+    </section>
+
+    <section class="ta-start-paths shell" aria-labelledby="ta-paths-heading">
+      <p class="ta-eyebrow">THERE'S A PLACE TO START</p>
+      <h2 id="ta-paths-heading">Martial arts for teens, adult beginners, and people starting again</h2>
+      <div class="ta-paths-grid">
+        <article>
+          <h3>Martial arts for teens</h3>
+          <p>For teenagers looking for a new challenge beyond school or sports, martial arts offers a chance to practice focus, responsibility, and controlled movement. Our teens and adults classes introduce real techniques in a training environment that values respect and effort.</p>
+        </article>
+        <article>
+          <h3>Beginner martial arts for adults</h3>
+          <p>Never trained before? That's fine. You don't have to know a stance, memorize a combination, or already be in peak shape. Ask questions, learn the fundamentals, and build confidence through repetition.</p>
+        </article>
+        <article>
+          <h3>Coming back after time away</h3>
+          <p>If you used to practice karate or another martial art, you don't need to pick up exactly where you left off. Talk with an instructor about your background and comfort level, then find a practical way to return to training.</p>
+        </article>
+      </div>
+      <p class="ta-paths-note">Interested in a program focused specifically on women's self-defense? <a href="/womens-defense">Explore our Women's Self-Defense classes</a>.</p>
     </section>
 
     <section class="ta-first shell" aria-labelledby="ta-first-heading">
@@ -390,11 +459,20 @@ const breadcrumbSchema = {
   .ta-final .ta-small { font-size:.86rem; margin:1.2rem auto; }
   .ta-final .ta-small a { font-weight:800; text-decoration:underline; }
   .ta-final .ta-tagline { font-family:"Black Ops One",cursive; font-size:1.12rem; margin:1.2rem auto 0; }
+  .ta-compare,.ta-start-paths { padding-top:4rem; padding-bottom:4rem; border-top:1px solid #ebebeb; }
+  .ta-compare-grid,.ta-paths-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1rem; }
+  .ta-compare-grid article,.ta-paths-grid article { background:#fafafa; border:1px solid #e2e2e2; border-radius:7px; padding:1.45rem; min-width:0; }
+  .ta-compare-grid h3,.ta-paths-grid h3 { font-size:1.25rem; margin:0 0 .7rem; }
+  .ta-compare-grid p,.ta-paths-grid p { font-size:.94rem; color:#424242; }
+  .ta-compare-grid a,.ta-compare-note a,.ta-paths-note a { color:#990913; font-weight:800; text-decoration:underline; text-underline-offset:3px; }
+  .ta-compare-note,.ta-paths-note { margin:1.35rem 0 0; color:#4e4e4e; }
   @media(max-width:1100px) {
     .ta-benefit-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
     .ta-schedule-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
   }
   @media(max-width:760px) {
+    .ta-compare,.ta-start-paths { padding-top:3rem; padding-bottom:3rem; }
+    .ta-compare-grid,.ta-paths-grid { grid-template-columns:1fr; }
     .ta-hero { padding:1.7rem 0 3.1rem; }
     .ta-hero-grid,.ta-chooser-inner,.ta-first-grid,.ta-community-grid,.ta-local-grid { grid-template-columns:1fr; }
     .ta-hero h1 { font-size:clamp(2.35rem,9.1vw,3.45rem); }
