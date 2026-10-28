@@ -1,4 +1,5 @@
 ---
+import { weeklySchedule, formatClassTime } from "../../data/schedule";
 // Landing page: /lp/jr-ninjas
 // Not linked in nav or sitemap. noindex meta tag prevents search indexing.
 // Posts via /api/submit-ninja-lead — no Cloudflare Turnstile on this flow.
@@ -502,45 +503,20 @@
       <p class="sched-eyebrow">Weekly Schedule</p>
       <h2 class="sched-heading">Find a class that fits your week.</h2>
       <div class="sched-list">
-        <div class="sched-day">
-          <p class="day-label">Monday</p>
-          <ul>
-            <li><span class="sched-time">5:00 - 5:45 PM</span><span class="sched-cls">Jr. Kenpo</span></li>
-            <li><span class="sched-time">6:00 - 6:45 PM</span><span class="sched-cls">Jr. Kenpo</span></li>
-            <li><span class="sched-time">7:00 - 8:00 PM</span><span class="sched-cls">Teens and Adults Kenpo</span></li>
-          </ul>
-        </div>
-        <div class="sched-day">
-          <p class="day-label">Tuesday &amp; Thursday</p>
-          <ul>
-            <li><span class="sched-time">5:00 - 5:45 PM</span><span class="sched-cls">Jr. Muay Thai</span></li>
-            <li><span class="sched-time">6:00 - 6:45 PM</span><span class="sched-cls">Jr. Muay Thai</span></li>
-            <li><span class="sched-time">7:00 - 8:00 PM</span><span class="sched-cls">Teens and Adults Muay Thai</span></li>
-          </ul>
-        </div>
-        <div class="sched-day">
-          <p class="day-label">Wednesday</p>
-          <ul>
-            <li><span class="sched-time">5:00 - 5:45 PM</span><span class="sched-cls">Wing Chun Kids</span></li>
-            <li><span class="sched-time">6:00 - 6:45 PM</span><span class="sched-cls">Wing Chun Teens</span></li>
-            <li><span class="sched-time">7:00 - 8:00 PM</span><span class="sched-cls">Wing Chun Adults</span></li>
-          </ul>
-        </div>
-        <div class="sched-day">
-          <p class="day-label">Saturday</p>
-          <ul>
-            <li><span class="sched-time">9:30 - 10:15 AM</span><span class="sched-cls">Jr. Sparring</span></li>
-            <li><span class="sched-time">10:30 - 11:15 AM</span><span class="sched-cls">Teens and Adults Sparring</span></li>
-          </ul>
-        </div>
-        <div class="sched-day">
-          <p class="day-label">Sunday</p>
-          <ul>
-            <li><span class="sched-time">11:00 AM - 12:00 PM</span><span class="sched-cls">Women's Defense</span></li>
-            <li><span class="sched-time"></span><span class="sched-cls">Special Events</span></li>
-          </ul>
-          <p class="sched-note">Birthdays, seminars &amp; more</p>
-        </div>
+        {weeklySchedule.map((day) => (
+          <div class="sched-day">
+            <p class="day-label">{day.day}</p>
+            <ul>
+              {day.slots.map((slot) => (
+                <li>
+                  <span class="sched-time">{formatClassTime(slot.start, slot.end)}</span>
+                  <span class="sched-cls">{slot.cls}</span>
+                </li>
+              ))}
+            </ul>
+            {day.note && <p class="sched-note">{day.note}</p>}
+          </div>
+        ))}
       </div>
     </section>
 

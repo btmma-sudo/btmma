@@ -1,66 +1,12 @@
 
 ---
+import { weeklySchedule, formatClassTime } from "../data/schedule";
+
 type Props = {
   ctaHref?: string;
 };
 
 const { ctaHref = "/29-trial" } = Astro.props;
-
-const schedule = [
-  {
-    days: "Monday",
-    slots: [
-      { time: "5:00–5:45 PM", cls: "Jr. Kenpo" },
-      { time: "6:00–6:45 PM", cls: "Jr. Kenpo" },
-      { time: "7:00–8:00 PM", cls: "Teens & Adults Kenpo" }
-    ]
-  },
-  {
-    days: "Tuesday",
-    slots: [
-      { time: "5:00–5:45 PM", cls: "Jr. Muay Thai" },
-      { time: "6:00–6:45 PM", cls: "Jr. Muay Thai" },
-      { time: "7:00–8:00 PM", cls: "Teens & Adults Muay Thai" }
-    ]
-  },
-  {
-    days: "Wednesday",
-    slots: [
-      { time: "5:00–5:45 PM", cls: "Jr. Wing Chun" },
-      { time: "6:00–6:45 PM", cls: "Jr. Wing Chun" },
-      { time: "7:00–8:00 PM", cls: "Teens & Adults Wing Chun" }
-    ]
-  },
-  {
-    days: "Thursday",
-    slots: [
-      { time: "5:00–5:45 PM", cls: "Jr. Muay Thai" },
-      { time: "6:00–6:45 PM", cls: "Jr. Muay Thai" },
-      { time: "7:00–8:00 PM", cls: "Teens & Adults Muay Thai" }
-    ]
-  },
-  {
-    days: "Friday",
-    slots: [
-      { time: "6:00–7:00 PM", cls: "Leadership" }
-    ]
-  },
-  {
-    days: "Saturday",
-    slots: [
-      { time: "9:30–10:15 AM", cls: "Jr. Sparring" },
-      { time: "10:30–11:30 AM", cls: "Teens & Adults Open Mat" }
-    ],
-    note: "Birthday Parties, Seminars & Special Events"
-  },
-  {
-    days: "Sunday",
-    slots: [
-      { time: "12:00–2:00 PM", cls: "Women's Self-Defense / Sanuces" }
-    ],
-    note: "Birthday Parties, Seminars & Special Events"
-  }
-];
 ---
 
 <section class="shell section-divider">
@@ -72,14 +18,14 @@ const schedule = [
   </div>
 
   <div class="schedule-grid">
-    {schedule.map((day) => (
+    {weeklySchedule.map((day) => (
       <div class="schedule-day">
-        <p class="schedule-day-label">{day.days}</p>
+        <p class="schedule-day-label">{day.day}</p>
 
         <ul class="schedule-slots">
           {day.slots.map((slot) => (
             <li class="schedule-slot">
-              <span class="schedule-time">{slot.time}</span>
+              <span class="schedule-time">{formatClassTime(slot.start, slot.end)}</span>
               <span class="schedule-class">{slot.cls}</span>
             </li>
           ))}

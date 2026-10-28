@@ -17,7 +17,7 @@ import { faqPage, site } from "../data/site";
   <section class="shell grid-two section-divider">
     <div class="stack">
       <article class="detail-card contact-card">
-        <p class="eyebrow">Contact and Hours</p>
+        <p class="eyebrow">Contact and Class Hours</p>
         <h2>Plan your first visit to Burning Tree MMA.</h2>
         <p>{site.addressLine1}</p>
         <p>
@@ -27,6 +27,7 @@ import { faqPage, site } from "../data/site";
         <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
         <div class="benefit-list">
           {site.hours.map((hour) => <p>{hour}</p>)}
+          <p>Birthday parties, seminars and special events may run outside scheduled class hours.</p>
         </div>
       </article>
 

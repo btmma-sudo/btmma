@@ -1,3 +1,5 @@
+import { weeklySchedule, formatClock } from "./schedule";
+
 export type ThemeName = "flame" | "wellness";
 
 export type NavItem = {
@@ -119,23 +121,17 @@ export const site = {
   latitude: 39.4120992,
   longitude: -76.7795037,
   serviceArea: "Baltimore County",
-  hours: [
-    "Monday - Thursday: 5:00 PM - 9:00 PM",
-    "Saturday: 9:30 AM - 11:30 AM",
-    "Sunday: Closed"
-  ],
-  schemaHours: [
-    {
-      days: ["Monday", "Tuesday", "Wednesday", "Thursday"],
-      opens: "17:00",
-      closes: "21:00"
-    },
-    {
-      days: ["Saturday"],
-      opens: "09:30",
-      closes: "11:30"
-    }
-  ],
+  // Class hours and structured hours are generated from the same weekly schedule.
+  hours: weeklySchedule.map((day) => {
+    const first = day.slots[0];
+    const last = day.slots[day.slots.length - 1];
+    return `${day.day}: ${formatClock(first.start)} – ${formatClock(last.end)}`;
+  }),
+  schemaHours: weeklySchedule.map((day) => ({
+    days: [day.day],
+    opens: day.slots[0].start,
+    closes: day.slots[day.slots.length - 1].end
+  })),
   social: {
     instagram: "https://www.instagram.com/burningtree_mma/",
     facebook: "https://www.facebook.com/burningtreemma"
