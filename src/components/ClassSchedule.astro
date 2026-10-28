@@ -4,7 +4,8 @@ type Props = {
   ctaHref?: string;
 };
 
-const { ctaHref = "/29-trial" } = Astro.props;
+const { ctaHref = "/29-trial/" } = Astro.props;
+const ctaLabel = ctaHref.startsWith("/29-trial") ? "GET STARTED FOR $29" : "CONTACT US ABOUT CLASSES";
 
 const schedule = [
   {
@@ -94,7 +95,7 @@ const schedule = [
 
   <div class="schedule-cta">
     <a class="button" href={ctaHref}>
-      Try a Class
+      {ctaLabel}
     </a>
   </div>
 </section>
