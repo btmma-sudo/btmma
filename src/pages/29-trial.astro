@@ -78,12 +78,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     const guardianName = document.getElementById("guardianName");
     const checkoutButton = document.getElementById("checkout-button");
     let grant = null;
+    let liveMode = null; // null until the server confirms the current checkout mode.
     checkoutButton?.addEventListener("click", async () => {
-      if (!grant || !checkoutButton) return;
+      if (!grant || !checkoutButton || liveMode === null) return;
       checkoutButton.disabled = true;
-      notice.textContent = "Preparing secure Stripe test checkout...";
+      notice.textContent = liveMode ? "Preparing secure $29 checkout..." : "Preparing secure Stripe test checkout...";
       try {
-        const response = await fetch("/api/create-checkout", {
+        const response = await fetch(liveMode ? "/api/create-checkout-live" : "/api/create-checkout", {
           method: "POST", headers: { "content-type": "application/json" },
           body: JSON.stringify({ grant })
         });
@@ -98,6 +99,28 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     });
     const submit = form?.querySelector('button[type="submit"]');
     if (!form || !notice || !submit) return;
+    submit.disabled = true;
+    // Fail closed until the server confirms whether checkout is test or live.
+    (async () => {
+      try {
+        const response = await fetch("/api/trial-eligibility-live", { cache: "no-store" });
+        if (!response.ok) throw new Error("Could not verify checkout mode");
+        const status = await response.json();
+        if (!["locked", "enabled"].includes(status.liveRegistration)) throw new Error("Invalid checkout mode");
+        liveMode = status.liveRegistration === "enabled";
+        const returnState = new URLSearchParams(window.location.search).get("checkout");
+        notice.textContent = returnState === "success"
+          ? "Thank you for completing checkout! We'll verify your payment and follow up about classes."
+          : returnState === "cancelled"
+          ? "Checkout was cancelled. You have not completed payment."
+          : liveMode
+          ? "We'll check the student's eligibility before taking a secure $29 payment."
+          : "Stripe test checkout is active. No real payment will be collected.";
+        submit.disabled = false;
+      } catch {
+        notice.textContent = "Registration is temporarily unavailable. Please call 410-218-0894.";
+      }
+    })();
     const syncGuardian = () => {
       const isMinor = type?.value === "minor";
       if (guardian) guardian.hidden = !isMinor;
@@ -112,6 +135,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       event.preventDefault();
       grant = null;
       if (checkoutButton) { checkoutButton.hidden = true; checkoutButton.disabled = true; }
+      if (liveMode === null) {
+        notice.textContent = "Registration is temporarily unavailable. Please call 410-218-0894.";
+        return;
+      }
       notice.textContent = "Validating registration...";
       if (!form.reportValidity()) {
         notice.textContent = "Please complete all required fields.";
@@ -130,7 +157,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 15000);
       try {
-        const response = await fetch("/api/trial-eligibility", {
+        const response = await fetch(liveMode ? "/api/trial-eligibility-live" : "/api/trial-eligibility", {
           method: "POST",
           headers: { "content-type": "application/json" },
           body: JSON.stringify({ ...payload, turnstileToken: token }),
@@ -142,7 +169,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           grant = result.checkoutGrant;
           checkoutButton.hidden = false;
           checkoutButton.disabled = false;
-          notice.textContent += " You may now continue to secure Stripe TEST checkout. No real payment will be collected.";
+          notice.textContent = liveMode
+            ? "Student registration approved. Click PAY $29 NOW to continue to secure checkout."
+            : "Student registration approved. You may continue to the Stripe test checkout; no real payment will be collected.";
         }
       } catch (error) {
         notice.textContent = error?.name === "AbortError"
