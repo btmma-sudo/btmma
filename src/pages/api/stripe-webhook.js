@@ -63,7 +63,7 @@ export async function POST({ request, locals }) {
       const updated = await fetch(url, {
         method: "PATCH",
         headers: { Authorization: "Bearer " + env.AIRTABLE_API_TOKEN, "Content-Type": "application/json" },
-        body: JSON.stringify({ fields: { "$29 Trial Used": true, "Payment Status": "Paid", "Stripe Checkout Session": sessionId, "Payment Amount": 29 }, typecast: false })
+        body: JSON.stringify({ fields: { "$29 Trial Used": true, "Payment Status": "Paid" }, typecast: false })
       });
       if (!updated.ok) {
         let airtableError = {};
