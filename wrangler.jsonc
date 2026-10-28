@@ -9,6 +9,13 @@
     "directory": "./dist",
     "binding": "ASSETS"
   },
+  "d1_databases": [
+    {
+      "binding": "TRIAL_DB",
+      "database_name": "burningtree-trial-payments",
+      "database_id": "d2422ebf-13fe-4834-ab5f-586eb94121d3"
+    }
+  ],
   "vars": {
     "MAKE_WEBHOOK_URL": "https://hook.eu2.make.com/148pw2jrjro999olsiy0up1i54rixtj2",
     "AIRTABLE_BASE_ID": "apptGRToJEGKv0NDa"
