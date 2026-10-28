@@ -35,8 +35,66 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </select>
         <label for="studentName">Student's full name</label>
         <input id="studentName" name="studentName" type="text" autocomplete="off" maxlength="120" required />
-        <label for="studentDob">Student's date of birth</label>
-        <input id="studentDob" name="studentDob" type="date" required />
+        <p id="dob-label" class="form-heading">Student's date of birth</p>
+        <div class="dob-fields" role="group" aria-labelledby="dob-label">
+          <label for="dobMonth">Month
+            <select id="dobMonth" autocomplete="bday-month" required>
+              <option value="">Month</option>
+              <option value="01">January</option>
+              <option value="02">February</option>
+              <option value="03">March</option>
+              <option value="04">April</option>
+              <option value="05">May</option>
+              <option value="06">June</option>
+              <option value="07">July</option>
+              <option value="08">August</option>
+              <option value="09">September</option>
+              <option value="10">October</option>
+              <option value="11">November</option>
+              <option value="12">December</option>
+            </select>
+          </label>
+          <label for="dobDay">Day
+            <select id="dobDay" autocomplete="bday-day" required>
+              <option value="">Day</option>
+              <option value="01">1</option>
+              <option value="02">2</option>
+              <option value="03">3</option>
+              <option value="04">4</option>
+              <option value="05">5</option>
+              <option value="06">6</option>
+              <option value="07">7</option>
+              <option value="08">8</option>
+              <option value="09">9</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+              <option value="13">13</option>
+              <option value="14">14</option>
+              <option value="15">15</option>
+              <option value="16">16</option>
+              <option value="17">17</option>
+              <option value="18">18</option>
+              <option value="19">19</option>
+              <option value="20">20</option>
+              <option value="21">21</option>
+              <option value="22">22</option>
+              <option value="23">23</option>
+              <option value="24">24</option>
+              <option value="25">25</option>
+              <option value="26">26</option>
+              <option value="27">27</option>
+              <option value="28">28</option>
+              <option value="29">29</option>
+              <option value="30">30</option>
+              <option value="31">31</option>
+            </select>
+          </label>
+          <label for="dobYear">Year (4 digits)
+            <input id="dobYear" type="text" inputmode="numeric" autocomplete="bday-year" minlength="4" maxlength="4" pattern="[0-9]{4}" placeholder="YYYY" title="Enter exactly four numbers for the birth year" required />
+          </label>
+        </div>
+        <input id="studentDob" name="studentDob" type="hidden" />
         <p class="fine-print">Used to help verify each student's eligibility, including siblings sharing contact details.</p>
         <div id="guardianFields" hidden>
           <label for="guardianName">Parent / guardian full name</label>
@@ -81,9 +139,40 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     const type = document.getElementById("studentType");
     const guardian = document.getElementById("guardianFields");
     const guardianName = document.getElementById("guardianName");
+    const dobMonth = document.getElementById("dobMonth");
+    const dobDay = document.getElementById("dobDay");
+    const dobYear = document.getElementById("dobYear");
+    const studentDob = document.getElementById("studentDob");
     const checkoutButton = document.getElementById("checkout-button");
     const pilotFields = document.getElementById("pilotFields");
     const pilotCode = document.getElementById("pilotCode");
+    // Native date pickers can allow a five-digit year in their segmented UI.
+    // Keep birth-year entry to four digits and create the ISO date the API expects.
+    const syncDob = () => {
+      if (!dobMonth || !dobDay || !dobYear || !studentDob) return false;
+      const digits = dobYear.value.replace(/[^0-9]/g, "").slice(0, 4);
+      if (dobYear.value !== digits) dobYear.value = digits;
+      dobYear.setCustomValidity("");
+      studentDob.value = "";
+      if (!dobMonth.value || !dobDay.value || !/^[0-9]{4}$/.test(digits)) return false;
+      const year = Number(digits);
+      const month = Number(dobMonth.value);
+      const day = Number(dobDay.value);
+      const date = new Date(Date.UTC(year, month - 1, day));
+      const valid = date.getUTCFullYear() === year &&
+        date.getUTCMonth() === month - 1 && date.getUTCDate() === day &&
+        date.getTime() <= Date.now();
+      if (!valid) {
+        dobYear.setCustomValidity("Enter a valid date of birth that is not in the future.");
+        return false;
+      }
+      studentDob.value = digits + "-" + dobMonth.value + "-" + dobDay.value;
+      return true;
+    };
+    dobMonth?.addEventListener("change", syncDob);
+    dobDay?.addEventListener("change", syncDob);
+    dobYear?.addEventListener("input", syncDob);
+    syncDob();
     let grant = null;
     let liveMode = null; // null until the server confirms the current checkout mode.
     let pilotOnly = false;
@@ -153,7 +242,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         return;
       }
       notice.textContent = "Validating registration...";
-      if (!form.reportValidity()) {
+      syncDob();
+      if (!form.reportValidity() || !studentDob?.value) {
         notice.textContent = "Please complete all required fields.";
         return;
       }
@@ -217,6 +307,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   .form{display:grid;gap:11px;text-align:left;border:1px solid #ddd;border-radius:16px;padding:25px}
   .form label{font-weight:700;margin-top:8px}
   .form input,.form select{width:100%;box-sizing:border-box;border:1px solid #999;border-radius:8px;padding:13px;font:inherit;background:var(--surface);color:var(--text)}
+  .form-heading{font-weight:700;margin:8px 0 0}
+  .dob-fields{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.75fr) minmax(0,1fr);gap:9px}
+  .dob-fields label{display:grid;gap:5px;margin-top:0;font-size:.9rem}
+  .dob-fields select,.dob-fields input{min-width:0}
+  @media(max-width:420px){.dob-fields{grid-template-columns:minmax(0,1.1fr) minmax(0,.65fr) minmax(0,.9fr);gap:6px}.dob-fields select,.dob-fields input{padding:10px 6px;font-size:14px}}
   #guardianFields:not([hidden]),#pilotFields:not([hidden]){display:grid;gap:11px}
   .form button[hidden]{display:none}
   .form button:disabled{opacity:.55;cursor:not-allowed}
