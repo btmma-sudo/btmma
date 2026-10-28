@@ -22,7 +22,7 @@ export async function POST({ request, locals }) {
   const grant = input?.grant;
   if (typeof grant !== "string" || grant.length > 500) return json({ error: "Registration approval required." }, 403);
   const [recordId, expiry, mac] = grant.split(".");
-  if (!/^rec[A-Za-z0-9]+$/.test(recordId || "") || !/^\\d{13}$/.test(expiry || "") ||
+  if (!/^rec[A-Za-z0-9]+$/.test(recordId || "") || !/^\d{13}$/.test(expiry || "") ||
       !/^[a-f0-9]{64}$/.test(mac || "") || Number(expiry) < Date.now() ||
       Number(expiry) > Date.now() + 16 * 60 * 1000) return json({ error: "Registration approval expired." }, 403);
   const expected = await sign(env.STRIPE_LIVE_WEBHOOK_SECRET, recordId + "." + expiry);
