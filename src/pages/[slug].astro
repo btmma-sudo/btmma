@@ -46,7 +46,7 @@ const curriculumBlocks = !hasVariants ? program.curriculum.copy.split("\n\n") : 
           </div>
         </div>
       ) : (
-        <PageHero hero={program.hero} showMobileCta={showLeadForm} ctaLabel={program.mobileCta} centerMobile={isWellness} centerContent={centerContent} />
+        <PageHero hero={program.hero} showMobileCta={showLeadForm} ctaLabel={program.mobileCta ?? (program.leadForm.offerLink ? "GET STARTED FOR $29" : "Contact Us")} centerMobile={isWellness} centerContent={centerContent} />
       )}
 
       {useSplitLayout ? (
