@@ -75,7 +75,7 @@ export async function POST({ request, locals }) {
           type: typeof type === "string" ? type.slice(0, 100) : "unknown",
           detail: typeof detail === "string" ? detail.slice(0, 300) : "unavailable"
         });
-        return reply("Airtable update unavailable", 503);
+        return reply("Airtable update rejected: HTTP " + updated.status + "; type=" + (typeof type === "string" ? type.slice(0, 80) : "unknown") + "; field=" + (typeof detail === "string" ? detail.match(/(?:field|column)\s+[\x27\x22]?([\w $-]{1,60})/i)?.[1] || "not specified" : "unknown"), 503);
       }
       const paidUpdate = await env.TRIAL_DB.prepare("UPDATE trial_registrations SET state = 'paid', stripe_payment_intent_id = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND stripe_session_id = ?")
         .bind(typeof session.payment_intent === "string" ? session.payment_intent : null, row.id, sessionId).run();
