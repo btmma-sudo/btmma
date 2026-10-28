@@ -48,6 +48,18 @@ import { homePage, homepagePrograms } from "../data/site";
     </div>
   </section>
 
+  <section class="shell section-divider home-adult-spotlight" aria-labelledby="home-adult-heading">
+    <div class="home-adult-spotlight-inner">
+      <div class="home-adult-spotlight-copy">
+        <p class="eyebrow">Teens &amp; Adults • Owings Mills</p>
+        <h2 id="home-adult-heading">You Don't Need Experience. You Just Need to Start.</h2>
+        <p>Ready to build real skills, get moving, and challenge yourself? Our beginner-friendly Kenpo Karate, Muay Thai, and Wing Chun classes welcome teens and adults at every starting point.</p>
+        <a class="button" href="/teens-adults-martial-arts">Explore Teens &amp; Adults Classes</a>
+      </div>
+      <img src="/images/adult-martial-arts-gallery-3.jpg" width="760" height="550" loading="lazy" decoding="async" alt="Adult martial arts students practicing partner drills at Burning Tree MMA in Owings Mills" />
+    </div>
+  </section>
+
   <section class="shell section-divider">
     <div class="section-heading">
       <div>
@@ -125,7 +137,18 @@ import { homePage, homepagePrograms } from "../data/site";
   .home-kids-spotlight-copy h2 { margin: 0 0 1rem; }
   .home-kids-spotlight-copy p:not(.eyebrow) { color: #e6e6e6; max-width: 610px; }
   .home-kids-spotlight-copy .button { margin-top: .8rem; }
+  .home-adult-spotlight { padding-top: 3rem; padding-bottom: 3rem; }
+  .home-adult-spotlight-inner { display: grid; grid-template-columns: 1.07fr .93fr; align-items: center; gap: 2.5rem; background: #1b1b1b; border: 1px solid #4b1c1c; padding: 1.2rem; }
+  .home-adult-spotlight-inner img { height: 310px; width: 100%; object-fit: cover; }
+  .home-adult-spotlight-copy { padding: 1.2rem 0 1.2rem 1.3rem; }
+  .home-adult-spotlight-copy h2 { margin: 0 0 1rem; color: #fff; }
+  .home-adult-spotlight-copy p:not(.eyebrow) { color: #e6e6e6; max-width: 610px; }
+  .home-adult-spotlight-copy .button { margin-top: .8rem; }
   @media(max-width: 720px) {
+    .home-adult-spotlight-inner { grid-template-columns: 1fr; gap: 0; }
+    .home-adult-spotlight-inner img { height: 240px; }
+    .home-adult-spotlight-copy { padding: 1.4rem .3rem .8rem; }
+    .home-adult-spotlight-copy .button { width: 100%; }
     .home-kids-spotlight-inner { grid-template-columns: 1fr; gap: 0; }
     .home-kids-spotlight-inner img { height: 240px; }
     .home-kids-spotlight-copy { padding: 1.4rem .3rem .5rem; }
