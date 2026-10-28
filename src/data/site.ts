@@ -743,7 +743,7 @@ export const programPages: ProgramPage[] = [
         "Techniques designed to work against larger and stronger attackers",
         "Close-quarters focus that applies directly to the situations women face most",
         "Combines joint manipulation, pressure points, throws, and ground control",
-        "Taught here by Hanshi Daryl King, 10th Dan and Chief Instructor of all KNS Schools of Sanuces Ryu Jiu-Jitsu"
+        "Led by Coach Dana Marable II, 2nd Degree Black Belt in Sanuces Ryu Jujitsu and retired U.S. Army veteran"
       ],
       closing: "Most self-defense courses teach women to survive an attack. This one teaches them to end it. If you want training that is honest about the threat and serious about the solution, this is where you start."
     }
