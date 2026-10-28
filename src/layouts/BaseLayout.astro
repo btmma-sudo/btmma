@@ -34,42 +34,73 @@ const dayUrlMap = {
   Saturday: "https://schema.org/Saturday",
   Sunday: "https://schema.org/Sunday"
 } as const;
+const schoolId = `${site.primaryDomain}/#martial-arts-school`;
+const websiteId = `${site.primaryDomain}/#website`;
+// One stable school entity across every page, linked to each page's unique identity.
 const schema = {
   "@context": "https://schema.org",
-  "@type": ["LocalBusiness", "SportsActivityLocation"],
-  name: site.name,
-  alternateName: site.shortName,
-  description,
-  url: canonical,
-  telephone: site.phone,
-  email: site.email,
-  slogan: site.tagline,
-  image: imageUrl,
-  hasMap: site.mapUrl,
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: site.addressLine1,
-    addressLocality: site.city,
-    addressRegion: site.region,
-    postalCode: site.postalCode,
-    addressCountry: site.country
-  },
-  geo: {
-    "@type": "GeoCoordinates",
-    latitude: site.latitude,
-    longitude: site.longitude
-  },
-  openingHoursSpecification: site.schemaHours.map((entry) => ({
-    "@type": "OpeningHoursSpecification",
-    dayOfWeek: entry.days.map((day) => dayUrlMap[day as keyof typeof dayUrlMap]),
-    opens: entry.opens,
-    closes: entry.closes
-  })),
-  areaServed: {
-    "@type": "AdministrativeArea",
-    name: site.serviceArea
-  },
-  sameAs: [site.social.instagram, site.social.facebook]
+  "@graph": [
+    {
+      "@type": ["LocalBusiness", "SportsActivityLocation"],
+      "@id": schoolId,
+      name: site.name,
+      alternateName: site.shortName,
+      description: "Beginner-friendly Kenpo Karate, Muay Thai, Wing Chun, and women's self-defense training for kids, teens, and adults in Owings Mills, Maryland.",
+      url: `${site.primaryDomain}/`,
+      telephone: site.phone,
+      email: site.email,
+      slogan: "One Tree. One Family.",
+      image: new URL("/images/logo.png", site.primaryDomain).toString(),
+      hasMap: site.mapUrl,
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: site.addressLine1,
+        addressLocality: site.city,
+        addressRegion: site.region,
+        postalCode: site.postalCode,
+        addressCountry: site.country
+      },
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: site.latitude,
+        longitude: site.longitude
+      },
+      openingHoursSpecification: site.schemaHours.map((entry) => ({
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: entry.days.map((day) => dayUrlMap[day as keyof typeof dayUrlMap]),
+        opens: entry.opens,
+        closes: entry.closes
+      })),
+      areaServed: [
+        { "@type": "Place", name: "Owings Mills, Maryland" },
+        { "@type": "Place", name: "Reisterstown, Maryland" },
+        { "@type": "Place", name: "Pikesville, Maryland" },
+        { "@type": "Place", name: "Randallstown, Maryland" },
+        { "@type": "AdministrativeArea", name: site.serviceArea }
+      ],
+      knowsAbout: ["American Kenpo Karate", "Muay Thai", "Wing Chun", "Sanuces Ryu Jujitsu", "Women's self-defense", "Kids martial arts"],
+      sameAs: [site.social.instagram, site.social.facebook]
+    },
+    {
+      "@type": "WebSite",
+      "@id": websiteId,
+      name: site.name,
+      url: `${site.primaryDomain}/`,
+      inLanguage: "en-US",
+      publisher: { "@id": schoolId }
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${canonical}#webpage`,
+      url: canonical,
+      name: title,
+      description,
+      inLanguage: "en-US",
+      isPartOf: { "@id": websiteId },
+      about: { "@id": schoolId },
+      primaryImageOfPage: { "@type": "ImageObject", url: imageUrl }
+    }
+  ]
 };
 ---
 
@@ -89,7 +120,7 @@ const schema = {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="keywords" content={keywords.join(", ")} />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta name="generator" content={Astro.generator} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -100,10 +131,12 @@ const schema = {
     <link rel="shortcut icon" href="/favicon.ico?v=1" type="image/x-icon" />
     <link rel="canonical" href={canonical} />
     <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:alt" content={title} />
     <meta property="og:site_name" content={site.name} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
