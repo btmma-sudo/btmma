@@ -99,6 +99,20 @@ const curriculumBlocks = !hasVariants ? program.curriculum.copy.split("\n\n") : 
           </article>
         </section>
       )}
+      {["kenpo-karate", "muay-thai", "wing-chun"].includes(program.slug) && (
+        <section class="shell section-divider">
+          <article class="detail-card narrative-section">
+            <p class="eyebrow">Ready to train?</p>
+            <h2>Teen &amp; Adult Martial Arts in Owings Mills</h2>
+            <p>
+              Beginner-friendly Kenpo Karate, Muay Thai, and Wing Chun classes for teens and adults.
+              Compare the programs, check the evening class schedule, and learn how to start
+              with our $29 new student special.
+            </p>
+            <a class="button" href="/teens-adults-martial-arts">Explore Teens &amp; Adults Classes</a>
+          </article>
+        </section>
+      )}
       {isWellness && <WellnessBooking />}
     </>
   )}
