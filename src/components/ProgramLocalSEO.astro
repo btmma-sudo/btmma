@@ -95,7 +95,7 @@ const classTimes = block?.scheduleTerm
         {" · "}
         <a href="/faq">Frequently asked questions</a>
       </p>
-      <a class="button" href="/29-trial">See Our $29 New Student Special</a>
+      <a class="button" href={program.slug === "birthday-parties" ? "/faq#lead-form" : "/29-trial"}>{program.slug === "birthday-parties" ? "Ask About a Birthday Party" : "See Our $29 New Student Special"}</a>
       <p><a href={"tel:" + site.phoneHref}>Questions? Call or text {site.phone}</a></p>
     </article>
   </section>
