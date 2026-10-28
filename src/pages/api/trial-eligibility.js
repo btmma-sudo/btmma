@@ -26,6 +26,8 @@ async function checkoutGrant(secret, recordId) {
 export const prerender = false;
 export async function POST({ request, locals }) {
   const env = locals?.runtime?.env ?? {};
+  if (env.LIVE_CHECKOUT_ENABLED === "true" && env.TRIAL_REGISTRATION_CONTEXT !== "live")
+    return json({ success: false, error: "Sandbox registration is unavailable while live enrollment is active." }, 503);
   const required = ["AIRTABLE_API_TOKEN", "AIRTABLE_BASE_ID", "TURNSTILE_SECRET_KEY", "TRIAL_DB", "STRIPE_WEBHOOK_SECRET"];
   const missing = required.filter((name) => !env[name]);
   if (missing.length) {
