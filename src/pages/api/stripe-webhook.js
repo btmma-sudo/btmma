@@ -14,7 +14,7 @@ const constantTimeEqual = (a, b) => {
 };
 export async function POST({ request, locals }) {
   const env = locals?.runtime?.env ?? {};
-  if (!env.STRIPE_WEBHOOK_SECRET || !env.TRIAL_DB) return reply("Webhook not configured", 503);
+  if (!env.STRIPE_WEBHOOK_SECRET || !env.TRIAL_DB || !env.AIRTABLE_API_TOKEN || !env.AIRTABLE_BASE_ID || !env.STRIPE_SECRET_KEY) return reply("Webhook not configured", 503);
   const signature = request.headers.get("stripe-signature") || "";
   const timestamp = signature.split(",").find((part) => part.startsWith("t="))?.slice(2);
   const signatures = signature.split(",").filter((part) => part.startsWith("v1=")).map((part) => part.slice(3));
@@ -32,8 +32,45 @@ export async function POST({ request, locals }) {
   let event;
   try { event = JSON.parse(body); } catch { return reply("Invalid JSON", 400); }
   if (typeof event.id !== "string" || !event.id.startsWith("evt_")) return reply("Invalid event", 400);
-  // The endpoint is deliberately fail-closed: do not mark an event processed,
-  // mark a trial used, or return 2xx before payment-to-student fulfillment exists.
-  console.warn("Stripe webhook received before fulfillment enabled", { type: event.type, id: event.id });
-  return reply("Payment fulfillment not yet enabled", 503);
+  if (!["checkout.session.completed", "checkout.session.async_payment_succeeded", "checkout.session.async_payment_failed"].includes(event.type)) return reply("Ignored", 200);
+  if (event.livemode !== false || !String(env.STRIPE_SECRET_KEY).startsWith("sk_test_")) return reply("Test-mode only", 503);
+  const sessionId = event.data?.object?.id;
+  if (typeof sessionId !== "string" || !sessionId.startsWith("cs_test_")) return reply("Invalid session", 400);
+  const row = await env.TRIAL_DB.prepare("SELECT id, airtable_record_id, state FROM trial_registrations WHERE stripe_session_id = ?").bind(sessionId).first();
+  if (!row) return reply("Unrecognized checkout session", 503);
+  const already = await env.TRIAL_DB.prepare("SELECT event_id FROM stripe_webhook_events WHERE event_id = ?").bind(event.id).first();
+  if (already) return reply("Already processed", 200);
+  // Re-fetch from Stripe: never trust a browser redirect or unsigned session metadata.
+  const stripeResponse = await fetch("https://api.stripe.com/v1/checkout/sessions/" + encodeURIComponent(sessionId), {
+    headers: { Authorization: "Bearer " + env.STRIPE_SECRET_KEY }
+  });
+  if (!stripeResponse.ok) return reply("Stripe verification unavailable", 503);
+  const session = await stripeResponse.json();
+  if (session.livemode !== false || session.mode !== "payment" ||
+      session.currency !== "usd" || session.amount_total !== 2900 ||
+      session.client_reference_id !== row.id) return reply("Session mismatch", 503);
+  if (event.type === "checkout.session.async_payment_failed") {
+    // Do not release the reservation automatically; staff must reconcile failed/late payments.
+    await env.TRIAL_DB.prepare("UPDATE trial_registrations SET state = 'manual_review', updated_at = CURRENT_TIMESTAMP WHERE id = ? AND state != 'paid'").bind(row.id).run();
+  } else {
+    if (session.payment_status !== "paid") return reply("Awaiting payment", 503);
+    if (row.state !== "paid") {
+      const url = "https://api.airtable.com/v0/" + encodeURIComponent(env.AIRTABLE_BASE_ID) + "/tblZCXEuRKXiPZlc7/" + encodeURIComponent(row.airtable_record_id);
+      const current = await fetch(url, { headers: { Authorization: "Bearer " + env.AIRTABLE_API_TOKEN } });
+      if (!current.ok) return reply("Airtable verification unavailable", 503);
+      const student = await current.json();
+      if (student.fields?.["$29 Trial Used"] && student.fields?.["Payment Status"] !== "Paid") return reply("Student requires manual review", 503);
+      const updated = await fetch(url, {
+        method: "PATCH",
+        headers: { Authorization: "Bearer " + env.AIRTABLE_API_TOKEN, "Content-Type": "application/json" },
+        body: JSON.stringify({ fields: { "$29 Trial Used": true, "Payment Status": "Paid" }, typecast: false })
+      });
+      if (!updated.ok) return reply("Airtable update unavailable", 503);
+      await env.TRIAL_DB.prepare("UPDATE trial_registrations SET state = 'paid', stripe_payment_intent_id = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND stripe_session_id = ?")
+        .bind(typeof session.payment_intent === "string" ? session.payment_intent : null, row.id, sessionId).run();
+    }
+  }
+  await env.TRIAL_DB.prepare("INSERT OR IGNORE INTO stripe_webhook_events (event_id, event_type) VALUES (?, ?)")
+    .bind(event.id, event.type).run();
+  return reply("Processed", 200);
 }
