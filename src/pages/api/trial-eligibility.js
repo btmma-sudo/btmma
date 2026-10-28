@@ -5,6 +5,7 @@ const json = (body, status = 200) => new Response(JSON.stringify(body), {
   status, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" }
 });
 const normalize = (value) => String(value || "").trim().replace(/\s+/g, " ").toLocaleLowerCase("en-US");
+const sameDob = (fields, dob) => fields["Student Date of Birth"] === dob;
 export const prerender = false;
 export async function POST({ request, locals }) {
   const env = locals?.runtime?.env ?? {};
@@ -17,7 +18,7 @@ export async function POST({ request, locals }) {
   try { data = await request.json(); } catch { return json({ success: false, error: "Invalid registration." }, 400); }
   const { studentType, studentName, studentDob, guardianName, email, phone, programInterest, turnstileToken } = data || {};
   // Parse a calendar date strictly; reject impossible and future dates.
-  const dobValid = typeof studentDob === "string" && /^\\d{4}-\\d{2}-\\d{2}$/.test(studentDob);
+  const dobValid = typeof studentDob === "string" && /^\d{4}-\d{2}-\d{2}$/.test(studentDob);
   const dobDate = dobValid ? new Date(studentDob + "T00:00:00Z") : null;
   const today = new Date();
   const birthYear = dobValid ? Number(studentDob.slice(0, 4)) : 0;
@@ -164,6 +165,7 @@ export async function POST({ request, locals }) {
           return json({ success: true, eligible: false, message: "Please contact the studio so we can verify this student's trial eligibility." });
         }
         if (normalize(fields["Student Name"]) === normalize(studentName) &&
+            (sameDob(fields, studentDob) || !fields["Student Date of Birth"]) &&
             (fields["$29 Trial Used"] || fields["Payment Status"] === "Paid")) {
           return json({ success: true, eligible: false, message: "Please contact the studio about this student's trial eligibility." });
         }
@@ -201,6 +203,7 @@ export async function POST({ request, locals }) {
       for (const record of namePage.records || []) {
         const fields = record.fields || {};
         if (normalize(fields["Student Name"]) === normalize(studentName) &&
+            (sameDob(fields, studentDob) || !fields["Student Date of Birth"]) &&
             (fields["$29 Trial Used"] || fields["Payment Status"] === "Paid")) {
           return json({
             success: true,
@@ -237,6 +240,7 @@ export async function POST({ request, locals }) {
         const fields = record.fields || {};
         if (normalize(fields["Student Name"]) === normalize(studentName) &&
             normalize(fields["Email"]) === contactEmail &&
+            sameDob(fields, studentDob) &&
             !fields["$29 Trial Used"] && fields["Payment Status"] !== "Paid") {
           return json({
             success: true, eligible: true, registrationSaved: true,
@@ -250,6 +254,7 @@ export async function POST({ request, locals }) {
     const fields = {
       "Name": studentType === "minor" ? guardianName.trim() : studentName.trim(),
       "Student Name": studentName.trim(),
+      "Student Date of Birth": studentDob,
       "Email": email.trim()
     };
     // Do not set Student ID: Airtable's Autonumber field assigns it.
