@@ -449,7 +449,7 @@ export const programPages: ProgramPage[] = [
           ]
         },
         galleryImages: [
-          { src: "/images/jr-muay-thai-gallery-2.jpg", alt: "Junior Muay Thai students practicing a partner drill" },
+          { src: "/images/Gallery/gallery11.jpeg", alt: "Burning Tree junior martial arts students and instructors together at a class event" },
           { src: "/images/kids-martial-arts-bag-training.png", alt: "Young student practicing controlled strikes on a training bag" },
           { src: "/images/kids-martial-arts-partner-practice.png", alt: "Children practicing martial arts partner techniques" }
         ],
@@ -662,7 +662,7 @@ export const programPages: ProgramPage[] = [
           ]
         },
         galleryImages: [
-          { src: "/images/jr-wing-chun-gallery-2.jpg", alt: "Young martial arts students practicing close-range hand techniques" },
+          { src: "/images/Gallery/gallery6.jpeg", alt: "Burning Tree teenage martial artist and instructor together at the school" },
           { src: "/images/kids-martial-arts-partner-practice.png", alt: "Children practicing partnered martial arts hand techniques" },
           { src: "/images/kids-martial-arts-karate-guard.png", alt: "Junior martial artist practicing a guarded stance" }
         ],
