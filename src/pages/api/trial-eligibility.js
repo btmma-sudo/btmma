@@ -166,6 +166,42 @@ export async function POST({ request, locals }) {
       "We couldn't verify eligibility right now. Please contact the studio.";
     return json({ success: false, error: message }, 503);
   }
+  // Check the student's name across ALL contact emails, not just the payer email.
+  // A name match is a manual-review flag, not proof of identity. This remains
+  // a read-only precheck; it is NOT sufficient to authorize payment.
+  try {
+    const escapedName = normalize(studentName).replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+    const nameFormula = 'LOWER({Student Name}) = "' + escapedName + '"';
+    const nameParams = new URLSearchParams({ filterByFormula: nameFormula, pageSize: "100" });
+    let nameOffset;
+    do {
+      if (nameOffset) nameParams.set("offset", nameOffset);
+      else nameParams.delete("offset");
+      const nameResponse = await fetch(
+        "https://api.airtable.com/v0/" + encodeURIComponent(env.AIRTABLE_BASE_ID) + "/tblZCXEuRKXiPZlc7?" + nameParams,
+        { headers: { Authorization: "Bearer " + env.AIRTABLE_API_TOKEN } }
+      );
+      if (!nameResponse.ok) {
+        console.error("Cross-email trial eligibility lookup failed", { status: nameResponse.status });
+        return json({ success: false, error: "We couldn't complete the student eligibility check. Please contact the studio." }, 503);
+      }
+      const namePage = await nameResponse.json();
+      for (const record of namePage.records || []) {
+        const fields = record.fields || {};
+        if (normalize(fields["Student Name"]) === normalize(studentName) &&
+            (fields["$29 Trial Used"] || fields["Payment Status"] === "Paid")) {
+          return json({
+            success: true,
+            eligible: false,
+            message: "A previous trial may be associated with this student name. Please contact the studio to verify eligibility."
+          });
+        }
+      }
+      nameOffset = namePage.offset;
+    } while (nameOffset);
+  } catch {
+    return json({ success: false, error: "We couldn't complete the student eligibility check. Please contact the studio." }, 503);
+  }
   // Do not return a public Stripe Payment Link: this precheck cannot lock eligibility.
   return json({ success: true, eligible: true, message: "Student details verified. Online checkout is being connected. Please contact the studio to complete registration." });
 }
