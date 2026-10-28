@@ -53,6 +53,7 @@ export async function POST({ request, locals }) {
     "line_items[0][price_data][product_data][name]": "Burning Tree $29 New Student Special",
     "line_items[0][quantity]": "1",
     client_reference_id: row.id,
+    "metadata[btmma_source]": "btmma_29_trial_live_v1",
     success_url: origin + "/29-trial/?checkout=success",
     cancel_url: origin + "/29-trial/?checkout=cancelled"
   });
