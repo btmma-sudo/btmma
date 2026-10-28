@@ -8,15 +8,32 @@ const respond = (status, error) => new Response(JSON.stringify({ success: false,
   status, headers: { "content-type": "application/json", "cache-control": "no-store" }
 });
 
-// Read-only launch-gate check. No student data, secrets, or payment operations.
-export async function GET({ locals }) {
-  const locked = locals?.runtime?.env?.LIVE_CHECKOUT_ENABLED !== "true";
-  return new Response(JSON.stringify({
-    liveRegistration: locked ? "locked" : "enabled"
-  }), { status: 200, headers: {
-    "content-type": "application/json",
-    "cache-control": "no-store"
-  }});
+// Read-only checks. Never expose credentials, student data or registration IDs.
+export async function GET({ request, locals }) {
+  const env = locals?.runtime?.env ?? {};
+  const locked = env.LIVE_CHECKOUT_ENABLED !== "true";
+  const headers = { "content-type": "application/json", "cache-control": "no-store" };
+  if (!locked || new URL(request.url).searchParams.get("check") !== "readiness") {
+    return new Response(JSON.stringify({ liveRegistration: locked ? "locked" : "enabled" }), { headers });
+  }
+  let database = "needs_attention";
+  try {
+    const rows = await env.LIVE_TRIAL_DB.prepare(
+      "SELECT name FROM sqlite_master WHERE type = 'table' AND name IN ('trial_registrations', 'stripe_webhook_events')"
+    ).all();
+    const names = new Set((rows.results || []).map(row => row.name));
+    if (names.has("trial_registrations") && names.has("stripe_webhook_events")) database = "ready";
+  } catch {
+    console.warn("Live database readiness check failed");
+  }
+  const checks = {
+    liveDatabase: database,
+    stripeKeyConfigured: /^(sk|rk)_live_/.test(String(env.STRIPE_LIVE_SECRET_KEY || "")),
+    webhookSecretConfigured: String(env.STRIPE_LIVE_WEBHOOK_SECRET || "").startsWith("whsec_"),
+    airtableConfigured: Boolean(env.AIRTABLE_API_TOKEN && env.AIRTABLE_BASE_ID),
+    turnstileConfigured: Boolean(env.TURNSTILE_SECRET_KEY)
+  };
+  return new Response(JSON.stringify({ liveRegistration: "locked", checks }), { headers });
 }
 
 export async function POST({ request, locals }) {
