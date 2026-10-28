@@ -4,6 +4,16 @@ import LeadForm from "../components/LeadForm.astro";
 import PageHero from "../components/PageHero.astro";
 import ClassSchedule from "../components/ClassSchedule.astro";
 import { faqPage, site } from "../data/site";
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqPage.faqs.map((faq) => ({
+    "@type": "Question",
+    name: faq.question,
+    acceptedAnswer: { "@type": "Answer", text: faq.answer }
+  }))
+};
 ---
 
 <BaseLayout
@@ -13,6 +23,7 @@ import { faqPage, site } from "../data/site";
   keywords={faqPage.seo.keywords}
   image={faqPage.hero.image}>
   <PageHero hero={faqPage.hero} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
   <section class="shell grid-two section-divider">
     <div class="stack">
@@ -52,6 +63,14 @@ import { faqPage, site } from "../data/site";
         </article>
       ))}
     </div>
+  </section>
+
+  <section class="shell section-divider">
+    <article class="detail-card narrative-section">
+      <h2>Ready to Try Martial Arts in Owings Mills?</h2>
+      <p>Learn more about <a href="/kids-martial-arts">kids martial arts and karate</a>, <a href="/teens-adults-martial-arts">teen and adult training</a>, or our <a href="/womens-defense">women's self-defense classes</a>. We welcome beginners and will help you choose the right starting class.</p>
+      <p>New students can start with <a href="/29-trial">two beginner classes and a free uniform for $29</a>. Questions? Call or text <a href="tel:4102180894">410-218-0894</a>.</p>
+    </article>
   </section>
 
   <ClassSchedule ctaHref="#lead-form" />
