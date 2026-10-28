@@ -6,12 +6,12 @@ const json = (body, status = 200) => new Response(JSON.stringify(body), {
 });
 const normalize = (value) => String(value || "").trim().replace(/\s+/g, " ").toLocaleLowerCase("en-US");
 const sameDob = (fields, dob) => fields["Student Date of Birth"] === dob;
-async function reserveStudent(db, recordId) {
+async function reserveStudent(db, recordId, studentKey = recordId) {
   if (!/^rec[A-Za-z0-9]+$/.test(recordId)) throw new Error("Invalid record ID");
   const existing = await db.prepare("SELECT state FROM trial_registrations WHERE airtable_record_id = ?").bind(recordId).first();
   if (existing) return existing.state === "reserved" || existing.state === "checkout_open";
   await db.prepare("INSERT OR IGNORE INTO trial_registrations (id, airtable_record_id, student_key, state) VALUES (?, ?, ?, 'reserved')")
-    .bind(crypto.randomUUID(), recordId, recordId).run();
+    .bind(crypto.randomUUID(), recordId, studentKey).run();
   const row = await db.prepare("SELECT state FROM trial_registrations WHERE airtable_record_id = ?").bind(recordId).first();
   return row?.state === "reserved";
 }
@@ -58,6 +58,20 @@ export async function POST({ request, locals }) {
       !["Kenpo Karate", "Muay Thai", "Wing Chun"].includes(programInterest) ||
       typeof turnstileToken !== "string" || !turnstileToken) {
     return json({ success: false, error: "Please complete all required fields correctly." }, 400);
+  }
+  // The LIVE database must reserve one trial per student, not per email
+  // or per Airtable record. A keyed, normalized name+DOB match triggers
+  // manual review rather than an automatic identity denial.
+  let reservationStudentKey = null;
+  if (env.TRIAL_REGISTRATION_CONTEXT === "live") {
+    const key = await crypto.subtle.importKey(
+      "raw", new TextEncoder().encode(env.STRIPE_WEBHOOK_SECRET),
+      { name: "HMAC", hash: "SHA-256" }, false, ["sign"]
+    );
+    const input = "btmma-student-v1|" + normalize(studentName) + "|" + studentDob;
+    const bytes = new Uint8Array(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(input)));
+    reservationStudentKey = "identity:v1:" +
+      Array.from(bytes, b => b.toString(16).padStart(2, "0")).join("");
   }
   const verification = new FormData();
   verification.set("secret", env.TURNSTILE_SECRET_KEY);
@@ -261,7 +275,7 @@ export async function POST({ request, locals }) {
             normalize(fields["Email"]) === contactEmail &&
             sameDob(fields, studentDob) &&
             !fields["$29 Trial Used"] && fields["Payment Status"] !== "Paid") {
-          if (!await reserveStudent(env.TRIAL_DB, record.id)) return json({ success: true, eligible: false, message: "Please contact the studio to verify this registration." });
+          if (!await reserveStudent(env.TRIAL_DB, record.id, reservationStudentKey || record.id)) return json({ success: true, eligible: false, message: "Please contact the studio to verify this registration." });
           return json({
             checkoutGrant: await checkoutGrant(env.STRIPE_WEBHOOK_SECRET, record.id),
             success: true, eligible: true, registrationSaved: true,
@@ -295,7 +309,7 @@ export async function POST({ request, locals }) {
       return json({ success: false, error: "We verified eligibility but could not save the registration. Please contact the studio." }, 503);
     }
     const saved = await created.json();
-    if (!await reserveStudent(env.TRIAL_DB, saved.id)) return json({ success: true, eligible: false, registrationSaved: true, message: "Registration saved. Please contact the studio to verify eligibility." });
+    if (!await reserveStudent(env.TRIAL_DB, saved.id, reservationStudentKey || saved.id)) return json({ success: true, eligible: false, registrationSaved: true, message: "Registration saved. Please contact the studio to verify eligibility." });
     return json({
       checkoutGrant: await checkoutGrant(env.STRIPE_WEBHOOK_SECRET, saved.id),
       success: true, eligible: true, registrationSaved: true,
