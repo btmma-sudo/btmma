@@ -1,0 +1,244 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ClassSchedule from "../components/ClassSchedule.astro";
+import { site } from "../data/site";
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: site.primaryDomain + "/" },
+    { "@type": "ListItem", position: 2, name: "Your First Class", item: site.primaryDomain + "/your-first-class/" }
+  ]
+};
+
+const firstClassQuestions = [
+  {
+    question: "Do I need any martial arts experience?",
+    answer: "Not at all. We welcome first-time students and explain the basics step by step."
+  },
+  {
+    question: "Can my child start if they are shy or nervous?",
+    answer: "Yes. It is normal to feel shy on the first day. Let us know how your child is feeling so we can help them settle in."
+  },
+  {
+    question: "Will I have to spar during my first class?",
+    answer: "Beginners focus on learning safely. Ask your coach about any partner drills or sparring expectations before class begins."
+  },
+  {
+    question: "Does submitting the $29 form reserve a class time?",
+    answer: "No. Complete both the contact form and secure payment, then our team will contact you to help arrange the right beginner classes."
+  }
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: firstClassQuestions.map((item) => ({
+    "@type": "Question",
+    name: item.question,
+    acceptedAnswer: { "@type": "Answer", text: item.answer }
+  }))
+};
+---
+
+<BaseLayout
+  title="Your First Martial Arts Class in Owings Mills, MD | Burning Tree MMA"
+  description="New to martial arts? See what to wear, where to park, how to choose your first Kenpo, Muay Thai or Wing Chun class, and how Burning Tree MMA's $29 special works."
+  path="/your-first-class/"
+  image="/images/kids-martial-arts-group.png"
+  keywords={["first martial arts class Owings Mills", "what to expect karate first class", "beginner martial arts Owings Mills", "what to wear to karate class", "first Muay Thai class", "kids karate first day"]}>
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <div class="first-class-page">
+    <section class="first-hero">
+      <div class="shell first-hero-grid">
+        <div class="first-hero-copy">
+          <nav aria-label="Breadcrumb" class="first-breadcrumb"><a href="/">Home</a><span aria-hidden="true"> / </span><span>Your First Class</span></nav>
+          <p class="eyebrow">Your first visit · Owings Mills, Maryland</p>
+          <h1>Your First Class Starts Here.</h1>
+          <p class="first-lead">A little nervous? That's completely normal. Whether you're bringing your child or stepping on the mats yourself, you don't need experience to belong here.</p>
+          <p>We'll help you get comfortable, meet your coach, and take that first step. <strong>One Tree. One Family.</strong></p>
+          <div class="first-actions">
+            <a class="button" href="/29-trial">Claim the $29 New Student Special</a>
+            <a class="first-outline" href="#what-to-expect">See What to Expect</a>
+          </div>
+          <p class="first-offer"><strong>$29</strong> · Two beginner classes + a FREE uniform · New students only</p>
+        </div>
+        <div class="first-hero-photo">
+          <img src="/images/kids-martial-arts-group.png" width="1353" height="1086" alt="Young students training together at Burning Tree Mixed Martial Arts" loading="eager" decoding="async" />
+        </div>
+      </div>
+    </section>
+
+    <section class="shell first-section" id="what-to-expect" aria-labelledby="first-expect-heading">
+      <p class="eyebrow">The first day, made simple</p>
+      <h2 id="first-expect-heading">What Happens at Your First Class?</h2>
+      <p class="first-section-intro">We want your first visit to feel exciting, not intimidating. Here is how to prepare and what a typical beginner class involves.</p>
+      <ol class="first-steps">
+        <li><span class="first-step-number">01</span><div><h3>Arrive a little early</h3><p>Aim for 10–15 minutes before the class time we confirm with you. That gives you time to find us, ask questions, and get settled.</p></div></li>
+        <li><span class="first-step-number">02</span><div><h3>Meet your coach</h3><p>Tell us if it's your first time or if your child is feeling shy. We will explain the plan and help you feel welcome.</p></div></li>
+        <li><span class="first-step-number">03</span><div><h3>Learn the fundamentals</h3><p>Expect a warm-up, simple movements, and beginner techniques suited to your class. You can learn at your starting level.</p></div></li>
+        <li><span class="first-step-number">04</span><div><h3>Talk about what comes next</h3><p>After class, ask questions, discuss your second trial class, and see which ongoing program could fit your goals.</p></div></li>
+      </ol>
+    </section>
+
+    <section class="first-soft">
+      <div class="shell first-split">
+        <div>
+          <p class="eyebrow">Your first-day checklist</p>
+          <h2>What Should You Wear or Bring?</h2>
+          <ul class="first-checklist">
+            <li><strong>Comfortable workout clothes:</strong> a T-shirt and athletic pants or shorts you can move in.</li>
+            <li><strong>Water bottle:</strong> bring water and take breaks when needed.</li>
+            <li><strong>Easy-to-remove shoes:</strong> ask your coach about footwear before stepping onto the mats.</li>
+            <li><strong>Keep jewelry and valuables to a minimum:</strong> follow your instructor's safety guidance.</li>
+            <li><strong>Questions or concerns:</strong> mention injuries, accommodations, or anything that might affect your comfort before training.</li>
+          </ul>
+          <p class="first-small-note">The $29 new student special includes a free uniform. We'll help you with the uniform details and fit—there is no need to buy a gi before your first visit.</p>
+        </div>
+        <img class="first-side-photo" src="/images/burning-tree-adult-striking-drill.webp" width="800" height="620" alt="Adult martial arts students practicing beginner-friendly striking drills at Burning Tree MMA" loading="lazy" decoding="async" />
+      </div>
+    </section>
+
+    <section class="shell first-section" aria-labelledby="first-program-heading">
+      <p class="eyebrow">Find your starting point</p>
+      <h2 id="first-program-heading">Which Program Should I Choose?</h2>
+      <p class="first-section-intro">You don't have to figure it out alone. Choose by age and what sounds interesting, and we'll help confirm the right class.</p>
+      <div class="first-program-grid">
+        <article class="first-program-card"><h3>Kids Martial Arts</h3><p>For kids building focus, confidence, discipline, and skills step by step. Explore junior Kenpo, Muay Thai, and Wing Chun.</p><a href="/kids-martial-arts">Explore Kids Classes</a></article>
+        <article class="first-program-card"><h3>American Kenpo Karate</h3><p>A great starting point for structured self-defense, technique, and personal progress.</p><a href="/kenpo-karate">Explore Kenpo</a></article>
+        <article class="first-program-card"><h3>Muay Thai</h3><p>Try punches, kicks, footwork, and controlled pad work while improving fitness and coordination.</p><a href="/muay-thai">Explore Muay Thai</a></article>
+        <article class="first-program-card"><h3>Wing Chun &amp; Self-Defense</h3><p>Explore close-range movement and timing in Wing Chun, or ask about our Sunday women's self-defense / Sanuces class.</p><div class="first-card-links"><a href="/wing-chun">Wing Chun</a><a href="/womens-defense">Women's Self-Defense</a></div></article>
+      </div>
+      <p class="first-help">Not sure which one? <a href={"tel:" + site.phoneHref}>Call {site.phone}</a> or text us and tell us the student's age and goals. We'll help you choose.</p>
+    </section>
+
+    <section class="first-soft" id="parking" aria-labelledby="first-parking-heading">
+      <div class="shell first-split first-visit">
+        <div>
+          <p class="eyebrow">Find us easily</p>
+          <h2 id="first-parking-heading">Where to Go and Park</h2>
+          <address class="first-address"><strong>Burning Tree Mixed Martial Arts</strong><span>{site.addressLine1}, Suite C</span><span>{site.city}, {site.region} {site.postalCode}</span></address>
+          <p>Head to the building at 10210 S Dolfield Road and look for <strong>Suite C</strong>. Use parking at the property where permitted and follow any posted signs or reserved-space markings.</p>
+          <p>If you have trouble finding the entrance or an available spot, give us a call or text at <a href={"tel:" + site.phoneHref}>{site.phone}</a> before class.</p>
+          <div class="first-actions">
+            <a class="button" href={site.mapUrl} target="_blank" rel="noopener noreferrer">Get Directions</a>
+            <a class="first-outline" href={"tel:" + site.phoneHref}>Call the School</a>
+          </div>
+        </div>
+        <div class="first-map">
+          <iframe title="Map to Burning Tree MMA, 10210 South Dolfield Road, Suite C, Owings Mills" src={site.mapEmbedUrl} loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section class="shell first-section" aria-labelledby="first-special-heading">
+      <p class="eyebrow">New students only</p>
+      <h2 id="first-special-heading">How Does the $29 Special Work?</h2>
+      <div class="first-special-grid">
+        <div class="first-price-card"><span>New Student Special</span><strong>$29</strong><p>2 Beginner Classes<br />+ FREE Uniform</p><a class="button" href="/29-trial">Get Started for $29</a></div>
+        <ol class="first-signup-steps">
+          <li><strong>1. Share your information.</strong><p>Go to the <a href="/29-trial">$29 registration page</a> and tell us about your student so we can help you choose a class.</p></li>
+          <li><strong>2. Complete your secure payment.</strong><p>Follow the payment link on that page to purchase the $29 new student offer. Both steps are required.</p></li>
+          <li><strong>3. Arrange your first class.</strong><p>Our team will reach out to help confirm the appropriate class and start time. Submitting the form or paying does not automatically book a class.</p></li>
+          <li><strong>4. Come train and see how it feels.</strong><p>Attend your two beginner classes, ask about your included uniform, and talk with us about your options if you want to continue.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="first-soft" aria-labelledby="first-questions-heading">
+      <div class="shell first-section">
+        <p class="eyebrow">A few more things you might wonder</p>
+        <h2 id="first-questions-heading">First Class Questions</h2>
+        <div class="first-faq-grid">
+          {firstClassQuestions.map((item) => (
+            <article class="first-faq-card"><h3>{item.question}</h3><p>{item.answer}</p></article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <ClassSchedule ctaHref="/29-trial" ctaLabel="Claim the $29 Special" />
+
+    <section class="first-final-cta">
+      <div class="shell">
+        <p class="eyebrow">The first step is the hardest. We'll help with the rest.</p>
+        <h2>Come See What We're Building Together.</h2>
+        <p>You don't need to know how to throw a punch or tie a belt. Just come ready to learn. We'd love to meet you.</p>
+        <a class="button" href="/29-trial">Start With 2 Classes for $29</a>
+        <p class="first-final-tagline">One Tree. One Family. 🔥</p>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .first-class-page { overflow: hidden; }
+  .first-class-page h1 { color: #fff; -webkit-text-stroke: 0; font-size: clamp(2.15rem, 5vw, 4.25rem); line-height: 1.12; }
+  .first-class-page h2 { font-size: clamp(1.6rem, 3.6vw, 2.6rem); line-height: 1.16; }
+  .first-class-page h3 { font-size: clamp(1.1rem, 2vw, 1.45rem); line-height: 1.2; }
+  .first-class-page p { line-height: 1.65; }
+  .first-hero { background: linear-gradient(140deg, #231919, #121212 65%); border-bottom: 3px solid #b41616; padding: clamp(2.5rem, 6vw, 5rem) 0; }
+  .first-hero-grid, .first-split { display: grid; grid-template-columns: 1.06fr .94fr; align-items: center; gap: clamp(1.5rem, 4vw, 3.5rem); }
+  .first-breadcrumb { font-size: .85rem; color: #d4d4d4; margin-bottom: 1.7rem; }
+  .first-breadcrumb span { margin-left: .45rem; }
+  .first-breadcrumb a { text-decoration: underline; text-underline-offset: 3px; }
+  .first-hero-copy > p:not(.eyebrow) { max-width: 660px; }
+  .first-lead { font-size: clamp(1.06rem, 2vw, 1.35rem); font-weight: 600; }
+  .first-hero-photo { min-width: 0; }
+  .first-hero-photo img { width: 100%; height: clamp(285px, 37vw, 470px); object-fit: cover; object-position: center; border: 2px solid #7b2727; border-radius: 10px; }
+  .first-actions { display: flex; gap: .85rem; align-items: center; flex-wrap: wrap; margin: 1.6rem 0 .9rem; }
+  .first-actions > a { min-height: 3.2rem; padding: .7rem 1rem; text-align: center; }
+  .first-outline { display: inline-flex; justify-content: center; align-items: center; border: 1px solid #aaa; font-weight: 700; color: #fff; }
+  .first-offer { color: #f4d6d6; font-size: .92rem; }
+  .first-section { padding-top: clamp(2.8rem, 5vw, 4.5rem); padding-bottom: clamp(2.8rem, 5vw, 4.5rem); }
+  .first-section-intro { max-width: 750px; margin-bottom: 1.5rem; }
+  .first-steps { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 1rem; list-style: none; margin: 1.6rem 0 0; padding: 0; }
+  .first-steps li { display: flex; align-items: flex-start; gap: 1.1rem; background: #1e1e1e; border: 1px solid #4a2a2a; padding: 1.4rem; border-radius: 9px; min-width: 0; }
+  .first-steps h3, .first-program-card h3, .first-faq-card h3 { color: #fff; -webkit-text-stroke: 0; }
+  .first-steps p, .first-program-card p, .first-faq-card p { margin-bottom: 0; }
+  .first-step-number { color: #ff7b7b; font-size: 1.35rem; font-weight: 900; flex: none; }
+  .first-soft { background: #1b1b1b; border-top: 1px solid #343434; border-bottom: 1px solid #343434; padding: 2.8rem 0; }
+  .first-checklist { padding-left: 1.3rem; margin: 1.2rem 0; }
+  .first-checklist li { padding-left: .1rem; margin-bottom: .8rem; }
+  .first-checklist li::marker { color: #fb5b5b; }
+  .first-small-note { font-size: .95rem; background: #2b2020; padding: .9rem 1.1rem; border-left: 3px solid #cc2727; }
+  .first-side-photo { width: 100%; max-height: 450px; object-fit: cover; border-radius: 10px; }
+  .first-program-grid, .first-faq-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1rem; margin-top: 1.4rem; }
+  .first-program-card, .first-faq-card { background: #212121; border: 1px solid #474747; border-radius: 9px; padding: 1.5rem; min-width: 0; }
+  .first-program-card a { display: inline-block; color: #ff9696; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; margin-top: .85rem; }
+  .first-card-links { display: flex; flex-wrap: wrap; column-gap: 1.2rem; }
+  .first-help { margin-top: 1.5rem; }
+  .first-help a, .first-visit p a, .first-signup-steps a { color: #ff9999; text-decoration: underline; text-underline-offset: 3px; }
+  .first-address { display: flex; flex-direction: column; line-height: 1.7; font-style: normal; margin: 1.25rem 0; }
+  .first-map { min-height: 340px; height: 100%; overflow: hidden; border: 1px solid #454545; border-radius: 10px; }
+  .first-map iframe { border: 0; width: 100%; height: 100%; min-height: 340px; }
+  .first-special-grid { display: grid; grid-template-columns: minmax(240px,.72fr) 1.28fr; gap: clamp(1.3rem, 4vw, 3rem); align-items: start; margin-top: 1.7rem; }
+  .first-price-card { background: #291919; border: 2px solid #c52828; border-radius: 12px; padding: 1.6rem; text-align: center; }
+  .first-price-card span { text-transform: uppercase; font-weight: 800; letter-spacing: .07em; }
+  .first-price-card strong { display: block; font-size: clamp(4rem, 9vw, 6rem); line-height: 1.2; color: #fff; }
+  .first-price-card p { font-size: 1.18rem; font-weight: 800; }
+  .first-price-card .button { width: 100%; }
+  .first-signup-steps { padding: 0 0 0 1.3rem; margin: 0; }
+  .first-signup-steps li { padding-left: .4rem; margin: 0 0 1.2rem; }
+  .first-signup-steps li::marker { color: #ff7575; font-weight: 800; }
+  .first-signup-steps strong { font-size: 1.12rem; }
+  .first-signup-steps p { margin: .3rem 0 0; }
+  .first-final-cta { background: linear-gradient(125deg,#301717,#151515); text-align: center; padding: 3.5rem 0; }
+  .first-final-cta p { max-width: 700px; margin: 1.1rem auto; }
+  .first-final-tagline { font-weight: 800; }
+  @media (max-width: 760px) {
+    .first-hero-grid, .first-split, .first-special-grid { grid-template-columns: minmax(0,1fr); }
+    .first-steps, .first-program-grid, .first-faq-grid { grid-template-columns: minmax(0,1fr); }
+    .first-hero { padding: 2rem 0; }
+    .first-hero-photo img { height: auto; max-height: 340px; object-fit: cover; }
+    .first-actions { flex-direction: column; align-items: stretch; }
+    .first-actions > a { width: 100%; }
+    .first-soft { padding: 2rem 0; }
+    .first-steps li { padding: 1.1rem; }
+    .first-map { min-height: 270px; }
+    .first-map iframe { min-height: 270px; }
+  }
+</style>
