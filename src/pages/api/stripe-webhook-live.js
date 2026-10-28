@@ -1,4 +1,6 @@
-// Isolated live payment webhook. Public live checkout is not enabled.\n// Only reconcile signed, paid, verified checkout sessions tied to LIVE_TRIAL_DB.\nexport const prerender = false;
+// Isolated live payment webhook. Public live checkout is not enabled.
+// Only reconcile signed, paid, verified checkout sessions tied to LIVE_TRIAL_DB.
+export const prerender = false;
 const reply = (message, status) => new Response(JSON.stringify({ message }), {
   status, headers: { "content-type": "application/json", "cache-control": "no-store" }
 });
