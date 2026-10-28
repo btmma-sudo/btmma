@@ -103,8 +103,8 @@ export type SupportingPage = {
 export const site = {
   name: "Burning Tree Mixed Martial Arts",
   shortName: "Burning Tree MMA",
-  phone: "202-368-4395",
-  phoneHref: "2023684395",
+  phone: "410-218-0894",
+  phoneHref: "4102180894",
   email: "info@burningtreemma.com",
   addressLine1: "10210 S Dolfield Rd",
   city: "Owings Mills",
@@ -116,7 +116,7 @@ export const site = {
     "https://www.google.com/maps?q=10210%20S%20Dolfield%20Rd%20Owings%20Mills%20MD%2021117",
   mapEmbedUrl:
     "https://www.google.com/maps?q=10210%20S%20Dolfield%20Rd%20Owings%20Mills%20MD%2021117&output=embed",
-  primaryDomain: "https://www.burningtreemma.com",
+  primaryDomain: "https://burningtreemma.com",
   tagline: "Burning Tree MMA: Keepers of the Flame",
   latitude: 39.4120992,
   longitude: -76.7795037,
