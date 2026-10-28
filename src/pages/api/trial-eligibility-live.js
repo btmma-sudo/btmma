@@ -33,6 +33,40 @@ export async function GET({ request, locals }) {
     airtableConfigured: Boolean(env.AIRTABLE_API_TOKEN && env.AIRTABLE_BASE_ID),
     turnstileConfigured: Boolean(env.TURNSTILE_SECRET_KEY)
   };
+  // Read-only calls test whether the live key is actually accepted and
+  // whether Airtable's payment fields still match the fulfillment handler.
+  // Never expose API responses, records, customer data, or secrets.
+  const [stripeCheck, airtableCheck] = await Promise.all([
+    (async () => {
+      if (!checks.stripeKeyConfigured) return "not_configured";
+      try {
+        const response = await fetch("https://api.stripe.com/v1/checkout/sessions?limit=1", {
+          headers: { Authorization: "Bearer " + env.STRIPE_LIVE_SECRET_KEY }
+        });
+        return response.ok ? "ready" : response.status === 401 ? "key_rejected"
+          : response.status === 403 ? "permissions_required" : "unavailable";
+      } catch { return "unavailable"; }
+    })(),
+    (async () => {
+      if (!checks.airtableConfigured) return "not_configured";
+      try {
+        const response = await fetch(
+          "https://api.airtable.com/v0/meta/bases/" + encodeURIComponent(env.AIRTABLE_BASE_ID) + "/tables",
+          { headers: { Authorization: "Bearer " + env.AIRTABLE_API_TOKEN } }
+        );
+        if (!response.ok) return "unavailable";
+        const data = await response.json();
+        const table = data.tables?.find(t => t.id === "tblZCXEuRKXiPZlc7");
+        const payment = table?.fields?.find(f => f.name.trim().toLowerCase() === "payment status");
+        const trial = table?.fields?.find(f => /29/.test(f.name) && /tr(?:ia|ai)l/i.test(f.name) && /used/i.test(f.name));
+        const hasPaidChoice = payment?.type === "singleSelect" &&
+          payment.options?.choices?.some(choice => choice.name === "Paid");
+        return trial?.type === "checkbox" && hasPaidChoice ? "ready" : "needs_review";
+      } catch { return "unavailable"; }
+    })()
+  ]);
+  checks.liveStripeSessionRead = stripeCheck;
+  checks.airtableFulfillmentFields = airtableCheck;
   return new Response(JSON.stringify({ liveRegistration: "locked", checks }), { headers });
 }
 
