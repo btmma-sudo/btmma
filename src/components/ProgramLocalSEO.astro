@@ -1,0 +1,102 @@
+---
+import type { ProgramPage } from "../data/site";
+import { site } from "../data/site";
+import { weeklySchedule, formatClassTime } from "../data/schedule";
+
+type Props = { program: ProgramPage };
+const { program } = Astro.props;
+
+const localPages: Record<string, { heading: string; intro: string; next: string; question: string; answer: string; scheduleTerm?: string }> = {
+  "kenpo-karate": {
+    heading: "American Kenpo Karate classes near Owings Mills",
+    intro: "Looking for a local karate school where your child can build focus and confidence, or where you can learn practical self-defense as an adult? At Burning Tree Mixed Martial Arts, our junior Kenpo classes emphasize age-appropriate fundamentals, respect, and steady progression. Our teens and adults classes focus on striking, techniques, forms, and structured learning. Beginners are welcome.",
+    next: "Families can explore our kids martial arts guide, while teens and adults can compare all evening programs before picking their first class.",
+    question: "Can a beginner join Kenpo Karate?",
+    answer: "Yes. Our instructors help first-time students learn the fundamentals in a supportive class. Contact us about the best starting class for your age and goals.",
+    scheduleTerm: "Kenpo"
+  },
+  "muay-thai": {
+    heading: "Beginner Muay Thai classes in Owings Mills, Maryland",
+    intro: "Muay Thai training at Burning Tree MMA introduces punches, kicks, controlled combinations, movement, and pad drills. Junior classes are designed for younger students to work on coordination, focus, and confidence. Teens and adults can practice striking technique and conditioning in the evening. You do not need previous martial arts experience to ask about getting started.",
+    next: "Compare kids and adult martial arts programs, or contact our team for guidance on choosing a Muay Thai class.",
+    question: "Do I need to be fit before starting Muay Thai?",
+    answer: "No. Our classes welcome beginners. Tell an instructor about your experience and physical limitations so you can discuss a suitable starting point.",
+    scheduleTerm: "Muay Thai"
+  },
+  "wing-chun": {
+    heading: "Wing Chun training in Owings Mills on Wednesdays",
+    intro: "Interested in Wing Chun near Owings Mills? This close-range martial art emphasizes balance, centerline awareness, efficiency, and partner drills. Burning Tree offers junior Wing Chun classes and an evening class for teens and adults on Wednesdays. It is an option for students who enjoy learning technique, timing, and control step by step.",
+    next: "Explore the kids and teen/adult programs to see how Wing Chun fits alongside our American Kenpo and Muay Thai classes.",
+    question: "Is Wing Chun suitable for beginners?",
+    answer: "Yes. New students can contact Burning Tree MMA about class placement and learn the fundamentals with instructor guidance.",
+    scheduleTerm: "Wing Chun"
+  },
+  "womens-defense": {
+    heading: "Women's self-defense training in Owings Mills",
+    intro: "Burning Tree MMA offers women's self-defense and Sanuces Ryu Jujitsu classes focused on awareness, practical responses, and confidence. Classes include guided work on self-defense principles and controlled technique practice in a supportive setting. Women interested in learning how to respond to real-world situations can ask about joining our Sunday sessions.",
+    next: "Visit our teens and adults martial arts guide to explore additional evening classes, or speak with us about your first women's self-defense session.",
+    question: "When are the women's self-defense classes?",
+    answer: "Our published Sunday Women's Self-Defense / Sanuces session runs from 12:00 PM to 2:00 PM. Contact us before your first visit.",
+    scheduleTerm: "Women's Self-Defense"
+  },
+  "birthday-parties": {
+    heading: "Martial arts birthday parties for Owings Mills families",
+    intro: "Planning a kids birthday celebration in Owings Mills? Burning Tree Mixed Martial Arts hosts martial arts birthday events with guided movement and group activities. Our studio is a local option for families who want a party focused on fun, participation, and trying something new.",
+    next: "Contact our team about event availability, age suitability, and the party activities planned for your group. Parties and special events are scheduled separately from regular class times.",
+    question: "Do guests need martial arts experience?",
+    answer: "Ask us about your group and planned activities. You can discuss first-timer participation with our team before booking."
+  }
+};
+const block = localPages[program.slug];
+const classTimes = block?.scheduleTerm
+  ? weeklySchedule
+      .map((day) => ({
+        day: day.day,
+        slots: day.slots.filter((slot) => slot.cls.includes(block.scheduleTerm!))
+      }))
+      .filter((day) => day.slots.length > 0)
+  : [];
+---
+
+{block && (
+  <section class="shell section-divider" aria-labelledby="local-program-heading">
+    <article class="detail-card narrative-section">
+      <p class="eyebrow">Your Local Martial Arts Studio</p>
+      <h2 id="local-program-heading">{block.heading}</h2>
+      <p>{block.intro}</p>
+      <p>{block.next}</p>
+
+      {classTimes.length > 0 && (
+        <>
+          <h3>Current class days and times</h3>
+          <ul>
+            {classTimes.map((day) => (
+              <li>
+                <strong>{day.day}:</strong>
+                {" "}
+                {day.slots.map((slot) => slot.cls + " (" + formatClassTime(slot.start, slot.end) + ")").join("; ")}
+              </li>
+            ))}
+          </ul>
+          <p>Class times are pulled from our current school schedule. Please contact us to confirm your first class.</p>
+        </>
+      )}
+
+      <h3>{block.question}</h3>
+      <p>{block.answer}</p>
+      <p>
+        We welcome families and adults from Owings Mills, Reisterstown, Pikesville, Randallstown,
+        and surrounding Baltimore County communities at {site.addressLine1}, {site.city}, {site.region} {site.postalCode}.
+      </p>
+      <p>
+        <a href="/kids-martial-arts">Kids martial arts</a>
+        {" · "}
+        <a href="/teens-adults-martial-arts">Teens and adults classes</a>
+        {" · "}
+        <a href="/faq">Frequently asked questions</a>
+      </p>
+      <a class="button" href={program.slug === "birthday-parties" ? "/faq#lead-form" : "/29-trial"}>{program.slug === "birthday-parties" ? "Ask About a Birthday Party" : "See Our $29 New Student Special"}</a>
+      <p><a href={"tel:" + site.phoneHref}>Questions? Call or text {site.phone}</a></p>
+    </article>
+  </section>
+)}

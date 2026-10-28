@@ -38,6 +38,20 @@ import { primaryPrograms, secondaryNav, site } from "../data/site";
     </div>
   </div>
 
+  <div class="shell footer-local">
+    <p class="footer-label">Martial Arts Near Owings Mills, Maryland</p>
+    <p>Burning Tree Mixed Martial Arts welcomes students from Owings Mills, Reisterstown, Pikesville, Randallstown, and nearby Baltimore County communities. Find the right class for your age and goals:</p>
+    <nav class="footer-local-links" aria-label="Popular martial arts programs">
+      <a href="/kids-martial-arts">Kids Karate &amp; Martial Arts</a>
+      <a href="/teens-adults-martial-arts">Teen &amp; Adult Martial Arts</a>
+      <a href="/kenpo-karate">Kenpo Karate</a>
+      <a href="/muay-thai">Muay Thai</a>
+      <a href="/wing-chun">Wing Chun</a>
+      <a href="/womens-defense">Women's Self-Defense</a>
+    </nav>
+    <p>New to martial arts? <a href="/29-trial">See our $29 offer: two beginner classes and a free uniform.</a></p>
+  </div>
+
   <div class="shell footer-bottom">
     <p>&copy; 2026 Burning Tree Mixed Martial Arts. All rights reserved.</p>
     <p>
@@ -47,3 +61,10 @@ import { primaryPrograms, secondaryNav, site } from "../data/site";
     </p>
   </div>
 </footer>
+
+<style>
+  .footer-local { border-top: 1px solid var(--line); padding-top: 1.4rem; padding-bottom: 1.3rem; }
+  .footer-local > p { max-width: 850px; margin: .5rem 0; }
+  .footer-local-links { display: flex; flex-wrap: wrap; gap: .6rem 1.2rem; margin: .9rem 0; }
+  .footer-local-links a { text-decoration: underline; text-underline-offset: 3px; }
+</style>
