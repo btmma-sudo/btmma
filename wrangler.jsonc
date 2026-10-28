@@ -11,6 +11,6 @@
   },
   "vars": {
     "MAKE_WEBHOOK_URL": "https://hook.eu2.make.com/148pw2jrjro999olsiy0up1i54rixtj2",
-    "AIRTABLE_BASE_ID": "apptGRToJEGKvONDa"
+    "AIRTABLE_BASE_ID": "apptGRToJEGKv0NDa"
   }
 }
