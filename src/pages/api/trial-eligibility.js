@@ -6,10 +6,19 @@ const json = (body, status = 200) => new Response(JSON.stringify(body), {
 });
 const normalize = (value) => String(value || "").trim().replace(/\s+/g, " ").toLocaleLowerCase("en-US");
 const sameDob = (fields, dob) => fields["Student Date of Birth"] === dob;
+async function reserveStudent(db, recordId) {
+  if (!/^rec[A-Za-z0-9]+$/.test(recordId)) throw new Error("Invalid record ID");
+  const existing = await db.prepare("SELECT state FROM trial_registrations WHERE airtable_record_id = ?").bind(recordId).first();
+  if (existing) return existing.state === "reserved" || existing.state === "checkout_open";
+  await db.prepare("INSERT OR IGNORE INTO trial_registrations (id, airtable_record_id, student_key, state) VALUES (?, ?, ?, 'reserved')")
+    .bind(crypto.randomUUID(), recordId, recordId).run();
+  const row = await db.prepare("SELECT state FROM trial_registrations WHERE airtable_record_id = ?").bind(recordId).first();
+  return row?.state === "reserved";
+}
 export const prerender = false;
 export async function POST({ request, locals }) {
   const env = locals?.runtime?.env ?? {};
-  const required = ["AIRTABLE_API_TOKEN", "AIRTABLE_BASE_ID", "TURNSTILE_SECRET_KEY"];
+  const required = ["AIRTABLE_API_TOKEN", "AIRTABLE_BASE_ID", "TURNSTILE_SECRET_KEY", "TRIAL_DB"];
   const missing = required.filter((name) => !env[name]);
   if (missing.length) {
     return json({ success: false, error: "Registration verification is not available yet. Missing Worker settings: " + missing.join(", ") + ". Please contact the studio." }, 503);
@@ -242,6 +251,7 @@ export async function POST({ request, locals }) {
             normalize(fields["Email"]) === contactEmail &&
             sameDob(fields, studentDob) &&
             !fields["$29 Trial Used"] && fields["Payment Status"] !== "Paid") {
+          if (!await reserveStudent(env.TRIAL_DB, record.id)) return json({ success: true, eligible: false, message: "Please contact the studio to verify this registration." });
           return json({
             success: true, eligible: true, registrationSaved: true,
             message: "Your student registration is already on file. Online payment is not available yet. Please contact the studio to finish enrollment."
@@ -273,6 +283,8 @@ export async function POST({ request, locals }) {
       console.error("Trial registration save failed", { status: created.status });
       return json({ success: false, error: "We verified eligibility but could not save the registration. Please contact the studio." }, 503);
     }
+    const saved = await created.json();
+    if (!await reserveStudent(env.TRIAL_DB, saved.id)) return json({ success: true, eligible: false, registrationSaved: true, message: "Registration saved. Please contact the studio to verify eligibility." });
     return json({
       success: true, eligible: true, registrationSaved: true,
       message: "Student registration received! Online payment is not available yet. Please contact the studio to complete the $29 offer."
