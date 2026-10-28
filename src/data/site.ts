@@ -737,8 +737,8 @@ export const programPages: ProgramPage[] = [
     },
     hero: {
       title: "Women's Defense",
-      image: "/images/womens-defense-hero.jpg",
-      imageAlt: "Women's self-defense class at Burning Tree MMA in Owings Mills",
+      image: "/images/burning-tree-womens-self-defense-cropped.webp",
+      imageAlt: "Women's self-defense training partners practicing a controlled technique at Burning Tree MMA",
       overlay: "strong"
     },
     audience: "Women",
