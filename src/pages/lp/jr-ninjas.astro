@@ -9,7 +9,7 @@ import { weeklySchedule, formatClassTime } from "../../data/schedule";
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex, nofollow" />
     <title>Claim Your Free Week + Summer Special | Burning Tree MMA</title>
     <link rel="icon" href="/favicon.ico" />
@@ -427,6 +427,15 @@ import { weeklySchedule, formatClassTime } from "../../data/schedule";
 
       .claim-btn:active {
         background: var(--accent-hover);
+      }
+      /* Independent landing page: keep long text and class times within small phones. */
+      img { max-width: 100%; height: auto; }
+      h1, h2, h3, p, li, button, label, .sched-cls { overflow-wrap: break-word; }
+      .sched-day, .sched-row, .form-card, .sched-cls { min-width: 0; }
+      .sched-cls { flex: 1 1 auto; }
+      @media (max-width: 360px) {
+        .sched-row { align-items: flex-start; }
+        .sched-time { white-space: normal; }
       }
     </style>
   </head>

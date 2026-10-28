@@ -1788,6 +1788,10 @@ button, input, textarea, select, iframe, video { max-width: 100%; }
   .program-split { gap: 1.25rem; }
   .variant-tab-btn { flex: 1 1 45%; }
 }
+/* Show instructor portraits without cutting off faces on stacked bio cards. */
+@media (max-width: 979px) {
+  .instructor-photo img { width: 100%; height: auto; max-height: 32rem; object-fit: contain; background: var(--surface); }
+}
 @media (max-width: 360px) {
   .nav-shell { gap: .35rem; }
   .header-mobile-offer { padding: .45rem .4rem; font-size: .7rem; }
