@@ -202,6 +202,66 @@ export async function POST({ request, locals }) {
   } catch {
     return json({ success: false, error: "We couldn't complete the student eligibility check. Please contact the studio." }, 503);
   }
-  // Do not return a public Stripe Payment Link: this precheck cannot lock eligibility.
-  return json({ success: true, eligible: true, message: "Student details verified. Online checkout is being connected. Please contact the studio to complete registration." });
+  // Save a registration record only when the user explicitly submits the form.
+  // Do not claim this Airtable read-then-create flow prevents concurrent duplicate
+  // submissions; a transactional reservation is required before payment.
+  // Reuse a prior unpaid registration for the same student/contact combination.
+  try {
+    const safeName = normalize(studentName).replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+    const safeEmail = contactEmail.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+    const pendingFilter = 'AND(LOWER({Student Name}) = "' + safeName + '", LOWER({Email}) = "' + safeEmail + '")';
+    const existingParams = new URLSearchParams({ filterByFormula: pendingFilter, pageSize: "100" });
+    let pendingOffset;
+    do {
+      if (pendingOffset) existingParams.set("offset", pendingOffset);
+      else existingParams.delete("offset");
+      const existingResponse = await fetch(
+        "https://api.airtable.com/v0/" + encodeURIComponent(env.AIRTABLE_BASE_ID) + "/tblZCXEuRKXiPZlc7?" + existingParams,
+        { headers: { Authorization: "Bearer " + env.AIRTABLE_API_TOKEN } }
+      );
+      if (!existingResponse.ok) throw new Error("pending_lookup_" + existingResponse.status);
+      const existingPage = await existingResponse.json();
+      for (const record of existingPage.records || []) {
+        const fields = record.fields || {};
+        if (normalize(fields["Student Name"]) === normalize(studentName) &&
+            normalize(fields["Email"]) === contactEmail &&
+            !fields["$29 Trial Used"] && fields["Payment Status"] !== "Paid") {
+          return json({
+            success: true, eligible: true, registrationSaved: true,
+            message: "Your student registration is already on file. Online payment is not available yet. Please contact the studio to finish enrollment."
+          });
+        }
+      }
+      pendingOffset = existingPage.offset;
+    } while (pendingOffset);
+
+    const fields = {
+      "Name": studentType === "minor" ? guardianName.trim() : studentName.trim(),
+      "Student Name": studentName.trim(),
+      "Email": email.trim()
+    };
+    // Do not set Student ID: Airtable's Autonumber field assigns it.
+    const created = await fetch(
+      "https://api.airtable.com/v0/" + encodeURIComponent(env.AIRTABLE_BASE_ID) + "/tblZCXEuRKXiPZlc7",
+      {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + env.AIRTABLE_API_TOKEN,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ fields, typecast: false })
+      }
+    );
+    if (!created.ok) {
+      console.error("Trial registration save failed", { status: created.status });
+      return json({ success: false, error: "We verified eligibility but could not save the registration. Please contact the studio." }, 503);
+    }
+    return json({
+      success: true, eligible: true, registrationSaved: true,
+      message: "Student registration received! Online payment is not available yet. Please contact the studio to complete the $29 offer."
+    });
+  } catch (error) {
+    console.error("Trial registration save unavailable", { reason: error instanceof Error ? error.message.slice(0, 60) : "unknown" });
+    return json({ success: false, error: "Registration could not be saved. Please contact the studio." }, 503);
+  }
 }
