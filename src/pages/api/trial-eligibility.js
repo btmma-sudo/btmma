@@ -15,10 +15,22 @@ export async function POST({ request, locals }) {
   }
   let data;
   try { data = await request.json(); } catch { return json({ success: false, error: "Invalid registration." }, 400); }
-  const { studentType, studentName, studentAge, guardianName, email, phone, programInterest, turnstileToken } = data || {};
-  const age = Number(studentAge);
+  const { studentType, studentName, studentDob, guardianName, email, phone, programInterest, turnstileToken } = data || {};
+  // Parse a calendar date strictly; reject impossible and future dates.
+  const dobValid = typeof studentDob === "string" && /^\\d{4}-\\d{2}-\\d{2}$/.test(studentDob);
+  const dobDate = dobValid ? new Date(studentDob + "T00:00:00Z") : null;
+  const today = new Date();
+  const birthYear = dobValid ? Number(studentDob.slice(0, 4)) : 0;
+  const birthMonth = dobValid ? Number(studentDob.slice(5, 7)) : 0;
+  const birthDay = dobValid ? Number(studentDob.slice(8, 10)) : 0;
+  const calendarDateValid = dobDate && !Number.isNaN(dobDate.getTime()) &&
+    dobDate.getUTCFullYear() === birthYear && dobDate.getUTCMonth() + 1 === birthMonth &&
+    dobDate.getUTCDate() === birthDay && dobDate.getTime() <= today.getTime();
+  const age = calendarDateValid ? today.getUTCFullYear() - birthYear -
+    (today.getUTCMonth() + 1 < birthMonth ||
+      (today.getUTCMonth() + 1 === birthMonth && today.getUTCDate() < birthDay) ? 1 : 0) : NaN;
   if (!["minor", "adult"].includes(studentType) || typeof studentName !== "string" || studentName.trim().length < 2 ||
-      studentName.length > 120 || !Number.isInteger(age) || age < 3 || age > 110 ||
+      studentName.length > 120 || !calendarDateValid || !Number.isInteger(age) || age < 3 || age > 110 ||
       (studentType === "minor" && (!guardianName || typeof guardianName !== "string" || guardianName.trim().length < 2)) ||
       (studentType === "adult" && age < 18) || (studentType === "minor" && age >= 18) ||
       typeof email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254 ||
