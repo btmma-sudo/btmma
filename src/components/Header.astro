@@ -36,6 +36,7 @@ import { primaryPrograms, site } from "../data/site";
         </div>
       </details>
 
+      <a class="trial-header-link" href="/29-trial/">$29 New Student Special</a>
       <a href="/about">About</a>
       <a href="/faq">FAQ</a>
       <a href="https://imaginativephotographybyxavi.shootproof.com/gallery/21758953" target="_blank" rel="noreferrer">Gallery</a>
@@ -62,6 +63,7 @@ import { primaryPrograms, site } from "../data/site";
         </details>
 
         <div class="mobile-menu-links">
+          <a class="trial-mobile-link" href="/29-trial/">$29 New Student Special — Register Now</a>
           <a href="/about">About</a>
           <a href="/faq">FAQ</a>
           <a href="https://imaginativephotographybyxavi.shootproof.com/gallery/21758953" target="_blank" rel="noreferrer">Gallery</a>
@@ -73,3 +75,24 @@ import { primaryPrograms, site } from "../data/site";
     </details>
   </div>
 </header>
+
+<style>
+  .top-nav > a.trial-header-link {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    padding: .7rem .8rem;
+    white-space: nowrap;
+    border-radius: 3px;
+  }
+  .top-nav > a.trial-header-link:hover,
+  .top-nav > a.trial-header-link:focus-visible {
+    filter: brightness(1.12);
+    text-decoration: underline;
+  }
+  .mobile-menu-links a.trial-mobile-link {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+</style>
