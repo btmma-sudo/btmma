@@ -60,10 +60,34 @@ export async function POST({ request, locals }) {
       if (!current.ok) return reply("Airtable verification unavailable", 503);
       const student = await current.json();
       if (student.fields?.["$29 Trial Used"] && student.fields?.["Payment Status"] !== "Paid") return reply("Student requires manual review", 503);
+      // Resolve canonical Airtable field IDs instead of relying on visible labels.
+      // The existing checkbox may be spelled "Trial" or "Trail" in the base.
+      const schemaResponse = await fetch(
+        "https://api.airtable.com/v0/meta/bases/" + encodeURIComponent(env.AIRTABLE_BASE_ID) + "/tables",
+        { headers: { Authorization: "Bearer " + env.AIRTABLE_API_TOKEN } }
+      );
+      if (!schemaResponse.ok) {
+        console.error("Airtable schema lookup failed", { status: schemaResponse.status });
+        return reply("Airtable field lookup unavailable", 503);
+      }
+      const schema = await schemaResponse.json();
+      const leadTable = schema.tables?.find(t => t.id === "tblZCXEuRKXiPZlc7");
+      const paymentField = leadTable?.fields?.find(f => f.name.trim().toLowerCase() === "payment status");
+      const trialField = leadTable?.fields?.find(f =>
+        /29/.test(f.name) && /tr(?:ia|ai)l/i.test(f.name) && /used/i.test(f.name)
+      );
+      if (!paymentField || !trialField || trialField.type !== "checkbox") {
+        console.error("Airtable fulfillment fields not found", {
+          paymentStatusFound: Boolean(paymentField),
+          trialCheckboxFound: Boolean(trialField),
+          trialFieldType: trialField?.type || "missing"
+        });
+        return reply("Airtable payment fields require review", 503);
+      }
       const updated = await fetch(url, {
         method: "PATCH",
         headers: { Authorization: "Bearer " + env.AIRTABLE_API_TOKEN, "Content-Type": "application/json" },
-        body: JSON.stringify({ fields: { "$29 Trial Used": true, "Payment Status": "Paid" }, typecast: false })
+        body: JSON.stringify({ fields: { [trialField.id]: true, [paymentField.id]: "Paid" }, typecast: false })
       });
       if (!updated.ok) {
         let airtableError = {};
