@@ -13,19 +13,24 @@ const images = [
   "/images/Gallery/gallery11.jpeg",
 ];
 
-// Duplicate the list so the second copy seamlessly replaces the first
-const doubled = [...images, ...images];
 ---
 
-<div class="carousel" aria-hidden="true">
+<div class="carousel" role="region" aria-label="Burning Tree class and student photos">
   <div class="carousel-track">
-    {doubled.map((src, i) => (
-      <img
-        src={src}
-        alt=""
-        loading={i < images.length ? "eager" : "lazy"}
-        decoding="async"
-      />
+    {[0, 1].map((copy) => (
+      <div class="carousel-set" aria-hidden={copy === 1 ? "true" : undefined}>
+        {images.map((src) => (
+          <img
+            src={src}
+            alt={copy === 0 ? "Students and instructors at Burning Tree Mixed Martial Arts" : ""}
+            width="360"
+            height="260"
+            loading="eager"
+            fetchpriority="low"
+            decoding="async"
+          />
+        ))}
+      </div>
     ))}
   </div>
 </div>

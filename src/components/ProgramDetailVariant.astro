@@ -12,12 +12,6 @@ const variants = program.variants!;
 const showTestimonials = program.showTestimonials !== false;
 const showSchedule = program.showSchedule !== false;
 
-const variantCarousels = variants.map((v) => [
-  ...v.galleryImages,
-  ...v.galleryImages,
-  ...v.galleryImages,
-  ...v.galleryImages,
-]);
 ---
 
 <div class="variant-tabs-bar shell">
@@ -62,15 +56,22 @@ const variantCarousels = variants.map((v) => [
       </div>
     </section>
 
-    <div class="carousel" aria-hidden="true">
+    <div class="carousel" role="region" aria-label={`Photos from Burning Tree ${v.label} classes`}>
       <div class="carousel-track page-carousel-track">
-        {variantCarousels[i].map((image, idx) => (
-          <img
-            src={image.src}
-            alt={image.alt}
-            loading={idx < v.galleryImages.length ? "eager" : "lazy"}
-            decoding="async"
-          />
+        {[0, 1].map((copy) => (
+          <div class="carousel-set" aria-hidden={copy === 1 ? "true" : undefined}>
+            {[...v.galleryImages, ...v.galleryImages, ...v.galleryImages].map((image) => (
+              <img
+                src={image.src}
+                alt={copy === 0 ? image.alt : ""}
+                width="360"
+                height="260"
+                loading="eager"
+                fetchpriority="low"
+                decoding="async"
+              />
+            ))}
+          </div>
         ))}
       </div>
     </div>
