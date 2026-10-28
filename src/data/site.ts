@@ -212,8 +212,8 @@ export const homepagePrograms: ProgramCard[] = [
     eyebrow: "American Kenpo",
     title: "Kenpo Karate",
     href: "/kenpo-karate",
-    image: "/images/jr-kenpo-gallery-1.jpg",
-    imageAlt: "Jr. Kenpo students in black gis with yellow belts sitting with their instructor at a tournament",
+    image: "/images/kids-martial-arts-karate-guard.png",
+    imageAlt: "Young martial arts student practicing a karate guard at Burning Tree MMA",
     summary: "Traditional Kenpo for kids and adults. Discipline, self-defense, and real progression."
   },
   {
@@ -228,8 +228,8 @@ export const homepagePrograms: ProgramCard[] = [
     eyebrow: "Sanuces Ryu Jiu-Jitsu",
     title: "Women's Defense",
     href: "/womens-defense",
-    image: "/images/womens-defense-hero.jpg",
-    imageAlt: "Women's self-defense class at Burning Tree MMA in Owings Mills",
+    image: "/images/burning-tree-womens-self-defense-cropped.webp",
+    imageAlt: "Women's self-defense training partners practicing a technique at Burning Tree MMA",
     summary: "Real-world self-defense for real-world situations. Practical, powerful, and built for women."
   },
   {
@@ -332,8 +332,8 @@ export const faqPage: SupportingPage & {
   },
   hero: {
     title: "FAQ",
-    image: "/images/faq-hero.jpg",
-    imageAlt: "Martial arts students practicing technique during live training with an American flag in the background",
+    image: "/images/kids-martial-arts-partner-practice.png",
+    imageAlt: "Young martial arts students practicing a controlled partner technique at Burning Tree MMA",
     overlay: "medium"
   },
   faqs: [
@@ -525,8 +525,8 @@ export const programPages: ProgramPage[] = [
     },
     hero: {
       title: "Kenpo Karate",
-      image: "/images/karate-hero.jpg",
-      imageAlt: "Karate students training at Burning Tree MMA in Owings Mills",
+      image: "/images/burning-tree-teen-kenpo-training.webp",
+      imageAlt: "Kenpo student practicing on the martial arts training mats in Owings Mills",
       overlay: "strong"
     },
     audience: "",
