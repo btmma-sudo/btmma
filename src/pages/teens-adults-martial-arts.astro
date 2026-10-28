@@ -1,0 +1,423 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { weeklySchedule, formatClassTime } from "../data/schedule";
+import { site } from "../data/site";
+
+const adultSchedule = weeklySchedule
+  .map((day) => ({
+    day: day.day,
+    slots: day.slots.filter((slot) => slot.cls.startsWith("Teens & Adults"))
+  }))
+  .filter((day) => day.slots.length > 0);
+
+const faqs = [
+  {
+    question: "Can I start martial arts as an adult with no experience?",
+    answer: "Absolutely. Our teens and adults classes welcome beginners. We introduce fundamentals, demonstrate techniques, and help you build confidence at a pace that works for your experience level."
+  },
+  {
+    question: "Do I need to be in shape before starting?",
+    answer: "No. You don't have to get fit before joining martial arts. Classes involve movement and physical training, and you can speak with an instructor about your comfort level and any limitations before you begin."
+  },
+  {
+    question: "What martial arts do you teach teens and adults?",
+    answer: "We offer American Kenpo Karate, Muay Thai, and Wing Chun. Each has a different focus: practical self-defense and forms in Kenpo, striking and conditioning in Muay Thai, and close-range technique and efficiency in Wing Chun."
+  },
+  {
+    question: "Which martial art should I choose for self-defense?",
+    answer: "All three programs teach useful skills in different ways. Kenpo emphasizes practical self-defense techniques, Muay Thai develops striking fundamentals, and Wing Chun focuses on distance, timing, and efficient movement. Contact us and we'll help you choose a starting class."
+  },
+  {
+    question: "Do adults have to spar or compete?",
+    answer: "Competition is not a prerequisite for getting started. Ask your instructor about partner drills, sparring, and the expectations for the class you choose so you can make an informed decision."
+  },
+  {
+    question: "When are your teens and adults classes?",
+    answer: "Kenpo is Monday evening, Muay Thai is Tuesday and Thursday evenings, and Wing Chun is Wednesday evening. We also list a teens and adults open mat on Saturday mornings. Check the weekly schedule on this page for current times."
+  },
+  {
+    question: "What should I bring to my first martial arts class?",
+    answer: "Wear comfortable workout clothes and bring water. If you're a new student, our $29 introductory special includes two beginner classes and a free uniform."
+  },
+  {
+    question: "How much does it cost to try a class?",
+    answer: "New students can start with two beginner classes and a free uniform for $29. Contact Burning Tree to discuss ongoing training and the program that best fits your goals."
+  },
+  {
+    question: "Where can I take adult karate or Muay Thai near Owings Mills?",
+    answer: "Burning Tree Mixed Martial Arts is located at 10210 S Dolfield Rd, Owings Mills, MD 21117. We welcome teens and adults from Owings Mills, Reisterstown, Pikesville, Randallstown, and surrounding Baltimore County communities."
+  }
+];
+
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "Teen and Adult Martial Arts Classes in Owings Mills, Maryland",
+  description: "Beginner-friendly American Kenpo Karate, Muay Thai, and Wing Chun training for teens and adults at Burning Tree Mixed Martial Arts.",
+  serviceType: "Teen and adult martial arts instruction",
+  areaServed: {
+    "@type": "Place",
+    name: "Owings Mills, Maryland"
+  },
+  provider: {
+    "@type": "SportsActivityLocation",
+    name: site.name,
+    url: site.primaryDomain,
+    telephone: site.phone,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: site.addressLine1,
+      addressLocality: site.city,
+      addressRegion: site.region,
+      postalCode: site.postalCode,
+      addressCountry: "US"
+    }
+  },
+  offers: {
+    "@type": "Offer",
+    name: "New Student Special: Two Beginner Classes and a Free Uniform",
+    price: "29",
+    priceCurrency: "USD",
+    url: new URL("/29-trial", site.primaryDomain).toString()
+  }
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: site.primaryDomain },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Teens & Adults Martial Arts",
+      item: new URL("/teens-adults-martial-arts/", site.primaryDomain).toString()
+    }
+  ]
+};
+---
+
+<BaseLayout
+  title="Teen & Adult Martial Arts in Owings Mills | Burning Tree MMA"
+  description="Adult karate, Muay Thai and Wing Chun in Owings Mills, MD. Beginner-friendly martial arts and self-defense classes for teens and adults. Start for $29."
+  keywords={["adult martial arts Owings Mills", "adult karate Owings Mills MD", "martial arts for teens Owings Mills", "beginner martial arts adults Baltimore County", "Muay Thai classes Owings Mills", "Wing Chun classes Owings Mills", "adult self-defense classes Owings Mills"]}
+  path="/teens-adults-martial-arts/"
+  image="/images/adult-martial-arts-hero.jpg">
+  <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+
+  <div class="ta-page">
+    <section class="ta-hero" aria-labelledby="ta-heading">
+      <div class="shell ta-hero-grid">
+        <div class="ta-hero-copy">
+          <nav class="ta-breadcrumb" aria-label="Breadcrumb">
+            <a href="/">Home</a><span aria-hidden="true"> / </span><span>Teens & Adults Martial Arts</span>
+          </nav>
+          <p class="ta-eyebrow">TEEN & ADULT MARTIAL ARTS • OWINGS MILLS, MD</p>
+          <h1 id="ta-heading">It's never too late to <em>start something powerful.</em></h1>
+          <p class="ta-hero-subhead">Beginner-friendly martial arts classes for teens and adults in Owings Mills—built around real skills, stronger confidence, and steady progress.</p>
+          <p class="ta-hero-lead">Maybe you've always wanted to learn self-defense. Maybe you're ready for a challenge beyond the gym. Or maybe you just want to feel more confident in yourself. Whatever brings you here, you don't need experience to take the first step.</p>
+          <div class="ta-hero-actions">
+            <a class="ta-button" href="/29-trial">Try 2 Classes + a FREE Uniform for $29</a>
+            <a class="ta-text-link ta-text-link-light" href="#ta-programs">Explore Our Classes →</a>
+          </div>
+          <p class="ta-hero-note">New students only • Questions? <a href={"tel:" + site.phoneHref}>{site.phone}</a></p>
+        </div>
+        <div class="ta-hero-photo">
+          <img src="/images/adult-martial-arts-hero.jpg" alt="Teen and adult martial artists training together at Burning Tree Mixed Martial Arts in Owings Mills" width="1000" height="750" fetchpriority="high" />
+          <div class="ta-photo-stamp"><strong>ONE TREE.</strong><span>ONE FAMILY.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ta-benefits" aria-labelledby="ta-benefits-heading">
+      <div class="shell">
+        <p class="ta-eyebrow">MORE THAN ANOTHER WORKOUT</p>
+        <h2 id="ta-benefits-heading">Training that gives you something to work toward.</h2>
+        <div class="ta-benefit-grid">
+          <article><span aria-hidden="true">01</span><h3>Practical Self-Defense</h3><p>Build awareness, movement, and martial arts fundamentals through consistent, supervised practice.</p></article>
+          <article><span aria-hidden="true">02</span><h3>Fitness With Purpose</h3><p>Get moving, challenge your coordination, and work on strength and endurance while learning new skills.</p></article>
+          <article><span aria-hidden="true">03</span><h3>Confidence & Discipline</h3><p>Learn techniques one step at a time. Showing up, practicing, and making progress create reasons to be proud.</p></article>
+          <article><span aria-hidden="true">04</span><h3>A Community That Supports You</h3><p>Train alongside people who want to improve, learn from one another, and support each other's efforts.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="ta-programs shell" id="ta-programs" aria-labelledby="ta-programs-heading">
+      <p class="ta-eyebrow">FIND YOUR STYLE</p>
+      <h2 id="ta-programs-heading">Three martial arts. Your next chapter.</h2>
+      <p class="ta-intro">Whether you're a teenager trying martial arts for the first time or an adult returning to training, we'll help you find a class that fits your goals. You can begin without a martial arts background.</p>
+      <div class="ta-program-grid">
+        <article class="ta-program-card">
+          <img src="/images/adult-martial-arts-gallery-1.jpg" alt="Adults wearing black martial arts uniforms practicing control techniques during Kenpo training" loading="lazy" decoding="async" width="600" height="440" />
+          <div class="ta-program-body">
+            <p class="ta-program-label">MONDAY EVENINGS</p>
+            <h3>American Kenpo Karate</h3>
+            <p>Learn self-defense concepts, striking, forms, and the discipline of a structured belt-progression system. Kenpo combines traditional training with practical applications.</p>
+            <a href="/kenpo-karate">Explore Kenpo Karate <span aria-hidden="true">→</span></a>
+          </div>
+        </article>
+        <article class="ta-program-card">
+          <img src="/images/muay-thai-gallery-1.jpg" alt="Muay Thai martial artists in protective training gear practicing controlled kick techniques" loading="lazy" decoding="async" width="600" height="440" />
+          <div class="ta-program-body">
+            <p class="ta-program-label">TUESDAY & THURSDAY EVENINGS</p>
+            <h3>Muay Thai</h3>
+            <p>Train punches, kicks, footwork, and combinations through striking drills. Muay Thai is a great option if you want active sessions that challenge both your focus and conditioning.</p>
+            <a href="/muay-thai">Explore Muay Thai <span aria-hidden="true">→</span></a>
+          </div>
+        </article>
+        <article class="ta-program-card">
+          <img src="/images/wing-chun-gallery-1.jpg" alt="Wing Chun students practicing close-range defense and striking drills with a training partner" loading="lazy" decoding="async" width="600" height="440" />
+          <div class="ta-program-body">
+            <p class="ta-program-label">WEDNESDAY EVENINGS</p>
+            <h3>Wing Chun</h3>
+            <p>Explore centerline theory, efficient movement, timing, and controlled partner practice. Wing Chun is a thoughtful approach to martial arts that emphasizes technique over brute force.</p>
+            <a href="/wing-chun">Explore Wing Chun <span aria-hidden="true">→</span></a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="ta-chooser" aria-labelledby="ta-chooser-heading">
+      <div class="shell ta-chooser-inner">
+        <div>
+          <p class="ta-eyebrow">NOT SURE WHERE TO START?</p>
+          <h2 id="ta-chooser-heading">You don't have to pick the perfect martial art before you walk in.</h2>
+          <p>Want traditional karate and self-defense? Start by exploring <a href="/kenpo-karate">Kenpo</a>. Want striking drills and conditioning? Look at <a href="/muay-thai">Muay Thai</a>. Interested in precise close-range techniques? Try <a href="/wing-chun">Wing Chun</a>.</p>
+          <p>Tell us what you're interested in, and we'll help you choose a good first class.</p>
+          <a class="ta-button" href="/29-trial">Get Started for $29</a>
+        </div>
+        <div class="ta-chooser-points">
+          <p><strong>No experience necessary</strong><span>New students are welcome.</span></p>
+          <p><strong>No need to get in shape first</strong><span>Talk with our instructors about your current fitness and comfort level.</span></p>
+          <p><strong>Real progress, one class at a time</strong><span>Give yourself the chance to learn something new.</span></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="ta-first shell" aria-labelledby="ta-first-heading">
+      <div class="ta-first-grid">
+        <div>
+          <p class="ta-eyebrow">YOUR FIRST CLASS</p>
+          <h2 id="ta-first-heading">New to martial arts? That's exactly where everyone starts.</h2>
+          <p>Walking into a martial arts school for the first time can feel intimidating. It doesn't have to be. Come ready to learn, ask questions, and work through the basics.</p>
+        </div>
+        <ol class="ta-steps">
+          <li><span>1</span><div><h3>Tell us your goal.</h3><p>Self-defense, fitness, confidence, or simply trying something new—we'll help point you toward a program.</p></div></li>
+          <li><span>2</span><div><h3>Show up and start learning.</h3><p>Wear comfortable athletic clothes, bring water, and let us know you're new.</p></div></li>
+          <li><span>3</span><div><h3>Build on your first class.</h3><p>Practice, ask questions, and discover what you can accomplish with consistent training.</p></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ta-schedule" aria-labelledby="ta-schedule-heading">
+      <div class="shell">
+        <p class="ta-eyebrow">FIND YOUR TRAINING TIME</p>
+        <h2 id="ta-schedule-heading">Teen & adult martial arts class schedule</h2>
+        <p class="ta-intro">These class times come from our shared school schedule, so updates to the schedule carry through to this page.</p>
+        <div class="ta-schedule-grid">
+          {adultSchedule.map((day) => (
+            <article class="ta-schedule-day">
+              <h3>{day.day}</h3>
+              <ul>
+                {day.slots.map((slot) => (
+                  <li><strong>{slot.cls}</strong><span>{formatClassTime(slot.start, slot.end)}</span></li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+        <p class="ta-schedule-note">Class placement and attendance may depend on experience and instructor guidance. Contact us with questions about your first class or Saturday open mat.</p>
+        <a class="ta-button" href="/29-trial">Claim Your $29 New Student Special</a>
+      </div>
+    </section>
+
+    <section class="ta-community shell" aria-labelledby="ta-community-heading">
+      <div class="ta-community-grid">
+        <img src="/images/adult-martial-arts-gallery-3.jpg" alt="Adult martial arts partners practicing blocking and hand techniques together at Burning Tree MMA" width="700" height="530" loading="lazy" decoding="async" />
+        <div>
+          <p class="ta-eyebrow">ONE TREE. ONE FAMILY.</p>
+          <h2 id="ta-community-heading">More than a place to work out.</h2>
+          <p>At Burning Tree, you're not just showing up to burn calories. You're learning skills, building habits, and training alongside people who want to see you succeed.</p>
+          <p>We welcome teens who want a positive challenge, adults getting back into an active routine, and people who have always been curious about martial arts but weren't sure where to begin.</p>
+          <a class="ta-text-link" href="/about">Get to know Burning Tree →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="ta-local" aria-labelledby="ta-local-heading">
+      <div class="shell ta-local-grid">
+        <div>
+          <p class="ta-eyebrow">YOUR LOCAL MARTIAL ARTS SCHOOL</p>
+          <h2 id="ta-local-heading">Martial arts for teens and adults in Owings Mills, Maryland</h2>
+          <p>Looking for adult karate, Muay Thai, Wing Chun, or beginner self-defense classes near Owings Mills? Burning Tree Mixed Martial Arts welcomes students from Reisterstown, Pikesville, Randallstown, and surrounding Baltimore County communities.</p>
+          <address><strong>{site.name}</strong><span>{site.addressLine1}, {site.city}, {site.region} {site.postalCode}</span><a href={"tel:" + site.phoneHref}>{site.phone}</a></address>
+          <div class="ta-local-actions">
+            <a class="ta-button" href="/29-trial">Try Two Classes for $29</a>
+            <a class="ta-text-link" href={site.mapUrl} target="_blank" rel="noopener noreferrer">Get Directions →</a>
+          </div>
+        </div>
+        <aside>
+          <h3>Why begin at Burning Tree?</h3>
+          <ul>
+            <li>Beginner-friendly teen and adult martial arts classes</li>
+            <li>Kenpo Karate, Muay Thai, and Wing Chun</li>
+            <li>Weeknight classes and Saturday open mat</li>
+            <li>Practical training in a community-focused school</li>
+            <li>New student offer: two classes and a uniform for $29</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="ta-faq shell" aria-labelledby="ta-faq-heading">
+      <p class="ta-eyebrow">FREQUENTLY ASKED QUESTIONS</p>
+      <h2 id="ta-faq-heading">Questions about starting martial arts as a teen or adult?</h2>
+      <div class="ta-faq-list">
+        {faqs.map((faq) => (
+          <details>
+            <summary>{faq.question}<span aria-hidden="true">+</span></summary>
+            <p>{faq.answer}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <section class="ta-final" aria-labelledby="ta-final-heading">
+      <div class="shell">
+        <p class="ta-eyebrow">YOUR NEXT CHAPTER STARTS HERE</p>
+        <h2 id="ta-final-heading">You don't have to be ready for everything. Just ready to start.</h2>
+        <p>Come experience the difference at Burning Tree Mixed Martial Arts. We would love to welcome you onto the mats.</p>
+        <a class="ta-button ta-button-light" href="/29-trial">2 Beginner Classes + FREE Uniform — $29</a>
+        <p class="ta-small">New students only. Have questions? <a href={"tel:" + site.phoneHref}>Call or text {site.phone}</a>.</p>
+        <p class="ta-tagline">One Tree. One Family. <span aria-hidden="true">🔥</span></p>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .ta-page { background:#fff; color:#1c1c1c; }
+  .ta-page :where(h1,h2,h3) { text-transform:none; line-height:1.12; }
+  .ta-page :where(h2,h3) { color:#171717; }
+  .ta-page p { line-height:1.68; }
+  .ta-page a:focus-visible, .ta-page summary:focus-visible { outline:3px solid #e23838; outline-offset:4px; }
+  .ta-eyebrow { font-size:.75rem; font-weight:800; letter-spacing:.11em; text-transform:uppercase; color:#b20d16; margin:0 0 .75rem; }
+  .ta-page h2 { font-size:clamp(1.85rem,3.3vw,2.9rem); margin:0 0 1.1rem; max-width:860px; }
+  .ta-button { display:inline-flex; align-items:center; justify-content:center; text-align:center; background:#b20d16; border:2px solid #b20d16; border-radius:7px; padding:.85rem 1.3rem; min-height:3.35rem; color:#fff; font-size:.94rem; line-height:1.3; font-weight:800; text-decoration:none; transition:background .2s ease, transform .2s ease; }
+  .ta-button:hover { background:#8a0710; transform:translateY(-1px); }
+  .ta-text-link { font-weight:800; color:#990913; text-decoration:underline; text-underline-offset:4px; }
+  .ta-hero { background:#131313; color:#fff; padding:3.1rem 0 3.7rem; }
+  .ta-hero-grid { display:grid; grid-template-columns:1.06fr .94fr; align-items:center; gap:clamp(1.4rem,3.5vw,3.5rem); }
+  .ta-breadcrumb { font-size:.82rem; color:#d2d2d2; margin-bottom:1.85rem; }
+  .ta-breadcrumb a { text-decoration:underline; text-underline-offset:3px; }
+  .ta-breadcrumb span { margin-left:.3rem; }
+  .ta-hero h1 { color:#fff; font-size:clamp(2.35rem,5.1vw,4.65rem); line-height:1.06; letter-spacing:-.035em; margin:0 0 1.3rem; }
+  .ta-hero h1 em { color:#ff5858; font-style:normal; }
+  .ta-hero .ta-eyebrow { color:#ff8383; }
+  .ta-hero-subhead { font-size:clamp(1.05rem,1.6vw,1.3rem); color:#fff; font-weight:700; margin:0 0 1.2rem; }
+  .ta-hero-lead { color:#dfdfdf; margin:0 0 1.65rem; }
+  .ta-hero-actions { display:flex; flex-wrap:wrap; align-items:center; gap:1.1rem; }
+  .ta-text-link-light { color:#fff; }
+  .ta-hero-note { font-size:.83rem; color:#ddd; margin:1.1rem 0 0; }
+  .ta-hero-note a { text-decoration:underline; }
+  .ta-hero-photo { position:relative; padding:0 0 1rem; }
+  .ta-hero-photo img { display:block; width:100%; height:clamp(320px,36vw,500px); object-fit:cover; border-radius:9px; border:5px solid #fff; }
+  .ta-photo-stamp { position:absolute; left:-.7rem; bottom:0; background:#b20d16; color:#fff; padding:.9rem 1.2rem; display:flex; flex-direction:column; line-height:1.2; transform:rotate(-3deg); font-family:"Black Ops One",cursive; }
+  .ta-photo-stamp strong { font-size:1.18rem; }.ta-photo-stamp span { font-size:.95rem; }
+  .ta-benefits { background:#f5f5f5; padding:4.2rem 0; }
+  .ta-benefit-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1.15rem; margin-top:1.7rem; }
+  .ta-benefit-grid article { background:#fff; border:1px solid #e6e6e6; padding:1.4rem; border-top:4px solid #b20d16; }
+  .ta-benefit-grid article > span { color:#b20d16; font-weight:900; font-size:.78rem; }
+  .ta-benefit-grid h3 { margin:.65rem 0 .6rem; font-size:1.25rem; }
+  .ta-benefit-grid p { font-size:.94rem; margin:0; }
+  .ta-programs,.ta-first,.ta-community,.ta-faq { padding-top:4.2rem; padding-bottom:4.2rem; }
+  .ta-intro { max-width:870px; color:#505050; margin:0 0 1.6rem; }
+  .ta-program-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1.25rem; }
+  .ta-program-card { display:flex; flex-direction:column; border:1px solid #dedede; border-radius:9px; overflow:hidden; background:#fff; box-shadow:0 8px 22px #0000000d; }
+  .ta-program-card > img { display:block; width:100%; aspect-ratio:4/3; object-fit:cover; }
+  .ta-program-body { display:flex; flex:1; flex-direction:column; padding:1.4rem; }
+  .ta-program-label { font-size:.72rem; color:#a40b16; font-weight:900; letter-spacing:.055em; margin:0 0 .55rem; }
+  .ta-program-body h3 { font-size:1.45rem; margin:0 0 .6rem; }
+  .ta-program-body p:not(.ta-program-label) { color:#414141; font-size:.95rem; margin:0 0 1.1rem; }
+  .ta-program-body a { color:#a40b16; font-weight:800; margin-top:auto; text-decoration:underline; text-underline-offset:3px; }
+  .ta-chooser { background:#171717; color:#fff; padding:4rem 0; }
+  .ta-chooser-inner { display:grid; grid-template-columns:1.15fr .85fr; gap:clamp(1.5rem,4vw,4rem); align-items:center; }
+  .ta-chooser h2 { color:#fff; }
+  .ta-chooser p { color:#e0e0e0; }
+  .ta-chooser a:not(.ta-button) { color:#fff; text-decoration:underline; text-underline-offset:3px; }
+  .ta-chooser-points { display:grid; gap:.9rem; }
+  .ta-chooser-points p { margin:0; padding:1.2rem; background:#282828; border-left:4px solid #d3222d; display:grid; gap:.3rem; }
+  .ta-chooser-points strong { color:#fff; }.ta-chooser-points span { font-size:.91rem; }
+  .ta-first-grid { display:grid; grid-template-columns:.9fr 1.1fr; gap:clamp(1.5rem,4vw,4rem); align-items:center; }
+  .ta-steps { list-style:none; padding:0; margin:0; display:grid; gap:1rem; }
+  .ta-steps li { display:flex; gap:1rem; padding:1.05rem; background:#f6f6f6; border-radius:7px; }
+  .ta-steps li > span { display:grid; place-items:center; flex:0 0 2.3rem; width:2.3rem; height:2.3rem; background:#b20d16; color:#fff; border-radius:50%; font-weight:800; }
+  .ta-steps h3 { font-size:1.17rem; margin:.05rem 0 .25rem; }
+  .ta-steps p { margin:0; color:#484848; }
+  .ta-schedule { background:#f5f5f5; padding:4.1rem 0; }
+  .ta-schedule-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:.9rem; margin:1.5rem 0 1.6rem; }
+  .ta-schedule-day { background:#fff; border-top:4px solid #b20d16; padding:1.05rem; min-width:0; }
+  .ta-schedule-day h3 { margin:.1rem 0 .7rem; font-size:1.13rem; }
+  .ta-schedule-day ul { margin:0; padding:0; list-style:none; }
+  .ta-schedule-day li { display:grid; gap:.35rem; border-top:1px solid #e5e5e5; padding:.6rem 0 0; font-size:.88rem; }
+  .ta-schedule-day li strong { font-size:.86rem; }.ta-schedule-day li span { color:#9d0710; font-weight:800; }
+  .ta-schedule-note { margin:0 0 1.25rem; font-size:.9rem; color:#555; }
+  .ta-community-grid { display:grid; grid-template-columns:1fr 1fr; gap:clamp(1.5rem,4vw,4rem); align-items:center; }
+  .ta-community-grid img { display:block; width:100%; height:350px; object-fit:cover; border-radius:9px; }
+  .ta-local { border-top:1px solid #ebebeb; padding:4.1rem 0; }
+  .ta-local-grid { display:grid; grid-template-columns:1.3fr .8fr; gap:2rem; }
+  .ta-local-grid address { display:grid; gap:.25rem; font-style:normal; margin:1.3rem 0; }
+  .ta-local-grid address a { color:#990913; font-weight:800; width:fit-content; }
+  .ta-local-actions { display:flex; flex-wrap:wrap; gap:1rem; align-items:center; }
+  .ta-local-grid aside { border-left:5px solid #b20d16; background:#f5f5f5; padding:1.4rem; }
+  .ta-local-grid aside h3 { margin:0 0 .8rem; }
+  .ta-local-grid aside ul { padding-left:1.1rem; margin:0; }
+  .ta-local-grid aside li { margin-bottom:.65rem; line-height:1.5; }
+  .ta-faq-list { display:grid; gap:.7rem; max-width:930px; }
+  .ta-faq-list details { border:1px solid #ddd; padding:1.1rem 1.2rem; border-radius:7px; }
+  .ta-faq-list summary { font-weight:800; cursor:pointer; display:flex; justify-content:space-between; gap:1rem; list-style:none; }
+  .ta-faq-list summary::-webkit-details-marker { display:none; }
+  .ta-faq-list summary span { font-size:1.5rem; color:#b20d16; }
+  .ta-faq-list details[open] summary span { transform:rotate(45deg); }
+  .ta-faq-list details p { color:#484848; margin:.8rem 0 0; }
+  .ta-final { background:#b20d16; padding:4.8rem 0; text-align:center; color:#fff; }
+  .ta-final .ta-eyebrow { color:#ffe3e3; }
+  .ta-final h2 { margin:0 auto 1rem; color:#fff; max-width:880px; }
+  .ta-final p { max-width:760px; margin:0 auto 1.6rem; }
+  .ta-button-light { color:#990913; background:#fff; border-color:#fff; }
+  .ta-button-light:hover { color:#fff; background:#171717; border-color:#171717; }
+  .ta-final .ta-small { font-size:.86rem; margin:1.2rem auto; }
+  .ta-final .ta-small a { font-weight:800; text-decoration:underline; }
+  .ta-final .ta-tagline { font-family:"Black Ops One",cursive; font-size:1.12rem; margin:1.2rem auto 0; }
+  @media(max-width:1100px) {
+    .ta-benefit-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .ta-schedule-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  }
+  @media(max-width:760px) {
+    .ta-hero { padding:1.7rem 0 3.1rem; }
+    .ta-hero-grid,.ta-chooser-inner,.ta-first-grid,.ta-community-grid,.ta-local-grid { grid-template-columns:1fr; }
+    .ta-hero h1 { font-size:clamp(2.35rem,9.1vw,3.45rem); }
+    .ta-breadcrumb { margin-bottom:1.15rem; }
+    .ta-hero-photo { margin:.8rem .5rem 0; }
+    .ta-hero-photo img { height:320px; }
+    .ta-hero-actions { flex-direction:column; align-items:stretch; }
+    .ta-text-link-light { text-align:center; }
+    .ta-benefits,.ta-chooser,.ta-schedule,.ta-local,.ta-final { padding:3.1rem 0; }
+    .ta-programs,.ta-first,.ta-community,.ta-faq { padding-top:3.1rem; padding-bottom:3.1rem; }
+    .ta-program-grid { grid-template-columns:1fr; }
+    .ta-program-card > img { max-height:300px; }
+    .ta-schedule-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .ta-community-grid img { height:300px; }
+    .ta-button { width:100%; }
+  }
+  @media(max-width:440px) {
+    .ta-benefit-grid,.ta-schedule-grid { grid-template-columns:1fr; }
+    .ta-hero-photo img { height:270px; }
+    .ta-photo-stamp strong { font-size:1rem; }.ta-photo-stamp span { font-size:.84rem; }
+  }
+  @media(prefers-reduced-motion:reduce) {
+    .ta-button { transition:none; }
+    .ta-button:hover { transform:none; }
+  }
+</style>
