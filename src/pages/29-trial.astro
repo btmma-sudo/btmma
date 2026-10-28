@@ -54,6 +54,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <option>Wing Chun</option>
         </select>
         <p class="fine-print">By submitting, you agree to our <a href="/privacy">Privacy Policy</a> and <a href="/terms">Terms of Service</a>.</p>
+        <div id="pilotFields" hidden>
+          <label for="pilotCode">Private launch test code</label>
+          <input id="pilotCode" name="pilotCode" type="password" autocomplete="off" maxlength="128" />
+          <p class="fine-print">Only for Burning Tree’s authorized live-payment verification. A real $29 charge will apply.</p>
+        </div>
         <button type="submit">CHECK TRIAL ELIGIBILITY</button>
         <button id="checkout-button" type="button" hidden disabled>PAY $29 NOW</button>
         <p id="setup-note" class="notice" role="status">We will check the student’s eligibility before payment. Online checkout is not enabled yet.</p>
@@ -77,8 +82,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     const guardian = document.getElementById("guardianFields");
     const guardianName = document.getElementById("guardianName");
     const checkoutButton = document.getElementById("checkout-button");
+    const pilotFields = document.getElementById("pilotFields");
+    const pilotCode = document.getElementById("pilotCode");
     let grant = null;
     let liveMode = null; // null until the server confirms the current checkout mode.
+    let pilotOnly = false;
     checkoutButton?.addEventListener("click", async () => {
       if (!grant || !checkoutButton || liveMode === null) return;
       checkoutButton.disabled = true;
@@ -108,13 +116,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         const status = await response.json();
         if (!["locked", "enabled"].includes(status.liveRegistration)) throw new Error("Invalid checkout mode");
         liveMode = status.liveRegistration === "enabled";
+        pilotOnly = liveMode && status.pilotOnly !== false;
+        if (pilotFields) pilotFields.hidden = !pilotOnly;
+        if (pilotCode) pilotCode.required = pilotOnly;
         const returnState = new URLSearchParams(window.location.search).get("checkout");
         notice.textContent = returnState === "success"
           ? "Thank you for completing checkout! We'll verify your payment and follow up about classes."
           : returnState === "cancelled"
           ? "Checkout was cancelled. You have not completed payment."
           : liveMode
-          ? "We'll check the student's eligibility before taking a secure $29 payment."
+          ? pilotOnly
+            ? "Private live payment verification is enabled. A real $29 charge applies after approval."
+            : "We'll check the student's eligibility before taking a secure $29 payment."
            : "Student registration is available. Online payments are not yet enabled. Call or text 410-218-0894 for assistance.";
         submit.disabled = false;
       } catch {
@@ -204,7 +217,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   .form{display:grid;gap:11px;text-align:left;border:1px solid #ddd;border-radius:16px;padding:25px}
   .form label{font-weight:700;margin-top:8px}
   .form input,.form select{width:100%;box-sizing:border-box;border:1px solid #999;border-radius:8px;padding:13px;font:inherit;background:var(--surface);color:var(--text)}
-  #guardianFields:not([hidden]){display:grid;gap:11px}
+  #guardianFields:not([hidden]),#pilotFields:not([hidden]){display:grid;gap:11px}
   .form button[hidden]{display:none}
   .form button:disabled{opacity:.55;cursor:not-allowed}
   .notice,.fine-print{font-size:.9rem;line-height:1.5}
