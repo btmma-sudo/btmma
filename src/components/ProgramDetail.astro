@@ -44,7 +44,7 @@ const { seoCopy } = program;
   <div class="carousel-track page-carousel-track">
     {[0, 1].map((copy) => (
       <div class="carousel-set" aria-hidden={copy === 1 ? "true" : undefined}>
-        {[...program.galleryImages, ...program.galleryImages, ...program.galleryImages].map((image) => (
+        {program.galleryImages.map((image) => (
           <img
             src={image.src}
             alt={copy === 0 ? image.alt : ""}

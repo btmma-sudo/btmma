@@ -60,7 +60,7 @@ const showSchedule = program.showSchedule !== false;
       <div class="carousel-track page-carousel-track">
         {[0, 1].map((copy) => (
           <div class="carousel-set" aria-hidden={copy === 1 ? "true" : undefined}>
-            {[...v.galleryImages, ...v.galleryImages, ...v.galleryImages].map((image) => (
+            {v.galleryImages.map((image) => (
               <img
                 src={image.src}
                 alt={copy === 0 ? image.alt : ""}

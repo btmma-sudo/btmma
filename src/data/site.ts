@@ -449,9 +449,12 @@ export const programPages: ProgramPage[] = [
           ]
         },
         galleryImages: [
-          { src: "/images/jr-muay-thai-gallery-1.jpg", alt: "Jr. Muay Thai students training at Burning Tree MMA" },
-          { src: "/images/jr-muay-thai-gallery-2.jpg", alt: "Young student practicing Muay Thai striking technique at Burning Tree MMA" },
-          { src: "/images/jr-muay-thai-gallery-3.jpg", alt: "Jr. Muay Thai class at Burning Tree MMA in Owings Mills" }
+          { src: "/images/jr-muay-thai-gallery-2.jpg", alt: "Two junior Burning Tree martial arts students practicing a controlled partner drill" },
+          { src: "/images/Gallery/gallery11.jpeg", alt: "Burning Tree students lined up during a martial arts event at the studio" },
+          { src: "/images/Gallery/gallery5.jpeg", alt: "Burning Tree instructor smiling with a young student after training" },
+          { src: "/images/burning-tree-belt-achievements.webp", alt: "Burning Tree martial arts students holding belt rank certificates" },
+          { src: "/images/burning-tree-kenpo-team.webp", alt: "Burning Tree junior students and instructors celebrating a martial arts achievement" },
+          { src: "/images/Gallery/gallery6.jpeg", alt: "Burning Tree instructor and young martial arts student in uniform together" }
         ],
         seoCopy: {
           tagline: "The Same Art That Builds Champions. Sized Right for Kids.",
@@ -484,9 +487,12 @@ export const programPages: ProgramPage[] = [
           ]
         },
         galleryImages: [
-          { src: "/images/muay-thai-gallery-1.jpg", alt: "Two Muay Thai students in full protective headgear and shin guards practicing a kick technique during class" },
-          { src: "/images/muay-thai-gallery-2.jpg", alt: "An instructor demonstrating a wrist control technique to students in the gym with framed awards on the wall" },
-          { src: "/images/muay-thai-gallery-3.jpg", alt: "Two men in black training clothes practicing a striking combination in the gym, black and white photo" }
+          { src: "/images/adult-martial-arts-gallery-1.jpg", alt: "Adult martial arts partners practicing a control technique during training" },
+          { src: "/images/Gallery/gallery3.jpeg", alt: "Adult martial arts participants demonstrating a controlled technique during training" },
+          { src: "/images/Gallery/gallery4.jpeg", alt: "Martial artists demonstrating a partner self-defense technique in the studio" },
+          { src: "/images/burning-tree-adult-striking-drill.webp", alt: "Adult martial arts students practicing a controlled striking drill at Burning Tree" },
+          { src: "/images/adult-martial-arts-gallery-3.jpg", alt: "Adult martial arts students practicing partner hand movements at a seminar" },
+          { src: "/images/Gallery/gallery10.jpeg", alt: "Burning Tree martial artists smiling together against the studio's red wall" }
         ],
         seoCopy: {
           tagline: "Eight Limbs. Zero Boredom. Real Results.",
@@ -556,9 +562,15 @@ export const programPages: ProgramPage[] = [
           ]
         },
         galleryImages: [
-          { src: "/images/jr-kenpo-gallery-1.jpg", alt: "Two Jr. Kenpo students in black gis with yellow belts sitting with their instructor at a tournament, all smiling" },
-          { src: "/images/kids-martial-arts-karate-guard.png", alt: "Junior martial arts students practicing their karate guard techniques at Burning Tree MMA" },
-          { src: "/images/jr-kenpo-gallery-3.jpg", alt: "A young Jr. Kenpo student in a black gi with yellow belt proudly holding up two medals at the DC Youth Classics competition" }
+          { src: "/images/jr-kenpo-gallery-1.jpg", alt: "Two junior Kenpo students smiling with their instructor at a tournament" },
+          { src: "/images/Gallery/gallery5.jpeg", alt: "Burning Tree instructor smiling with a young student after training" },
+          { src: "/images/Gallery/gallery6.jpeg", alt: "Burning Tree instructor and young martial arts student in uniform together" },
+          { src: "/images/Gallery/gallery11.jpeg", alt: "Burning Tree students lined up during a martial arts event at the studio" },
+          { src: "/images/burning-tree-kenpo-team.webp", alt: "Burning Tree junior students and instructors celebrating a martial arts achievement" },
+          { src: "/images/burning-tree-belt-achievements.webp", alt: "Burning Tree martial arts students holding belt rank certificates" },
+          { src: "/images/burning-tree-teen-kenpo-training.webp", alt: "Junior student practicing on the Burning Tree training mats" },
+          { src: "/images/jr-kenpo-gallery-3.jpg", alt: "Junior Kenpo student proudly displaying medals at a martial arts tournament" },
+          { src: "/images/Gallery/gallery7.jpeg", alt: "Martial arts student with a Burning Tree instructor at a tournament" }
         ],
         seoCopy: {
           tagline: "Your Kid Will Be Different After 30 Days. In the Best Way.",
@@ -591,9 +603,14 @@ export const programPages: ProgramPage[] = [
           ]
         },
         galleryImages: [
-          { src: "/images/adult-martial-arts-gallery-1.jpg", alt: "Two adult students in black gis practicing a grappling control technique together while the full class trains in the background" },
-          { src: "/images/adult-martial-arts-gallery-2.jpg", alt: "An instructor demonstrating a palm strike technique on a student during a martial arts seminar with a group of students watching" },
-          { src: "/images/adult-martial-arts-gallery-3.jpg", alt: "Two adult students practicing hand-blocking techniques face to face with multiple training pairs visible in the background" }
+          { src: "/images/adult-martial-arts-gallery-1.jpg", alt: "Adult martial arts partners practicing a control technique during training" },
+          { src: "/images/adult-martial-arts-gallery-2.jpg", alt: "Adults demonstrating an instructor-led defense technique during a martial arts seminar" },
+          { src: "/images/adult-martial-arts-gallery-3.jpg", alt: "Adult martial arts students practicing partner hand movements at a seminar" },
+          { src: "/images/Gallery/gallery3.jpeg", alt: "Adult martial arts participants demonstrating a controlled technique during training" },
+          { src: "/images/Gallery/gallery4.jpeg", alt: "Martial artists demonstrating a partner self-defense technique in the studio" },
+          { src: "/images/burning-tree-adult-striking-drill.webp", alt: "Adult martial arts students practicing a controlled striking drill at Burning Tree" },
+          { src: "/images/Gallery/gallery10.jpeg", alt: "Burning Tree martial artists smiling together against the studio's red wall" },
+          { src: "/images/Gallery/gallery1.jpeg", alt: "Burning Tree martial arts community members smiling together at a studio event" }
         ],
         seoCopy: {
           tagline: "You Do Not Need to Be Fit to Start. You Will Be Fit Because You Started.",
@@ -662,9 +679,12 @@ export const programPages: ProgramPage[] = [
           ]
         },
         galleryImages: [
-          { src: "/images/jr-wing-chun-gallery-1.jpg", alt: "Jr. Wing Chun students training at Burning Tree MMA" },
-          { src: "/images/jr-wing-chun-gallery-2.jpg", alt: "Young student practicing Wing Chun technique at Burning Tree MMA" },
-          { src: "/images/jr-wing-chun-gallery-3.jpg", alt: "Jr. Wing Chun class at Burning Tree MMA in Owings Mills" }
+          { src: "/images/jr-wing-chun-gallery-2.jpg", alt: "Two junior martial arts students practicing a close-range hand technique" },
+          { src: "/images/Gallery/gallery5.jpeg", alt: "Burning Tree instructor smiling with a young student after training" },
+          { src: "/images/Gallery/gallery6.jpeg", alt: "Burning Tree instructor and young martial arts student in uniform together" },
+          { src: "/images/Gallery/gallery11.jpeg", alt: "Burning Tree students lined up during a martial arts event at the studio" },
+          { src: "/images/burning-tree-kenpo-team.webp", alt: "Burning Tree junior students and instructors celebrating a martial arts achievement" },
+          { src: "/images/jr-kenpo-gallery-3.jpg", alt: "Junior Kenpo student proudly displaying medals at a martial arts tournament" }
         ],
         seoCopy: {
           tagline: "The Martial Art That Teaches Kids to Fight Smarter, Not Harder.",
@@ -697,9 +717,13 @@ export const programPages: ProgramPage[] = [
           ]
         },
         galleryImages: [
-          { src: "/images/wing-chun-gallery-1.jpg", alt: "Wing Chun students practicing simultaneous block and strike technique at Burning Tree MMA" },
-          { src: "/images/wing-chun-gallery-2.jpg", alt: "Instructor demonstrating centerline control during Wing Chun class at Burning Tree MMA" },
-          { src: "/images/wing-chun-gallery-3.jpg", alt: "Wing Chun students drilling chain punches and close-range striking combinations" }
+          { src: "/images/adult-martial-arts-gallery-1.jpg", alt: "Adult martial arts partners practicing a control technique during training" },
+          { src: "/images/adult-martial-arts-gallery-2.jpg", alt: "Adults demonstrating an instructor-led defense technique during a martial arts seminar" },
+          { src: "/images/adult-martial-arts-gallery-3.jpg", alt: "Adult martial arts students practicing partner hand movements at a seminar" },
+          { src: "/images/Gallery/gallery4.jpeg", alt: "Martial artists demonstrating a partner self-defense technique in the studio" },
+          { src: "/images/Gallery/gallery3.jpeg", alt: "Adult martial arts participants demonstrating a controlled technique during training" },
+          { src: "/images/burning-tree-adult-striking-drill.webp", alt: "Adult martial arts students practicing a controlled striking drill at Burning Tree" },
+          { src: "/images/Gallery/gallery10.jpeg", alt: "Burning Tree martial artists smiling together against the studio's red wall" }
         ],
         seoCopy: {
           tagline: "The Martial Art Built for People Who Fight Smart, Not Big.",
@@ -756,9 +780,11 @@ export const programPages: ProgramPage[] = [
       ]
     },
     galleryImages: [
-      { src: "/images/womens-defense-gallery-1.jpeg", alt: "Women's self-defense class drilling escape technique at Burning Tree MMA" },
-      { src: "/images/womens-defense-gallery-2.jpeg", alt: "Instructor demonstrating a defense technique during Women's Defense class at Burning Tree MMA" },
-      { src: "/images/womens-defense-gallery-3.jpeg", alt: "Women's self-defense students practicing ground defense at Burning Tree MMA in Owings Mills" }
+      { src: "/images/burning-tree-womens-self-defense-cropped.webp", alt: "Woman practicing a real self-defense technique with a partner at Burning Tree" },
+      { src: "/images/womens-defense-gallery-1.jpeg", alt: "Instructor and student demonstrating a controlled martial arts defense technique" },
+      { src: "/images/womens-defense-gallery-2.jpeg", alt: "Martial arts instructor demonstrating a defense drill with a student" },
+      { src: "/images/womens-defense-gallery-3.jpeg", alt: "Instructor helping a student practice a self-defense technique" },
+      { src: "/images/Gallery/gallery4.jpeg", alt: "Martial artists demonstrating a partner self-defense technique in the studio" }
     ],
     leadForm: {
       title: "Join a Women's Defense Class",
