@@ -14,7 +14,7 @@ export async function GET({ request, locals }) {
   const locked = env.LIVE_CHECKOUT_ENABLED !== "true";
   const headers = { "content-type": "application/json", "cache-control": "no-store" };
   if (!locked || new URL(request.url).searchParams.get("check") !== "readiness") {
-    return new Response(JSON.stringify({ liveRegistration: locked ? "locked" : "enabled" }), { headers });
+    return new Response(JSON.stringify({ liveRegistration: locked ? "locked" : "enabled", pilotOnly: env.LIVE_PILOT_ONLY !== "false" }), { headers });
   }
   let database = "needs_attention";
   try {
@@ -86,6 +86,23 @@ export async function POST({ request, locals }) {
   if (!env?.LIVE_TRIAL_DB || !env?.STRIPE_LIVE_WEBHOOK_SECRET ||
       !/^(sk|rk)_live_/.test(String(env?.STRIPE_LIVE_SECRET_KEY || "")))
     return respond(503, "Live registration is not configured.");
+
+  // Private pilot is ON by default, including if a rollout setting is absent.
+  // Public live signup requires a deliberate later change of LIVE_PILOT_ONLY.
+  if (env.LIVE_PILOT_ONLY !== "false") {
+    if (typeof env.LIVE_PILOT_CODE !== "string" || env.LIVE_PILOT_CODE.length < 16)
+      return respond(503, "Private live payment testing is not configured.");
+    let data;
+    try { data = await request.clone().json(); }
+    catch { return respond(400, "Invalid registration."); }
+    const supplied = data?.pilotCode;
+    if (typeof supplied !== "string" || supplied.length > 128) return respond(403, "Private test access required.");
+    const a = new TextEncoder().encode(supplied);
+    const b = new TextEncoder().encode(env.LIVE_PILOT_CODE);
+    let mismatch = a.length ^ b.length;
+    for (let i = 0; i < Math.max(a.length, b.length); i++) mismatch |= (a[i] || 0) ^ (b[i] || 0);
+    if (mismatch !== 0) return respond(403, "Private test access required.");
+  }
 
   const liveEnv = {
     ...env,
