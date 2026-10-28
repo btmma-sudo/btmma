@@ -473,7 +473,7 @@ const breadcrumbSchema = {
   .ta-intro { max-width:870px; color:#505050; margin:0 0 1.6rem; }
   .ta-program-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1.25rem; }
   .ta-program-card { display:flex; flex-direction:column; border:1px solid #dedede; border-radius:9px; overflow:hidden; background:#fff; box-shadow:0 8px 22px #0000000d; }
-  .ta-program-card > img { display:block; width:100%; aspect-ratio:4/3; object-fit:cover; }
+  .ta-program-card > img { display:block; width:100%; aspect-ratio:4/3; object-fit:contain; background:#171717; }
   .ta-program-body { display:flex; flex:1; flex-direction:column; padding:1.4rem; }
   .ta-program-label { font-size:.72rem; color:#a40b16; font-weight:900; letter-spacing:.055em; margin:0 0 .55rem; }
   .ta-program-body h3 { font-size:1.45rem; margin:0 0 .6rem; }
@@ -570,6 +570,12 @@ const breadcrumbSchema = {
     .ta-benefit-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
     .ta-schedule-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
   }
+  @media (min-width:761px) and (max-width:980px) {
+    .ta-hero-grid, .ta-chooser-inner, .ta-first-grid,
+    .ta-community-grid, .ta-local-grid, .ta-womens-grid { grid-template-columns:minmax(0,1fr); }
+    .ta-program-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .ta-hero-photo img { height:auto; aspect-ratio:4 / 3; object-fit:contain; }
+  }
   @media(max-width:760px) {
     .ta-compare,.ta-start-paths { padding-top:3rem; padding-bottom:3rem; }
     .ta-compare-grid,.ta-paths-grid { grid-template-columns:1fr; }
@@ -604,7 +610,7 @@ const breadcrumbSchema = {
     .ta-gallery-more .ta-gallery-team { grid-column:auto; }
     .ta-gallery-more figure:not(.ta-gallery-team) img { height:320px; }
     .ta-gallery-team img { height:auto; aspect-ratio:1370 / 878; }
-    .ta-hero-photo img { height:270px; }
+    .ta-hero-photo img { height:auto; aspect-ratio:4 / 3; object-fit:contain; }
     .ta-photo-stamp strong { font-size:1rem; }.ta-photo-stamp span { font-size:.84rem; }
   }
   @media(prefers-reduced-motion:reduce) {

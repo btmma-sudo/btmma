@@ -1761,3 +1761,36 @@ iframe {
     white-space: normal;
   }
 }
+
+
+/* Shared responsive safeguards across every page. Keep content inside the viewport
+   without flattening the intentional photo framing or marquee animations. */
+html, body { max-width: 100%; }
+body { overflow-x: clip; }
+main, .shell, .detail-card, .program-card, .lead-card, .quote-card, .faq-card,
+.program-split > *, .split-section > *, .footer-grid > *, .grid-two > *,
+.card-grid > *, .schedule-grid > * { min-width: 0; }
+h1, h2, h3, p, li, blockquote, figcaption, summary, .button, .schedule-class {
+  overflow-wrap: break-word;
+}
+button, input, textarea, select, iframe, video { max-width: 100%; }
+.button { max-width: 100%; text-align: center; white-space: normal; }
+.variant-tabs-bar { flex-wrap: wrap; }
+.variant-tab-btn { flex: 1 1 auto; min-width: 0; padding-inline: clamp(.8rem, 2vw, 2.5rem); }
+.program-split { grid-template-columns: minmax(0, 420px) minmax(0, 1fr); }
+@media (min-width: 701px) and (max-width: 1000px) {
+  .program-split { grid-template-columns: minmax(0, 1fr); gap: 1.25rem; }
+}
+@media (max-width: 760px) {
+  .hero-banner:not(.hero-bottom-mobile) { min-height: 0; }
+  .hero-content h1 { max-width: 100%; }
+  .header-mobile-offer { max-width: min(40vw, 10rem); overflow-wrap: break-word; }
+  .program-split { gap: 1.25rem; }
+  .variant-tab-btn { flex: 1 1 45%; }
+}
+@media (max-width: 360px) {
+  .nav-shell { gap: .35rem; }
+  .header-mobile-offer { padding: .45rem .4rem; font-size: .7rem; }
+  .brand-logo { height: 4.8rem; }
+  .variant-tab-btn { flex-basis: 100%; }
+}
