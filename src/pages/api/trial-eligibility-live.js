@@ -48,25 +48,33 @@ export async function GET({ request, locals }) {
       } catch { return "unavailable"; }
     })(),
     (async () => {
-      if (!checks.airtableConfigured) return "not_configured";
+      if (!checks.airtableConfigured) return { fulfillment: "not_configured", registration: "not_configured" };
       try {
         const response = await fetch(
           "https://api.airtable.com/v0/meta/bases/" + encodeURIComponent(env.AIRTABLE_BASE_ID) + "/tables",
           { headers: { Authorization: "Bearer " + env.AIRTABLE_API_TOKEN } }
         );
-        if (!response.ok) return "unavailable";
+        if (!response.ok) return { fulfillment: "unavailable", registration: "unavailable" };
         const data = await response.json();
         const table = data.tables?.find(t => t.id === "tblZCXEuRKXiPZlc7");
         const payment = table?.fields?.find(f => f.name.trim().toLowerCase() === "payment status");
         const trial = table?.fields?.find(f => /29/.test(f.name) && /tr(?:ia|ai)l/i.test(f.name) && /used/i.test(f.name));
         const hasPaidChoice = payment?.type === "singleSelect" &&
           payment.options?.choices?.some(choice => choice.name === "Paid");
-        return trial?.type === "checkbox" && hasPaidChoice ? "ready" : "needs_review";
-      } catch { return "unavailable"; }
+        const phone = table?.fields?.find(f => f.name.trim().toLowerCase() === "phone number");
+        const notes = table?.fields?.find(f => f.name.trim().toLowerCase() === "additional notes");
+        const registrationReady = phone?.type === "phoneNumber" &&
+          ["multilineText", "singleLineText"].includes(notes?.type);
+        return {
+          fulfillment: trial?.type === "checkbox" && hasPaidChoice ? "ready" : "needs_review",
+          registration: registrationReady ? "ready" : "needs_review"
+        };
+      } catch { return { fulfillment: "unavailable", registration: "unavailable" }; }
     })()
   ]);
   checks.liveStripeSessionRead = stripeCheck;
-  checks.airtableFulfillmentFields = airtableCheck;
+  checks.airtableFulfillmentFields = airtableCheck.fulfillment;
+  checks.airtableRegistrationFields = airtableCheck.registration;
   return new Response(JSON.stringify({ liveRegistration: "locked", checks }), { headers });
 }
 
