@@ -35,7 +35,8 @@ export async function POST({ request, locals }) {
   if (event.livemode !== true || !/^((sk|rk)_live_)/.test(String(env.STRIPE_LIVE_SECRET_KEY))) return reply("Live key required", 503);
   const sessionId = event.data?.object?.id;
   if (typeof sessionId !== "string" || !sessionId.startsWith("cs_live_")) return reply("Invalid session", 400);
-  // Only sessions reserved through the live student-specific checkout flow are eligible.\n  const row = await env.LIVE_TRIAL_DB.prepare("SELECT id, airtable_record_id, state FROM trial_registrations WHERE stripe_session_id = ?").bind(sessionId).first();
+  // Only sessions reserved through the live student-specific checkout flow are eligible.
+  const row = await env.LIVE_TRIAL_DB.prepare("SELECT id, airtable_record_id, state FROM trial_registrations WHERE stripe_session_id = ?").bind(sessionId).first();
   if (!row) return reply("Unrecognized checkout session", 503);
   const already = await env.LIVE_TRIAL_DB.prepare("SELECT event_id FROM stripe_webhook_events WHERE event_id = ?").bind(event.id).first();
   if (already) return reply("Already processed", 200);
