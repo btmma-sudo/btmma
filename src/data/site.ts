@@ -22,6 +22,7 @@ export type LeadFormConfig = {
   intro: string;
   defaultProgram?: string;
   submitLabel?: string;
+  offerLink?: string; // Direct checkout landing page for a paid starter offer
   webhookPath?: string;
   hideProgramSelect?: boolean;
   fields?: "standard" | "emailOnly";
@@ -284,8 +285,9 @@ export const homePage: {
     overlay: "strong"
   },
   leadForm: {
-    title: "Try a Free Class",
-    intro: "Take the first step today, we will reach out to follow up with you",
+    title: "$29 New Student Special",
+    intro: "Get 2 beginner classes plus a FREE uniform for just $29. One introductory offer per new student.",
+    offerLink: "/29-trial/",
     submitLabel: "Submit"
   }
 };
@@ -312,8 +314,9 @@ export const aboutPage: SupportingPage & {
     overlay: "medium"
   },
   leadForm: {
-    title: "Try a Free Class",
-    intro: "Take the first step today, we will reach out to follow up with you",
+    title: "$29 New Student Special",
+    intro: "Get 2 beginner classes plus a FREE uniform for just $29. One introductory offer per new student.",
+    offerLink: "/29-trial/",
     submitLabel: "Submit"
   }
 };
@@ -349,7 +352,7 @@ export const faqPage: SupportingPage & {
     {
       question: "What should I bring to my first class?",
       answer:
-        "Bring comfortable workout clothes, water, and a willingness to learn. We will guide you on uniforms and gear after you contact us."
+        "Bring water and comfortable workout clothes for your first class. The $29 New Student Special includes a free uniform; we will help with sizing after registration."
     },
     {
       question: "Do you offer classes for kids and adults?",
@@ -363,8 +366,9 @@ export const faqPage: SupportingPage & {
     }
   ],
   leadForm: {
-    title: "Try a Free Class",
-    intro: "Take the first step today, we will reach out to follow up with you",
+    title: "$29 New Student Special",
+    intro: "Get 2 beginner classes plus a FREE uniform for just $29. One introductory offer per new student.",
+    offerLink: "/29-trial/",
     submitLabel: "Submit"
   }
 };
@@ -399,8 +403,9 @@ export const programPages: ProgramPage[] = [
     benefits: { title: "", items: [] },
     galleryImages: [],
     leadForm: {
-      title: "Try a Free Class",
-      intro: "Take the first step today, we will reach out to follow up with you",
+      title: "$29 New Student Special",
+      intro: "Get 2 beginner classes plus a FREE uniform for just $29. One introductory offer per new student.",
+      offerLink: "/29-trial/",
       submitLabel: "Submit"
     },
     variants: [
@@ -506,8 +511,9 @@ export const programPages: ProgramPage[] = [
     benefits: { title: "", items: [] },
     galleryImages: [],
     leadForm: {
-      title: "Try a Free Class",
-      intro: "Take the first step today, we will reach out to follow up with you",
+      title: "$29 New Student Special",
+      intro: "Get 2 beginner classes plus a FREE uniform for just $29. One introductory offer per new student.",
+      offerLink: "/29-trial/",
       submitLabel: "Submit"
     },
     variants: [
@@ -612,8 +618,9 @@ export const programPages: ProgramPage[] = [
     benefits: { title: "", items: [] },
     galleryImages: [],
     leadForm: {
-      title: "Try a Free Class",
-      intro: "Take the first step today, we will reach out to follow up with you",
+      title: "$29 New Student Special",
+      intro: "Get 2 beginner classes plus a FREE uniform for just $29. One introductory offer per new student.",
+      offerLink: "/29-trial/",
       submitLabel: "Submit"
     },
     variants: [
