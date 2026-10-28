@@ -12,6 +12,8 @@ async function signature(secret, value) {
 }
 export async function POST({ request, locals }) {
   const env = locals?.runtime?.env ?? {};
+  if (env.LIVE_CHECKOUT_ENABLED === "true")
+    return json({ error: "Sandbox checkout is unavailable while live checkout is active." }, 503);
   if (!env.TRIAL_DB || !env.STRIPE_SECRET_KEY?.startsWith("sk_test_") || !env.STRIPE_WEBHOOK_SECRET)
     return json({ error: "Test checkout is not configured." }, 503);
   let body;
