@@ -8,6 +8,17 @@ const respond = (status, error) => new Response(JSON.stringify({ success: false,
   status, headers: { "content-type": "application/json", "cache-control": "no-store" }
 });
 
+// Read-only launch-gate check. No student data, secrets, or payment operations.
+export async function GET({ locals }) {
+  const locked = locals?.runtime?.env?.LIVE_CHECKOUT_ENABLED !== "true";
+  return new Response(JSON.stringify({
+    liveRegistration: locked ? "locked" : "enabled"
+  }), { status: 200, headers: {
+    "content-type": "application/json",
+    "cache-control": "no-store"
+  }});
+}
+
 export async function POST({ request, locals }) {
   const env = locals?.runtime?.env;
   // This must be enabled only after live checkout and webhook are launch-ready.
