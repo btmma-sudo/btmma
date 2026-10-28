@@ -31,7 +31,8 @@ export async function GET({ request, locals }) {
     stripeKeyConfigured: /^(sk|rk)_live_/.test(String(env.STRIPE_LIVE_SECRET_KEY || "")),
     webhookSecretConfigured: String(env.STRIPE_LIVE_WEBHOOK_SECRET || "").startsWith("whsec_"),
     airtableConfigured: Boolean(env.AIRTABLE_API_TOKEN && env.AIRTABLE_BASE_ID),
-    turnstileConfigured: Boolean(env.TURNSTILE_SECRET_KEY)
+    turnstileConfigured: Boolean(env.TURNSTILE_SECRET_KEY),
+    privatePilotCodeConfigured: typeof env.LIVE_PILOT_CODE === "string" && env.LIVE_PILOT_CODE.length >= 16
   };
   // Read-only calls test whether the live key is actually accepted and
   // whether Airtable's payment fields still match the fulfillment handler.
