@@ -83,6 +83,31 @@ export async function POST({ request, locals }) {
     turnstile = await result.json();
   } catch { return json({ success: false, error: "Security verification is temporarily unavailable." }, 503); }
   if (!turnstile.success) return json({ success: false, error: "Please complete the security check again." }, 403);
+  // Live eligibility must recognize the REAL Airtable trial-used checkbox,
+  // including legacy field-label spelling, before approving checkout.
+  let trialUsedFieldName = "$29 Trial Used";
+  let liveLeadFields = null;
+  if (env.TRIAL_REGISTRATION_CONTEXT === "live") {
+    try {
+      const response = await fetch(
+        "https://api.airtable.com/v0/meta/bases/" + encodeURIComponent(env.AIRTABLE_BASE_ID) + "/tables",
+        { headers: { Authorization: "Bearer " + env.AIRTABLE_API_TOKEN } }
+      );
+      if (!response.ok) throw new Error("schema_http_" + response.status);
+      const meta = await response.json();
+      liveLeadFields = meta.tables?.find(t => t.id === "tblZCXEuRKXiPZlc7")?.fields;
+      const trial = liveLeadFields?.find(f => f.type === "checkbox" &&
+        /29/.test(f.name) && /tr(?:ia|ai)l/i.test(f.name) && /used/i.test(f.name));
+      if (!trial) throw new Error("trial_field_missing");
+      trialUsedFieldName = trial.name;
+    } catch (error) {
+      console.error("Live trial eligibility schema unavailable", {
+        reason: error instanceof Error ? error.message.slice(0, 80) : "unknown"
+      });
+      return json({ success: false,
+        error: "We couldn't verify trial history right now. Please contact the studio." }, 503);
+    }
+  }
   const contactEmail = normalize(email);
   // Search only records belonging to the payer/contact email; siblings can share an email.
   const formula = 'LOWER({Email}) = "' + contactEmail.replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '"';
@@ -194,12 +219,12 @@ export async function POST({ request, locals }) {
       for (const record of page.records || []) {
         const fields = record.fields || {};
         // Existing records without a Student Name cannot safely be cleared automatically.
-        if (!fields["Student Name"] && (fields["$29 Trial Used"] || fields["Payment Status"] === "Paid")) {
+        if (!fields["Student Name"] && (fields[trialUsedFieldName] || fields["Payment Status"] === "Paid")) {
           return json({ success: true, eligible: false, message: "Please contact the studio so we can verify this student's trial eligibility." });
         }
         if (normalize(fields["Student Name"]) === normalize(studentName) &&
             (sameDob(fields, studentDob) || !fields["Student Date of Birth"]) &&
-            (fields["$29 Trial Used"] || fields["Payment Status"] === "Paid")) {
+            (fields[trialUsedFieldName] || fields["Payment Status"] === "Paid")) {
           return json({ success: true, eligible: false, message: "Please contact the studio about this student's trial eligibility." });
         }
       }
@@ -237,7 +262,7 @@ export async function POST({ request, locals }) {
         const fields = record.fields || {};
         if (normalize(fields["Student Name"]) === normalize(studentName) &&
             (sameDob(fields, studentDob) || !fields["Student Date of Birth"]) &&
-            (fields["$29 Trial Used"] || fields["Payment Status"] === "Paid")) {
+            (fields[trialUsedFieldName] || fields["Payment Status"] === "Paid")) {
           return json({
             success: true,
             eligible: false,
@@ -274,7 +299,7 @@ export async function POST({ request, locals }) {
         if (normalize(fields["Student Name"]) === normalize(studentName) &&
             normalize(fields["Email"]) === contactEmail &&
             sameDob(fields, studentDob) &&
-            !fields["$29 Trial Used"] && fields["Payment Status"] !== "Paid") {
+            !fields[trialUsedFieldName] && fields["Payment Status"] !== "Paid") {
           if (!await reserveStudent(env.TRIAL_DB, record.id, reservationStudentKey || record.id)) return json({ success: true, eligible: false, message: "Please contact the studio to verify this registration." });
           return json({
             checkoutGrant: await checkoutGrant(env.STRIPE_WEBHOOK_SECRET, record.id),
@@ -296,16 +321,7 @@ export async function POST({ request, locals }) {
     // for the studio to schedule the correct student's first class. Use
     // canonical Airtable field IDs, so display-label changes fail safely.
     if (env.TRIAL_REGISTRATION_CONTEXT === "live") {
-      const schemaResponse = await fetch(
-        "https://api.airtable.com/v0/meta/bases/" + encodeURIComponent(env.AIRTABLE_BASE_ID) + "/tables",
-        { headers: { Authorization: "Bearer " + env.AIRTABLE_API_TOKEN } }
-      );
-      if (!schemaResponse.ok) {
-        console.error("Live registration schema unavailable", { status: schemaResponse.status });
-        return json({ success: false, error: "Registration setup needs verification. Please contact the studio." }, 503);
-      }
-      const schema = await schemaResponse.json();
-      const leadFields = schema.tables?.find(t => t.id === "tblZCXEuRKXiPZlc7")?.fields || [];
+      const leadFields = liveLeadFields;
       const byName = name => leadFields.find(f => f.name.trim().toLowerCase() === name);
       const phoneField = byName("phone number");
       const notesField = byName("additional notes");
