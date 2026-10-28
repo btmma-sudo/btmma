@@ -21,6 +21,13 @@ const fields = config?.fields ?? "standard";
   <h2>{title}</h2>
   <p>{intro}</p>
 
+  {config?.offerLink ? (
+    <div class="starter-offer-cta">
+      <p class="starter-offer-includes"><strong>2 Beginner Classes + FREE Uniform</strong></p>
+      <a class="button starter-offer-button" href={config.offerLink}>GET STARTED FOR $29</a>
+      <p class="fine-print">Register and pay securely online. New students only; siblings register separately.</p>
+    </div>
+  ) : (
   <form
     class="lead-form-compact"
     method="post"
@@ -67,6 +74,7 @@ const fields = config?.fields ?? "standard";
     <p class="form-status" data-form-status aria-live="polite"></p>
     <button class="button" type="submit">{submitLabel}</button>
   </form>
+  )}
 </section>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
@@ -166,3 +174,10 @@ const fields = config?.fields ?? "standard";
     }
   }
 </script>
+
+<style>
+  .starter-offer-cta { display: grid; gap: .9rem; justify-items: stretch; margin-top: 1.1rem; }
+  .starter-offer-includes { font-weight: 700; font-size: 1.05rem; margin: 0; }
+  .starter-offer-button { text-align: center; padding: .95rem 1.2rem; font-size: 1rem; }
+  .starter-offer-cta .fine-print { font-size: .85rem; line-height: 1.45; margin: 0; }
+</style>
