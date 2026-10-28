@@ -356,6 +356,38 @@ export const faqPage: SupportingPage & {
       question: "Where is Burning Tree MMA located?",
       answer:
         "We are located at 10210 S Dolfield Rd in Owings Mills, Maryland, serving local families and adults looking for martial arts classes near them."
+    },
+    {
+      question: "What does the $29 new student special include?",
+      answer: "For new students, $29 includes two beginner classes and a free uniform. Register through our $29 New Student Special page; one introductory offer applies per new student."
+    },
+    {
+      question: "When are kids karate classes in Owings Mills?",
+      answer: "Junior Kenpo classes are on Mondays at 5:00 PM and 6:00 PM. We also offer junior Muay Thai on Tuesdays and Thursdays and junior Wing Chun on Wednesdays. See the class schedule for complete times."
+    },
+    {
+      question: "Do you have martial arts classes for adult beginners?",
+      answer: "Yes. Teens and adults can learn Kenpo Karate on Monday evenings, Muay Thai on Tuesdays and Thursdays, and Wing Chun on Wednesdays. Our classes welcome people new to martial arts."
+    },
+    {
+      question: "Do you teach women's self-defense?",
+      answer: "Yes. Our Women's Self-Defense / Sanuces program meets on Sundays from 12:00 PM to 2:00 PM. Contact us before attending for the first time."
+    },
+    {
+      question: "Which is better for my child: Kenpo, Muay Thai, or Wing Chun?",
+      answer: "It depends on your child's interests. Kenpo offers structured karate progression, Muay Thai emphasizes movement and striking drills, and Wing Chun develops balance and timing. Our instructors can help you choose."
+    },
+    {
+      question: "Do you host martial arts birthday parties?",
+      answer: "Yes. Burning Tree MMA offers birthday parties and special events. Contact the studio to discuss available dates and the activities appropriate for your group."
+    },
+    {
+      question: "Do you serve families near Reisterstown, Pikesville, and Randallstown?",
+      answer: "Yes. Our studio is in Owings Mills, MD, and welcomes families from nearby Baltimore County communities. Contact us if you need help planning your first visit."
+    },
+    {
+      question: "How can I register or ask about my first class?",
+      answer: "Visit the $29 New Student Special registration page or call or text us at 410-218-0894. We'll help you choose a suitable beginner class."
     }
   ],
   leadForm: {
