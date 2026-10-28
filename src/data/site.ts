@@ -220,8 +220,8 @@ export const homepagePrograms: ProgramCard[] = [
     eyebrow: "Wing Chun",
     title: "Wing Chun",
     href: "/wing-chun",
-    image: "/images/wing-chun-gallery-1.jpg",
-    imageAlt: "Wing Chun students practicing centerline striking technique at Burning Tree MMA",
+    image: "/images/wing-chun-main-training.webp",
+    imageAlt: "Adult Wing Chun training partners practicing a centerline hand-defense technique at Burning Tree MMA in Owings Mills",
     summary: "The traditional Chinese martial art of Ip Man and Bruce Lee. Close-quarters combat built on precision, not power."
   },
   {
@@ -631,8 +631,8 @@ export const programPages: ProgramPage[] = [
     },
     hero: {
       title: "Wing Chun",
-      image: "/images/wing-chun-hero.jpg",
-      imageAlt: "Wing Chun students practicing centerline striking technique at Burning Tree MMA",
+      image: "/images/wing-chun-main-training.webp",
+      imageAlt: "Wing Chun training partners demonstrating a controlled hand-defense technique at Burning Tree MMA in Owings Mills",
       overlay: "strong"
     },
     audience: "",
@@ -697,9 +697,13 @@ export const programPages: ProgramPage[] = [
           ]
         },
         galleryImages: [
-          { src: "/images/wing-chun-gallery-1.jpg", alt: "Students practicing Wing Chun centerline techniques" },
-          { src: "/images/adult-martial-arts-gallery-3.jpg", alt: "Adult students practicing partner hand techniques" },
-          { src: "/images/burning-tree-adult-striking-drill.webp", alt: "Adult martial arts partners practicing controlled techniques" }
+          { src: "/images/wing-chun-class-0050.webp", alt: "Wing Chun teacher and student working on centerline positioning and a controlled block at Burning Tree" },
+          { src: "/images/wing-chun-class-0051.webp", alt: "Wing Chun class partners practicing simultaneous hand techniques and defensive movements in the studio" },
+          { src: "/images/wing-chun-class-0052.webp", alt: "Wing Chun instructor and adult partner demonstrating an upper-body defensive drill" },
+          { src: "/images/wing-chun-class-0053.webp", alt: "Adults practicing hand positioning and close-range technique in the Burning Tree Wing Chun class" },
+          { src: "/images/wing-chun-class-0056.webp", alt: "Wing Chun students practicing controlled hand contact and redirection drills" },
+          { src: "/images/wing-chun-class-0059.webp", alt: "Wing Chun instructor showing a practical partner-defense technique at Burning Tree" },
+          { src: "/images/wing-chun-class-0048.webp", alt: "Adult Wing Chun training partners practicing centerline control with a guarded stance" }
         ],
         seoCopy: {
           tagline: "The Martial Art Built for People Who Fight Smart, Not Big.",
