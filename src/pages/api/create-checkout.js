@@ -14,7 +14,7 @@ export async function POST({ request, locals }) {
   const env = locals?.runtime?.env ?? {};
   // Public test payments must never mark real customer records Paid without collecting money.
   // Sandbox checkout may only be reopened via an explicit later deployment.
-  if (env.LIVE_CHECKOUT_ENABLED !== "true")
+  if (env.SANDBOX_CHECKOUT_ENABLED !== "true")
     return json({ error: "Online payments are being prepared. Please contact the studio." }, 503);
   if (env.LIVE_CHECKOUT_ENABLED === "true")
     return json({ error: "Sandbox checkout is unavailable while live checkout is active." }, 503);
