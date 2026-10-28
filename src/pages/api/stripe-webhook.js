@@ -63,11 +63,12 @@ export async function POST({ request, locals }) {
       const updated = await fetch(url, {
         method: "PATCH",
         headers: { Authorization: "Bearer " + env.AIRTABLE_API_TOKEN, "Content-Type": "application/json" },
-        body: JSON.stringify({ fields: { "$29 Trial Used": true, "Payment Status": "Paid" }, typecast: false })
+        body: JSON.stringify({ fields: { "$29 Trial Used": true, "Payment Status": "Paid", "Stripe Checkout Session": sessionId, "Payment Amount": 29 }, typecast: false })
       });
       if (!updated.ok) return reply("Airtable update unavailable", 503);
-      await env.TRIAL_DB.prepare("UPDATE trial_registrations SET state = 'paid', stripe_payment_intent_id = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND stripe_session_id = ?")
+      const paidUpdate = await env.TRIAL_DB.prepare("UPDATE trial_registrations SET state = 'paid', stripe_payment_intent_id = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND stripe_session_id = ?")
         .bind(typeof session.payment_intent === "string" ? session.payment_intent : null, row.id, sessionId).run();
+      if (paidUpdate.meta?.changes !== 1) return reply("Payment reconciliation pending", 503);
     }
   }
   await env.TRIAL_DB.prepare("INSERT OR IGNORE INTO stripe_webhook_events (event_id, event_type) VALUES (?, ?)")
