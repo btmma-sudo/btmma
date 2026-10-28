@@ -1,0 +1,67 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { site } from "../../data/site";
+import { adviceArticles } from "../../data/advice";
+import "../../styles/advice.css";
+
+export function getStaticPaths() {
+  return adviceArticles.map((article) => ({ params: { slug: article.slug }, props: { article } }));
+}
+const { article } = Astro.props;
+const permalink = `${site.primaryDomain}/advice/${article.slug}`;
+const dateLabel = new Date(`${article.date}T12:00:00`).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: article.title,
+  description: article.description,
+  datePublished: article.date,
+  dateModified: article.date,
+  mainEntityOfPage: permalink,
+  image: new URL(article.image, site.primaryDomain).toString(),
+  author: { "@type": "Organization", name: "Burning Tree Mixed Martial Arts", url: site.primaryDomain },
+  publisher: { "@type": "Organization", name: site.name, url: site.primaryDomain, logo: { "@type": "ImageObject", url: `${site.primaryDomain}/images/logo.png` } },
+  inLanguage: "en-US"
+};
+---
+<BaseLayout title={article.seoTitle} description={article.description} path={`/advice/${article.slug}`} image={article.image}>
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <header class="advice-header">
+    <div class="shell">
+      <p class="eyebrow"><a href="/advice">Advice &amp; Community</a> / {article.category}</p>
+      <h1>{article.title}</h1>
+      <div class="advice-small">
+        <span>By the Burning Tree MMA team</span>
+        <time datetime={article.date}>{dateLabel}</time>
+        <span>{article.minutes} minute read</span>
+      </div>
+    </div>
+  </header>
+  <article class="advice-article">
+    <figure class="advice-article-photo">
+      <img src={article.image} alt={article.imageAlt} loading="eager" decoding="async" width="1200" height="675" />
+      <figcaption>From the Burning Tree MMA training community in Owings Mills, Maryland.</figcaption>
+    </figure>
+    {article.intro.map((paragraph) => <p>{paragraph}</p>)}
+    {article.sections.map((section) => (
+      <section>
+        <h2>{section.heading}</h2>
+        {section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+        {section.bullets.length > 0 && <ul>{section.bullets.map((bullet) => <li>{bullet}</li>)}</ul>}
+      </section>
+    ))}
+    <div class="advice-next">
+      <p class="eyebrow">Your Next Step</p>
+      <h2>Come See Our Classes in Person</h2>
+      <p>Have a question about your first visit or finding the right class? We're happy to help. Call or text <a href={`tel:${site.phoneHref}`}>{site.phone}</a>.</p>
+      <a class="button" href={article.relatedHref}>{article.relatedLabel}</a>
+    </div>
+    <div class="advice-bottom-cta">
+      <p>New students can also try two beginner classes with a free uniform for $29.</p>
+      <a class="button" href="/29-trial">See the $29 New Student Special</a>
+    </div>
+    <nav class="advice-more" aria-label="More advice">
+      <a href="/advice">← Back to All Advice &amp; Community Articles</a>
+    </nav>
+  </article>
+</BaseLayout>

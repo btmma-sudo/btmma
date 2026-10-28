@@ -1,0 +1,46 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { adviceArticles } from "../../data/advice";
+import "../../styles/advice.css";
+---
+<BaseLayout
+  title="Martial Arts Advice & Community | Burning Tree MMA"
+  description="Real advice from the Burning Tree MMA community in Owings Mills: choosing martial arts for kids, comparing Kenpo and Muay Thai, and preparing for a first class."
+  path="/advice"
+  image="/images/Gallery/gallery11.jpeg">
+  <section class="advice-header">
+    <div class="shell">
+      <p class="eyebrow">One Tree. One Family.</p>
+      <h1>Martial Arts Advice &amp; Community</h1>
+      <p>Helpful answers for parents, first-time students, and neighbors around Owings Mills. Learn what happens in class, compare training styles, and get to know the community behind Burning Tree.</p>
+    </div>
+  </section>
+  <section class="shell section-divider" aria-labelledby="advice-guides-title">
+    <div class="advice-heading">
+      <p class="eyebrow">From Our Training Floor</p>
+      <h2 id="advice-guides-title">Guides for Real People and Real Beginners</h2>
+      <p>Our instructors believe progress begins with showing up. These articles share practical guidance—not promises or quick fixes—based on the styles and beginner classes we teach.</p>
+    </div>
+    <div class="advice-grid">
+      {adviceArticles.map((article) => (
+        <article class="advice-card">
+          <a href={`/advice/${article.slug}`} aria-label={`Read ${article.title}`}>
+            <img src={article.image} alt={article.imageAlt} loading="lazy" decoding="async" width="640" height="400" />
+          </a>
+          <div class="advice-card-body">
+            <p class="eyebrow">{article.category}</p>
+            <h3><a href={`/advice/${article.slug}`}>{article.title}</a></h3>
+            <p>{article.excerpt}</p>
+            <a class="advice-card-link" href={`/advice/${article.slug}`}>Read the Guide</a>
+          </div>
+        </article>
+      ))}
+    </div>
+    <div class="advice-hub-cta">
+      <p class="eyebrow">Ready to Try It Yourself?</p>
+      <h2>Meet Us on the Mats</h2>
+      <p>Visit Burning Tree Mixed Martial Arts in Owings Mills, Maryland. Our $29 new student special includes two beginner classes and a free uniform for new students.</p>
+      <a class="button" href="/29-trial">Claim the $29 New Student Special</a>
+    </div>
+  </section>
+</BaseLayout>

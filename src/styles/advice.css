@@ -1,0 +1,38 @@
+
+/* Advice & Community – page and homepage preview */
+.advice-heading { max-width: 760px; margin-bottom: 2rem; }
+.advice-heading p:not(.eyebrow) { color: var(--muted); font-size: 1.05rem; }
+.advice-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 1.3rem; }
+.advice-card { min-width: 0; overflow: hidden; border: 1px solid var(--line); background: var(--surface-strong); display: flex; flex-direction: column; }
+.advice-card > a { display: block; }
+.advice-card img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
+.advice-card-body { padding: 1.3rem; display: flex; flex: 1; flex-direction: column; }
+.advice-card .eyebrow { margin-bottom: .5rem; color: #ff8b6c; }
+.advice-card h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); line-height: 1.2; margin-bottom: .85rem; }
+.advice-card-body > p:not(.eyebrow) { color: #dedede; font-size: .95rem; margin: 0 0 1.2rem; flex: 1; }
+.advice-card-link { color: #fff; font-weight: 700; text-decoration: underline; text-underline-offset: .22em; }
+.advice-header { padding: 3.25rem 0 2rem; border-bottom: 1px solid var(--line); background: linear-gradient(125deg, #220808, #131313 55%); }
+.advice-header h1 { max-width: 930px; line-height: 1.08; margin-bottom: 1.1rem; }
+.advice-header p:not(.eyebrow) { max-width: 780px; color: #eee; font-size: 1.1rem; }
+.advice-small { display: flex; flex-wrap: wrap; gap: .5rem 1rem; color: var(--muted); font-size: .84rem; }
+.advice-article { max-width: 860px; margin: 0 auto; padding: 2.5rem 1rem 4rem; }
+.advice-article-photo { margin: 0 0 2rem; }
+.advice-article-photo img { width: 100%; max-height: 490px; object-fit: cover; aspect-ratio: 16 / 9; }
+.advice-article-photo figcaption { margin-top: .45rem; color: var(--muted); font-size: .79rem; }
+.advice-article p { color: #ededed; line-height: 1.85; font-size: 1.02rem; }
+.advice-article section { padding: 1.45rem 0 .4rem; }
+.advice-article section h2 { font-size: clamp(1.45rem, 3vw, 2rem); margin-bottom: .9rem; }
+.advice-article ul { padding-left: 1.5rem; margin: .7rem 0 1rem; }
+.advice-article li { line-height: 1.7; margin-bottom: .5rem; }
+.advice-next { margin-top: 2.5rem; padding: 1.5rem; background: #251717; border-left: 4px solid var(--accent); }
+.advice-next h2 { font-size: 1.65rem; }
+.advice-next p { margin: .75rem 0 1.2rem; }
+.advice-bottom-cta { margin-top: 2rem; }
+.advice-bottom-cta .button { margin-top: .7rem; }
+.advice-more { border-top: 1px solid var(--line); margin-top: 2rem; padding-top: 2rem; }
+.advice-more a { text-decoration: underline; text-underline-offset: .2em; }
+.advice-hub-cta { margin-top: 2rem; padding: 1.75rem; background: #221515; border: 1px solid #583030; }
+.advice-hub-cta p { max-width: 650px; }
+.advice-all-link { margin-top: 1.5rem; display: inline-block; font-weight: 700; text-decoration: underline; text-underline-offset: .22em; }
+@media(max-width: 850px) { .advice-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media(max-width: 570px) { .advice-grid { grid-template-columns: 1fr; } .advice-header { padding: 2.25rem 0 1.5rem; } .advice-header h1 { font-size: clamp(2rem, 8vw, 3rem); } .advice-article { padding-top: 1.5rem; } .advice-next .button, .advice-hub-cta .button { width: 100%; } }

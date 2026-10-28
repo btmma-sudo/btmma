@@ -5,6 +5,8 @@ import ClassSchedule from "../components/ClassSchedule.astro";
 import LeadForm from "../components/LeadForm.astro";
 import GalleryCarousel from "../components/GalleryCarousel.astro";
 import { homePage, homepagePrograms } from "../data/site";
+import { adviceArticles } from "../data/advice";
+import "../styles/advice.css";
 ---
 
 <BaseLayout
@@ -96,6 +98,31 @@ import { homePage, homepagePrograms } from "../data/site";
       <p><strong>For women interested in self-defense:</strong> Ask about our Sunday <a href="/womens-defense">Women's Self-Defense / Sanuces classes</a> with practical technique instruction.</p>
       <p>Not sure where to begin? Call or text us at <a href="tel:4102180894">410-218-0894</a>, or <a href="/29-trial">claim our $29 new student special</a> with two beginner classes and a free uniform.</p>
     </article>
+  </section>
+
+
+  <section class="shell section-divider" aria-labelledby="home-advice-title">
+    <div class="advice-heading">
+      <p class="eyebrow">Advice &amp; Community</p>
+      <h2 id="home-advice-title">Questions Before Your First Class?</h2>
+      <p>Explore advice from our training floor about building confidence, choosing a martial art, and feeling prepared for your first day at Burning Tree.</p>
+    </div>
+    <div class="advice-grid">
+      {adviceArticles.map((article) => (
+        <article class="advice-card">
+          <a href={`/advice/${article.slug}`} aria-label={`Read ${article.title}`}>
+            <img src={article.image} alt={article.imageAlt} loading="lazy" decoding="async" width="640" height="400" />
+          </a>
+          <div class="advice-card-body">
+            <p class="eyebrow">{article.category}</p>
+            <h3><a href={`/advice/${article.slug}`}>{article.title}</a></h3>
+            <p>{article.excerpt}</p>
+            <a class="advice-card-link" href={`/advice/${article.slug}`}>Read the Guide</a>
+          </div>
+        </article>
+      ))}
+    </div>
+    <a class="advice-all-link" href="/advice">Explore Martial Arts Advice &amp; Community</a>
   </section>
 
   <ClassSchedule ctaHref="/29-trial" ctaLabel="Claim the $29 Special" />
