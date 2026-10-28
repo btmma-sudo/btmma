@@ -258,9 +258,9 @@ export const homePage: {
   leadForm: LeadFormConfig;
 } = {
   seo: {
-    title: "Martial Arts Classes in Owings Mills | Burning Tree MMA",
+    title: "Martial Arts in Owings Mills, MD | Burning Tree MMA",
     description:
-      "Burning Tree MMA offers Jr. Kenpo, Adult Karate, Muay Thai, Wing Chun, birthday parties, and wellness services in Owings Mills.",
+      "Kids, teens and adults: train Kenpo Karate, Muay Thai, Wing Chun and self-defense in Owings Mills. Start with 2 beginner classes and a free uniform for $29.",
     keywords: [
       ...categoryKeywords,
       "MMA Owings Mills",
@@ -291,9 +291,9 @@ export const aboutPage: SupportingPage & {
 } = {
   slug: "about",
   seo: {
-    title: "About Burning Tree MMA | Owings Mills Martial Arts School",
+    title: "Meet Our Instructors | Burning Tree MMA Owings Mills",
     description:
-      "Learn about Burning Tree MMA, our school philosophy, instructor team, and the martial arts culture we are building in Owings Mills.",
+      "Meet the instructors at Burning Tree MMA in Owings Mills, MD. Discover our approach to kids karate, adult martial arts, confidence and community.",
     keywords: [
       ...categoryKeywords,
       "Burning Tree MMA",
@@ -320,9 +320,9 @@ export const faqPage: SupportingPage & {
 } = {
   slug: "faq",
   seo: {
-    title: "FAQ | Burning Tree MMA Owings Mills",
+    title: "Martial Arts Class FAQ in Owings Mills | Burning Tree MMA",
     description:
-      "Find answers about classes, schedules, gear, contact information, and getting started at Burning Tree MMA in Owings Mills.",
+      "New to martial arts in Owings Mills? Find answers about kids karate, adult classes, schedules, what to wear and our $29 new student special.",
     keywords: [
       ...categoryKeywords,
       "martial arts FAQ",
@@ -372,9 +372,9 @@ export const programPages: ProgramPage[] = [
   {
     slug: "muay-thai",
     seo: {
-      title: "Muay Thai in Owings Mills | Burning Tree MMA",
-      description:
-        "Muay Thai classes in Owings Mills with pad drills, clinch technique, combinations, conditioning, and real striking coaching.",
+      title: "Muay Thai Classes in Owings Mills, MD | Burning Tree",
+    description:
+      "Beginner-friendly Muay Thai for kids, teens and adults in Owings Mills. Learn strikes, footwork and pad work. Try 2 classes and a free uniform for $29.",
       keywords: [
         ...categoryKeywords,
         "Muay Thai Owings Mills",
@@ -477,9 +477,9 @@ export const programPages: ProgramPage[] = [
   {
     slug: "kenpo-karate",
     seo: {
-      title: "Kenpo Karate in Owings Mills | Burning Tree MMA",
-      description:
-        "Kenpo Karate classes for kids and adults in Owings Mills. Jr. Kenpo builds confidence and discipline in children while Adult Kenpo delivers real self-defense, fitness, and belt progression.",
+      title: "Kenpo Karate Classes in Owings Mills, MD | Burning Tree",
+    description:
+      "Explore American Kenpo Karate in Owings Mills for kids, teens and adults. Build confidence, discipline and self-defense skills. New students start for $29.",
       keywords: [
         ...categoryKeywords,
         "Kenpo Karate Owings Mills",
@@ -584,9 +584,9 @@ export const programPages: ProgramPage[] = [
   {
     slug: "wing-chun",
     seo: {
-      title: "Wing Chun in Owings Mills | Burning Tree MMA",
-      description:
-        "Wing Chun classes in Owings Mills. Learn the traditional martial art of Ip Man and Bruce Lee. Close-quarters combat, self-defense, and precision-based striking every Wednesday.",
+      title: "Wing Chun Classes in Owings Mills, MD | Burning Tree",
+    description:
+      "Discover Wing Chun in Owings Mills for kids, teens and adults. Practice balance, timing and close-range technique on Wednesdays. Start with our $29 special.",
       keywords: [
         ...categoryKeywords,
         "Wing Chun Owings Mills",
@@ -690,9 +690,9 @@ export const programPages: ProgramPage[] = [
   {
     slug: "womens-defense",
     seo: {
-      title: "Women's Self-Defense in Owings Mills | Burning Tree MMA",
-      description:
-        "Women's self-defense classes in Owings Mills using Sanuces Ryu Jiu-Jitsu. Learn practical techniques for real-world situations including bear hugs, chokes, hair pulling, and ground defense.",
+      title: "Women's Self-Defense in Owings Mills, MD | Burning Tree",
+    description:
+      "Practical women's self-defense and Sanuces Ryu Jujitsu training in Owings Mills, MD. Explore beginner-friendly Sunday classes and contact our instructors.",
       keywords: [
         ...categoryKeywords,
         "women's self-defense Owings Mills",
@@ -753,9 +753,9 @@ export const programPages: ProgramPage[] = [
   {
     slug: "birthday-parties",
     seo: {
-      title: "Birthday Parties in Owings Mills | Burning Tree MMA",
-      description:
-        "Plan an active martial arts birthday party in Owings Mills with Burning Tree MMA for memorable events and guided activities.",
+      title: "Martial Arts Birthday Parties in Owings Mills, MD",
+    description:
+      "Plan a fun, active martial arts birthday party at Burning Tree MMA in Owings Mills. Explore guided activities and contact us about dates and party options.",
       keywords: [
         "martial arts birthday parties",
         "kids party Owings Mills",
@@ -803,9 +803,9 @@ export const programPages: ProgramPage[] = [
   {
     slug: "chimpman-gi",
     seo: {
-      title: "ChimpmanGi Drop Sign Up | Burning Tree MMA",
-      description:
-        "Join the Burning Tree MMA ChimpmanGi drop list to hear when the next custom gi release becomes available.",
+      title: "ChimpmanGi Martial Arts Uniform Drop | Burning Tree MMA",
+    description:
+      "Get news about the next ChimpmanGi custom martial arts uniform release from Burning Tree MMA. Join the drop list for release announcements.",
       keywords: [
         "ChimpmanGi",
         "custom gi drop",
@@ -852,8 +852,8 @@ export const programPages: ProgramPage[] = [
     slug: "health-and-wellness",
     seo: {
       title: "Health and Wellness in Owings Mills | Burning Tree MMA",
-      description:
-        "Explore health and wellness services from Burning Tree MMA in Owings Mills with a focus on recovery, coaching, and sustainable progress.",
+    description:
+      "Explore health and wellness support at Burning Tree MMA in Owings Mills, MD. Learn about available wellness services and how to connect with our team.",
       keywords: [
         "health and wellness Owings Mills",
         "wellness coaching",
