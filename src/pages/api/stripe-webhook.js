@@ -65,7 +65,18 @@ export async function POST({ request, locals }) {
         headers: { Authorization: "Bearer " + env.AIRTABLE_API_TOKEN, "Content-Type": "application/json" },
         body: JSON.stringify({ fields: { "$29 Trial Used": true, "Payment Status": "Paid", "Stripe Checkout Session": sessionId, "Payment Amount": 29 }, typecast: false })
       });
-      if (!updated.ok) return reply("Airtable update unavailable", 503);
+      if (!updated.ok) {
+        let airtableError = {};
+        try { airtableError = await updated.json(); } catch {}
+        const type = airtableError?.error?.type;
+        const detail = airtableError?.error?.message;
+        console.error("Airtable payment update rejected", {
+          status: updated.status,
+          type: typeof type === "string" ? type.slice(0, 100) : "unknown",
+          detail: typeof detail === "string" ? detail.slice(0, 300) : "unavailable"
+        });
+        return reply("Airtable update unavailable", 503);
+      }
       const paidUpdate = await env.TRIAL_DB.prepare("UPDATE trial_registrations SET state = 'paid', stripe_payment_intent_id = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND stripe_session_id = ?")
         .bind(typeof session.payment_intent === "string" ? session.payment_intent : null, row.id, sessionId).run();
       if (paidUpdate.meta?.changes !== 1) return reply("Payment reconciliation pending", 503);
