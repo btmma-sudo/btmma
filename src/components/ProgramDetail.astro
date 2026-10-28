@@ -76,7 +76,7 @@ const carouselImages = [
   </section>
 )}
 
-{showSchedule && <ClassSchedule ctaHref="#lead-form" />}
+{showSchedule && <ClassSchedule ctaHref={program.leadForm.offerLink ?? "#lead-form"} />}
 
 <section class="shell section-divider">
   <div class="stack">
