@@ -314,6 +314,34 @@ const breadcrumbSchema = {
       </div>
     </section>
 
+    <section class="ta-gallery" aria-labelledby="ta-gallery-heading">
+      <div class="shell">
+        <p class="ta-eyebrow">REAL MOMENTS AT BURNING TREE</p>
+        <h2 id="ta-gallery-heading">Real people. Real training. Real progress.</h2>
+        <p class="ta-intro">There's more to martial arts than learning a technique. It's the practice, the encouragement, and the moments when students see how far they've come. Here's a look inside the Burning Tree family.</p>
+        <div class="ta-gallery-grid">
+          <figure class="ta-gallery-feature">
+            <img src="/images/burning-tree-adult-striking-drill.webp" alt="Adults at Burning Tree Mixed Martial Arts practicing a controlled punch and defensive technique with training partners in Owings Mills" width="900" height="1200" loading="lazy" decoding="async" />
+            <figcaption><strong>Learn by doing.</strong><span>Adult martial arts students working on a partner technique in class.</span></figcaption>
+          </figure>
+          <div class="ta-gallery-more">
+            <figure class="ta-gallery-team">
+              <img src="/images/burning-tree-kenpo-team.webp" alt="Burning Tree MMA martial arts instructors and students of different ages posing together in black uniforms after a belt achievement" width="1200" height="873" loading="lazy" decoding="async" />
+              <figcaption><strong>One Tree. One Family.</strong><span>Our martial arts community grows together.</span></figcaption>
+            </figure>
+            <figure>
+              <img src="/images/burning-tree-belt-achievements.webp" alt="Martial arts instructor and younger students smiling while holding their Burning Tree belt rank achievement certificates" width="1200" height="900" loading="lazy" decoding="async" />
+              <figcaption><strong>Every milestone matters.</strong><span>Recognizing the effort behind each step forward.</span></figcaption>
+            </figure>
+            <figure>
+              <img src="/images/burning-tree-teen-kenpo-training.webp" alt="Teen martial arts student in a black uniform with a yellow belt kneeling on the training mats during a Kenpo session" width="900" height="1170" loading="lazy" decoding="async" />
+              <figcaption><strong>Practice builds confidence.</strong><span>Showing up and putting in the work.</span></figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="ta-local" aria-labelledby="ta-local-heading">
       <div class="shell ta-local-grid">
         <div>
@@ -435,6 +463,23 @@ const breadcrumbSchema = {
   .ta-schedule-note { margin:0 0 1.25rem; font-size:.9rem; color:#555; }
   .ta-community-grid { display:grid; grid-template-columns:1fr 1fr; gap:clamp(1.5rem,4vw,4rem); align-items:center; }
   .ta-community-grid img { display:block; width:100%; height:350px; object-fit:cover; border-radius:9px; }
+  .ta-gallery { background:#141414; color:#fff; padding:4.2rem 0; }
+  .ta-gallery .ta-eyebrow { color:#ff9696; }
+  .ta-gallery h2 { color:#fff; }
+  .ta-gallery .ta-intro { color:#e6e6e6; }
+  .ta-gallery-grid { display:grid; grid-template-columns:minmax(0,.85fr) minmax(0,1.4fr); gap:1rem; align-items:stretch; }
+  .ta-gallery figure { min-width:0; margin:0; border:1px solid #3e3e3e; border-radius:8px; overflow:hidden; background:#222; }
+  .ta-gallery figure img { display:block; width:100%; object-fit:cover; }
+  .ta-gallery-feature { display:flex; flex-direction:column; }
+  .ta-gallery-feature img { height:510px; flex:1; object-position:center 25%; }
+  .ta-gallery figcaption { display:grid; gap:.3rem; padding:.95rem 1.1rem 1.1rem; }
+  .ta-gallery figcaption strong { color:#fff; font-size:1.02rem; }
+  .ta-gallery figcaption span { color:#dfdfdf; font-size:.87rem; line-height:1.48; }
+  .ta-gallery-more { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1rem; }
+  .ta-gallery-more .ta-gallery-team { grid-column:1/-1; }
+  .ta-gallery-team img { height:245px; object-position:center 35%; }
+  .ta-gallery-more figure:not(.ta-gallery-team) img { height:205px; }
+  .ta-gallery-more figure:last-child img { object-position:center 33%; }
   .ta-local { border-top:1px solid #ebebeb; padding:4.1rem 0; }
   .ta-local-grid { display:grid; grid-template-columns:1.3fr .8fr; gap:2rem; }
   .ta-local-grid address { display:grid; gap:.25rem; font-style:normal; margin:1.3rem 0; }
@@ -487,11 +532,20 @@ const breadcrumbSchema = {
     .ta-program-grid { grid-template-columns:1fr; }
     .ta-program-card > img { max-height:300px; }
     .ta-schedule-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .ta-gallery { padding:3.1rem 0; }
+    .ta-gallery-grid { grid-template-columns:1fr; }
+    .ta-gallery-feature img { height:360px; flex:initial; }
+    .ta-gallery-team img { height:220px; }
+    .ta-gallery-more figure:not(.ta-gallery-team) img { height:190px; }
     .ta-community-grid img { height:300px; }
     .ta-button { width:100%; }
   }
   @media(max-width:440px) {
     .ta-benefit-grid,.ta-schedule-grid { grid-template-columns:1fr; }
+    .ta-gallery-more { grid-template-columns:1fr; }
+    .ta-gallery-more .ta-gallery-team { grid-column:auto; }
+    .ta-gallery-more figure:not(.ta-gallery-team) img { height:260px; }
+    .ta-gallery-team img { height:230px; }
     .ta-hero-photo img { height:270px; }
     .ta-photo-stamp strong { font-size:1rem; }.ta-photo-stamp span { font-size:.84rem; }
   }
