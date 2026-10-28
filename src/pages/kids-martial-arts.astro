@@ -1,0 +1,369 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { weeklySchedule, formatClassTime } from "../data/schedule";
+import { site } from "../data/site";
+
+const kidsSchedule = weeklySchedule
+  .map((day) => ({
+    day: day.day,
+    slots: day.slots.filter((slot) => slot.cls.startsWith("Jr."))
+  }))
+  .filter((day) => day.slots.length > 0);
+
+const faqs = [
+  {
+    question: "What age can my child start martial arts?",
+    answer: "Our Jr. Kenpo program welcomes ages 5–12. Contact us about the best fit for your child in Jr. Muay Thai or Jr. Wing Chun."
+  },
+  {
+    question: "Does my child need any experience?",
+    answer: "Not at all. Beginners are welcome. We introduce the fundamentals step by step and help each child learn at a comfortable pace."
+  },
+  {
+    question: "Is martial arts training safe for kids?",
+    answer: "Our junior classes use age-appropriate instruction, supervised drills, and an emphasis on control, respect, and safe training habits. Ask us about the activities in a specific class."
+  },
+  {
+    question: "What should my child wear to the first class?",
+    answer: "Comfortable workout clothes and a water bottle are a great start. Our $29 new student special includes two beginner classes and a free uniform."
+  },
+  {
+    question: "Will these classes help my child with confidence and focus?",
+    answer: "Confidence, focus, respect, and self-control are skills we practice on the mats. Every child grows differently, and our goal is to encourage steady progress and celebrate the effort along the way."
+  },
+  {
+    question: "Where is Burning Tree Mixed Martial Arts?",
+    answer: "We are at 10210 S Dolfield Rd, Owings Mills, MD 21117, serving families in Owings Mills and surrounding Baltimore County communities."
+  }
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((faq) => ({
+    "@type": "Question",
+    name: faq.question,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: faq.answer
+    }
+  }))
+};
+
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "Kids Martial Arts Classes in Owings Mills",
+  serviceType: "Children's martial arts instruction",
+  areaServed: { "@type": "Place", name: "Owings Mills, Maryland" },
+  provider: {
+    "@type": "SportsActivityLocation",
+    name: site.name,
+    url: site.primaryDomain,
+    telephone: site.phone,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: site.addressLine1,
+      addressLocality: site.city,
+      addressRegion: site.region,
+      postalCode: site.postalCode,
+      addressCountry: "US"
+    }
+  },
+  offers: {
+    "@type": "Offer",
+    name: "New Student Special: Two Beginner Classes and a Free Uniform",
+    price: "29",
+    priceCurrency: "USD",
+    url: new URL("/29-trial", site.primaryDomain).toString(),
+    eligibleCustomerType: "New students"
+  }
+};
+---
+
+<BaseLayout
+  title="Kids Martial Arts in Owings Mills, MD | Burning Tree MMA"
+  description="Kids karate, Muay Thai and Wing Chun classes in Owings Mills, MD. Help your child practice confidence, focus and respect. Start with 2 classes + a free uniform for $29."
+  keywords={["kids martial arts Owings Mills", "kids karate Owings Mills MD", "karate for kids near me", "children's martial arts Baltimore County", "kids self defense classes", "junior Muay Thai", "kids Wing Chun"]}
+  path="/kids-martial-arts"
+  image="/images/jr-kenpo-gallery-1.jpg">
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
+
+  <div class="kids-page">
+    <section class="kids-hero" aria-labelledby="kids-heading">
+      <div class="shell kids-hero-grid">
+        <div class="kids-hero-copy">
+          <nav class="kids-breadcrumb" aria-label="Breadcrumb">
+            <a href="/">Home</a><span aria-hidden="true"> / </span><span>Kids Martial Arts</span>
+          </nav>
+          <p class="kids-eyebrow">KIDS MARTIAL ARTS • OWINGS MILLS, MD</p>
+          <h1 id="kids-heading">Your child is capable of <em>more.</em></h1>
+          <p class="kids-subhead">Kids karate and martial arts classes that build confidence, focus, discipline, and respect—one class at a time.</p>
+          <p class="kids-lead">Some kids are shy. Some have energy to spare. Some just need a place where they can feel proud of themselves. At Burning Tree, we meet them where they are and help them keep growing.</p>
+          <div class="kids-actions">
+            <a class="kids-button" href="/29-trial">Claim the $29 New Student Special</a>
+            <a class="kids-secondary" href="#kids-programs">Explore Kids Classes</a>
+          </div>
+          <p class="kids-offer-note"><strong>2 beginner classes + FREE uniform for $29</strong> • New students only</p>
+        </div>
+        <div class="kids-hero-media">
+          <img
+            src="/images/jr-kenpo-gallery-1.jpg"
+            width="960"
+            height="720"
+            fetchpriority="high"
+            alt="Two smiling Burning Tree junior karate students in black uniforms with yellow belts posing with their instructor at a tournament" />
+          <div class="kids-media-stamp"><strong>ONE TREE.</strong><span>ONE FAMILY.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="kids-benefits" aria-labelledby="kids-benefits-heading">
+      <div class="shell">
+        <p class="kids-eyebrow">MORE THAN LEARNING TO KICK</p>
+        <h2 id="kids-benefits-heading">The skills you want your child to carry beyond the mats.</h2>
+        <div class="kids-benefit-grid">
+          <article><span class="kids-number">01</span><h3>Real Confidence</h3><p>Small achievements add up. We give students goals to work toward and reasons to believe in their progress.</p></article>
+          <article><span class="kids-number">02</span><h3>Focus & Self-Control</h3><p>Listening, following directions, and controlling movement become part of every class—not just something we talk about.</p></article>
+          <article><span class="kids-number">03</span><h3>Discipline & Respect</h3><p>Kids practice being responsible training partners, showing respect, and putting effort into hard things.</p></article>
+          <article><span class="kids-number">04</span><h3>Self-Defense Awareness</h3><p>We teach age-appropriate techniques alongside awareness, boundaries, and the importance of avoiding conflict.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="kids-programs shell" id="kids-programs" aria-labelledby="kids-programs-heading">
+      <p class="kids-eyebrow">FIND THEIR STARTING POINT</p>
+      <h2 id="kids-programs-heading">Three ways for your child to grow.</h2>
+      <p class="kids-section-intro">Not sure which class is right? We'll help you find a good fit. All three programs welcome children who are new to martial arts.</p>
+      <div class="kids-program-grid">
+        <article class="kids-program-card">
+          <img src="/images/jr-kenpo-gallery-2.jpg" alt="Junior Kenpo students practicing a striking technique together during class" loading="lazy" decoding="async" width="600" height="440" />
+          <div class="kids-program-content">
+            <span class="kids-program-tag">AGES 5–12 • MONDAYS</span>
+            <h3>Kids Kenpo Karate</h3>
+            <p>Build fundamentals, coordination, self-control, and belt progression through structured karate training.</p>
+            <a href="/kenpo-karate">Explore Jr. Kenpo <span aria-hidden="true">→</span></a>
+          </div>
+        </article>
+        <article class="kids-program-card">
+          <img src="/images/jr-muay-thai-gallery-1.jpg" alt="Young martial arts students training at Burning Tree Mixed Martial Arts" loading="lazy" decoding="async" width="600" height="440" />
+          <div class="kids-program-content">
+            <span class="kids-program-tag">TUESDAYS & THURSDAYS</span>
+            <h3>Kids Muay Thai</h3>
+            <p>Practice beginner-friendly punches, kicks, pad work, coordination, and controlled movement.</p>
+            <a href="/muay-thai">Explore Jr. Muay Thai <span aria-hidden="true">→</span></a>
+          </div>
+        </article>
+        <article class="kids-program-card">
+          <img src="/images/jr-wing-chun-gallery-2.jpg" alt="Young martial artists practicing techniques together in a supervised class" loading="lazy" decoding="async" width="600" height="440" />
+          <div class="kids-program-content">
+            <span class="kids-program-tag">WEDNESDAYS</span>
+            <h3>Kids Wing Chun</h3>
+            <p>Learn balance, awareness, precision, and thoughtful defense in a structured setting.</p>
+            <a href="/wing-chun">Explore Jr. Wing Chun <span aria-hidden="true">→</span></a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="kids-first-class" aria-labelledby="first-class-heading">
+      <div class="shell kids-first-grid">
+        <div>
+          <p class="kids-eyebrow">NEW HERE? YOU'RE IN THE RIGHT PLACE.</p>
+          <h2 id="first-class-heading">Their first class should feel exciting—not intimidating.</h2>
+          <p>We've all been beginners. Your child doesn't need to know how to punch, kick, or tie a belt before walking through our doors. They just need the chance to try.</p>
+          <a class="kids-button" href="/29-trial">Get Started for $29</a>
+        </div>
+        <ol class="kids-steps">
+          <li><span>1</span><div><strong>Choose your starting class.</strong><p>Tell us about your child, and we'll help find the right beginner session.</p></div></li>
+          <li><span>2</span><div><strong>Come meet the Burning Tree family.</strong><p>We'll introduce the space, explain what to expect, and guide your child through training.</p></div></li>
+          <li><span>3</span><div><strong>Celebrate the first win.</strong><p>From trying something new to learning a technique, progress starts with showing up.</p></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="kids-proof shell" aria-labelledby="kids-proof-heading">
+      <div class="kids-proof-media">
+        <img src="/images/jr-kenpo-gallery-3.jpg" alt="Young Burning Tree Kenpo student proudly holding competition medals while wearing a black karate uniform" width="660" height="660" loading="lazy" decoding="async" />
+      </div>
+      <div class="kids-proof-copy">
+        <p class="kids-eyebrow">WHAT FAMILIES ARE SAYING</p>
+        <h2 id="kids-proof-heading">We love seeing kids find their confidence.</h2>
+        <blockquote>
+          <p>“My grandson has learned discipline, confidence and martial arts techniques. I am so glad my husband made the decision to enroll him, it was the best choice.”</p>
+          <footer>— Kelly W.</footer>
+        </blockquote>
+        <p>We're proud to be a local martial arts school where families know they belong.</p>
+        <a href="/about" class="kids-text-link">Meet our instructors <span aria-hidden="true">→</span></a>
+      </div>
+    </section>
+
+    <section class="kids-schedule" aria-labelledby="kids-schedule-heading">
+      <div class="shell">
+        <p class="kids-eyebrow">FIND A TIME THAT WORKS</p>
+        <h2 id="kids-schedule-heading">Our junior class schedule</h2>
+        <p class="kids-section-intro">Current junior classes, pulled from our shared weekly schedule so the times stay in sync across the site.</p>
+        <div class="kids-schedule-grid">
+          {kidsSchedule.map((day) => (
+            <article class="kids-schedule-day">
+              <h3>{day.day}</h3>
+              <ul>
+                {day.slots.map((slot) => (
+                  <li><span>{slot.cls}</span><strong>{formatClassTime(slot.start, slot.end)}</strong></li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+        <p class="kids-schedule-note">Class placement and availability can vary. Ask us about the right fit for your child.</p>
+        <a class="kids-button" href="/29-trial">Try 2 Beginner Classes for $29</a>
+      </div>
+    </section>
+
+    <section class="kids-faq shell" aria-labelledby="kids-faq-heading">
+      <p class="kids-eyebrow">QUESTIONS PARENTS ASK</p>
+      <h2 id="kids-faq-heading">Everything you need to know before the first class.</h2>
+      <div class="kids-faq-list">
+        {faqs.map((faq) => (
+          <details>
+            <summary>{faq.question}<span aria-hidden="true">+</span></summary>
+            <p>{faq.answer}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <section class="kids-final-cta" aria-labelledby="kids-final-heading">
+      <div class="shell">
+        <p class="kids-eyebrow">LET'S GET YOUR CHILD STARTED</p>
+        <h2 id="kids-final-heading">You don't have to wait for your child to feel confident to give them a chance to grow.</h2>
+        <p>We would love to welcome your family to Burning Tree Mixed Martial Arts in Owings Mills.</p>
+        <a class="kids-button kids-button-light" href="/29-trial">Claim 2 Classes + a FREE Uniform for $29</a>
+        <p class="kids-final-small">New students only. Questions? <a href={"tel:" + site.phoneHref}>Call {site.phone}</a>.</p>
+        <p class="kids-tagline">One Tree. One Family. <span aria-hidden="true">🔥</span></p>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .kids-page { background: #fff; color: #1d1d1d; }
+  .kids-page :where(h1,h2,h3) { -webkit-text-stroke: 0; text-transform: none; line-height: 1.12; }
+  .kids-page :where(h2,h3) { color: #171717; }
+  .kids-page p { line-height: 1.7; }
+  .kids-page a:focus-visible, .kids-page summary:focus-visible { outline: 3px solid #d62121; outline-offset: 4px; }
+  .kids-page .kids-eyebrow { color: #b20d16; font-weight: 800; letter-spacing: .115em; font-size: .78rem; text-transform: uppercase; margin: 0 0 .9rem; }
+  .kids-hero { background: #121212; color: #fff; overflow: hidden; padding: 3.5rem 0 4rem; }
+  .kids-hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; gap: clamp(1.5rem,4vw,4rem); }
+  .kids-hero-copy { max-width: 650px; }
+  .kids-breadcrumb { font-size: .8rem; color: #d0d0d0; margin-bottom: 2rem; }
+  .kids-breadcrumb a { text-decoration: underline; text-underline-offset: 3px; }
+  .kids-breadcrumb span { margin-left: .3rem; }
+  .kids-hero h1 { color: #fff; font-size: clamp(2.45rem,5vw,4.8rem); margin: 0 0 1.15rem; letter-spacing: -.03em; }
+  .kids-hero h1 em { color: #ff5757; font-style: normal; }
+  .kids-subhead { font-size: clamp(1.1rem,1.7vw,1.38rem); font-weight: 700; color: #fff; margin: 0 0 1rem; }
+  .kids-lead { color: #e1e1e1; margin: 0 0 1.6rem; }
+  .kids-actions { display: flex; gap: .9rem; flex-wrap: wrap; align-items: center; }
+  .kids-button { display: inline-flex; align-items: center; justify-content: center; border: 2px solid #b20d16; border-radius: 7px; min-height: 3.5rem; padding: .78rem 1.25rem; color: #fff; background: #b20d16; font-weight: 800; text-align: center; line-height: 1.3; transition: background .2s, transform .2s; }
+  .kids-button:hover { background: #8f0711; transform: translateY(-1px); }
+  .kids-secondary { color: #fff; border-bottom: 2px solid #e04b4b; padding: .4rem 0; font-weight: 700; }
+  .kids-offer-note { font-size: .85rem; color: #e5e5e5; margin: 1.1rem 0 0; }
+  .kids-hero-media { position: relative; padding: 0 0 1.25rem; }
+  .kids-hero-media img { width: 100%; height: clamp(340px,40vw,535px); object-fit: cover; border-radius: 9px; border: 5px solid #fff; }
+  .kids-media-stamp { position: absolute; bottom: 0; left: -1rem; padding: .9rem 1.3rem; background: #b20d16; color: #fff; display: flex; flex-direction: column; font-family: "Black Ops One",cursive; line-height: 1.25; transform: rotate(-3deg); }
+  .kids-media-stamp strong { font-size: 1.35rem; }.kids-media-stamp span { font-size: 1.12rem; }
+  .kids-benefits { background: #f5f5f5; padding: 4rem 0; }
+  .kids-page h2 { font-size: clamp(1.85rem,3.2vw,2.9rem); max-width: 800px; margin: 0 0 1.5rem; }
+  .kids-benefit-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 1rem; margin-top: 2rem; }
+  .kids-benefit-grid article { background: #fff; padding: 1.4rem; border-top: 5px solid #b20d16; box-shadow: 0 4px 18px #0000000d; }
+  .kids-number { font-weight: 900; color: #b20d16; font-size: .8rem; }
+  .kids-page h3 { font-size: 1.3rem; margin: .6rem 0 .6rem; }
+  .kids-benefit-grid p, .kids-program-grid p { margin: 0; font-size: .94rem; }
+  .kids-programs { padding-top: 4.5rem; padding-bottom: 4.5rem; }
+  .kids-section-intro { max-width: 730px; margin: 0 0 2rem; color: #444; }
+  .kids-program-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1.2rem; }
+  .kids-program-card { display: flex; flex-direction: column; border: 1px solid #dedede; border-radius: 9px; overflow: hidden; background: #fff; box-shadow: 0 9px 25px #00000010; }
+  .kids-program-card > img { aspect-ratio: 4 / 3; object-fit: cover; width: 100%; }
+  .kids-program-content { padding: 1.5rem; display: flex; flex-direction: column; flex: 1; }
+  .kids-program-tag { font-size: .68rem; letter-spacing: .07em; font-weight: 800; color: #b20d16; }
+  .kids-program-content p { margin-bottom: 1.3rem; }
+  .kids-program-content a { color: #9b0810; font-weight: 800; margin-top: auto; text-decoration: underline; text-underline-offset: 4px; }
+  .kids-first-class { background: #171717; color: #fff; padding: 4.6rem 0; }
+  .kids-first-grid { display: grid; grid-template-columns: .95fr 1.05fr; gap: clamp(2rem,6vw,5rem); align-items: center; }
+  .kids-first-class h2 { color: #fff; }
+  .kids-first-class p { color: #dedede; }
+  .kids-first-class .kids-button { margin-top: .6rem; }
+  .kids-steps { padding: 0; margin: 0; list-style: none; display: grid; gap: 1.2rem; }
+  .kids-steps li { display: flex; gap: 1rem; padding: 1.25rem; background: #262626; border-radius: 7px; border-left: 4px solid #d1222d; }
+  .kids-steps li > span { display: grid; place-items: center; flex: 0 0 2.4rem; height: 2.4rem; background: #b20d16; color: #fff; border-radius: 50%; font-weight: 900; }
+  .kids-steps strong { color: #fff; }.kids-steps p { margin: .25rem 0 0; font-size: .92rem; }
+  .kids-proof { padding-top: 4.5rem; padding-bottom: 4.5rem; display: grid; grid-template-columns: .8fr 1.2fr; gap: clamp(2rem,5vw,4rem); align-items: center; }
+  .kids-proof-media img { width: 100%; max-height: 440px; object-fit: cover; border-radius: 9px; }
+  .kids-proof-copy blockquote { margin: 0 0 1.4rem; padding: 1.1rem 0 1.1rem 1.4rem; border-left: 5px solid #b20d16; }
+  .kids-proof-copy blockquote p { font-size: clamp(1.06rem,1.6vw,1.27rem); font-weight: 700; margin: 0 0 .7rem; }
+  .kids-proof-copy blockquote footer { font-weight: 800; color: #9b0810; }
+  .kids-text-link { font-weight: 800; color: #9b0810; text-decoration: underline; text-underline-offset: 3px; }
+  .kids-schedule { background: #f5f5f5; padding: 4.4rem 0; }
+  .kids-schedule-grid { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: .7rem; }
+  .kids-schedule-day { padding: 1.2rem; background: #fff; border-radius: 7px; border: 1px solid #ddd; }
+  .kids-schedule-day h3 { font-size: 1.12rem; color: #9b0810; margin: 0 0 .8rem; }
+  .kids-schedule-day ul { margin: 0; padding: 0; list-style: none; }
+  .kids-schedule-day li { margin-bottom: .9rem; border-top: 1px solid #ececec; padding-top: .65rem; display: grid; gap: .15rem; }
+  .kids-schedule-day li span { font-weight: 700; font-size: .88rem; }
+  .kids-schedule-day li strong { font-size: .82rem; }
+  .kids-schedule-note { font-size: .88rem; color: #555; margin: 1.1rem 0 1.4rem; }
+  .kids-faq { padding-top: 4.5rem; padding-bottom: 4.5rem; }
+  .kids-faq-list { max-width: 880px; display: grid; gap: .75rem; }
+  .kids-faq-list details { border: 1px solid #d9d9d9; border-radius: 7px; padding: 1rem 1.2rem; }
+  .kids-faq-list details[open] { border-color: #b20d16; }
+  .kids-faq-list summary { cursor: pointer; display: flex; align-items: center; justify-content: space-between; list-style: none; gap: .5rem; font-weight: 800; }
+  .kids-faq-list summary::-webkit-details-marker { display: none; }
+  .kids-faq-list summary span { color: #9b0810; font-size: 1.6rem; flex-shrink: 0; }
+  .kids-faq-list details[open] summary span { transform: rotate(45deg); }
+  .kids-faq-list details p { margin: .75rem 0 0; color: #444; }
+  .kids-final-cta { background: #b20d16; text-align: center; color: #fff; padding: 4.7rem 0; }
+  .kids-final-cta .kids-eyebrow { color: #ffe2e2; }
+  .kids-final-cta h2 { color: #fff; max-width: 930px; margin: 0 auto 1rem; }
+  .kids-final-cta p { max-width: 730px; margin: 0 auto 1.5rem; }
+  .kids-button-light { background: #fff; color: #930610; border-color: #fff; }
+  .kids-button-light:hover { color: #fff; background: #171717; border-color: #171717; }
+  .kids-final-cta .kids-final-small { font-size: .86rem; margin: 1.2rem auto; }
+  .kids-final-small a { text-decoration: underline; font-weight: 800; }
+  .kids-final-cta .kids-tagline { font-family: "Black Ops One",cursive; font-size: 1.2rem; margin: 1.6rem auto 0; }
+
+  @media (max-width: 1000px) {
+    .kids-benefit-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+    .kids-schedule-grid { grid-template-columns: repeat(3,minmax(0,1fr)); }
+  }
+  @media (max-width: 760px) {
+    .kids-hero { padding: 1.65rem 0 3rem; }
+    .kids-hero-grid, .kids-first-grid, .kids-proof { grid-template-columns: 1fr; }
+    .kids-hero-copy { order: 1; }
+    .kids-hero-media { order: 2; margin: .6rem .5rem 0; }
+    .kids-hero-media img { height: 325px; }
+    .kids-breadcrumb { margin-bottom: 1.2rem; }
+    .kids-hero h1 { font-size: clamp(2.4rem,9.2vw,3.5rem); }
+    .kids-actions { flex-direction: column; align-items: stretch; }
+    .kids-secondary { text-align: center; align-self: center; }
+    .kids-benefits, .kids-first-class, .kids-schedule, .kids-final-cta { padding: 3.2rem 0; }
+    .kids-programs, .kids-faq { padding-top: 3.2rem; padding-bottom: 3.2rem; }
+    .kids-program-grid { grid-template-columns: 1fr; }
+    .kids-program-card > img { max-height: 300px; }
+    .kids-proof { padding-top: 3.2rem; padding-bottom: 3.2rem; }
+    .kids-proof-media img { max-height: 310px; }
+    .kids-schedule-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+    .kids-button { width: 100%; }
+  }
+  @media (max-width: 440px) {
+    .kids-benefit-grid, .kids-schedule-grid { grid-template-columns: 1fr; }
+    .kids-benefit-grid article { padding: 1.1rem; }
+    .kids-program-content { padding: 1.2rem; }
+    .kids-hero-media img { height: 265px; }
+    .kids-media-stamp strong { font-size: 1rem; }.kids-media-stamp span { font-size: .9rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .kids-button { transition: none; }
+    .kids-button:hover { transform: none; }
+  }
+</style>
