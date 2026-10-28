@@ -20,6 +20,7 @@ const { program } = Astro.props;
 const isChimpmanGi  = program.slug === "chimpman-gi";
 const isWellness    = program.slug === "health-and-wellness";
 const isBirthday    = program.slug === "birthday-parties";
+const isWingChun   = program.slug === "wing-chun";
 const hasVariants   = !!program.variants?.length;
 const showLeadForm  = program.showLeadForm !== false;
 const centerContent = !isWellness && !isBirthday;
@@ -40,12 +41,30 @@ const curriculumBlocks = !hasVariants ? program.curriculum.copy.split("\n\n") : 
   ) : (
     <>
       {hasVariants ? (
-        <div class="variant-page-header">
-          <div class="shell">
-            <h1>{program.hero.title}</h1>
-            <a class="button" href="#lead-form">Try a Free Class</a>
+        isWingChun ? (
+          <section class="wing-chun-feature" aria-labelledby="wing-chun-feature-heading">
+            <div class="shell wing-chun-feature-grid">
+              <div class="wing-chun-feature-copy">
+                <p class="wing-chun-kicker">WEDNESDAY WING CHUN CLASSES • OWINGS MILLS, MD</p>
+                <h1 id="wing-chun-feature-heading">Wing Chun Martial Arts</h1>
+                <p>Discover centerline control, timing, and precise close-range techniques through real partner training at Burning Tree Mixed Martial Arts.</p>
+                <a class="button" href="/29-trial">Try 2 Beginner Classes for $29</a>
+                <p class="wing-chun-feature-small">Includes a free uniform for new students.</p>
+              </div>
+              <figure class="wing-chun-feature-photo">
+                <img src="/images/wing-chun-main-training.webp" alt="Wing Chun instructor and adult training partner practicing a simultaneous blocking and striking technique at Burning Tree MMA in Owings Mills" width="1152" height="864" loading="eager" decoding="async" fetchpriority="high" />
+                <figcaption>Real Wing Chun partner training inside Burning Tree.</figcaption>
+              </figure>
+            </div>
+          </section>
+        ) : (
+          <div class="variant-page-header">
+            <div class="shell">
+              <h1>{program.hero.title}</h1>
+              <a class="button" href="#lead-form">Try a Free Class</a>
+            </div>
           </div>
-        </div>
+        )
       ) : (
         <PageHero hero={program.hero} showMobileCta={showLeadForm} ctaLabel={program.mobileCta} centerMobile={isWellness} centerContent={centerContent} />
       )}
@@ -119,3 +138,63 @@ const curriculumBlocks = !hasVariants ? program.curriculum.copy.split("\n\n") : 
     </>
   )}
 </BaseLayout>
+
+<style>
+  .wing-chun-feature {
+    background: linear-gradient(135deg, #171717, #290a10);
+    border-bottom: 3px solid #be1820;
+    padding: clamp(2rem, 4vw, 3.5rem) 0;
+  }
+  .wing-chun-feature-grid {
+    display: grid;
+    grid-template-columns: minmax(0, .88fr) minmax(0, 1.12fr);
+    gap: clamp(1.3rem, 4vw, 3rem);
+    align-items: center;
+  }
+  .wing-chun-feature-copy { min-width: 0; }
+  .wing-chun-kicker {
+    color: #ff9696;
+    font-size: .78rem;
+    font-weight: 800;
+    letter-spacing: .08em;
+    line-height: 1.5;
+    margin: 0 0 .85rem;
+  }
+  .wing-chun-feature h1 {
+    color: #fff;
+    font-size: clamp(2.4rem, 5vw, 4.2rem);
+    line-height: 1.08;
+    margin: 0 0 1rem;
+  }
+  .wing-chun-feature-copy > p:not(.wing-chun-kicker) {
+    color: #f0f0f0;
+    line-height: 1.65;
+    max-width: 550px;
+    margin-bottom: 1.2rem;
+  }
+  .wing-chun-feature-copy .button { display: inline-flex; text-align: center; }
+  .wing-chun-feature-copy .wing-chun-feature-small { font-size: .87rem; margin: .8rem 0 0; }
+  .wing-chun-feature-photo { min-width: 0; margin: 0; background: #121212; }
+  .wing-chun-feature-photo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    object-position: center center;
+    border: 3px solid #e0d0d0;
+    border-radius: 5px;
+  }
+  .wing-chun-feature-photo figcaption {
+    color: #dfd2d2;
+    font-size: .83rem;
+    padding: .65rem .15rem 0;
+    text-align: center;
+  }
+  @media (max-width: 760px) {
+    .wing-chun-feature-grid { grid-template-columns: 1fr; }
+    .wing-chun-feature h1 { font-size: clamp(2.2rem, 10vw, 3.35rem); }
+    .wing-chun-feature-copy .button { width: 100%; justify-content: center; }
+    .wing-chun-feature-photo img { object-fit: contain; }
+  }
+</style>
