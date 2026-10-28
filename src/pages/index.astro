@@ -36,6 +36,18 @@ import { homePage, homepagePrograms } from "../data/site";
     </div>
   </div>
 
+  <section class="shell section-divider home-kids-spotlight" aria-labelledby="home-kids-heading">
+    <div class="home-kids-spotlight-inner">
+      <img src="/images/jr-kenpo-gallery-2.jpg" width="760" height="550" loading="lazy" decoding="async" alt="Two junior martial arts students practicing a technique at Burning Tree MMA in Owings Mills" />
+      <div class="home-kids-spotlight-copy">
+        <p class="eyebrow">Parents in Owings Mills: This Is For You</p>
+        <h2 id="home-kids-heading">Kids Martial Arts. Confidence For Life.</h2>
+        <p>Looking for something that helps your child build focus, discipline, respect, and real confidence? Explore our beginner-friendly kids karate, Muay Thai, and Wing Chun classes.</p>
+        <a class="button" href="/kids-martial-arts">Explore Kids Martial Arts</a>
+      </div>
+    </div>
+  </section>
+
   <section class="shell section-divider">
     <div class="section-heading">
       <div>
@@ -104,3 +116,19 @@ import { homePage, homepagePrograms } from "../data/site";
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  .home-kids-spotlight { padding-top: 3rem; padding-bottom: 3rem; }
+  .home-kids-spotlight-inner { display: grid; grid-template-columns: .92fr 1.08fr; align-items: center; gap: 2.5rem; background: #1b1b1b; border: 1px solid #4b1c1c; padding: 1.2rem; }
+  .home-kids-spotlight-inner img { height: 310px; width: 100%; object-fit: cover; }
+  .home-kids-spotlight-copy { padding: 1.2rem 1.3rem 1.2rem 0; }
+  .home-kids-spotlight-copy h2 { margin: 0 0 1rem; }
+  .home-kids-spotlight-copy p:not(.eyebrow) { color: #e6e6e6; max-width: 610px; }
+  .home-kids-spotlight-copy .button { margin-top: .8rem; }
+  @media(max-width: 720px) {
+    .home-kids-spotlight-inner { grid-template-columns: 1fr; gap: 0; }
+    .home-kids-spotlight-inner img { height: 240px; }
+    .home-kids-spotlight-copy { padding: 1.4rem .3rem .5rem; }
+    .home-kids-spotlight-copy .button { width: 100%; }
+  }
+</style>
