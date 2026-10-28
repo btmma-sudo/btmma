@@ -43,7 +43,6 @@ export async function POST({ request, locals }) {
   const origin = new URL(request.url).origin;
   const params = new URLSearchParams({
     mode: "payment",
-    "payment_method_types[0]": "card",
     "line_items[0][price_data][currency]": "usd",
     "line_items[0][price_data][unit_amount]": "2900",
     "line_items[0][price_data][product_data][name]": "Burning Tree $29 New Student Special",
@@ -57,7 +56,7 @@ export async function POST({ request, locals }) {
     response = await fetch("https://api.stripe.com/v1/checkout/sessions", {
       method: "POST",
       headers: { Authorization: "Bearer " + env.STRIPE_SECRET_KEY,
-        "Content-Type": "application/x-www-form-urlencoded", "Idempotency-Key": "btmma-trial-" + row.id },
+        "Content-Type": "application/x-www-form-urlencoded", "Idempotency-Key": "btmma-trial-v2-" + row.id },
       body: params
     });
   } catch { return json({ error: "Stripe checkout is temporarily unavailable. Please contact the studio." }, 503); }
