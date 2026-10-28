@@ -24,7 +24,7 @@ export async function POST({ request, locals }) {
     return json({ error: "Registration approval expired. Please register again." }, 403);
   const expected = await signature(env.STRIPE_WEBHOOK_SECRET, recordId + "." + expires);
   if (expected !== mac) return json({ error: "Invalid registration approval." }, 403);
-  const row = await env.TRIAL_DB.prepare("SELECT id, state, stripe_session_id FROM trial_registrations WHERE airtable_record_id = ?").bind(recordId).first();
+  const row = await env.TRIAL_DB.prepare("SELECT id, state, stripe_session_id, updated_at FROM trial_registrations WHERE airtable_record_id = ?").bind(recordId).first();
   if (!row || row.state === "paid" || row.state === "manual_review" || row.state === "cancelled")
     return json({ error: "Please contact the studio to verify this student's trial." }, 409);
   if (row.stripe_session_id) {
@@ -37,7 +37,7 @@ export async function POST({ request, locals }) {
       return json({ url: session.url });
     return json({ error: "This registration already has a checkout session. Please contact the studio." }, 409);
   }
-  const claim = await env.TRIAL_DB.prepare("UPDATE trial_registrations SET state = 'checkout_open', updated_at = CURRENT_TIMESTAMP WHERE id = ? AND state = 'reserved' AND stripe_session_id IS NULL")
+  const claim = await env.TRIAL_DB.prepare("UPDATE trial_registrations SET state = 'checkout_open', updated_at = CURRENT_TIMESTAMP WHERE id = ? AND stripe_session_id IS NULL AND (state = 'reserved' OR (state = 'checkout_open' AND updated_at < datetime('now', '-60 seconds')))")
     .bind(row.id).run();
   if (claim.meta?.changes !== 1) return json({ error: "Checkout is being prepared. Please try again shortly." }, 409);
   const origin = new URL(request.url).origin;
@@ -62,7 +62,10 @@ export async function POST({ request, locals }) {
     });
   } catch { return json({ error: "Stripe checkout is temporarily unavailable. Please contact the studio." }, 503); }
   if (!response.ok) {
-    console.error("Stripe checkout creation failed", { status: response.status });
+    let stripeError = {};
+    try { stripeError = await response.json(); } catch {}
+    console.error("Stripe checkout creation failed", { status: response.status, type: stripeError.error?.type, code: stripeError.error?.code, param: stripeError.error?.param });
+    await env.TRIAL_DB.prepare("UPDATE trial_registrations SET state = 'reserved', updated_at = CURRENT_TIMESTAMP WHERE id = ? AND state = 'checkout_open' AND stripe_session_id IS NULL").bind(row.id).run();
     return json({ error: "Unable to create checkout. Please contact the studio." }, 503);
   }
   const session = await response.json();
