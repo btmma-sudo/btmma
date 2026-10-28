@@ -12,7 +12,7 @@ type Props = {
   centerContent?: boolean;
 };
 
-const { hero, large = false, leadForm, showMobileCta = true, ctaLabel = "Try a Free Class", centerMobile = false, centerContent = false } = Astro.props;
+const { hero, large = false, leadForm, showMobileCta = true, ctaLabel = "GET STARTED FOR $29", centerMobile = false, centerContent = false } = Astro.props;
 const overlayClass = hero.overlay === "medium" ? "hero-overlay-medium" : "hero-overlay-strong";
 ---
 
@@ -41,7 +41,7 @@ const overlayClass = hero.overlay === "medium" ? "hero-overlay-medium" : "hero-o
     <div class="hero-content">
       <h1>{hero.title}</h1>
       {!leadForm && showMobileCta && (
-        <a class="button hero-mobile-cta" href="#lead-form">{ctaLabel}</a>
+        <a class="button hero-mobile-cta" href={ctaLabel === "GET STARTED FOR $29" ? "/29-trial/" : "#lead-form"}>{ctaLabel}</a>
       )}
     </div>
     {leadForm && (
