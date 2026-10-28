@@ -101,8 +101,8 @@ export type SupportingPage = {
 export const site = {
   name: "Burning Tree Mixed Martial Arts",
   shortName: "Burning Tree MMA",
-  phone: "202-368-4395",
-  phoneHref: "2023684395",
+  phone: "410-218-0894",
+  phoneHref: "4102180894",
   email: "info@burningtreemma.com",
   addressLine1: "10210 S Dolfield Rd",
   city: "Owings Mills",
