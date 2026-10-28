@@ -557,7 +557,7 @@ export const programPages: ProgramPage[] = [
         },
         galleryImages: [
           { src: "/images/jr-kenpo-gallery-1.jpg", alt: "Two Jr. Kenpo students in black gis with yellow belts sitting with their instructor at a tournament, all smiling" },
-          { src: "/images/jr-kenpo-gallery-2.jpg", alt: "A junior student practicing striking technique with a younger classmate in the Burning Tree MMA gym" },
+          { src: "/images/kids-martial-arts-karate-guard.png", alt: "Junior martial arts students practicing their karate guard techniques at Burning Tree MMA" },
           { src: "/images/jr-kenpo-gallery-3.jpg", alt: "A young Jr. Kenpo student in a black gi with yellow belt proudly holding up two medals at the DC Youth Classics competition" }
         ],
         seoCopy: {
