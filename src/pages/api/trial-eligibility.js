@@ -15,10 +15,18 @@ async function reserveStudent(db, recordId) {
   const row = await db.prepare("SELECT state FROM trial_registrations WHERE airtable_record_id = ?").bind(recordId).first();
   return row?.state === "reserved";
 }
+async function checkoutGrant(secret, recordId) {
+  if (!secret || !/^rec[A-Za-z0-9]+$/.test(recordId)) return null;
+  const expires = String(Date.now() + 10 * 60 * 1000);
+  const payload = recordId + "." + expires;
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  const mac = new Uint8Array(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(payload)));
+  return payload + "." + Array.from(mac, b => b.toString(16).padStart(2, "0")).join("");
+}
 export const prerender = false;
 export async function POST({ request, locals }) {
   const env = locals?.runtime?.env ?? {};
-  const required = ["AIRTABLE_API_TOKEN", "AIRTABLE_BASE_ID", "TURNSTILE_SECRET_KEY", "TRIAL_DB"];
+  const required = ["AIRTABLE_API_TOKEN", "AIRTABLE_BASE_ID", "TURNSTILE_SECRET_KEY", "TRIAL_DB", "STRIPE_WEBHOOK_SECRET"];
   const missing = required.filter((name) => !env[name]);
   if (missing.length) {
     return json({ success: false, error: "Registration verification is not available yet. Missing Worker settings: " + missing.join(", ") + ". Please contact the studio." }, 503);
@@ -253,6 +261,7 @@ export async function POST({ request, locals }) {
             !fields["$29 Trial Used"] && fields["Payment Status"] !== "Paid") {
           if (!await reserveStudent(env.TRIAL_DB, record.id)) return json({ success: true, eligible: false, message: "Please contact the studio to verify this registration." });
           return json({
+            checkoutGrant: await checkoutGrant(env.STRIPE_WEBHOOK_SECRET, record.id),
             success: true, eligible: true, registrationSaved: true,
             message: "Your student registration is already on file. Online payment is not available yet. Please contact the studio to finish enrollment."
           });
@@ -286,6 +295,7 @@ export async function POST({ request, locals }) {
     const saved = await created.json();
     if (!await reserveStudent(env.TRIAL_DB, saved.id)) return json({ success: true, eligible: false, registrationSaved: true, message: "Registration saved. Please contact the studio to verify eligibility." });
     return json({
+      checkoutGrant: await checkoutGrant(env.STRIPE_WEBHOOK_SECRET, saved.id),
       success: true, eligible: true, registrationSaved: true,
       message: "Student registration received! Online payment is not available yet. Please contact the studio to complete the $29 offer."
     });
