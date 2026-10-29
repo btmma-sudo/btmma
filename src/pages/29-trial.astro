@@ -24,7 +24,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     </section>
     <section class="registration" id="registration">
       <h2>Student Registration</h2>
-      <p>Choose a program, enter the student’s details, and then choose secure card checkout or pay directly to our Cash App. Register one student at a time; siblings can share their parent contact details.</p>
+      <p>Choose a program, enter the student’s details, and then choose Apple Pay (including eligible Apple Cash cards), secure card checkout, or direct Cash App. Register one student at a time; siblings can share their parent contact details.</p>
       <p class="first-class-help">First time on the mats? <a href="/your-first-class">See what to wear, where to park, and what happens after you register.</a></p>
       <form id="student-registration" class="form">
         <label for="studentType">Who are you registering for?</label>
@@ -122,9 +122,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <div class="cf-turnstile" data-sitekey="0x4AAAAAAD6Ievu-t0Ll1euh" data-size="compact"></div>
         </div>
         <button type="submit">CONTINUE TO SECURE $29 PAYMENT</button>
-        <button id="checkout-button" type="button" hidden disabled>PAY $29 SECURELY BY CARD</button>
+        <button id="applepay-button" type="button" hidden disabled>APPLE PAY / APPLE CASH — $29</button>
+        <button id="checkout-button" type="button" hidden disabled>PAY $29 WITH CREDIT / DEBIT CARD</button>
         <button id="cashapp-button" type="button" hidden disabled>PAY $29 DIRECTLY WITH CASH APP</button>
-        <p id="setup-note" class="notice" role="status">We’ll check eligibility before showing payment options. Card payments use Stripe; direct Cash App payments require manual verification.</p>
+        <p id="applepay-help" class="payment-help" hidden>Apple Pay opens secure Stripe checkout and appears on supported devices. To use your Apple Cash balance, choose your Apple Cash card in Apple Pay. If Apple Pay is unavailable, you can still use a card. These payments are processed by Stripe, not sent directly to a personal Apple Cash account.</p>
+        <p id="setup-note" class="notice" role="status">We’ll check eligibility before showing payment options. Cards and Apple Pay use Stripe; direct Cash App payments require manual verification.</p>
         <div id="cashapp-instructions" class="cashapp-instructions" hidden aria-live="polite">
           <h3>Direct Cash App Payment</h3>
           <p>Send exactly <strong>$29</strong> to <strong>$BTMMA</strong> through Cash App.</p>
@@ -166,6 +168,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     const dobYear = document.getElementById("dobYear");
     const studentDob = document.getElementById("studentDob");
     const checkoutButton = document.getElementById("checkout-button");
+    const applePayButton = document.getElementById("applepay-button");
+    const applePayHelp = document.getElementById("applepay-help");
     const cashAppButton = document.getElementById("cashapp-button");
     const cashAppInstructions = document.getElementById("cashapp-instructions");
     const pilotFields = document.getElementById("pilotFields");
@@ -247,8 +251,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     const openCheckout = async () => {
       if (!grant || !checkoutButton || liveMode === null) return;
       checkoutButton.disabled = true;
+      if (applePayButton) applePayButton.disabled = true;
       if (cashAppButton) cashAppButton.disabled = true;
-      notice.textContent = liveMode ? "Preparing secure $29 card checkout..." : "Preparing secure Stripe test checkout...";
+      notice.textContent = liveMode ? "Preparing secure $29 Stripe checkout..." : "Preparing secure Stripe test checkout...";
       try {
         const response = await fetch(liveMode ? "/api/create-checkout-live" : "/api/create-checkout", {
           method: "POST", headers: { "content-type": "application/json" },
@@ -278,14 +283,19 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       } catch (error) {
         notice.textContent = error?.message || "Checkout is unavailable. Please contact the studio.";
         checkoutButton.disabled = false;
+        if (applePayButton && liveMode) applePayButton.disabled = false;
         if (cashAppButton && liveMode) cashAppButton.disabled = false;
       }
     };
     checkoutButton?.addEventListener("click", openCheckout);
+    // Both options use the same vetted Stripe session; Stripe shows Apple Pay
+    // only when the customer's device, browser and Wallet are eligible.
+    applePayButton?.addEventListener("click", openCheckout);
     cashAppButton?.addEventListener("click", async () => {
       if (!grant || !cashAppButton || !checkoutButton || liveMode !== true) return;
       cashAppButton.disabled = true;
       checkoutButton.disabled = true;
+      if (applePayButton) applePayButton.disabled = true;
       notice.textContent = "Preparing direct Cash App payment instructions...";
       try {
         const response = await fetch("/api/trial-cashapp-live", {
@@ -300,6 +310,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         grant = null;
         cashAppButton.hidden = true;
         checkoutButton.hidden = true;
+        if (applePayButton) applePayButton.hidden = true;
+        if (applePayHelp) applePayHelp.hidden = true;
         if (cashAppInstructions) cashAppInstructions.hidden = false;
         notice.textContent = "Opening Cash App with $BTMMA and $29. Check the details before sending. We'll verify your payment manually.";
         try { window.sessionStorage.setItem("btmma_cashapp_trial_pending", "1"); }
@@ -315,6 +327,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         notice.textContent = error?.message || "Please call (202) 368-4395 for payment assistance.";
         cashAppButton.disabled = false;
         checkoutButton.disabled = false;
+        if (applePayButton) applePayButton.disabled = false;
       }
     });
     const submit = form?.querySelector('button[type="submit"]');
@@ -435,6 +448,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       event.preventDefault();
       grant = null;
       if (checkoutButton) { checkoutButton.hidden = true; checkoutButton.disabled = true; }
+      if (applePayButton) { applePayButton.hidden = true; applePayButton.disabled = true; }
+      if (applePayHelp) applePayHelp.hidden = true;
       if (cashAppButton) { cashAppButton.hidden = true; cashAppButton.disabled = true; }
       if (cashAppInstructions) cashAppInstructions.hidden = true;
       if (liveMode === null) {
@@ -474,8 +489,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           trackTrial("trial_registration_approved");
           checkoutButton.hidden = false;
           checkoutButton.disabled = false;
+          if (applePayButton) { applePayButton.hidden = false; applePayButton.disabled = false; }
+          if (applePayHelp) applePayHelp.hidden = false;
           if (cashAppButton) { cashAppButton.hidden = false; cashAppButton.disabled = false; }
-          notice.textContent = "Registration approved! Choose card checkout or direct Cash App payment below. Cash App payments need staff verification.";
+          notice.textContent = "Registration approved! Choose Apple Pay / Apple Cash, credit or debit card, or direct Cash App. Apple Pay appears on eligible devices; Cash App requires staff verification.";
         }
       } catch (error) {
         notice.textContent = error?.name === "AbortError"
@@ -496,6 +513,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 })();
 </script>
 <style>
+  .trial-page .payment-help {
+    margin: 0 0 8px;
+    padding: 10px 12px;
+    border-left: 3px solid var(--accent);
+    line-height: 1.5;
+    font-size: .9rem;
+    color: var(--muted);
+  }
   .trial-page .cashapp-instructions {
     margin-top: 14px;
     padding: 20px;
