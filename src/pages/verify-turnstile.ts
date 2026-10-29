@@ -23,16 +23,21 @@ export const POST: APIRoute = async ({ request, locals }) => {
   }
 
   // Verify token with Cloudflare Turnstile
-  const verifyRes = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({
-      secret: secretKey,
-      response: String(token),
-    }),
-  });
-
-  const verifyData = await verifyRes.json() as { success: boolean };
+  let verifyData: { success?: boolean };
+  try {
+    const verifyRes = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        secret: secretKey,
+        response: String(token),
+      }),
+    });
+    if (!verifyRes.ok) throw new Error("Verification provider unavailable");
+    verifyData = await verifyRes.json() as { success?: boolean };
+  } catch {
+    return json({ error: "Security verification is temporarily unavailable. Please try again." }, 503);
+  }
 
   if (!verifyData.success) {
     return json({ error: "Verification failed. Please refresh and try again." }, 403);
@@ -51,11 +56,19 @@ export const POST: APIRoute = async ({ request, locals }) => {
     return json({ error: "Server configuration error. Please contact us directly." }, 500);
   }
 
-  await fetch(webhookUrl, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
-    body: encodedPayload.toString(),
-  });
+  // Do not acknowledge a lead until the receiving automation accepts it.
+  try {
+    const delivery = await fetch(webhookUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+      body: encodedPayload.toString(),
+    });
+    if (!delivery.ok) {
+      return json({ error: "We couldn't send your request. Please try again or call 410-218-0894." }, 502);
+    }
+  } catch {
+    return json({ error: "We couldn't send your request. Please try again or call 410-218-0894." }, 502);
+  }
 
   return json({ success: true }, 200);
 };
