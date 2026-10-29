@@ -157,6 +157,50 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     const checkoutButton = document.getElementById("checkout-button");
     const pilotFields = document.getElementById("pilotFields");
     const pilotCode = document.getElementById("pilotCode");
+
+    // Only the new Burning Tree GA4 property receives these funnel events.
+    // The site's existing global page_view tracking remains unchanged.
+    const ga4Id = "G-5M75V93ZV5";
+    const offerId = "btmma_29_trial";
+    const trialItem = {
+      item_id: offerId,
+      item_name: "Burning Tree $29 New Student Special",
+      price: 29,
+      quantity: 1
+    };
+    const trackTrial = (eventName, eventParams = {}) => {
+      try {
+        if (typeof window.gtag !== "function") return false;
+        // Never include student details, contact information or form data.
+        window.gtag("event", eventName, {
+          send_to: ga4Id,
+          offer_id: offerId,
+          ...eventParams
+        });
+        return true;
+      } catch {
+        // Analytics must never interrupt eligibility or Stripe payments.
+        return false;
+      }
+    };
+    const recordVerifiedPurchase = (sessionId) => {
+      // Called only after our server checks the live Stripe session is paid.
+      // One browser event per checkout session; transaction_id also enables
+      // GA4's purchase deduplication when this page is revisited.
+      const key = "btmma_ga4_purchase_" + sessionId;
+      try {
+        if (window.sessionStorage.getItem(key) === "sent") return;
+      } catch { /* Storage may be disabled. */ }
+      if (trackTrial("purchase", {
+        transaction_id: sessionId,
+        currency: "USD",
+        value: 29,
+        items: [trialItem]
+      })) {
+        try { window.sessionStorage.setItem(key, "sent"); }
+        catch { /* GA4 uses transaction_id to deduplicate as well. */ }
+      }
+    };
     // Native date pickers can allow a five-digit year in their segmented UI.
     // Keep birth-year entry to four digits and create the ISO date the API expects.
     const syncDob = () => {
@@ -199,7 +243,24 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         const result = await response.json();
         if (!response.ok || !result.url || !/^https:\/\/checkout\.stripe\.com\//.test(result.url))
           throw new Error(result.error || "Checkout is unavailable.");
-        window.location.assign(result.url);
+        // A checkout session was created successfully. Give the analytics
+        // beacon a short chance to send without ever blocking payment.
+        let redirected = false;
+        let redirectTimer;
+        const redirect = () => {
+          if (redirected) return;
+          redirected = true;
+          if (redirectTimer) clearTimeout(redirectTimer);
+          window.location.assign(result.url);
+        };
+        redirectTimer = setTimeout(redirect, 700);
+        if (!trackTrial("begin_checkout", {
+          currency: "USD",
+          value: 29,
+          items: [trialItem],
+          event_callback: redirect,
+          event_timeout: 650
+        })) redirect();
       } catch (error) {
         notice.textContent = error?.message || "Checkout is unavailable. Please contact the studio.";
         checkoutButton.disabled = false;
@@ -211,7 +272,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     submit.disabled = true;
     // Verify Stripe's session server-side. The return URL alone is not a receipt.
     const checkoutReturn = new URLSearchParams(window.location.search);
-    if (checkoutReturn.get("checkout") === "success") {
+    const checkoutState = checkoutReturn.get("checkout");
+    if (checkoutState === "cancelled") {
+      trackTrial("trial_checkout_cancelled");
+    } else if (checkoutState !== "success") {
+      // New landing-page visit (not a Stripe return).
+      trackTrial("trial_offer_view");
+    }
+    if (checkoutState === "success") {
       const panel = document.getElementById("checkout-result");
       const heading = document.getElementById("checkout-result-title");
       const message = document.getElementById("checkout-result-message");
@@ -235,6 +303,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             result = await response.json();
             if (result.status !== "processing" || attempt === 4) break;
             await new Promise(resolve => setTimeout(resolve, 1800));
+          }
+          // Both statuses mean the server independently verified Stripe's
+          // payment_status=paid. "processing" only means Airtable/D1
+          // fulfillment is still finishing, not that payment is unverified.
+          if (result.status === "confirmed" || result.status === "processing") {
+            recordVerifiedPurchase(sessionId);
           }
           if (result.status === "confirmed") {
             if (heading) heading.textContent = "Registration confirmed!";
@@ -313,6 +387,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       delete payload["cf-turnstile-response"];
       submit.disabled = true;
       notice.textContent = "Checking trial eligibility...";
+      trackTrial("trial_form_submitted");
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 15000);
       try {
@@ -326,6 +401,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         notice.textContent = result.message || result.error || "Please contact the studio to verify eligibility.";
         if (liveMode && result.success && result.eligible && result.registrationSaved && result.checkoutGrant && checkoutButton) {
           grant = result.checkoutGrant;
+          trackTrial("trial_registration_approved");
           checkoutButton.hidden = false;
           checkoutButton.disabled = false;
           notice.textContent = "Registration approved. Opening secure Stripe checkout...";
