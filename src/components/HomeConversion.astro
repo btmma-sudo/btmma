@@ -1,0 +1,228 @@
+---
+import GalleryCarousel from "./GalleryCarousel.astro";
+import LeadForm from "./LeadForm.astro";
+import { homePage, site } from "../data/site";
+---
+
+<section class="conversion-hero" aria-labelledby="conversion-heading">
+  <div class="shell conversion-layout">
+    <div class="conversion-copy">
+      <p class="eyebrow">Kids, Teens &amp; Adults Martial Arts • Owings Mills, MD</p>
+      <h1 id="conversion-heading">Confident Kids. Stronger Families. Real Martial Arts.</h1>
+      <p class="conversion-intro">At Burning Tree Mixed Martial Arts, your family gets more than a place to learn kicks and punches. We help students build confidence, focus, respect, and practical skills in a welcoming community where everyone belongs.</p>
+      <ul class="conversion-benefits">
+        <li>Build the confidence to stand up for yourself without becoming a bully.</li>
+        <li>Practice focus, discipline, and respect on and off the mats.</li>
+        <li>Start at your own pace with supportive, beginner-friendly coaching.</li>
+      </ul>
+      <div class="conversion-offer">
+        <p><strong>$29 New Student Special</strong> — 2 beginner classes + a FREE uniform.</p>
+        <span>One introductory offer per new student.</span>
+      </div>
+      <div class="conversion-actions">
+        <a class="button conversion-primary" href="/29-trial">Claim Your $29 Special</a>
+        <a class="button button-ghost conversion-secondary" href="/kids-martial-arts">Explore Kids Classes</a>
+      </div>
+      <p class="conversion-contact">Questions? <a href={"tel:" + site.phoneHref}>Call {site.phone}</a> or <a href={"sms:" + site.phoneHref}>text Coach David</a>. No experience needed.</p>
+      <p class="conversion-motto">One Tree. One Family. <span>Keepers of the Flame.</span></p>
+    </div>
+    <figure class="conversion-photo">
+      <img src={homePage.hero.image} alt={homePage.hero.imageAlt} width="1092" height="601" fetchpriority="high" loading="eager" decoding="async" />
+      <figcaption>Real Burning Tree students and instructors — training together as one family.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<GalleryCarousel />
+
+<section class="shell section-divider conversion-why" aria-labelledby="conversion-why-heading">
+  <div class="conversion-section-intro">
+    <p class="eyebrow">Why Families Choose Burning Tree</p>
+    <h2 id="conversion-why-heading">We Build Character Alongside Martial Arts Skills.</h2>
+    <p>Whether your child is shy, full of energy, or ready for a new challenge, we focus on helping each student grow—not just earn the next belt.</p>
+  </div>
+  <div class="conversion-why-grid">
+    <article class="conversion-why-item">
+      <h3>Confidence Without Bullying</h3>
+      <p>We teach students to believe in themselves, show respect, set boundaries, and avoid unnecessary conflict.</p>
+    </article>
+    <article class="conversion-why-item">
+      <h3>Support From Real Coaches</h3>
+      <p>Beginners are welcome. Our instructors help students learn step by step in structured, encouraging classes.</p>
+    </article>
+    <article class="conversion-why-item">
+      <h3>One School for Your Family</h3>
+      <p>Kids, teens, and adults can explore Kenpo Karate, Muay Thai, and Wing Chun, with women's self-defense and leadership opportunities too.</p>
+    </article>
+  </div>
+</section>
+
+<section class="shell section-divider conversion-start" aria-labelledby="conversion-start-heading">
+  <div class="conversion-section-intro">
+    <p class="eyebrow">Your First Step Is Simple</p>
+    <h2 id="conversion-start-heading">How to Get Started at Burning Tree</h2>
+    <p>No martial arts experience? No problem. Here's exactly what happens next.</p>
+  </div>
+  <ol class="conversion-steps">
+    <li>
+      <span class="conversion-step-number" aria-hidden="true">1</span>
+      <div>
+        <h3>Find Your Fit</h3>
+        <p>Explore <a href="/kids-martial-arts">kids classes</a> or <a href="/teens-adults-martial-arts">teen and adult programs</a>. Not sure? We'll help you choose.</p>
+      </div>
+    </li>
+    <li>
+      <span class="conversion-step-number" aria-hidden="true">2</span>
+      <div>
+        <h3>Register for $29</h3>
+        <p>Sign up online for two beginner classes plus a free uniform. One introductory offer per new student.</p>
+      </div>
+    </li>
+    <li>
+      <span class="conversion-step-number" aria-hidden="true">3</span>
+      <div>
+        <h3>Come Train With Us</h3>
+        <p>See <a href="/your-first-class">what to expect at your first class</a>, confirm your class time with us, and step onto the mats.</p>
+      </div>
+    </li>
+  </ol>
+  <div class="conversion-start-actions">
+    <a class="button" href="/29-trial">Register for the $29 Special</a>
+    <a class="conversion-text-link" href={"tel:" + site.phoneHref}>Or call {site.phone} for help choosing a class</a>
+  </div>
+</section>
+
+<section class="shell section-divider conversion-questions" aria-label="Questions before registering">
+  <div class="conversion-questions-copy">
+    <p class="eyebrow">We're Here to Help</p>
+    <h2>Not Sure Where to Start?</h2>
+    <p>Tell us who you're interested in classes for and what you'd like to work on. We can help you find a beginner class that fits your goals and schedule.</p>
+    <p>Prefer to talk? <a href={"tel:" + site.phoneHref}>Call {site.phone}</a> or <a href={"sms:" + site.phoneHref}>send us a text</a>.</p>
+    <a class="conversion-text-link" href="/your-first-class">Read the first-class guide</a>
+  </div>
+  <div class="conversion-questions-form">
+    <LeadForm config={homePage.leadForm} formId="home-lead-form" />
+  </div>
+</section>
+
+<style>
+  .conversion-hero {
+    padding: clamp(1.5rem, 3vw, 3rem) 0;
+    background: radial-gradient(circle at 83% 9%, #391515 0, #1c1515 42%, #121212 78%);
+    border-bottom: 3px solid #891b1b;
+  }
+  .conversion-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.06fr) minmax(0, .94fr);
+    align-items: center;
+    gap: clamp(1.25rem, 3.5vw, 3rem);
+  }
+  .conversion-copy h1 {
+    color: #fff;
+    font-size: clamp(2rem, 4.15vw, 3.65rem);
+    line-height: 1.1;
+    margin: 0 0 1rem;
+    letter-spacing: .012em;
+    text-wrap: balance;
+  }
+  .conversion-copy .eyebrow { color: #ff9990; font-size: .78rem; }
+  .conversion-intro {
+    color: #f2eeee;
+    line-height: 1.62;
+    font-size: clamp(1rem, 1.5vw, 1.16rem);
+    margin: 0 0 1.25rem;
+  }
+  .conversion-benefits {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.35rem;
+    display: grid;
+    gap: .7rem;
+  }
+  .conversion-benefits li {
+    display: flex;
+    align-items: baseline;
+    gap: .65rem;
+    color: #f2eeee;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+  .conversion-benefits li::before {
+    content: "✓";
+    color: #ff7770;
+    flex-shrink: 0;
+    font-size: 1.15rem;
+    font-weight: 800;
+  }
+  .conversion-offer {
+    padding: 1rem 1.15rem;
+    margin-bottom: 1.15rem;
+    border-left: 4px solid #e83226;
+    background: rgba(0, 0, 0, .35);
+  }
+  .conversion-offer p {
+    color: #fff;
+    margin: 0 0 .25rem;
+    font-size: 1.08rem;
+    line-height: 1.4;
+  }
+  .conversion-offer strong { color: #ff9d97; }
+  .conversion-offer span { color: #ddd; font-size: .85rem; }
+  .conversion-actions { display: flex; flex-wrap: wrap; gap: .75rem; }
+  .conversion-actions .button { min-height: 3.1rem; padding: .8rem 1rem; }
+  .conversion-primary { flex: 1 1 210px; }
+  .conversion-secondary { flex: 0 1 auto; }
+  .conversion-contact {
+    color: #eee;
+    margin: 1.15rem 0 .5rem;
+    line-height: 1.5;
+    font-size: .93rem;
+  }
+  .conversion-contact a, .conversion-questions-copy a {
+    color: #ffc3bd;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .conversion-motto { color: #fff; font-weight: 800; margin: .5rem 0 0; letter-spacing: .025em; }
+  .conversion-motto span { font-weight: 600; color: #ff9d97; }
+  .conversion-photo { margin: 0; min-width: 0; background: #130f0f; border: 1px solid #653030; }
+  .conversion-photo img { display: block; width: 100%; height: auto; object-fit: contain; object-position: center; }
+  .conversion-photo figcaption { color: #e2dada; padding: .75rem 1rem; font-size: .83rem; line-height: 1.45; text-align: center; }
+  .conversion-why, .conversion-start { padding-top: clamp(2.5rem, 5vw, 4.5rem); padding-bottom: clamp(2.5rem, 5vw, 4.5rem); }
+  .conversion-section-intro { max-width: 780px; margin-bottom: 1.75rem; }
+  .conversion-section-intro h2 { text-wrap: balance; margin-bottom: .8rem; }
+  .conversion-section-intro > p:last-child { color: #e0e0e0; line-height: 1.65; }
+  .conversion-why-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 1rem; }
+  .conversion-why-item { padding: 1.35rem; background: #1d1d1d; border: 1px solid #4b2626; border-top: 3px solid #b62d23; }
+  .conversion-why-item h3 { color: #fff; font-size: clamp(1.2rem, 1.8vw, 1.5rem); line-height: 1.2; margin-bottom: .75rem; }
+  .conversion-why-item p { color: #ddd; line-height: 1.65; margin: 0; }
+  .conversion-start { scroll-margin-top: 9rem; }
+  .conversion-steps { list-style: none; padding: 0; margin: 0 0 1.5rem; display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1rem; }
+  .conversion-steps li { display: flex; gap: 1rem; padding: 1.35rem; border: 1px solid var(--line); background: var(--surface); }
+  .conversion-step-number { display: grid; flex: 0 0 2.3rem; width: 2.3rem; height: 2.3rem; place-items: center; background: #9b1d17; color: white; font-family: "Black Ops One", cursive; font-size: 1.3rem; line-height: 1; }
+  .conversion-steps h3 { font-size: 1.3rem; line-height: 1.2; margin: .1rem 0 .65rem; }
+  .conversion-steps p { color: #ddd; line-height: 1.6; margin: 0; }
+  .conversion-steps a, .conversion-text-link { color: #ffb8b0; text-decoration: underline; text-underline-offset: 3px; font-weight: 700; }
+  .conversion-start-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 1rem 1.35rem; }
+  .conversion-start-actions .button { padding: .8rem 1.3rem; min-height: 3rem; }
+  .conversion-questions { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,420px); gap: clamp(1.5rem, 4vw, 4rem); align-items: center; padding-top: 3.5rem; padding-bottom: 3.5rem; }
+  .conversion-questions-copy p:not(.eyebrow) { color: #e5e5e5; line-height: 1.7; max-width: 560px; }
+  .conversion-questions-form :global(.lead-card-compact-card) { margin: 0; max-width: 100%; }
+  @media (max-width: 900px) {
+    .conversion-layout { grid-template-columns: 1fr; }
+    .conversion-photo { max-width: 760px; margin: 0 auto; }
+    .conversion-why-grid { grid-template-columns: 1fr; }
+    .conversion-steps { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 760px) {
+    .conversion-hero { padding: 1.4rem 0; }
+    .conversion-copy h1 { font-size: clamp(1.9rem, 8vw, 2.7rem); }
+    .conversion-actions { flex-direction: column; align-items: stretch; }
+    .conversion-primary, .conversion-secondary { flex: auto; width: 100%; }
+    .conversion-photo figcaption { font-size: .78rem; }
+    .conversion-questions { grid-template-columns: 1fr; padding-top: 2.5rem; padding-bottom: 2.5rem; }
+    .conversion-questions-form :global(.lead-card-compact-card) { margin-inline: auto; }
+    .conversion-start-actions { align-items: stretch; flex-direction: column; }
+    .conversion-start-actions .button { width: 100%; }
+  }
+</style>
