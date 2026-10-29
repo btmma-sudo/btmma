@@ -48,6 +48,9 @@ export async function POST({ request, locals }) {
   const origin = new URL(request.url).origin;
   const params = new URLSearchParams({
     mode: "payment",
+    // Cash App must be paid directly to $BTMMA, not through Stripe.
+    // Card also preserves supported Apple Pay and Google Pay wallet options.
+    "payment_method_types[0]": "card",
     "line_items[0][price_data][currency]": "usd",
     "line_items[0][price_data][unit_amount]": "2900",
     "line_items[0][price_data][product_data][name]": "Burning Tree $29 New Student Special",
