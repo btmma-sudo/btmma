@@ -56,25 +56,38 @@ const showSchedule = program.showSchedule !== false;
       </div>
     </section>
 
-    <div class="carousel" role="region" aria-label={`Photos from Burning Tree ${v.label} classes`}>
-      <div class="carousel-track page-carousel-track">
+    {v.galleryImages.length > 0 && (
+      v.galleryImages.length <= 2 ? (
+        <div class="shell variant-photo-grid" role="region" aria-label={`Photos from Burning Tree ${v.label} classes`}>
+          {v.galleryImages.map((image) => (
+            <figure class="variant-photo-tile">
+              <img src={image.src} alt={image.alt} loading="lazy" decoding="async" width="680" height="440" />
+            </figure>
+          ))}
+        </div>
+      ) : (
+        <div class="carousel" role="region" aria-label={`Photos from Burning Tree ${v.label} classes`}>
+        <div class="carousel-track page-carousel-track">
         {[0, 1].map((copy) => (
-          <div class="carousel-set" aria-hidden={copy === 1 ? "true" : undefined}>
-            {v.galleryImages.map((image) => (
-              <img
-                src={image.src}
-                alt={copy === 0 ? image.alt : ""}
-                width="360"
-                height="260"
-                loading="eager"
-                fetchpriority="low"
-                decoding="async"
-              />
-            ))}
-          </div>
+        <div class="carousel-set" aria-hidden={copy === 1 ? "true" : undefined}>
+        {v.galleryImages.map((image) => (
+        <img
+        src={image.src}
+        alt={copy === 0 ? image.alt : ""}
+        width="360"
+        height="260"
+        loading="eager"
+        fetchpriority="low"
+        decoding="async"
+        />
         ))}
-      </div>
-    </div>
+        </div>
+        ))}
+        </div>
+        </div>
+        
+      )
+    )}
 
     {v.seoCopy && (
       <section class="seo-copy-section">
@@ -141,3 +154,19 @@ const showSchedule = program.showSchedule !== false;
     });
   });
 </script>
+
+<style>
+  .variant-photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    gap: 1rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+  .variant-photo-tile { margin: 0; min-width: 0; background: #1d1d1d; }
+  .variant-photo-tile img { display: block; width: 100%; height: clamp(220px, 30vw, 350px); object-fit: cover; border-radius: 4px; }
+  @media (max-width: 700px) {
+    .variant-photo-grid { grid-template-columns: 1fr; }
+    .variant-photo-tile img { height: auto; max-height: 360px; object-fit: contain; }
+  }
+</style>
