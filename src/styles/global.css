@@ -129,10 +129,10 @@ button {
 }
 
 .header-notice {
-  background: var(--accent);
-  color: #fff;
-  font-size: 0.75rem;
-  padding: 0.4rem 0;
+  background: #671515;
+  color: #f9f9f9;
+  font-size: 0.82rem;
+  padding: 0.45rem 0;
 }
 
 .header-notice .shell {
@@ -196,12 +196,15 @@ button {
   align-items: center;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 0.85rem 1rem;
-  font-size: 0.78rem;
-  font-weight: 600;
-  font-family: "Black Ops One", cursive;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
+  gap: 0.75rem 0.9rem;
+  font-family: "Open Sans", Arial, sans-serif;
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1.45;
+  letter-spacing: 0;
+  text-transform: none;
+  text-shadow: none;
+  -webkit-text-stroke: 0;
   margin-left: auto;
 }
 
@@ -210,15 +213,38 @@ button {
 }
 
 .top-nav > a,
-.nav-group summary {
-  color: var(--text);
+.nav-group > summary {
+  color: #f4f4f4;
+  font-family: "Open Sans", Arial, sans-serif;
+  font-weight: 700;
+  text-shadow: none;
+  -webkit-text-stroke: 0;
+}
+.top-nav > a:not(.header-trial-nav),
+.nav-group > summary {
+  padding: .45rem .1rem;
+}
+.top-nav > a:hover:not(.header-trial-nav),
+.top-nav > a:focus-visible:not(.header-trial-nav),
+.nav-group > summary:hover,
+.nav-group > summary:focus-visible {
+  color: #ffffff;
+  text-decoration: underline;
+  text-decoration-color: #da5959;
+  text-decoration-thickness: 2px;
+  text-underline-offset: .3em;
+}
+.top-nav a:focus-visible,
+.nav-group > summary:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 4px;
 }
 
 .nav-group {
   position: relative;
 }
 
-.nav-group summary {
+.nav-group > summary {
   list-style: none;
   cursor: pointer;
 }
@@ -229,19 +255,46 @@ button {
 
 .nav-dropdown {
   position: absolute;
-  top: calc(100% + 0.9rem);
+  top: calc(100% + 0.25rem);
   left: 0;
-  min-width: 15rem;
+  width: min(21rem, calc(100vw - 2rem));
   display: grid;
-  gap: 0.25rem;
-  padding: 0.5rem;
-  border: 1px solid var(--line);
-  background: var(--surface-strong);
-  box-shadow: var(--shadow);
+  gap: .15rem;
+  padding: .5rem;
+  border: 1px solid #545454;
+  border-top: 3px solid #a82424;
+  border-radius: 6px;
+  background: #171717;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, .65);
+  z-index: 30;
 }
 
-.nav-dropdown a {
-  padding: 0.45rem 0.6rem;
+.site-header .nav-dropdown a {
+  display: block;
+  padding: .8rem .9rem;
+  border-radius: 4px;
+  background: transparent;
+  color: #f4f4f4;
+  font-family: "Open Sans", Arial, sans-serif;
+  font-size: .98rem;
+  font-weight: 700;
+  line-height: 1.45;
+  letter-spacing: 0;
+  text-transform: none;
+  text-shadow: none;
+  -webkit-text-stroke: 0;
+  white-space: normal;
+}
+
+.site-header .nav-dropdown a:hover,
+.site-header .nav-dropdown a:focus-visible {
+  color: #ffffff;
+  background: #3a2323;
+  outline: 2px solid #d65c5c;
+  outline-offset: -2px;
+}
+.nav-group[open] > summary {
+  color: #ffffff;
 }
 
 .mobile-menu summary::-webkit-details-marker,
@@ -1532,20 +1585,20 @@ iframe {
     position: relative;
   }
 
-  .mobile-menu summary {
+  .mobile-menu > summary {
     width: 3rem;
     height: 3rem;
     display: grid;
     align-content: center;
     gap: 0.34rem;
     padding: 0.7rem;
-    border: 1px solid var(--line);
-    background: var(--surface-strong);
+    border: 1px solid #606060;
+    background: #202020;
     cursor: pointer;
     list-style: none;
   }
 
-  .mobile-menu summary span {
+  .mobile-menu > summary span {
     display: block;
     width: 100%;
     height: 2px;
@@ -1566,46 +1619,79 @@ iframe {
     align-content: start;
     gap: 0.9rem;
     padding: 1rem;
-    border: 1px solid var(--line);
-    border-top: 2px solid var(--accent);
-    background: var(--surface-strong);
-    box-shadow: var(--shadow);
+    border: 1px solid #535353;
+    border-top: 3px solid #a82424;
+    background: #171717;
+    box-shadow: 0 12px 30px rgba(0,0,0,.6);
   }
 
   .mobile-menu-link,
   .mobile-menu-links a,
   .mobile-submenu-links a {
     display: block;
-    padding: 0.9rem 1rem;
-    border: 1px solid var(--line);
-    background: var(--surface);
-    font-family: "Black Ops One", cursive;
-    font-size: 0.95rem;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    padding: .85rem 1rem;
+    border: 1px solid #484848;
+    border-radius: 4px;
+    background: #242424;
+    color: #f4f4f4;
+    font-family: "Open Sans", Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.45;
+    letter-spacing: 0;
+    text-transform: none;
+    text-shadow: none;
+    -webkit-text-stroke: 0;
+  }
+  .mobile-menu-panel a:hover,
+  .mobile-menu-panel a:focus-visible {
+    background: #402525;
+    color: #fff;
+    outline: 2px solid #d65c5c;
+    outline-offset: -2px;
   }
 
   .mobile-menu-link-primary {
-    border-color: var(--accent);
-    background: var(--accent);
+    border-color: #a33131;
+    background: #861414;
+    color: #fff;
+  }
+  .mobile-menu-link-primary:hover,
+  .mobile-menu-link-primary:focus-visible {
+    background: #a82121;
   }
 
   .mobile-submenu {
-    border: 1px solid var(--line);
-    background: var(--surface);
+    border: 1px solid #535353;
+    border-radius: 4px;
+    background: #222;
   }
 
-  .mobile-submenu summary {
-    padding: 0.95rem 1rem;
+  .mobile-submenu > summary {
+    width: 100%;
+    height: auto;
+    min-height: 3rem;
+    padding: .8rem 1rem;
     cursor: pointer;
     list-style: none;
-    font-family: "Black Ops One", cursive;
+    font-family: "Open Sans", Arial, sans-serif;
     font-size: 1rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
+    font-weight: 700;
+    line-height: 1.45;
+    letter-spacing: 0;
+    text-transform: none;
+    color: #fff;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    text-shadow: none;
+    -webkit-text-stroke: 0;
+  }
+  .mobile-submenu > summary:hover,
+  .mobile-submenu > summary:focus-visible {
+    background: #402525;
+    outline: 2px solid #d65c5c;
+    outline-offset: -2px;
   }
 
   .mobile-submenu summary::after {
@@ -1697,12 +1783,19 @@ iframe {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.55rem 0.75rem;
-  background: var(--accent);
-  border: 1px solid var(--accent-soft);
+  padding: .65rem .85rem;
+  background: #8f1515;
+  border: 1px solid #ba4848;
+  border-radius: 4px;
   color: #fff !important;
+  font-family: "Open Sans", Arial, sans-serif;
+  font-size: .88rem;
   font-weight: 800;
+  line-height: 1.35;
+  letter-spacing: 0;
   text-align: center;
+  text-shadow: none;
+  -webkit-text-stroke: 0;
   white-space: nowrap;
 }
 .header-trial-nav:hover,
@@ -1753,11 +1846,13 @@ iframe {
     justify-content: center;
     text-align: center;
     padding: .55rem .7rem;
-    font-family: "Black Ops One", cursive;
-    font-size: .8rem;
-    line-height: 1.2;
-    font-weight: 700;
-    background: var(--accent);
+    font-family: "Open Sans", Arial, sans-serif;
+    font-size: .9rem;
+    line-height: 1.3;
+    font-weight: 800;
+    letter-spacing: 0;
+    text-shadow: none;
+    background: #8f1515;
     color: #fff;
   }
   .nav-shell {
