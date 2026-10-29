@@ -1,13 +1,39 @@
 {
   "name": "burningtreemma",
   "compatibility_date": "2026-04-08",
-  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
   "main": "./dist/_worker.js/index.js",
+  "observability": {
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 1,
+      "invocation_logs": true,
+      "persist": true
+    }
+  },
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS"
   },
+  "d1_databases": [
+    {
+      "binding": "TRIAL_DB",
+      "database_name": "burningtree-trial-payments",
+      "database_id": "d2422ebf-13fe-4834-ab5f-586eb94121d3"
+    },
+    {
+      "binding": "LIVE_TRIAL_DB",
+      "database_name": "burningtree-live-payments",
+      "database_id": "b7b87f5b-560a-4e92-b7e7-0b3959025c4f"
+    }
+  ],
   "vars": {
-    "MAKE_WEBHOOK_URL": "https://hook.eu2.make.com/148pw2jrjro999olsiy0up1i54rixtj2"
+    "MAKE_WEBHOOK_URL": "https://hook.eu2.make.com/148pw2jrjro999olsiy0up1i54rixtj2",
+    "AIRTABLE_BASE_ID": "apptGRToJEGKv0NDa",
+    "LIVE_CHECKOUT_ENABLED": "true",
+    "LIVE_PILOT_ONLY": "false",
+    "SANDBOX_CHECKOUT_ENABLED": "false"
   }
 }

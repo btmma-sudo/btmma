@@ -1,207 +1,606 @@
-
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import LeadForm from "../components/LeadForm.astro";
-const checkoutUrl = "https://buy.stripe.com/aFa3cvaLf06hfc869V73G03";
 ---
 <BaseLayout
-  title="$29 Martial Arts Trial in Owings Mills | Burning Tree MMA"
-  description="Try two beginner martial arts classes and get a free uniform for $29 at Burning Tree MMA in Owings Mills, MD. New students only. Register today."
+  title="$29 New Student Special | Burning Tree MMA"
+  description="Two beginner martial arts classes and a free uniform for $29 in Owings Mills, Maryland."
   path="/29-trial"
   image="/images/jr-kenpo-gallery-1.jpg"
 >
   <div class="trial-page">
-    <section class="trial-hero">
-      <img class="trial-logo" src="/images/logo.png" alt="Burning Tree Mixed Martial Arts" width="100" height="136" />
+    <section class="hero">
+      <img src="/images/logo.png" alt="Burning Tree Mixed Martial Arts" width="90" height="122" />
       <p class="eyebrow">BURNING TREE MIXED MARTIAL ARTS</p>
-      <h1>YOUR CHILD IS CAPABLE OF MORE!</h1>
-      <p class="intro">Confidence. Focus. Discipline. Respect. Give your child the opportunity to discover what they can accomplish on the mats.</p>
+      <h1>START YOUR MARTIAL ARTS JOURNEY!</h1>
+      <p>Confidence. Focus. Discipline. Respect.</p>
       <div class="offer">
-        <p class="offer-label">NEW STUDENT SPECIAL</p>
-        <p class="price">$29</p>
+        <p class="eyebrow">NEW STUDENT SPECIAL</p>
+        <strong class="price">$29</strong>
         <h2>2 Beginner Classes + FREE Uniform</h2>
-        <p>Start with real training in a supportive, family-focused school.</p>
+        <p>One trial per new student. Each sibling registers separately.</p>
       </div>
-      <a class="trial-button" href="#registration">CLAIM YOUR $29 SPECIAL</a>
-      <p class="tagline">One Tree. One Family.</p>
-    </section>
-    <section class="benefits" aria-label="Benefits of martial arts">
-      <div><strong>CONFIDENCE</strong><span>Believe in what you can accomplish</span></div>
-      <div><strong>FOCUS</strong><span>Build discipline through practice</span></div>
-      <div><strong>COMMUNITY</strong><span>Grow in a supportive environment</span></div>
+      <a class="cta" href="#registration">REGISTER YOUR STUDENT</a>
+      <p><strong>One Tree. One Family.</strong></p>
     </section>
     <section class="registration" id="registration">
-      <p class="eyebrow">GET STARTED TODAY</p>
-      <h2>Two Simple Steps to Get Started</h2>
-      <p class="instructions">First, share your contact information so we can help select the right class. Then complete your $29 payment securely through Stripe.</p>
-      <p class="instructions">New to martial arts? <a href="/your-first-class" style="color: #ff9b9b; text-decoration: underline;">Read our Your First Class guide</a> for clothing, parking, programs, and what happens after signup.</p>
-      <div class="steps">
-        <div class="step">
-          <span class="number">1</span>
-          <LeadForm config={{ title: "Tell Us About Your Student", intro: "Complete this form so we can contact you about classes.", submitLabel: "Send My Information" }} />
+      <h2>Student Registration</h2>
+      <p>Choose a program, enter the student’s details, and continue straight to secure $29 checkout. Register one student at a time; siblings can share their parent contact details.</p>
+      <form id="student-registration" class="form">
+        <label for="studentType">Who are you registering for?</label>
+        <select id="studentType" name="studentType" required>
+          <option value="">Select student type</option>
+          <option value="minor">Child / minor student</option>
+          <option value="adult">Adult student</option>
+        </select>
+        <label for="studentName">Student's full name</label>
+        <input id="studentName" name="studentName" type="text" autocomplete="off" maxlength="120" required />
+        <p id="dob-label" class="form-heading">Student's date of birth</p>
+        <div class="dob-fields" role="group" aria-labelledby="dob-label">
+          <label for="dobMonth">Month
+            <select id="dobMonth" autocomplete="bday-month" required>
+              <option value="">Month</option>
+              <option value="01">January</option>
+              <option value="02">February</option>
+              <option value="03">March</option>
+              <option value="04">April</option>
+              <option value="05">May</option>
+              <option value="06">June</option>
+              <option value="07">July</option>
+              <option value="08">August</option>
+              <option value="09">September</option>
+              <option value="10">October</option>
+              <option value="11">November</option>
+              <option value="12">December</option>
+            </select>
+          </label>
+          <label for="dobDay">Day
+            <select id="dobDay" autocomplete="bday-day" required>
+              <option value="">Day</option>
+              <option value="01">1</option>
+              <option value="02">2</option>
+              <option value="03">3</option>
+              <option value="04">4</option>
+              <option value="05">5</option>
+              <option value="06">6</option>
+              <option value="07">7</option>
+              <option value="08">8</option>
+              <option value="09">9</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+              <option value="13">13</option>
+              <option value="14">14</option>
+              <option value="15">15</option>
+              <option value="16">16</option>
+              <option value="17">17</option>
+              <option value="18">18</option>
+              <option value="19">19</option>
+              <option value="20">20</option>
+              <option value="21">21</option>
+              <option value="22">22</option>
+              <option value="23">23</option>
+              <option value="24">24</option>
+              <option value="25">25</option>
+              <option value="26">26</option>
+              <option value="27">27</option>
+              <option value="28">28</option>
+              <option value="29">29</option>
+              <option value="30">30</option>
+              <option value="31">31</option>
+            </select>
+          </label>
+          <label for="dobYear">Year (4 digits)
+            <input id="dobYear" type="text" inputmode="numeric" autocomplete="bday-year" minlength="4" maxlength="4" pattern="[0-9]{4}" placeholder="YYYY" title="Enter exactly four numbers for the birth year" required />
+          </label>
         </div>
-        <div class="step payment">
-          <span class="number">2</span>
-          <h3>Complete Your $29 Purchase</h3>
-          <p>After submitting your information, purchase the special using our secure Stripe checkout. We will reach out to arrange beginner classes.</p>
-          <a class="trial-button" href={checkoutUrl} target="_blank" rel="noopener noreferrer">PAY $29 SECURELY</a>
-          <p class="note">Please complete both steps. Submitting the form does not process payment. Payment alone does not automatically schedule a class.</p>
+        <input id="studentDob" name="studentDob" type="hidden" />
+        <p class="fine-print">Used to help verify each student's eligibility, including siblings sharing contact details.</p>
+        <div id="guardianFields" hidden>
+          <label for="guardianName">Parent / guardian full name</label>
+          <input id="guardianName" name="guardianName" type="text" autocomplete="name" maxlength="120" />
         </div>
+        <label for="contactEmail">Contact email</label>
+        <input id="contactEmail" name="email" type="email" autocomplete="email" required />
+        <label for="contactPhone">Contact phone</label>
+        <input id="contactPhone" name="phone" type="tel" autocomplete="tel" required />
+        <label for="programInterest">Interested program</label>
+        <select id="programInterest" name="programInterest" required>
+          <option value="">Choose a program</option>
+          <option>Kenpo Karate</option>
+          <option>Muay Thai</option>
+          <option>Wing Chun</option>
+        </select>
+        <p class="fine-print">By submitting, you agree to our <a href="/privacy">Privacy Policy</a> and <a href="/terms">Terms of Service</a>.</p>
+        <div id="pilotFields" hidden>
+          <label for="pilotCode">Private launch test code</label>
+          <input id="pilotCode" name="pilotCode" type="password" autocomplete="off" maxlength="128" />
+          <p class="fine-print">Only for Burning Tree’s authorized live-payment verification. A real $29 charge will apply.</p>
+        </div>
+        <div class="form-security">
+          <p class="security-caption">Security check</p>
+          <div class="cf-turnstile" data-sitekey="0x4AAAAAAD6Ievu-t0Ll1euh" data-size="compact"></div>
+        </div>
+        <button type="submit">CONTINUE TO SECURE $29 PAYMENT</button>
+        <button id="checkout-button" type="button" hidden disabled>PAY $29 NOW</button>
+        <p id="setup-note" class="notice" role="status">We’ll check eligibility, then open Stripe Checkout. You’ll review the $29 purchase before confirming payment.</p>
+      </form>
+    </section>
+    <section class="registration" id="checkout-result" aria-live="polite" hidden>
+      <div class="offer">
+        <h2 id="checkout-result-title">Verifying your payment...</h2>
+        <p id="checkout-result-message" role="status">Checking your secure Stripe transaction.</p>
+        <p>Please do not make another payment while confirmation is pending.</p>
+        <a class="cta" href="tel:+14102180894">QUESTIONS? CALL 410-218-0894</a>
       </div>
     </section>
-    <section class="trial-contact">
+    <section class="contact">
       <h2>Questions? We're Here to Help.</h2>
       <p>Call <a href="tel:+14102180894">410-218-0894</a></p>
       <p>10210 S. Dolfield Road, Suite C · Owings Mills, MD 21117</p>
-      <p class="tagline">One Tree. One Family.</p>
+      <p><strong>One Tree. One Family.</strong></p>
     </section>
   </div>
 </BaseLayout>
+<script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script is:inline>
+(() => {
+  function initializeTrialForm() {
+    const form = document.getElementById("student-registration");
+    const notice = document.getElementById("setup-note");
+    const type = document.getElementById("studentType");
+    const guardian = document.getElementById("guardianFields");
+    const guardianName = document.getElementById("guardianName");
+    const dobMonth = document.getElementById("dobMonth");
+    const dobDay = document.getElementById("dobDay");
+    const dobYear = document.getElementById("dobYear");
+    const studentDob = document.getElementById("studentDob");
+    const checkoutButton = document.getElementById("checkout-button");
+    const pilotFields = document.getElementById("pilotFields");
+    const pilotCode = document.getElementById("pilotCode");
+    // Native date pickers can allow a five-digit year in their segmented UI.
+    // Keep birth-year entry to four digits and create the ISO date the API expects.
+    const syncDob = () => {
+      if (!dobMonth || !dobDay || !dobYear || !studentDob) return false;
+      const digits = dobYear.value.replace(/[^0-9]/g, "").slice(0, 4);
+      if (dobYear.value !== digits) dobYear.value = digits;
+      dobYear.setCustomValidity("");
+      studentDob.value = "";
+      if (!dobMonth.value || !dobDay.value || !/^[0-9]{4}$/.test(digits)) return false;
+      const year = Number(digits);
+      const month = Number(dobMonth.value);
+      const day = Number(dobDay.value);
+      const date = new Date(Date.UTC(year, month - 1, day));
+      const valid = date.getUTCFullYear() === year &&
+        date.getUTCMonth() === month - 1 && date.getUTCDate() === day &&
+        date.getTime() <= Date.now();
+      if (!valid) {
+        dobYear.setCustomValidity("Enter a valid date of birth that is not in the future.");
+        return false;
+      }
+      studentDob.value = digits + "-" + dobMonth.value + "-" + dobDay.value;
+      return true;
+    };
+    dobMonth?.addEventListener("change", syncDob);
+    dobDay?.addEventListener("change", syncDob);
+    dobYear?.addEventListener("input", syncDob);
+    syncDob();
+    let grant = null;
+    let liveMode = null; // null until the server confirms the current checkout mode.
+    let pilotOnly = false;
+    const openCheckout = async () => {
+      if (!grant || !checkoutButton || liveMode === null) return;
+      checkoutButton.disabled = true;
+      notice.textContent = liveMode ? "Preparing secure $29 checkout..." : "Preparing secure Stripe test checkout...";
+      try {
+        const response = await fetch(liveMode ? "/api/create-checkout-live" : "/api/create-checkout", {
+          method: "POST", headers: { "content-type": "application/json" },
+          body: JSON.stringify({ grant })
+        });
+        const result = await response.json();
+        if (!response.ok || !result.url || !/^https:\/\/checkout\.stripe\.com\//.test(result.url))
+          throw new Error(result.error || "Checkout is unavailable.");
+        window.location.assign(result.url);
+      } catch (error) {
+        notice.textContent = error?.message || "Checkout is unavailable. Please contact the studio.";
+        checkoutButton.disabled = false;
+      }
+    };
+    checkoutButton?.addEventListener("click", openCheckout);
+    const submit = form?.querySelector('button[type="submit"]');
+    if (!form || !notice || !submit) return;
+    submit.disabled = true;
+    // Verify Stripe's session server-side. The return URL alone is not a receipt.
+    const checkoutReturn = new URLSearchParams(window.location.search);
+    if (checkoutReturn.get("checkout") === "success") {
+      const panel = document.getElementById("checkout-result");
+      const heading = document.getElementById("checkout-result-title");
+      const message = document.getElementById("checkout-result-message");
+      form.hidden = true;
+      if (panel) panel.hidden = false;
+      const sessionId = checkoutReturn.get("session_id");
+      const valid = typeof sessionId === "string" && /^cs_live_[A-Za-z0-9_]+$/.test(sessionId);
+      (async () => {
+        if (!valid) {
+          if (heading) heading.textContent = "Payment verification needed";
+          if (message) message.textContent = "We couldn't verify the return from checkout. If you have a Stripe receipt, call the studio. Please don't make another payment.";
+          return;
+        }
+        try {
+          const response = await fetch("/api/trial-checkout-status?session_id=" + encodeURIComponent(sessionId), { cache: "no-store" });
+          if (!response.ok) throw new Error("Verification unavailable");
+          const result = await response.json();
+          if (result.status === "confirmed") {
+            if (heading) heading.textContent = "Registration confirmed!";
+            if (message) message.textContent = "Your $29 payment and registration are verified. Welcome to Burning Tree! We'll contact you to arrange your two beginner classes and free uniform.";
+          } else if (result.status === "processing") {
+            if (heading) heading.textContent = "Payment received!";
+            if (message) message.textContent = "Stripe confirmed your $29 payment. We're finalizing registration and will follow up about classes. Don't pay again.";
+          } else {
+            if (heading) heading.textContent = "Payment confirmation pending";
+            if (message) message.textContent = "Payment has not yet been confirmed. If you have a Stripe receipt, contact the studio before trying again.";
+          }
+        } catch {
+          if (heading) heading.textContent = "Payment verification pending";
+          if (message) message.textContent = "We couldn't check payment status right now. Contact the studio with your Stripe receipt before trying another payment.";
+        }
+      })();
+      return;
+    }
+    // Fail closed until the server confirms whether checkout is test or live.
+    (async () => {
+      try {
+        const response = await fetch("/api/trial-eligibility-live", { cache: "no-store" });
+        if (!response.ok) throw new Error("Could not verify checkout mode");
+        const status = await response.json();
+        if (!["locked", "enabled"].includes(status.liveRegistration)) throw new Error("Invalid checkout mode");
+        liveMode = status.liveRegistration === "enabled";
+        pilotOnly = liveMode && status.pilotOnly !== false;
+        if (pilotFields) pilotFields.hidden = !pilotOnly;
+        if (pilotCode) pilotCode.required = pilotOnly;
+        const returnState = new URLSearchParams(window.location.search).get("checkout");
+        notice.textContent = returnState === "success"
+          ? "Thank you for completing checkout! We'll verify your payment and follow up about classes."
+          : returnState === "cancelled"
+          ? "Checkout was cancelled. You have not completed payment."
+          : liveMode
+          ? pilotOnly
+            ? "Private live payment verification is enabled. A real $29 charge applies after approval."
+            : "We'll check the student's eligibility before taking a secure $29 payment."
+           : "Student registration is available. Online payments are not yet enabled. Call or text 410-218-0894 for assistance.";
+        submit.disabled = false;
+      } catch {
+        notice.textContent = "Registration is temporarily unavailable. Please call 410-218-0894.";
+      }
+    })();
+    const syncGuardian = () => {
+      const isMinor = type?.value === "minor";
+      if (guardian) guardian.hidden = !isMinor;
+      if (guardianName) {
+        guardianName.required = isMinor;
+        if (!isMinor) guardianName.value = "";
+      }
+    };
+    type?.addEventListener("change", syncGuardian);
+    syncGuardian();
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      grant = null;
+      if (checkoutButton) { checkoutButton.hidden = true; checkoutButton.disabled = true; }
+      if (liveMode === null) {
+        notice.textContent = "Registration is temporarily unavailable. Please call 410-218-0894.";
+        return;
+      }
+      notice.textContent = "Validating registration...";
+      syncDob();
+      if (!form.reportValidity() || !studentDob?.value) {
+        notice.textContent = "Please complete all required fields.";
+        return;
+      }
+      const values = new FormData(form);
+      const token = values.get("cf-turnstile-response");
+      if (!token) {
+        notice.textContent = "Please complete the security check before continuing.";
+        return;
+      }
+      const payload = Object.fromEntries(values.entries());
+      delete payload["cf-turnstile-response"];
+      submit.disabled = true;
+      notice.textContent = "Checking trial eligibility...";
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 15000);
+      try {
+        const response = await fetch(liveMode ? "/api/trial-eligibility-live" : "/api/trial-eligibility", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ ...payload, turnstileToken: token }),
+          signal: controller.signal
+        });
+        const result = await response.json();
+        notice.textContent = result.message || result.error || "Please contact the studio to verify eligibility.";
+        if (liveMode && result.success && result.eligible && result.registrationSaved && result.checkoutGrant && checkoutButton) {
+          grant = result.checkoutGrant;
+          checkoutButton.hidden = false;
+          checkoutButton.disabled = false;
+          notice.textContent = "Registration approved. Opening secure Stripe checkout...";
+          // Go straight to payment after eligibility. Keep the button as a retry option.
+          await openCheckout();
+        }
+      } catch (error) {
+        notice.textContent = error?.name === "AbortError"
+          ? "Verification timed out. Please try again or call 410-218-0894."
+          : "Eligibility verification is unavailable. Please call 410-218-0894.";
+      } finally {
+        clearTimeout(timeout);
+        submit.disabled = false;
+        window.turnstile?.reset();
+      }
+    });
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initializeTrialForm, { once: true });
+  } else {
+    initializeTrialForm();
+  }
+})();
+</script>
 <style>
-  /* Keep the $29 offer readable and usable on phones, tablets, and desktops. */
+  .trial-page [hidden] { display: none !important; }
+  /* Trial page styling is isolated from the main site so mobile spacing stays predictable. */
   .trial-page {
-    background: var(--bg);
+    width: 100%;
+    max-width: 100%;
     color: var(--text);
     text-align: center;
-    max-width: 100%;
   }
-  .trial-hero {
-    width: min(100%, 850px);
-    margin: auto;
-    padding: clamp(2rem, 5vw, 3rem) 1rem;
+
+  .trial-page .hero {
+    width: 100%;
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 48px 24px 20px;
   }
-  .trial-logo {
-    display: block;
+  .trial-page .hero img {
     width: auto;
-    max-width: 110px;
-    height: 108px;
+    height: 92px;
+    max-width: 100%;
     object-fit: contain;
-    margin: 0 auto 1rem;
+    margin: 0 auto 15px;
   }
-  .trial-page .eyebrow,
-  .offer-label {
-    color: #ff8989;
-    font-size: .9rem;
+  .trial-page .eyebrow {
+    margin: 0 0 10px;
+    color: var(--accent-soft);
     font-weight: 900;
     letter-spacing: .07em;
   }
-  .trial-hero h1 {
-    color: #fff;
-    font-size: clamp(2rem, 6vw, 4.2rem);
-    line-height: 1.12;
-    margin: 1.1rem 0;
+  .trial-page .hero h1 {
+    max-width: 18ch;
+    margin: 12px auto;
+    font-size: clamp(2rem, 5.5vw, 3.7rem);
+    line-height: 1.14;
     overflow-wrap: break-word;
   }
-  .intro {
-    font-size: clamp(1rem, 2.5vw, 1.35rem);
-    max-width: 680px;
-    line-height: 1.55;
-    margin: 0 auto;
+  .trial-page .hero > p {
+    margin: 10px auto;
+    line-height: 1.5;
   }
-  .offer {
-    width: min(100%, 560px);
-    border: 3px solid #d51b1b;
-    border-radius: 18px;
-    margin: 1.8rem auto;
-    padding: clamp(1rem, 4vw, 1.4rem);
-    box-shadow: 0 8px 28px #0003;
+  .trial-page .offer {
+    width: 100%;
+    max-width: 580px;
+    margin: 24px auto;
+    padding: 24px;
+    border: 2px solid var(--accent);
+    border-radius: 16px;
+    background: var(--surface-strong);
   }
-  .offer-label { margin: 0; }
-  .offer h2 {
-    color: #fff;
-    font-size: clamp(1.35rem, 4vw, 2rem);
-    margin: .5rem auto;
-    line-height: 1.18;
-  }
-  .offer p:last-child { margin-bottom: 0; }
-  .price {
-    color: #ff7373;
-    font-size: clamp(4.5rem, 12vw, 7rem);
-    line-height: 1;
+  .trial-page .offer .price {
+    display: block;
+    margin: 8px 0 5px;
+    color: var(--heading);
+    font-size: clamp(3.8rem, 11vw, 6.3rem);
     font-weight: 900;
-    margin: .7rem 0;
+    line-height: 1;
   }
-  .trial-button {
+  .trial-page .offer h2 {
+    margin: 10px auto;
+    font-size: clamp(1.35rem, 3.5vw, 2rem);
+    line-height: 1.2;
+  }
+  .trial-page .offer > p:last-child {
+    margin: 12px auto 0;
+    font-size: .9rem;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+  .trial-page .cta,
+  .trial-page .form button {
     display: inline-flex;
-    align-items: center;
     justify-content: center;
-    background: #b20d16;
-    border: 2px solid #d8202c;
-    color: #fff !important;
-    text-decoration: none;
-    padding: .9rem 1.25rem;
-    min-height: 3.3rem;
-    max-width: 100%;
+    align-items: center;
+    min-height: 52px;
+    padding: 14px 22px;
+    border: 0;
     border-radius: 9px;
+    background: var(--accent);
+    color: #fff;
+    font-family: "Black Ops One", cursive;
     font-size: 1rem;
+    font-weight: 900;
     line-height: 1.3;
-    font-weight: 900;
     text-align: center;
-    overflow-wrap: break-word;
-    transition: background .2s ease;
+    text-decoration: none;
+    cursor: pointer;
   }
-  .trial-button:hover,
-  .trial-button:focus-visible { background: #d1222e; }
-  .tagline { font-weight: 800; margin-top: 1.4rem; }
-  .benefits {
+  .trial-page .cta { max-width: 100%; }
+  .trial-page .registration {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 28px 20px 56px;
+    scroll-margin-top: 110px;
+  }
+  .trial-page .registration h2 {
+    margin: 0 0 10px;
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    line-height: 1.2;
+  }
+  .trial-page .registration > p {
+    max-width: 52ch;
+    margin: 0 auto 20px;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+  .trial-page .form {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1.25rem;
-    background: #171717;
-    color: #fff;
-    padding: 1.8rem max(1rem, calc((100% - 980px) / 2));
-  }
-  .benefits > div { display: flex; flex-direction: column; gap: .45rem; min-width: 0; }
-  .benefits span { font-size: .95rem; }
-  .registration {
-    width: min(100%, 1060px);
-    padding: clamp(2.2rem, 5vw, 3.75rem) 1rem;
-    margin: auto;
-    scroll-margin-top: 7rem;
-  }
-  .registration h2 { font-size: clamp(1.65rem, 4vw, 2.4rem); color: #fff; }
-  .instructions { max-width: 730px; margin: 1rem auto 2rem; line-height: 1.6; }
-  .steps {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.5rem;
-    align-items: start;
-    text-align: left;
-  }
-  .step {
+    width: 100%;
     min-width: 0;
+    gap: 9px;
+    padding: 26px;
+    text-align: left;
     border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: clamp(.9rem, 2.6vw, 1.35rem);
+    border-radius: 16px;
+    background: var(--surface-strong);
   }
-  .number {
-    display: inline-grid;
-    place-items: center;
-    background: #b20d16;
-    color: #fff;
-    width: 2.4rem;
-    height: 2.4rem;
-    line-height: 1;
-    font-size: 1rem;
-    font-weight: 900;
-    border-radius: 50%;
-    margin: 0 0 1rem;
+  .trial-page .form > label,
+  .trial-page .form-heading {
+    margin: 10px 0 0;
+    font-weight: 700;
+    line-height: 1.4;
   }
-  .payment h3 { color: #fff; font-size: 1.5rem; }
-  .payment p { line-height: 1.6; }
-  .payment .trial-button { margin: .9rem 0; }
-  .note { color: var(--muted); font-size: .9rem; line-height: 1.5; }
-  .trial-contact { background: var(--surface); padding: 2.5rem 1rem; }
-  .trial-contact h2 { color: #fff; }
-  .trial-contact a { color: #ff8989; font-weight: 900; }
-  @media (max-width: 800px) {
-    .steps { grid-template-columns: minmax(0, 1fr); }
-    .benefits { grid-template-columns: minmax(0, 1fr); }
+  .trial-page .form input:not([type="hidden"]),
+  .trial-page .form select {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    min-height: 48px;
+    padding: 11px 12px;
+    box-sizing: border-box;
+    border: 1px solid #777;
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 16px; /* Prevents unexpected iOS zoom while entering a student. */
+    line-height: 1.35;
   }
-  @media (max-width: 700px) {
-    .trial-hero { padding: 2rem 1rem; }
-    .step { padding: 1rem; }
-    .trial-button { width: 100%; }
-    .registration { scroll-margin-top: 5rem; }
+  .trial-page .form input:focus-visible,
+  .trial-page .form select:focus-visible {
+    outline: 2px solid var(--accent-soft);
+    outline-offset: 2px;
+  }
+  .trial-page .dob-fields {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, .75fr) minmax(0, 1fr);
+    align-items: start;
+    gap: 10px;
+    min-width: 0;
+  }
+  .trial-page .dob-fields label {
+    display: grid;
+    min-width: 0;
+    gap: 7px;
+    margin: 0;
+    font-size: .92rem;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  .trial-page .fine-print,
+  .trial-page .notice {
+    margin: 6px 0;
+    font-size: .88rem;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+  .trial-page .fine-print { color: var(--muted); }
+  .trial-page .fine-print a { text-decoration: underline; text-underline-offset: 2px; }
+  .trial-page #guardianFields:not([hidden]),
+  .trial-page #pilotFields:not([hidden]) {
+    display: grid;
+    gap: 9px;
+    min-width: 0;
+  }
+  .trial-page .form button {
+    width: 100%;
+    min-width: 0;
+    margin-top: 5px;
+  }
+  .trial-page .form button[hidden] { display: none; }
+  .trial-page .form button:disabled { opacity: .55; cursor: not-allowed; }
+  .trial-page .form-security {
+    width: 100%;
+    min-width: 0;
+    padding: 8px 0 4px;
+  }
+  .trial-page .security-caption {
+    margin: 0 0 8px;
+    font-weight: 700;
+    font-size: .86rem;
+    line-height: 1.4;
+  }
+  .trial-page .form-security .cf-turnstile {
+    width: 100%;
+    min-height: 140px;
+    max-width: 100%;
+  }
+  .trial-page #setup-note {
+    border-radius: 8px;
+    padding: 12px 14px;
+    background: var(--surface);
+  }
+  .trial-page .contact {
+    width: 100%;
+    padding: 36px 20px 42px;
+    background: var(--surface);
+  }
+  .trial-page .contact h2 {
+    margin-bottom: 12px;
+    font-size: clamp(1.35rem, 3vw, 1.85rem);
+  }
+  .trial-page .contact p { margin: 8px auto; line-height: 1.55; overflow-wrap: anywhere; }
+  .trial-page .contact a { color: var(--accent-soft); text-decoration: underline; }
+
+  @media (max-width: 600px) {
+    .trial-page .hero { padding: 26px 16px 12px; }
+    .trial-page .hero img { height: 70px; margin-bottom: 10px; }
+    .trial-page .eyebrow { font-size: .72rem; }
+    .trial-page .hero h1 {
+      max-width: 19ch;
+      margin: 10px auto;
+      font-size: clamp(1.75rem, 7.2vw, 2.6rem);
+      line-height: 1.17;
+    }
+    .trial-page .offer {
+      margin: 18px auto;
+      padding: 18px 14px;
+      border-radius: 12px;
+    }
+    .trial-page .offer .price { font-size: 4.3rem; }
+    .trial-page .offer h2 { font-size: clamp(1.28rem, 5.4vw, 1.75rem); }
+    .trial-page .cta {
+      display: flex;
+      width: 100%;
+      max-width: 450px;
+      margin: 0 auto;
+    }
+    .trial-page .registration {
+      padding: 20px 12px 38px;
+      scroll-margin-top: 90px;
+    }
+    .trial-page .registration > p { margin-bottom: 15px; font-size: .94rem; }
+    .trial-page .form { padding: 18px 16px; gap: 8px; border-radius: 12px; }
+    .trial-page .dob-fields {
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr);
+      gap: 10px;
+    }
+    .trial-page .dob-fields label:last-child {
+      grid-column: 1 / -1;
+    }
+    .trial-page .contact { padding: 28px 16px 34px; }
+  }
+  @media (max-width: 360px) {
+    .trial-page .hero { padding-inline: 12px; }
+    .trial-page .hero h1 { font-size: 1.7rem; }
+    .trial-page .offer { padding: 15px 10px; }
+    .trial-page .registration { padding-inline: 8px; }
+    .trial-page .form { padding: 15px 12px; }
   }
 </style>
