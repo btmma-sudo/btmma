@@ -1822,3 +1822,81 @@ button, input, textarea, select, iframe, video { max-width: 100%; }
 @media (max-width: 360px) {
   .site-header .brand-logo { height: 3.9rem; }
 }
+
+/* Homepage: display the entire real team portrait above the offer.
+   Keep faces and people at both edges visible at every screen width. */
+.hero-banner.hero-image-first {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-height: 0;
+  height: auto;
+  padding: 0;
+  background: #161010;
+}
+.hero-image-first .hero-media {
+  position: relative;
+  inset: auto;
+  flex: 0 0 auto;
+  width: min(100%, 1380px);
+  aspect-ratio: 1092 / 601;
+  margin-inline: auto;
+  background: #161010;
+}
+.hero-image-first .hero-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center center;
+}
+.hero-image-first .hero-shell {
+  width: 100%;
+  max-width: none;
+  padding: 0.9rem 1rem 1.5rem;
+  background: linear-gradient(180deg, #171111, #171717);
+  display: flex;
+  justify-content: center;
+}
+.hero-image-first .hero-content {
+  max-width: 66rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: clamp(1rem, 2vw, 1.5rem) 0 1rem;
+  text-align: center;
+  align-items: center;
+}
+.hero-image-first .hero-content h1 {
+  font-size: clamp(1.7rem, 4.5vw, 3.5rem);
+  line-height: 1.16;
+  text-align: center;
+}
+.hero-image-first .hero-cta-description {
+  margin: 1rem auto 1.2rem;
+  max-width: 46rem;
+  text-align: center;
+}
+.hero-image-first .hero-mobile-cta {
+  display: inline-flex;
+  justify-content: center;
+  max-width: 100%;
+}
+@media (max-width: 760px) {
+  .hero-banner.hero-image-first {
+    min-height: 0;
+    padding-bottom: 0;
+  }
+  .hero-image-first .hero-media {
+    width: 100%;
+  }
+  .hero-image-first .hero-shell {
+    padding: .75rem 1rem 1.35rem;
+  }
+  .hero-image-first .hero-content {
+    padding: .45rem 0 0.75rem;
+  }
+  .hero-image-first .hero-content h1 {
+    font-size: clamp(1.75rem, 8vw, 2.7rem);
+    line-height: 1.13;
+  }
+}

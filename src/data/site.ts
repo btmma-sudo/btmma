@@ -275,8 +275,8 @@ export const homePage: {
   },
   hero: {
     title: "Burning Tree MMA: Keepers of the flame",
-    image: "/images/burning-tree-adult-striking-drill.webp",
-    imageAlt: "Burning Tree adult martial arts students practicing a striking drill at the studio",
+    image: "/images/burning-tree-homepage-team.webp",
+    imageAlt: "Burning Tree martial arts students and instructors together in a group portrait at the studio, celebrating their training community",
     overlay: "strong"
   },
   leadForm: {

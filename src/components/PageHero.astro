@@ -12,9 +12,10 @@ type Props = {
   ctaDescription?: string;
   centerMobile?: boolean;
   centerContent?: boolean;
+  imageFirst?: boolean;
 };
 
-const { hero, large = false, leadForm, showMobileCta = true, ctaLabel = "Ask About Classes", ctaHref = "#lead-form", ctaDescription, centerMobile = false, centerContent = false } = Astro.props;
+const { hero, large = false, leadForm, showMobileCta = true, ctaLabel = "Ask About Classes", ctaHref = "#lead-form", ctaDescription, centerMobile = false, centerContent = false, imageFirst = false } = Astro.props;
 const overlayClass = hero.overlay === "medium" ? "hero-overlay-medium" : "hero-overlay-strong";
 ---
 
@@ -26,7 +27,8 @@ const overlayClass = hero.overlay === "medium" ? "hero-overlay-medium" : "hero-o
     large && "hero-large",
     showMobileCta && "hero-bottom-mobile",
     centerMobile && "hero-mobile-center",
-    centerContent && "hero-content-center"
+    centerContent && "hero-content-center",
+    imageFirst && "hero-image-first"
   ]}>
   <div class="hero-media">
     <img
