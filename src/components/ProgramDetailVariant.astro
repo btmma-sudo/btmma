@@ -34,7 +34,7 @@ const showSchedule = program.showSchedule !== false;
     <section class="shell section-divider">
       <div class="program-split">
         <div class="program-split-left">
-          <LeadForm config={{ ...program.leadForm, defaultProgram: v.programInterest ?? program.leadForm.defaultProgram }} />
+          <LeadForm formId={`lead-form-${i}`} config={{ ...program.leadForm, defaultProgram: v.programInterest ?? program.leadForm.defaultProgram }} />
         </div>
         <article class="detail-card detail-card-feature program-split-right">
           <p class="eyebrow">{v.audience}</p>
@@ -109,7 +109,7 @@ const showSchedule = program.showSchedule !== false;
   </div>
 ))}
 
-{showSchedule && <ClassSchedule ctaHref="#lead-form" />}
+{showSchedule && <ClassSchedule ctaHref="/29-trial" ctaLabel="Claim the $29 New Student Special" />}
 
 {showTestimonials && (
   <section class="shell section-divider">
