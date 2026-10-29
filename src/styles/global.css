@@ -1667,11 +1667,24 @@ iframe {
     background: #222;
   }
 
-  .mobile-submenu > summary {
+  /* The nested Classes control must be one full-width row, not the
+     3rem square reserved for the top-level hamburger menu. */
+  .site-header .mobile-menu-panel .mobile-submenu > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
     width: 100%;
+    min-width: 0;
     height: auto;
     min-height: 3rem;
-    padding: .8rem 1rem;
+    gap: .75rem;
+    padding: .85rem 1rem;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
     cursor: pointer;
     list-style: none;
     font-family: "Open Sans", Arial, sans-serif;
@@ -1681,26 +1694,37 @@ iframe {
     letter-spacing: 0;
     text-transform: none;
     color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    text-align: left;
     text-shadow: none;
     -webkit-text-stroke: 0;
   }
-  .mobile-submenu > summary:hover,
-  .mobile-submenu > summary:focus-visible {
+  .site-header .mobile-menu-panel .mobile-submenu > summary::marker {
+    content: "";
+  }
+  .site-header .mobile-menu-panel .mobile-submenu > summary:hover,
+  .site-header .mobile-menu-panel .mobile-submenu > summary:focus-visible {
     background: #402525;
     outline: 2px solid #d65c5c;
     outline-offset: -2px;
   }
 
-  .mobile-submenu summary::after {
+  .site-header .mobile-menu-panel .mobile-submenu > summary::after {
     content: "+";
-    font-size: 1.1rem;
+    position: static;
+    flex: 0 0 auto;
+    display: inline-block;
+    width: auto;
+    height: auto;
+    border: 0;
+    background: none;
+    font-family: "Open Sans", Arial, sans-serif;
+    font-size: 1.2rem;
+    line-height: 1;
+    color: #fff;
   }
 
-  .mobile-submenu[open] summary::after {
-    content: "-";
+  .site-header .mobile-menu-panel .mobile-submenu[open] > summary::after {
+    content: "−";
   }
 
   .mobile-submenu-links,
