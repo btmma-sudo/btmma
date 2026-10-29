@@ -8,8 +8,8 @@ export const adviceArticles = [
     "seoTitle": "Is Karate Good for Shy Kids? | Burning Tree MMA",
     "description": "How beginner karate classes can support shy children, what parents should look for, and how to make a first class less intimidating.",
     "date": "2026-10-28",
-    "image": "/images/Gallery/gallery11.jpeg",
-    "imageAlt": "Burning Tree instructor and junior students together on the training floor in Owings Mills",
+    "image": "/images/kids-martial-arts-smiling-student.png",
+    "imageAlt": "Smiling junior martial arts student at Burning Tree MMA in Owings Mills",
     "minutes": 5,
     "excerpt": "A quiet child does not need to become the loudest person in the room to build real confidence. Here's what parents can look for.",
     "intro": [
@@ -65,8 +65,8 @@ export const adviceArticles = [
     "seoTitle": "Kenpo vs. Muay Thai for Beginners | Burning Tree MMA",
     "description": "A practical, beginner-friendly comparison of American Kenpo Karate and Muay Thai, including class focus, goals, and how to choose.",
     "date": "2026-10-28",
-    "image": "/images/muay-thai-gallery-1.jpg",
-    "imageAlt": "Muay Thai students practicing a supervised kicking drill at Burning Tree MMA",
+    "image": "/images/burning-tree-muay-thai-female.webp",
+    "imageAlt": "Female martial arts student practicing Muay Thai at Burning Tree MMA",
     "minutes": 5,
     "excerpt": "Both can be excellent starting points. The better choice depends on what you enjoy learning and what brings you back to class.",
     "intro": [
@@ -120,8 +120,8 @@ export const adviceArticles = [
     "seoTitle": "Your First Martial Arts Class: What to Expect | Burning Tree MMA",
     "description": "What to wear, what to bring, and how beginner martial arts classes work at Burning Tree Mixed Martial Arts in Owings Mills, Maryland.",
     "date": "2026-10-28",
-    "image": "/images/Gallery/gallery5.jpeg",
-    "imageAlt": "Burning Tree instructor and young student smiling together after martial arts practice",
+    "image": "/images/kids-martial-arts-young-student.png",
+    "imageAlt": "Young martial arts student at Burning Tree MMA",
     "minutes": 5,
     "excerpt": "Wondering what to wear, whether you need experience, or how the first class works? Start here.",
     "intro": [
