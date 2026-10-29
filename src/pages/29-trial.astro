@@ -24,7 +24,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     </section>
     <section class="registration" id="registration">
       <h2>Student Registration</h2>
-      <p>Choose a program, enter the student’s details, and continue straight to secure $29 checkout. Register one student at a time; siblings can share their parent contact details.</p>
+      <p>Choose a program, enter the student’s details, and then choose secure card checkout or pay directly to our Cash App. Register one student at a time; siblings can share their parent contact details.</p>
       <p class="first-class-help">First time on the mats? <a href="/your-first-class">See what to wear, where to park, and what happens after you register.</a></p>
       <form id="student-registration" class="form">
         <label for="studentType">Who are you registering for?</label>
@@ -122,8 +122,17 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <div class="cf-turnstile" data-sitekey="0x4AAAAAAD6Ievu-t0Ll1euh" data-size="compact"></div>
         </div>
         <button type="submit">CONTINUE TO SECURE $29 PAYMENT</button>
-        <button id="checkout-button" type="button" hidden disabled>PAY $29 NOW</button>
-        <p id="setup-note" class="notice" role="status">We’ll check eligibility, then open Stripe Checkout. You’ll review the $29 purchase before confirming payment.</p>
+        <button id="checkout-button" type="button" hidden disabled>PAY $29 SECURELY BY CARD</button>
+        <button id="cashapp-button" type="button" hidden disabled>PAY $29 DIRECTLY WITH CASH APP</button>
+        <p id="setup-note" class="notice" role="status">We’ll check eligibility before showing payment options. Card payments use Stripe; direct Cash App payments require manual verification.</p>
+        <div id="cashapp-instructions" class="cashapp-instructions" hidden aria-live="polite">
+          <h3>Direct Cash App Payment</h3>
+          <p>Send exactly <strong>$29</strong> to <strong>$BTMMA</strong> through Cash App.</p>
+          <a class="cta" href="https://cash.app/$BTMMA" target="_blank" rel="noopener noreferrer">OPEN CASH APP TO PAY $29</a>
+          <p>Add “BTMMA New Student Special” in the payment note. Once paid, text the student's name and your payment confirmation to <a href="sms:+12023684395">(202) 368-4395</a>.</p>
+          <p><strong>Your registration is pending.</strong> We will confirm it only after verifying the $29 payment in our Cash App account. Do not pay again through Stripe.</p>
+          <p>Need to change payment methods? Call <a href="tel:+12023684395">(202) 368-4395</a>.</p>
+        </div>
       </form>
     </section>
     <section class="registration" id="checkout-result" aria-live="polite" hidden>
@@ -155,6 +164,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     const dobYear = document.getElementById("dobYear");
     const studentDob = document.getElementById("studentDob");
     const checkoutButton = document.getElementById("checkout-button");
+    const cashAppButton = document.getElementById("cashapp-button");
+    const cashAppInstructions = document.getElementById("cashapp-instructions");
     const pilotFields = document.getElementById("pilotFields");
     const pilotCode = document.getElementById("pilotCode");
 
@@ -234,7 +245,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     const openCheckout = async () => {
       if (!grant || !checkoutButton || liveMode === null) return;
       checkoutButton.disabled = true;
-      notice.textContent = liveMode ? "Preparing secure $29 checkout..." : "Preparing secure Stripe test checkout...";
+      if (cashAppButton) cashAppButton.disabled = true;
+      notice.textContent = liveMode ? "Preparing secure $29 card checkout..." : "Preparing secure Stripe test checkout...";
       try {
         const response = await fetch(liveMode ? "/api/create-checkout-live" : "/api/create-checkout", {
           method: "POST", headers: { "content-type": "application/json" },
@@ -264,9 +276,37 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       } catch (error) {
         notice.textContent = error?.message || "Checkout is unavailable. Please contact the studio.";
         checkoutButton.disabled = false;
+        if (cashAppButton && liveMode) cashAppButton.disabled = false;
       }
     };
     checkoutButton?.addEventListener("click", openCheckout);
+    cashAppButton?.addEventListener("click", async () => {
+      if (!grant || !cashAppButton || !checkoutButton || liveMode !== true) return;
+      cashAppButton.disabled = true;
+      checkoutButton.disabled = true;
+      notice.textContent = "Preparing direct Cash App payment instructions...";
+      try {
+        const response = await fetch("/api/trial-cashapp-live", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ grant })
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success || result.state !== "pending_manual_verification")
+          throw new Error(result.error || "Cash App payment is unavailable.");
+        // Cash App does not report a receipt to this website. Never mark paid here.
+        grant = null;
+        cashAppButton.hidden = true;
+        checkoutButton.hidden = true;
+        if (cashAppInstructions) cashAppInstructions.hidden = false;
+        notice.textContent = "Cash App selected. Follow the steps below; your registration is pending until we verify payment.";
+        trackTrial("trial_cashapp_payment_selected");
+      } catch (error) {
+        notice.textContent = error?.message || "Please call (202) 368-4395 for payment assistance.";
+        cashAppButton.disabled = false;
+        checkoutButton.disabled = false;
+      }
+    });
     const submit = form?.querySelector('button[type="submit"]');
     if (!form || !notice || !submit) return;
     submit.disabled = true;
@@ -367,6 +407,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       event.preventDefault();
       grant = null;
       if (checkoutButton) { checkoutButton.hidden = true; checkoutButton.disabled = true; }
+      if (cashAppButton) { cashAppButton.hidden = true; cashAppButton.disabled = true; }
+      if (cashAppInstructions) cashAppInstructions.hidden = true;
       if (liveMode === null) {
         notice.textContent = "Registration is temporarily unavailable. Please call (202) 368-4395.";
         return;
@@ -404,9 +446,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           trackTrial("trial_registration_approved");
           checkoutButton.hidden = false;
           checkoutButton.disabled = false;
-          notice.textContent = "Registration approved. Opening secure Stripe checkout...";
-          // Go straight to payment after eligibility. Keep the button as a retry option.
-          await openCheckout();
+          if (cashAppButton) { cashAppButton.hidden = false; cashAppButton.disabled = false; }
+          notice.textContent = "Registration approved! Choose card checkout or direct Cash App payment below. Cash App payments need staff verification.";
         }
       } catch (error) {
         notice.textContent = error?.name === "AbortError"
@@ -427,6 +468,17 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 })();
 </script>
 <style>
+  .trial-page .cashapp-instructions {
+    margin-top: 14px;
+    padding: 20px;
+    border: 1px solid var(--accent);
+    border-radius: 12px;
+    background: var(--surface);
+    line-height: 1.5;
+  }
+  .trial-page .cashapp-instructions h3 { margin: 0 0 10px; }
+  .trial-page .cashapp-instructions p { margin: 12px 0; }
+  .trial-page .cashapp-instructions a:not(.cta) { text-decoration: underline; }
   .trial-page [hidden] { display: none !important; }
   /* Trial page styling is isolated from the main site so mobile spacing stays predictable. */
   .trial-page {
