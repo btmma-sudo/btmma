@@ -1,9 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import PageHero from "../components/PageHero.astro";
+import HomeConversion from "../components/HomeConversion.astro";
 import ClassSchedule from "../components/ClassSchedule.astro";
-import LeadForm from "../components/LeadForm.astro";
-import GalleryCarousel from "../components/GalleryCarousel.astro";
 import { homePage, homepagePrograms, site } from "../data/site";
 import { adviceArticles } from "../data/advice";
 import "../styles/advice.css";
@@ -15,29 +13,7 @@ import "../styles/advice.css";
   path="/"
   keywords={homePage.seo.keywords}
   image={homePage.hero.image}>
-  <div class="hero-form-layout">
-    <PageHero
-      hero={homePage.hero}
-      large
-      centerContent
-      imageFirst
-      ctaLabel="Claim the $29 Special"
-      ctaHref="/29-trial"
-      ctaDescription="2 beginner classes + a FREE uniform for just $29. New students only."
-    />
-    <GalleryCarousel />
-    <section class="home-trial-banner shell" aria-label="$29 new student special">
-      <div class="home-trial-banner-copy">
-        <p class="eyebrow">New Student Special</p>
-        <h2>$29 — 2 Beginner Classes + FREE Uniform</h2>
-        <p>Ready to get on the mats? Register for our new student special today. <a href="/your-first-class" style="text-decoration: underline; text-underline-offset: 3px;">Not sure what to expect? Start with our first-class guide.</a></p>
-      </div>
-      <a class="button" href="/29-trial">Claim Your $29 Special</a>
-    </section>
-    <div class="hero-form-float">
-      <LeadForm config={homePage.leadForm} />
-    </div>
-  </div>
+  <HomeConversion />
 
   <section class="shell section-divider home-kids-spotlight" aria-labelledby="home-kids-heading">
     <div class="home-kids-spotlight-inner">
