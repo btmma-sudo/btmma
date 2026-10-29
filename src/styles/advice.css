@@ -5,7 +5,7 @@
 .advice-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 1.3rem; }
 .advice-card { min-width: 0; overflow: hidden; border: 1px solid var(--line); background: var(--surface-strong); display: flex; flex-direction: column; }
 .advice-card > a { display: block; }
-.advice-card img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
+.advice-card img { width: 100%; aspect-ratio: 16 / 10; object-fit: contain; background: #171717; }
 .advice-card-body { padding: 1.3rem; display: flex; flex: 1; flex-direction: column; }
 .advice-card .eyebrow { margin-bottom: .5rem; color: #ff8b6c; }
 .advice-card h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); line-height: 1.2; margin-bottom: .85rem; }
@@ -17,7 +17,7 @@
 .advice-small { display: flex; flex-wrap: wrap; gap: .5rem 1rem; color: var(--muted); font-size: .84rem; }
 .advice-article { max-width: 860px; margin: 0 auto; padding: 2.5rem 1rem 4rem; }
 .advice-article-photo { margin: 0 0 2rem; }
-.advice-article-photo img { width: 100%; max-height: 490px; object-fit: cover; aspect-ratio: 16 / 9; }
+.advice-article-photo img { width: 100%; max-height: 490px; object-fit: contain; aspect-ratio: 16 / 9; background: #171717; }
 .advice-article-photo figcaption { margin-top: .45rem; color: var(--muted); font-size: .79rem; }
 .advice-article p { color: #ededed; line-height: 1.85; font-size: 1.02rem; }
 .advice-article section { padding: 1.45rem 0 .4rem; }

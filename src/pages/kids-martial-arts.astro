@@ -363,7 +363,7 @@ const serviceSchema = {
   .kids-secondary { color: #fff; border-bottom: 2px solid #e04b4b; padding: .4rem 0; font-weight: 700; }
   .kids-offer-note { font-size: .85rem; color: #e5e5e5; margin: 1.1rem 0 0; }
   .kids-hero-media { position: relative; padding: 0 0 1.25rem; }
-  .kids-hero-media img { width: 100%; height: clamp(340px,40vw,535px); object-fit: cover; border-radius: 9px; border: 5px solid #fff; }
+  .kids-hero-media img { width: 100%; height: auto; aspect-ratio: 1353 / 1086; object-fit: contain; border-radius: 9px; border: 5px solid #fff; background: #111; }
   .kids-media-stamp { position: absolute; bottom: 0; left: -1rem; padding: .9rem 1.3rem; background: #b20d16; color: #fff; display: flex; flex-direction: column; font-family: "Black Ops One",cursive; line-height: 1.25; transform: rotate(-3deg); }
   .kids-media-stamp strong { font-size: 1.35rem; }.kids-media-stamp span { font-size: 1.12rem; }
   .kids-benefits { background: #f5f5f5; padding: 4rem 0; }
@@ -392,7 +392,7 @@ const serviceSchema = {
   .kids-steps li > span { display: grid; place-items: center; flex: 0 0 2.4rem; height: 2.4rem; background: #b20d16; color: #fff; border-radius: 50%; font-weight: 900; }
   .kids-steps strong { color: #fff; }.kids-steps p { margin: .25rem 0 0; font-size: .92rem; }
   .kids-proof { padding-top: 4.5rem; padding-bottom: 4.5rem; display: grid; grid-template-columns: .8fr 1.2fr; gap: clamp(2rem,5vw,4rem); align-items: center; }
-  .kids-proof-media img { width: 100%; max-height: 440px; object-fit: cover; border-radius: 9px; }
+  .kids-proof-media img { width: 100%; height: auto; max-height: 440px; object-fit: contain; border-radius: 9px; background: #f5f5f5; }
   .kids-proof-copy blockquote { margin: 0 0 1.4rem; padding: 1.1rem 0 1.1rem 1.4rem; border-left: 5px solid #b20d16; }
   .kids-proof-copy blockquote p { font-size: clamp(1.06rem,1.6vw,1.27rem); font-weight: 700; margin: 0 0 .7rem; }
   .kids-proof-copy blockquote footer { font-weight: 800; color: #9b0810; }
@@ -462,7 +462,7 @@ const serviceSchema = {
     .kids-hero-grid, .kids-first-grid, .kids-proof { grid-template-columns: 1fr; }
     .kids-hero-copy { order: 1; }
     .kids-hero-media { order: 2; margin: .6rem .5rem 0; }
-    .kids-hero-media img { height: 325px; }
+    .kids-hero-media img { height: auto; }
     .kids-breadcrumb { margin-bottom: 1.2rem; }
     .kids-hero h1 { font-size: clamp(2.4rem,9.2vw,3.5rem); }
     .kids-actions { flex-direction: column; align-items: stretch; }
@@ -472,7 +472,7 @@ const serviceSchema = {
     .kids-program-grid { grid-template-columns: 1fr; }
     .kids-program-card > img { max-height: 300px; }
     .kids-proof { padding-top: 3.2rem; padding-bottom: 3.2rem; }
-    .kids-proof-media img { max-height: 310px; }
+    .kids-proof-media img { max-height: 310px; object-fit: contain; }
     .kids-schedule-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
     .kids-button { width: 100%; }
   }

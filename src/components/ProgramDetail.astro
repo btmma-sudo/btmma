@@ -124,7 +124,7 @@ const { seoCopy } = program;
     padding-bottom: 1.5rem;
   }
   .program-photo-tile { margin: 0; min-width: 0; background: #1d1d1d; }
-  .program-photo-tile img { display: block; width: 100%; height: clamp(220px, 30vw, 350px); object-fit: cover; border-radius: 4px; }
+  .program-photo-tile img { display: block; width: 100%; height: clamp(220px, 30vw, 350px); object-fit: contain; object-position:center; background:#1d1d1d; border-radius: 4px; }
   @media (max-width: 700px) {
     .program-photo-grid { grid-template-columns: 1fr; }
     .program-photo-tile img { height: auto; max-height: 360px; object-fit: contain; }

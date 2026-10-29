@@ -460,7 +460,7 @@ const breadcrumbSchema = {
   .ta-hero-note { font-size:.83rem; color:#ddd; margin:1.1rem 0 0; }
   .ta-hero-note a { text-decoration:underline; }
   .ta-hero-photo { position:relative; padding:0 0 1rem; }
-  .ta-hero-photo img { display:block; width:100%; height:clamp(320px,36vw,500px); object-fit:cover; border-radius:9px; border:5px solid #fff; }
+  .ta-hero-photo img { display:block; width:100%; height:auto; aspect-ratio:4/3; object-fit:contain; border-radius:9px; border:5px solid #fff; background:#161616; }
   .ta-photo-stamp { position:absolute; left:-.7rem; bottom:0; background:#b20d16; color:#fff; padding:.9rem 1.2rem; display:flex; flex-direction:column; line-height:1.2; transform:rotate(-3deg); font-family:"Black Ops One",cursive; }
   .ta-photo-stamp strong { font-size:1.18rem; }.ta-photo-stamp span { font-size:.95rem; }
   .ta-benefits { background:#f5f5f5; padding:4.2rem 0; }
@@ -503,23 +503,23 @@ const breadcrumbSchema = {
   .ta-schedule-day li strong { font-size:.86rem; }.ta-schedule-day li span { color:#9d0710; font-weight:800; }
   .ta-schedule-note { margin:0 0 1.25rem; font-size:.9rem; color:#555; }
   .ta-community-grid { display:grid; grid-template-columns:1fr 1fr; gap:clamp(1.5rem,4vw,4rem); align-items:center; }
-  .ta-community-grid img { display:block; width:100%; height:350px; object-fit:cover; border-radius:9px; }
+  .ta-community-grid img { display:block; width:100%; height:auto; aspect-ratio:700/467; object-fit:contain; border-radius:9px; background:#181818; }
   .ta-gallery { background:#141414; color:#fff; padding:4.2rem 0; }
   .ta-gallery .ta-eyebrow { color:#ff9696; }
   .ta-gallery h2 { color:#fff; }
   .ta-gallery .ta-intro { color:#e6e6e6; }
   .ta-gallery-grid { display:grid; grid-template-columns:minmax(0,.85fr) minmax(0,1.4fr); gap:1rem; align-items:stretch; }
   .ta-gallery figure { min-width:0; margin:0; border:1px solid #3e3e3e; border-radius:8px; overflow:hidden; background:#222; }
-  .ta-gallery figure img { display:block; width:100%; object-fit:cover; }
+  .ta-gallery figure img { display:block; width:100%; object-fit:contain; background:#222; }
   .ta-gallery-feature { display:flex; flex-direction:column; }
-  .ta-gallery-feature img { height:510px; flex:1; object-position:center 25%; }
+  .ta-gallery-feature img { height:auto; max-height:510px; aspect-ratio:3/4; flex:initial; object-position:center; }
   .ta-gallery figcaption { display:grid; gap:.3rem; padding:.95rem 1.1rem 1.1rem; }
   .ta-gallery figcaption strong { color:#fff; font-size:1.02rem; }
   .ta-gallery figcaption span { color:#dfdfdf; font-size:.87rem; line-height:1.48; }
   .ta-gallery-more { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1rem; }
   .ta-gallery-more .ta-gallery-team { grid-column:1/-1; }
-  .ta-gallery-team img { height:auto; aspect-ratio:1370 / 878; object-fit:cover; object-position:center center; }
-  .ta-gallery-more figure:not(.ta-gallery-team) img { height:290px; }
+  .ta-gallery-team img { height:auto; aspect-ratio:1370 / 878; object-fit:contain; object-position:center center; }
+  .ta-gallery-more figure:not(.ta-gallery-team) img { height:290px; object-fit:contain; }
   .ta-gallery-more .ta-milestone-img { object-fit:contain; object-position:center; background:#222; }
   .ta-gallery-more figure:last-child img { object-fit:contain; object-position:center center; background:#222; }
   .ta-local { border-top:1px solid #ebebeb; padding:4.1rem 0; }
@@ -549,7 +549,7 @@ const breadcrumbSchema = {
   .ta-final .ta-tagline { font-family:"Black Ops One",cursive; font-size:1.12rem; margin:1.2rem auto 0; }
   .ta-womens { background:#f5f5f5; padding:4.3rem 0; border-top:1px solid #dedede; border-bottom:1px solid #dedede; }
   .ta-womens-grid { display:grid; grid-template-columns:.92fr 1.08fr; gap:clamp(1.5rem,4vw,3.7rem); align-items:center; }
-  .ta-womens-image img { display:block; width:100%; height:auto; aspect-ratio:4 / 5; object-fit:cover; object-position:center center; border-radius:8px; }
+  .ta-womens-image img { display:block; width:100%; height:auto; aspect-ratio:4 / 5; object-fit:contain; object-position:center center; border-radius:8px; background:#171717; }
   .ta-womens-copy h2 { margin-bottom:.9rem; }
   .ta-womens-copy p { color:#393939; margin:.5rem 0 .8rem; }
   .ta-womens-copy .ta-womens-intro { color:#222; font-size:1.08rem; font-weight:600; }
@@ -588,7 +588,7 @@ const breadcrumbSchema = {
     .ta-hero h1 { font-size:clamp(2.35rem,9.1vw,3.45rem); }
     .ta-breadcrumb { margin-bottom:1.15rem; }
     .ta-hero-photo { margin:.8rem .5rem 0; }
-    .ta-hero-photo img { height:320px; }
+    .ta-hero-photo img { height:auto; }
     .ta-hero-actions { flex-direction:column; align-items:stretch; }
     .ta-text-link-light { text-align:center; }
     .ta-benefits,.ta-chooser,.ta-schedule,.ta-local,.ta-final { padding:3.1rem 0; }
@@ -598,10 +598,10 @@ const breadcrumbSchema = {
     .ta-schedule-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
     .ta-gallery { padding:3.1rem 0; }
     .ta-gallery-grid { grid-template-columns:1fr; }
-    .ta-gallery-feature img { height:360px; flex:initial; }
+    .ta-gallery-feature img { height:auto; max-height:360px; flex:initial; }
     .ta-gallery-team img { height:auto; aspect-ratio:1370 / 878; }
     .ta-gallery-more figure:not(.ta-gallery-team) img { height:190px; }
-    .ta-community-grid img { height:300px; }
+    .ta-community-grid img { height:auto; }
     .ta-button { width:100%; }
   }
   @media(max-width:440px) {

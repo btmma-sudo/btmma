@@ -188,7 +188,7 @@ const faqSchema = {
   .first-hero-copy > p:not(.eyebrow) { max-width: 660px; }
   .first-lead { font-size: clamp(1.06rem, 2vw, 1.35rem); font-weight: 600; }
   .first-hero-photo { min-width: 0; }
-  .first-hero-photo img { width: 100%; height: clamp(285px, 37vw, 470px); object-fit: cover; object-position: center; border: 2px solid #7b2727; border-radius: 10px; }
+  .first-hero-photo img { width: 100%; height: auto; aspect-ratio:1353/1086; object-fit: contain; object-position: center; border: 2px solid #7b2727; border-radius: 10px; background:#181818; }
   .first-actions { display: flex; gap: .85rem; align-items: center; flex-wrap: wrap; margin: 1.6rem 0 .9rem; }
   .first-actions > a { min-height: 3.2rem; padding: .7rem 1rem; text-align: center; }
   .first-outline { display: inline-flex; justify-content: center; align-items: center; border: 1px solid #aaa; font-weight: 700; color: #fff; }
@@ -205,7 +205,7 @@ const faqSchema = {
   .first-checklist li { padding-left: .1rem; margin-bottom: .8rem; }
   .first-checklist li::marker { color: #fb5b5b; }
   .first-small-note { font-size: .95rem; background: #2b2020; padding: .9rem 1.1rem; border-left: 3px solid #cc2727; }
-  .first-side-photo { width: 100%; max-height: 450px; object-fit: cover; border-radius: 10px; }
+  .first-side-photo { width: 100%; height:auto; max-height: 450px; object-fit: contain; border-radius: 10px; background:#181818; }
   .first-program-grid, .first-faq-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1rem; margin-top: 1.4rem; }
   .first-program-card, .first-faq-card { background: #212121; border: 1px solid #474747; border-radius: 9px; padding: 1.5rem; min-width: 0; }
   .first-program-card a { display: inline-block; color: #ff9696; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; margin-top: .85rem; }
@@ -233,7 +233,7 @@ const faqSchema = {
     .first-hero-grid, .first-split, .first-special-grid { grid-template-columns: minmax(0,1fr); }
     .first-steps, .first-program-grid, .first-faq-grid { grid-template-columns: minmax(0,1fr); }
     .first-hero { padding: 2rem 0; }
-    .first-hero-photo img { height: auto; max-height: 340px; object-fit: cover; }
+    .first-hero-photo img { height: auto; max-height: 340px; object-fit: contain; }
     .first-actions { flex-direction: column; align-items: stretch; }
     .first-actions > a { width: 100%; }
     .first-soft { padding: 2rem 0; }
