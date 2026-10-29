@@ -1804,3 +1804,13 @@ button, input, textarea, select, iframe, video { max-width: 100%; }
   .brand-logo { height: 4.8rem; }
   .variant-tab-btn { flex-basis: 100%; }
 }
+
+/* Keep the mobile header compact so form content remains visible while scrolling. */
+@media (max-width: 760px) {
+  .site-header .nav-shell { min-height: 4.2rem; padding: .3rem 0; }
+  .site-header .brand { padding: 0; }
+  .site-header .brand-logo { height: 4.25rem; }
+}
+@media (max-width: 360px) {
+  .site-header .brand-logo { height: 3.9rem; }
+}
