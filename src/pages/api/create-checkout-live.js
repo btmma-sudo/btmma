@@ -68,7 +68,7 @@ export async function POST({ request, locals }) {
       if (contactResponse.ok) {
         const studentRecord = await contactResponse.json();
         const email = studentRecord?.fields?.Email;
-        if (typeof email === "string" && /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email) && email.length <= 254)
+        if (typeof email === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.length <= 254)
           params.set("customer_email", email);
       }
     } catch { /* Stripe collects an email when auto-fill is unavailable. */ }
