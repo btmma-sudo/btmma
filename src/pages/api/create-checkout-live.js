@@ -54,9 +54,25 @@ export async function POST({ request, locals }) {
     "line_items[0][quantity]": "1",
     client_reference_id: row.id,
     "metadata[btmma_source]": "btmma_29_trial_live_v1",
-    success_url: origin + "/29-trial/?checkout=success",
+    success_url: origin + "/29-trial/?checkout=success&session_id={CHECKOUT_SESSION_ID}",
     cancel_url: origin + "/29-trial/?checkout=cancelled"
   });
+  // Pre-fill email from the approved student record to avoid entering it twice.
+  if (env.AIRTABLE_API_TOKEN && env.AIRTABLE_BASE_ID) {
+    try {
+      const contactResponse = await fetch(
+        "https://api.airtable.com/v0/" + encodeURIComponent(env.AIRTABLE_BASE_ID) +
+        "/tblZCXEuRKXiPZlc7/" + encodeURIComponent(recordId),
+        { headers: { Authorization: "Bearer " + env.AIRTABLE_API_TOKEN } }
+      );
+      if (contactResponse.ok) {
+        const studentRecord = await contactResponse.json();
+        const email = studentRecord?.fields?.Email;
+        if (typeof email === "string" && /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email) && email.length <= 254)
+          params.set("customer_email", email);
+      }
+    } catch { /* Stripe collects an email when auto-fill is unavailable. */ }
+  }
   let result;
   try {
     result = await fetch("https://api.stripe.com/v1/checkout/sessions", {
