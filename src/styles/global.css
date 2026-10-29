@@ -1549,7 +1549,13 @@ iframe {
     top: calc(100% + 0.75rem);
     right: 0;
     width: min(22rem, calc(100vw - 2rem));
+    max-height: calc(100vh - 7rem);
+    max-height: calc(100dvh - 7rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
     display: grid;
+    align-content: start;
     gap: 0.9rem;
     padding: 1rem;
     border: 1px solid var(--line);
