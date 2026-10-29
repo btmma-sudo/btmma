@@ -7,6 +7,9 @@ Publish **one useful, original article or genuine community/school update every 
 - Kenpo vs. Muay Thai for Beginners
 - What to Expect at Your First Martial Arts Class
 
+## Special community article: October 28, 2026
+- Martial Arts Don't Create Bullies. They Build Bully-Proof Confidence. — A practical guide for families on confidence, respect, boundaries, help-seeking, and bullying prevention. This article does not promise children will never experience bullying.
+
 ## Ongoing monthly ideas
 - November 2026 — What Progress Looks Like in a Child's First Month of Karate
 - December 2026 — Choosing a Martial Arts Class for the New Year

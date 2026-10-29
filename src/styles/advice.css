@@ -2,7 +2,7 @@
 /* Advice & Community – page and homepage preview */
 .advice-heading { max-width: 760px; margin-bottom: 2rem; }
 .advice-heading p:not(.eyebrow) { color: var(--muted); font-size: 1.05rem; }
-.advice-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 1.3rem; }
+.advice-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 1.3rem; }
 .advice-card { min-width: 0; overflow: hidden; border: 1px solid var(--line); background: var(--surface-strong); display: flex; flex-direction: column; }
 .advice-card > a { display: block; }
 .advice-card img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }

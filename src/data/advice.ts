@@ -2,6 +2,71 @@
 // To add a monthly article, add one entry below and keep the date and image accurate.
 export const adviceArticles = [
   {
+    "slug": "martial-arts-bully-proof-kids-confidence",
+    "category": "Confidence & Bullying Prevention",
+    "title": "Martial Arts Don't Create Bullies. They Build Bully-Proof Confidence.",
+    "seoTitle": "Can Martial Arts Help Kids Handle Bullies? | Burning Tree MMA",
+    "description": "Will martial arts make your child aggressive? Learn how Burning Tree MMA in Owings Mills teaches respect, calm confidence, boundaries, and safer responses to bullying.",
+    "date": "2026-10-28",
+    "image": "/images/Gallery/gallery8.jpeg",
+    "imageAlt": "Two young martial artists smiling with a martial arts instructor after training at an event",
+    "minutes": 5,
+    "excerpt": "We don't teach kids to pick fights. We help them find their voice, set boundaries, and stand tall without putting others down.",
+    "intro": [
+      "One question I hear from parents is whether learning martial arts will teach their child to fight or turn them into a bully. At Burning Tree Mixed Martial Arts, our goal is the opposite. We don't teach children to intimidate people. We teach them to respect others, believe in themselves, and make better decisions under pressure.",
+      "We want kids to become bully-proof in the ways that matter: having the confidence to speak up, the self-control to walk away, and the courage to ask for help. No child is immune to bullying, and a child should never have to handle it alone. Martial arts can be one part of a bigger support system."
+    ],
+    "sections": [
+      {
+        "heading": "Real strength means self-control",
+        "paragraphs": [
+          "When children learn Kenpo Karate, Muay Thai, or Wing Chun, they practice more than kicks and punches. They practice listening, following directions, respecting partners, and stopping when an instructor says stop. We make it clear that knowing a technique does not give anyone permission to use it to scare or hurt someone.",
+          "We want students to understand that being strong is not about proving you are tougher than someone else. It's about choosing what is right, even when you're frustrated."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "Confidence changes how kids handle difficult moments",
+        "paragraphs": [
+          "A child who feels unsure of themselves may have a hard time saying no or asking an adult for help. Martial arts practice gives kids opportunities to try challenging things, hear useful feedback, and see themselves improve. Over time, some children become more comfortable making eye contact, speaking clearly, and setting boundaries.",
+          "That confidence is not a guarantee that bullying will stop. But it can help a child feel less powerless when something uncomfortable happens."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "What we mean by 'bully-proof'",
+        "paragraphs": [
+          "Being bully-proof does not mean a child has to fight back or never feel afraid. It means helping them build practical habits they can use at school, online, and in everyday life."
+        ],
+        "bullets": [
+          "Use a clear, firm voice: 'Stop. That's not okay.'",
+          "Move toward a safer place and stay near supportive friends or adults.",
+          "Tell a teacher, parent, counselor, or another trusted adult what happened—and keep telling someone if it continues.",
+          "Avoid retaliating or using martial arts to get even.",
+          "Stand up for someone being targeted by getting adult help rather than joining the confrontation."
+        ]
+      },
+      {
+        "heading": "Self-defense is about safety, not starting a fight",
+        "paragraphs": [
+          "We teach students that avoiding a fight is a success. Walking away, creating distance, and getting help should come before physical confrontation whenever possible. If a child is in immediate danger, their priority is to get to safety and seek adult assistance—not to win an argument or prove a point.",
+          "Parents and schools still have an important responsibility to address bullying. Training can support a child's confidence, but it does not replace a safety plan, adult intervention, or school reporting."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "At Burning Tree, we're building character first",
+        "paragraphs": [
+          "When your child walks into Burning Tree, I want them to feel like they belong. We want them to learn to encourage classmates, show respect to someone who is still learning, and feel proud of their progress without putting anyone else down.",
+          "Our goal isn't to raise bullies. It's to help raise kids who are confident enough to stand up for themselves, kind enough to stand up for others, and disciplined enough to know when to walk away. That's what One Tree. One Family. means to us."
+        ],
+        "bullets": []
+      }
+    ],
+    "relatedHref": "/kids-martial-arts",
+    "relatedLabel": "Explore Our Kids Martial Arts Classes"
+  },
+  {
     "slug": "is-karate-good-for-shy-kids",
     "category": "Parents & Kids",
     "title": "Is Karate Good for Shy Kids?",
