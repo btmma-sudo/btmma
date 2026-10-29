@@ -81,7 +81,7 @@ export async function POST({ request, locals }) {
   return json({
     success: true,
     cashtag: "$BTMMA",
-    paymentUrl: "https://cash.app/$BTMMA",
+    paymentUrl: "https://cash.app/$BTMMA/29",
     amount: 29,
     state: "pending_manual_verification"
   });
