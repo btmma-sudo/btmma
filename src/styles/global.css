@@ -745,7 +745,8 @@ button {
 }
 
 .program-card:hover .program-card-image img {
-  transform: scale(1.04);
+  /* No zoom: enlarging a fully framed picture can clip faces at card edges. */
+  transform: none;
 }
 
 .program-card-body {
