@@ -128,10 +128,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         <div id="cashapp-instructions" class="cashapp-instructions" hidden aria-live="polite">
           <h3>Direct Cash App Payment</h3>
           <p>Send exactly <strong>$29</strong> to <strong>$BTMMA</strong> through Cash App.</p>
-          <a class="cta" href="https://cash.app/$BTMMA" target="_blank" rel="noopener noreferrer">OPEN CASH APP TO PAY $29</a>
+          <a class="cta" href="https://cash.app/$BTMMA/29" rel="noopener noreferrer">OPEN CASH APP — $29 TO $BTMMA</a>
+          <p class="fine-print">Check that Cash App shows $BTMMA and $29 before tapping Send. If the amount does not appear, enter $29 manually.</p>
           <p>Add “BTMMA New Student Special” in the payment note. Once paid, text the student's name and your payment confirmation to <a href="sms:+14102180894">(410) 218-0894</a>.</p>
           <p><strong>Your registration is pending.</strong> We will confirm it only after verifying the $29 payment in our Cash App account. Do not pay again through Stripe.</p>
           <p>Need to change payment methods? Call <a href="tel:+12023684395">(202) 368-4395</a>.</p>
+          <button type="button" id="cashapp-new-student">REGISTER ANOTHER STUDENT</button>
         </div>
       </form>
     </section>
@@ -299,8 +301,16 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         cashAppButton.hidden = true;
         checkoutButton.hidden = true;
         if (cashAppInstructions) cashAppInstructions.hidden = false;
-        notice.textContent = "Cash App selected. Follow the steps below; your registration is pending until we verify payment.";
+        notice.textContent = "Opening Cash App with $BTMMA and $29. Check the details before sending. We'll verify your payment manually.";
+        try { window.sessionStorage.setItem("btmma_cashapp_trial_pending", "1"); }
+        catch { /* Continue even if browser storage is disabled. */ }
         trackTrial("trial_cashapp_payment_selected");
+        // Cash App's amount URL is not universally reliable. Keep an on-page
+        // fallback and a clear instruction to verify $BTMMA and $29.
+        const paymentUrl = result.paymentUrl;
+        if (paymentUrl === "https://cash.app/$BTMMA/29") {
+          window.location.assign(paymentUrl);
+        }
       } catch (error) {
         notice.textContent = error?.message || "Please call (202) 368-4395 for payment assistance.";
         cashAppButton.disabled = false;
@@ -310,6 +320,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     const submit = form?.querySelector('button[type="submit"]');
     if (!form || !notice || !submit) return;
     submit.disabled = true;
+    document.getElementById("cashapp-new-student")?.addEventListener("click", () => {
+      try { window.sessionStorage.removeItem("btmma_cashapp_trial_pending"); }
+      catch { /* Allow reset without storage. */ }
+      window.location.assign("/29-trial/");
+    });
     // Verify Stripe's session server-side. The return URL alone is not a receipt.
     const checkoutReturn = new URLSearchParams(window.location.search);
     const checkoutState = checkoutReturn.get("checkout");
@@ -365,6 +380,19 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           if (message) message.textContent = "We couldn't check payment status right now. Contact the studio with your Stripe receipt before trying another payment.";
         }
       })();
+      return;
+    }
+    // When the customer comes back from Cash App, show the text receipt
+    // instructions rather than accidentally offering a second payment.
+    let cashAppPending = false;
+    try { cashAppPending = window.sessionStorage.getItem("btmma_cashapp_trial_pending") === "1"; }
+    catch { /* No persistent state available. */ }
+    if (cashAppPending) {
+      if (cashAppInstructions) cashAppInstructions.hidden = false;
+      if (checkoutButton) checkoutButton.hidden = true;
+      if (cashAppButton) cashAppButton.hidden = true;
+      submit.disabled = true;
+      notice.textContent = "Your Cash App payment is pending verification. Please text your receipt to (410) 218-0894. Do not pay twice.";
       return;
     }
     // Fail closed until the server confirms whether checkout is test or live.
