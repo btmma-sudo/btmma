@@ -3,9 +3,10 @@ import { programInterestOptions, type LeadFormConfig } from "../data/site";
 
 type Props = {
   config?: LeadFormConfig;
+  formId?: string;
 };
 
-const { config } = Astro.props;
+const { config, formId = "lead-form" } = Astro.props;
 
 const title = config?.title ?? "Start Your First Step";
 const intro = config?.intro ?? "Tell us what you are interested in and we will follow up with the best class option.";
@@ -17,7 +18,7 @@ const hideProgramSelect = config?.hideProgramSelect ?? false;
 const fields = config?.fields ?? "standard";
 ---
 
-<section class="lead-card-compact-card" id="lead-form">
+<section class="lead-card-compact-card" id={formId}>
   <h2>{title}</h2>
   <p>{intro}</p>
 
@@ -74,7 +75,8 @@ const fields = config?.fields ?? "standard";
   if (!(window).__btmmaLeadFormsInitialized) {
     (window).__btmmaLeadFormsInitialized = true;
 
-    const forms = document.querySelectorAll("[data-lead-form]");
+    const initializeLeadForms = () => {
+      const forms = document.querySelectorAll("[data-lead-form]");
 
     for (const form of forms) {
       if (!(form instanceof HTMLFormElement) || form.dataset.bound === "true") continue;
@@ -163,6 +165,14 @@ const fields = config?.fields ?? "standard";
           }
         }
       });
+    }
+    };
+
+    // Wait for all tabs and form instances to be parsed before binding handlers.
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initializeLeadForms, { once: true });
+    } else {
+      initializeLeadForms();
     }
   }
 </script>
