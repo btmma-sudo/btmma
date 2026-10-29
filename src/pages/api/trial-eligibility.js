@@ -331,7 +331,7 @@ export async function POST({ request, locals }) {
           phoneReady: phoneField?.type === "phoneNumber",
           notesReady: Boolean(notesField && ["multilineText", "singleLineText"].includes(notesField.type))
         });
-        return json({ success: false, error: "Registration contact details need verification. Please call 410-218-0894." }, 503);
+        return json({ success: false, error: "Registration contact details need verification. Please call (202) 368-4395." }, 503);
       }
       fields[phoneField.id] = phone.trim();
       fields[notesField.id] = "Requested program: " + programInterest + ". Submitted through the $29 New Student Special.";

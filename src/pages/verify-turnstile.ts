@@ -64,10 +64,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
       body: encodedPayload.toString(),
     });
     if (!delivery.ok) {
-      return json({ error: "We couldn't send your request. Please try again or call 410-218-0894." }, 502);
+      return json({ error: "We couldn't send your request. Please try again or call (202) 368-4395." }, 502);
     }
   } catch {
-    return json({ error: "We couldn't send your request. Please try again or call 410-218-0894." }, 502);
+    return json({ error: "We couldn't send your request. Please try again or call (202) 368-4395." }, 502);
   }
 
   return json({ success: true }, 200);

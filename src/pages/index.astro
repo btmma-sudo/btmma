@@ -4,7 +4,7 @@ import PageHero from "../components/PageHero.astro";
 import ClassSchedule from "../components/ClassSchedule.astro";
 import LeadForm from "../components/LeadForm.astro";
 import GalleryCarousel from "../components/GalleryCarousel.astro";
-import { homePage, homepagePrograms } from "../data/site";
+import { homePage, homepagePrograms, site } from "../data/site";
 import { adviceArticles } from "../data/advice";
 import "../styles/advice.css";
 ---
@@ -96,7 +96,7 @@ import "../styles/advice.css";
       <p><strong>For kids:</strong> Our junior Kenpo Karate, Muay Thai, and Wing Chun classes focus on movement, discipline, confidence, and age-appropriate skill development. <a href="/kids-martial-arts">Compare kids martial arts programs</a>.</p>
       <p><strong>For teens and adults:</strong> American Kenpo develops structured self-defense skills; Muay Thai emphasizes striking and conditioning; and Wing Chun explores balance, timing, and efficient movement. <a href="/teens-adults-martial-arts">Find teen and adult classes</a>.</p>
       <p><strong>For women interested in self-defense:</strong> Ask about our Sunday <a href="/womens-defense">Women's Self-Defense / Sanuces classes</a> with practical technique instruction.</p>
-      <p>Not sure where to begin? Call or text us at <a href="tel:4102180894">410-218-0894</a>, or <a href="/29-trial">claim our $29 new student special</a> with two beginner classes and a free uniform.</p>
+      <p>Not sure where to begin? Call or text us at <a href={`tel:${site.phoneHref}`}>{site.phone}</a>, or <a href="/29-trial">claim our $29 new student special</a> with two beginner classes and a free uniform.</p>
     </article>
   </section>
 

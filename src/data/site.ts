@@ -103,8 +103,8 @@ export type SupportingPage = {
 export const site = {
   name: "Burning Tree Mixed Martial Arts",
   shortName: "Burning Tree MMA",
-  phone: "410-218-0894",
-  phoneHref: "4102180894",
+  phone: "(202) 368-4395",
+  phoneHref: "+12023684395",
   email: "info@burningtreemma.com",
   addressLine1: "10210 S Dolfield Rd",
   city: "Owings Mills",
@@ -387,7 +387,7 @@ export const faqPage: SupportingPage & {
     },
     {
       question: "How can I register or ask about my first class?",
-      answer: "Visit the $29 New Student Special registration page or call or text us at 410-218-0894. We'll help you choose a suitable beginner class."
+      answer: "Visit the $29 New Student Special registration page or call or text us at (202) 368-4395. We'll help you choose a suitable beginner class."
     }
   ],
   leadForm: {
