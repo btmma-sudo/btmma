@@ -40,25 +40,38 @@ const { seoCopy } = program;
 </section>
 )}
 
-<div class="carousel" role="region" aria-label="Burning Tree martial arts class photos">
-  <div class="carousel-track page-carousel-track">
-    {[0, 1].map((copy) => (
-      <div class="carousel-set" aria-hidden={copy === 1 ? "true" : undefined}>
-        {program.galleryImages.map((image) => (
-          <img
-            src={image.src}
-            alt={copy === 0 ? image.alt : ""}
-            width="360"
-            height="260"
-            loading="eager"
-            fetchpriority="low"
-            decoding="async"
-          />
+{program.galleryImages.length > 0 && (
+  program.galleryImages.length <= 2 ? (
+    <div class="shell program-photo-grid" role="region" aria-label="Burning Tree martial arts class photos">
+      {program.galleryImages.map((image) => (
+        <figure class="program-photo-tile">
+          <img src={image.src} alt={image.alt} loading="lazy" decoding="async" width="680" height="440" />
+        </figure>
+      ))}
+    </div>
+  ) : (
+    <div class="carousel" role="region" aria-label="Burning Tree martial arts class photos">
+      <div class="carousel-track page-carousel-track">
+        {[0, 1].map((copy) => (
+          <div class="carousel-set" aria-hidden={copy === 1 ? "true" : undefined}>
+            {program.galleryImages.map((image) => (
+              <img
+                src={image.src}
+                alt={copy === 0 ? image.alt : ""}
+                width="360"
+                height="260"
+                loading="eager"
+                fetchpriority="low"
+                decoding="async"
+              />
+            ))}
+          </div>
         ))}
       </div>
-    ))}
-  </div>
-</div>
+    </div>
+    
+  )
+)}
 
 {seoCopy && (
   <section class="seo-copy-section">
@@ -101,3 +114,19 @@ const { seoCopy } = program;
     )}
   </div>
 </section>
+
+<style>
+  .program-photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    gap: 1rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+  .program-photo-tile { margin: 0; min-width: 0; background: #1d1d1d; }
+  .program-photo-tile img { display: block; width: 100%; height: clamp(220px, 30vw, 350px); object-fit: cover; border-radius: 4px; }
+  @media (max-width: 700px) {
+    .program-photo-grid { grid-template-columns: 1fr; }
+    .program-photo-tile img { height: auto; max-height: 360px; object-fit: contain; }
+  }
+</style>
