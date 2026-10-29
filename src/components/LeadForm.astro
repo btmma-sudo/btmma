@@ -12,8 +12,6 @@ const title = config?.title ?? "Start Your First Step";
 const intro = config?.intro ?? "Tell us what you are interested in and we will follow up with the best class option.";
 const defaultProgram = config?.defaultProgram ?? "";
 const submitLabel = config?.submitLabel ?? "Request Information";
-const webhookPath =
-  config?.webhookPath ?? "https://hook.eu2.make.com/7gx96x2faucgmcessddi71c6znfii3ro";
 const hideProgramSelect = config?.hideProgramSelect ?? false;
 const fields = config?.fields ?? "standard";
 ---
@@ -150,7 +148,7 @@ const fields = config?.fields ?? "standard";
           }
 
           if (status instanceof HTMLElement) {
-            status.textContent = "Thanks. We received your information and will follow up soon.";
+            status.textContent = "Thanks! Your inquiry has been saved. We'll follow up soon.";
             status.dataset.state = "success";
           }
         } catch (error) {
