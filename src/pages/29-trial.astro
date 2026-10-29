@@ -25,6 +25,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <section class="registration" id="registration">
       <h2>Student Registration</h2>
       <p>Choose a program, enter the student’s details, and continue straight to secure $29 checkout. Register one student at a time; siblings can share their parent contact details.</p>
+      <p class="first-class-help">First time on the mats? <a href="/your-first-class">See what to wear, where to park, and what happens after you register.</a></p>
       <form id="student-registration" class="form">
         <label for="studentType">Who are you registering for?</label>
         <select id="studentType" name="studentType" required>
@@ -140,7 +141,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       <p><strong>One Tree. One Family.</strong></p>
     </section>
   </div>
-</BaseLayout>
 <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script is:inline>
 (() => {
@@ -360,6 +360,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     text-align: center;
   }
 
+  .first-class-help { font-size: .98rem; max-width: 660px; margin: .7rem auto 1.4rem; } 
+  .first-class-help a { color: #ff9e9e; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
   .trial-page .hero {
     width: 100%;
     max-width: 820px;
@@ -611,3 +613,4 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     .trial-page .form { padding: 15px 12px; }
   }
 </style>
+</BaseLayout>
