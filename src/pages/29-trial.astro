@@ -226,9 +226,16 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           return;
         }
         try {
-          const response = await fetch("/api/trial-checkout-status?session_id=" + encodeURIComponent(sessionId), { cache: "no-store" });
-          if (!response.ok) throw new Error("Verification unavailable");
-          const result = await response.json();
+          // Stripe redirects can arrive slightly before its signed webhook finishes.
+          // Check briefly for final registration confirmation without making a new charge.
+          let result;
+          for (let attempt = 0; attempt < 5; attempt++) {
+            const response = await fetch("/api/trial-checkout-status?session_id=" + encodeURIComponent(sessionId), { cache: "no-store" });
+            if (!response.ok) throw new Error("Verification unavailable");
+            result = await response.json();
+            if (result.status !== "processing" || attempt === 4) break;
+            await new Promise(resolve => setTimeout(resolve, 1800));
+          }
           if (result.status === "confirmed") {
             if (heading) heading.textContent = "Registration confirmed!";
             if (message) message.textContent = "Your $29 payment and registration are verified. Welcome to Burning Tree! We'll contact you to arrange your two beginner classes and free uniform.";
