@@ -557,7 +557,7 @@ export const programPages: ProgramPage[] = [
         },
         galleryImages: [
           { src: "/images/kids-martial-arts-karate-guard.png", alt: "Young martial arts student practicing a karate guard" },
-          { src: "/images/burning-tree-teen-kenpo-training.webp", alt: "Young Kenpo student practicing on the training mat" },
+          { src: "/images/kids-martial-arts-young-student.png", alt: "Young Kenpo student practicing the basics with focus and discipline" },
           { src: "/images/jr-kenpo-gallery-3.jpg", alt: "Junior Kenpo student proudly showing tournament medals" },
           { src: "/images/kids-martial-arts-certificates.png", alt: "Young martial arts students celebrating their achievements" }
         ],
@@ -760,7 +760,7 @@ export const programPages: ProgramPage[] = [
       ]
     },
     galleryImages: [
-      { src: "/images/burning-tree-womens-self-defense-cropped.webp", alt: "Women's self-defense class practicing a partner technique" },
+      { src: "/images/womens-defense-gallery-1.jpeg", alt: "Women practicing supervised self-defense techniques at Burning Tree" },
       { src: "/images/burning-tree-muay-thai-female.webp", alt: "Female martial artist practicing striking technique" }
     ],
     leadForm: {
@@ -820,8 +820,7 @@ export const programPages: ProgramPage[] = [
     },
     galleryImages: [
       { src: "/images/birthday-parties-gallery-1.jpg", alt: "Instructor leading a group of children in a foam sword activity at a martial arts birthday party with a ninja-themed Happy Birthday banner" },
-      { src: "/images/birthday-parties-gallery-2.jpg", alt: "Instructor presenting a certificate to a child at a birthday party while other guests sit and watch on the mat" },
-      { src: "/images/birthday-parties-gallery-3.jpg", alt: "Instructor standing in a circle of seated children leading a birthday party activity in the Burning Tree MMA gym" }
+            { src: "/images/birthday-parties-gallery-3.jpg", alt: "Instructor standing in a circle of seated children leading a birthday party activity in the Burning Tree MMA gym" }
     ],
     showTestimonials: false,
     showSchedule: false,
@@ -918,8 +917,7 @@ export const programPages: ProgramPage[] = [
       ]
     },
     galleryImages: [
-      { src: "/images/health-and-wellness-gallery-1.jpg", alt: "Wellness room interior with a massage table, massage chair, whiteboard, and artwork on the walls" },
-      { src: "/images/health-and-wellness-gallery-2.jpg", alt: "Display shelves of wellness and supplement products alongside Burning Tree MMA merchandise in the lobby" },
+            { src: "/images/health-and-wellness-gallery-2.jpg", alt: "Display shelves of wellness and supplement products alongside Burning Tree MMA merchandise in the lobby" },
       { src: "/images/health-and-wellness-gallery-3.jpg", alt: "Wellness Room door with bamboo leaf stencil artwork and an Available digital sign" }
     ],
     showTestimonials: false,
