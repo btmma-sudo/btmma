@@ -144,7 +144,7 @@ const schema = {
     <meta name="twitter:image" content={imageUrl} />
     <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
     <!-- Meta Pixel Code -->
-<script>
+<script is:inline>
 !function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
 n.callMethod.apply(n,arguments):n.queue.push(arguments)};
