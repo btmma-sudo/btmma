@@ -35,7 +35,7 @@ export async function POST({ request, locals }) {
   }
   let data;
   try { data = await request.json(); } catch { return json({ success: false, error: "Invalid registration." }, 400); }
-  const { studentType, studentName, studentDob, guardianName, email, phone, programInterest, turnstileToken } = data || {};
+  const { studentType, studentName, studentDob, guardianName, email, phone, programInterest, turnstileToken, attribution } = data || {};
   // Parse a calendar date strictly; reject impossible and future dates.
   const dobValid = typeof studentDob === "string" && /^\d{4}-\d{2}-\d{2}$/.test(studentDob);
   const dobDate = dobValid ? new Date(studentDob + "T00:00:00Z") : null;
@@ -335,6 +335,22 @@ export async function POST({ request, locals }) {
       }
       fields[phoneField.id] = phone.trim();
       fields[notesField.id] = "Requested program: " + programInterest + ". Submitted through the $29 New Student Special.";
+      // Save first-touch metadata alongside the approved student registration.
+      const firstTouch = attribution && typeof attribution === "object" && !Array.isArray(attribution) ? attribution : {};
+      for (const [fieldLabel, rawValue, maxLength] of [
+        ["first landing page", firstTouch.firstLandingPage, 160],
+        ["acquisition source", firstTouch.acquisitionSource, 80],
+        ["acquisition medium", firstTouch.acquisitionMedium, 80],
+        ["utm campaign", firstTouch.utmCampaign, 120],
+        ["original referrer", firstTouch.originalReferrer, 160]
+      ]) {
+        const field = byName(fieldLabel);
+        if (field?.type !== "singleLineText" || typeof rawValue !== "string") continue;
+        const cleanValue = rawValue.trim().slice(0, maxLength);
+        if (cleanValue) fields[field.id] = cleanValue;
+      }
+      const leadSourceField = byName("lead source");
+      if (leadSourceField?.type === "singleLineText") fields[leadSourceField.id] = "/29-trial/";
       const guardianField = byName("parent/guardian");
       if (studentType === "minor" && guardianField && ["singleLineText", "multilineText"].includes(guardianField.type)) {
         fields[guardianField.id] = guardianName.trim();
