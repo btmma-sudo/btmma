@@ -19,7 +19,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         <h2>2 Beginner Classes + FREE Uniform</h2>
         <p>One trial per new student. Each sibling registers separately.</p>
       </div>
-      <a class="cta" href="#registration">REGISTER YOUR STUDENT</a>
+      <a class="cta register-student-cta" href="#registration">REGISTER YOUR STUDENT</a>
       <p><strong>One Tree. One Family.</strong></p>
     </section>
     <section class="registration" id="registration">
@@ -123,7 +123,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </div>
         <p id="setup-note" class="notice" role="status" aria-live="polite">We’ll check eligibility before showing payment options. Cards and Apple Pay use Stripe; direct Cash App payments require manual verification.</p>
         <p id="registration-next-step" class="fine-print">We’ll check the student’s registration, then show available payment methods. You will not be charged by clicking this button.</p>
-        <button type="submit">VERIFY REGISTRATION &amp; CHOOSE PAYMENT</button>
+        <button class="verify-registration-button" type="submit">VERIFY REGISTRATION &amp; CHOOSE PAYMENT</button>
         <button id="applepay-button" type="button" hidden disabled>APPLE PAY / APPLE CASH — $29</button>
         <button id="checkout-button" type="button" hidden disabled>PAY $29 WITH CREDIT / DEBIT CARD</button>
         <a id="checkout-fallback" class="cta" hidden rel="noopener noreferrer">OPEN SECURE $29 CARD CHECKOUT</a>
@@ -632,6 +632,31 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     cursor: pointer;
   }
   .trial-page .cta { max-width: 100%; }
+  /* Clear, high-contrast text on the two registration action buttons. */
+  .trial-page .register-student-cta,
+  .trial-page .form button.verify-registration-button {
+    background-color: #741010;
+    color: #ffffff;
+    border: 2px solid #e69e9e;
+    font-family: "Open Sans", Arial, sans-serif;
+    font-size: clamp(1.05rem, 2.7vw, 1.2rem);
+    font-weight: 800;
+    letter-spacing: .012em;
+    line-height: 1.4;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .5);
+    white-space: normal;
+    padding: 15px 20px;
+  }
+  .trial-page .register-student-cta:hover,
+  .trial-page .form button.verify-registration-button:hover {
+    background-color: #901818;
+    color: #ffffff;
+  }
+  .trial-page .register-student-cta:focus-visible,
+  .trial-page .form button.verify-registration-button:focus-visible {
+    outline: 3px solid #ffffff;
+    outline-offset: 3px;
+  }
   .trial-page .registration {
     width: 100%;
     max-width: 700px;
