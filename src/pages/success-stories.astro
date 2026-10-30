@@ -1,0 +1,97 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site } from "../data/site";
+
+const stories = [
+  {
+    heading: "Finding Confidence and Discipline",
+    quote: "My grandson has learned discipline, confidence and martial arts techniques. I am so glad my husband made the decision to enroll him, it was the best choice.",
+    attribution: "Kelly W.",
+    relationship: "Grandparent"
+  },
+  {
+    heading: "A Place Their Child Loves",
+    quote: "Best place ever for mixed martial arts. My child is super happy there, come and try today!",
+    attribution: "Shoshana S.",
+    relationship: "Parent"
+  },
+  {
+    heading: "Lessons Beyond the Mats",
+    quote: "This is the best place for kids to learn and practice Karate. And this place is just not about Karate but also the trainer helps kids to gain focus and teaches valuables lesson for life.",
+    attribution: "Kamal N.",
+    relationship: "Family review"
+  }
+];
+---
+
+<BaseLayout
+  title="Parent Success Stories | Kids Martial Arts Reviews in Owings Mills | Burning Tree MMA"
+  description="Hear what real Burning Tree MMA families say about kids martial arts, confidence, focus, and discipline in Owings Mills, Maryland. Explore our $29 beginner special."
+  path="/success-stories"
+  keywords={["Burning Tree MMA parent reviews","Owings Mills kids martial arts testimonials","kids karate reviews Owings Mills","martial arts confidence for kids Baltimore County"]}>
+  <section class="shell stories-hero" aria-labelledby="stories-title">
+    <p class="eyebrow">One Tree. One Family.</p>
+    <h1 id="stories-title">Real Families. Real Progress. Real Confidence.</h1>
+    <p class="stories-lead">Every student arrives with a different story. Families at Burning Tree Mixed Martial Arts in Owings Mills share what their children have gained through training—from growing confidence to stronger focus and discipline.</p>
+    <a href="/29-trial" class="button">Start With 2 Classes + Free Uniform for $29</a>
+  </section>
+
+  <section class="shell section-divider" aria-labelledby="parent-voices">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">In Their Own Words</p>
+        <h2 id="parent-voices">What Our Families Are Saying</h2>
+        <p>These testimonials are reproduced from reviews already featured on our website. They are the families' own words, not invented student outcomes.</p>
+      </div>
+    </div>
+    <div class="stories-grid">
+      {stories.map(story => (
+        <article class="story-card">
+          <p class="eyebrow">Family Experience</p>
+          <h3>{story.heading}</h3>
+          <blockquote>
+            <p>“{story.quote}”</p>
+            <footer>— {story.attribution} · {story.relationship}</footer>
+          </blockquote>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="shell section-divider">
+    <div class="detail-card story-invite">
+      <p class="eyebrow">Every Milestone Matters</p>
+      <h2>Confidence. Focus. Discipline. Belonging.</h2>
+      <p>Sometimes success is a first class completed. Sometimes it's asking a question with confidence, learning a new technique, or earning a belt after weeks of practice. Our instructors celebrate every student's progress at their own pace.</p>
+      <p>Want to share your family's experience? Call or text <a href={`tel:${site.phoneHref}`}>{site.phone}</a>. With your permission, we can feature your words and an approved photo of your student on this page. Student names and photographs are never added here without appropriate permission.</p>
+    </div>
+  </section>
+
+  <section class="shell section-divider">
+    <div class="story-cta">
+      <p class="eyebrow">Your Child's Story Could Be Next</p>
+      <h2>Come See What Burning Tree Can Mean for Your Family</h2>
+      <p>Explore beginner-friendly American Kenpo Karate, Muay Thai and Wing Chun classes in Owings Mills. No prior martial arts experience is required.</p>
+      <a class="button" href="/29-trial">Claim the $29 New Student Special</a>
+      <p><a href="/kids-martial-arts">Explore Kids Martial Arts</a> · <a href="/your-first-class">What to Expect at Your First Class</a></p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .stories-hero { padding-top: 4rem; padding-bottom: 3rem; max-width: 1040px; }
+  .stories-hero h1 { max-width: 850px; line-height: 1.1; }
+  .stories-lead { max-width: 770px; font-size: clamp(1.05rem, 2vw, 1.3rem); line-height: 1.65; margin: 1.4rem 0 2rem; }
+  .stories-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1.25rem; margin-top: 1.4rem; }
+  .story-card { background: #1b1b1b; border: 1px solid #543030; border-top: 3px solid #b52525; padding: 1.6rem; min-width: 0; }
+  .story-card h3 { margin: .4rem 0 1.2rem; }
+  .story-card blockquote { margin: 0; }
+  .story-card blockquote p { line-height: 1.7; color: #f1f1f1; }
+  .story-card footer { margin-top: 1.2rem; font-weight: 700; color: #fff; }
+  .story-invite { padding: 2rem; }
+  .story-invite p { max-width: 850px; }
+  .story-cta { background: #1b1b1b; border: 1px solid #543030; text-align: center; padding: 3rem 1.6rem; }
+  .story-cta p { max-width: 740px; margin-left: auto; margin-right: auto; }
+  .story-cta .button { margin: 1rem 0; }
+  @media (max-width: 800px) { .stories-grid { grid-template-columns: 1fr; } .stories-hero { padding-top: 2.5rem; } .story-cta { padding: 2rem 1rem; } }
+</style>
