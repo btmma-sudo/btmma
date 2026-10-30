@@ -2019,3 +2019,68 @@ button, input, textarea, select, iframe, video { max-width: 100%; }
     line-height: 1.13;
   }
 }
+
+
+/* Site-wide readability pass: preserve Burning Tree colors while ensuring
+   light text remains legible against solid panels, menus and hero images. */
+:root {
+  --text: #fafafa;
+  --muted: #dedede;
+}
+body { line-height: 1.65; }
+main p, main li, main blockquote, main figcaption, .site-footer p,
+.site-footer li { line-height: 1.7; }
+main a:not(.button):not(.program-card):not(.kids-button):not(.kids-secondary) {
+  text-underline-offset: .2em;
+}
+main p a:not(.button), main li a:not(.button),
+main blockquote a:not(.button), .site-footer a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+}
+main a:focus-visible, .site-footer a:focus-visible,
+.site-header a:focus-visible, .site-header summary:focus-visible {
+  outline: 3px solid #ffd54a;
+  outline-offset: 3px;
+}
+.site-header, .site-header .nav-dropdown, .mobile-menu-panel {
+  color: #fff;
+}
+.site-header .nav-dropdown, .mobile-menu-panel {
+  background: #141414;
+  border-color: #777;
+}
+.site-header .nav-dropdown a, .mobile-menu-panel a,
+.site-header .mobile-submenu > summary { color: #fff; }
+.hero-content .hero-copy, .hero-content .hero-kicker,
+.hero-content .hero-cta-description {
+  color: #fff;
+  text-shadow: 0 2px 5px rgba(0,0,0,.95), 0 4px 12px rgba(0,0,0,.85);
+}
+.hero-banner:not(.hero-image-first) .hero-content {
+  background: rgba(10,10,10,.75);
+  padding: clamp(1rem,3vw,2rem);
+  border-radius: 4px;
+}
+.button:not(.button-ghost), .header-trial-nav, .header-mobile-offer {
+  background-color: #851010;
+  border-color: #c84b4b;
+  color: #fff;
+}
+.button:not(.button-ghost):hover, .button:not(.button-ghost):focus-visible {
+  background-color: #a81919;
+  color: #fff;
+}
+.eyebrow, .footer-label, .seo-bullet-heading {
+  color: #ff8a70;
+}
+.variant-tab-btn.is-active {
+  color: #fff;
+  border-color: #ff745a;
+  background: #722020;
+}
+@media (max-width:760px) {
+  .hero-banner:not(.hero-image-first) .hero-content {
+    padding: 1.1rem;
+  }
+}
