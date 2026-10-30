@@ -36,6 +36,21 @@ const stories = [
     <a href="/29-trial" class="button">Start With 2 Classes + Free Uniform for $29</a>
   </section>
 
+  <section class="shell section-divider" aria-labelledby="student-moments">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">From Our Own Training Mats</p>
+        <h2 id="student-moments">Student Moments Worth Celebrating</h2>
+        <p>Real photos from Burning Tree classes and achievements. These are snapshots of our school community, shown separately from individual family reviews.</p>
+      </div>
+    </div>
+    <div class="student-moments-grid">
+      <figure><img src="/images/kids-martial-arts-certificates.png" alt="Burning Tree junior students celebrating certificates" width="750" height="580" loading="lazy" decoding="async" /><figcaption>Celebrating Progress</figcaption></figure>
+      <figure><img src="/images/kids-martial-arts-partner-practice.png" alt="Burning Tree junior martial artists practicing together" width="750" height="580" loading="lazy" decoding="async" /><figcaption>Learning Together</figcaption></figure>
+      <figure><img src="/images/kids-martial-arts-smiling-student.png" alt="Young Burning Tree martial arts student smiling in class" width="750" height="580" loading="lazy" decoding="async" /><figcaption>Confidence on the Mats</figcaption></figure>
+    </div>
+  </section>
+
   <section class="shell section-divider" aria-labelledby="parent-voices">
     <div class="section-heading">
       <div>
@@ -82,6 +97,10 @@ const stories = [
   .stories-hero { padding-top: 4rem; padding-bottom: 3rem; max-width: 1040px; }
   .stories-hero h1 { max-width: 850px; line-height: 1.1; }
   .stories-lead { max-width: 770px; font-size: clamp(1.05rem, 2vw, 1.3rem); line-height: 1.65; margin: 1.4rem 0 2rem; }
+  .student-moments-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1rem; margin-top:1.4rem; }
+  .student-moments-grid figure { margin:0; background:#1b1b1b; border:1px solid #543030; min-width:0; }
+  .student-moments-grid img { display:block; width:100%; aspect-ratio:4 / 3; height:auto; object-fit:contain; background:#111; }
+  .student-moments-grid figcaption { padding:.8rem 1rem; font-weight:700; }
   .stories-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1.25rem; margin-top: 1.4rem; }
   .story-card { background: #1b1b1b; border: 1px solid #543030; border-top: 3px solid #b52525; padding: 1.6rem; min-width: 0; }
   .story-card h3 { margin: .4rem 0 1.2rem; }
@@ -93,5 +112,5 @@ const stories = [
   .story-cta { background: #1b1b1b; border: 1px solid #543030; text-align: center; padding: 3rem 1.6rem; }
   .story-cta p { max-width: 740px; margin-left: auto; margin-right: auto; }
   .story-cta .button { margin: 1rem 0; }
-  @media (max-width: 800px) { .stories-grid { grid-template-columns: 1fr; } .stories-hero { padding-top: 2.5rem; } .story-cta { padding: 2rem 1rem; } }
+  @media (max-width: 800px) { .student-moments-grid { grid-template-columns:1fr; } .stories-grid { grid-template-columns: 1fr; } .stories-hero { padding-top: 2.5rem; } .story-cta { padding: 2rem 1rem; } }
 </style>
