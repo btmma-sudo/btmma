@@ -2084,3 +2084,52 @@ main a:focus-visible, .site-footer a:focus-visible,
     padding: 1.1rem;
   }
 }
+
+/* High-contrast white lettering on Burning Tree's red panels and buttons.
+   Informational pages only: the locked $29 trial registration page is unchanged. */
+main:not(:has(> .trial-page)) :is(.kids-final-cta, .ta-final) {
+  background-color: #930e18;
+  color: #fff;
+}
+main:not(:has(> .trial-page)) :is(.kids-final-cta, .ta-final) :is(h2, p, .kids-eyebrow, .ta-eyebrow, .kids-tagline, .ta-tagline) {
+  color: #fff;
+  -webkit-text-stroke: 0;
+  text-shadow: none;
+}
+main:not(:has(> .trial-page)) :is(.kids-final-cta, .ta-final) a:not(.kids-button-light):not(.ta-button-light) {
+  color: #fff;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: .2em;
+}
+main:not(:has(> .trial-page)) :is(.kids-final-cta, .ta-final) :is(.kids-final-small, .ta-small) {
+  font-size: max(.95rem, 15px);
+  line-height: 1.6;
+}
+main:not(:has(> .trial-page)) :is(.kids-media-stamp, .ta-photo-stamp) {
+  background-color: #870e17;
+  color: #fff;
+  font-weight: 800;
+  line-height: 1.4;
+  -webkit-text-stroke: 0;
+  text-shadow: none;
+}
+main:not(:has(> .trial-page)) :is(.kids-media-stamp, .ta-photo-stamp) span {
+  font-size: max(1rem, 16px);
+}
+main:not(:has(> .trial-page)) :is(.button:not(.button-ghost), .kids-button:not(.kids-button-light), .ta-button:not(.ta-button-light)) {
+  background-color: #891018;
+  border-color: #b83a42;
+  color: #fff;
+  font-family: "Open Sans", Arial, sans-serif;
+  font-size: max(1rem, 16px);
+  font-weight: 800;
+  line-height: 1.45;
+  letter-spacing: .01em;
+  -webkit-text-stroke: 0;
+  text-shadow: none;
+}
+main:not(:has(> .trial-page)) :is(.button:not(.button-ghost), .kids-button:not(.kids-button-light), .ta-button:not(.ta-button-light)):is(:hover, :focus-visible) {
+  background-color: #720912;
+  color: #fff;
+}
