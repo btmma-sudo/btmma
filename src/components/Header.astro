@@ -30,8 +30,6 @@ import { primaryPrograms, site } from "../data/site";
       <details class="nav-group">
         <summary>Classes</summary>
         <div class="nav-dropdown">
-          <a href="/kids-martial-arts">Kids Martial Arts</a>
-          <a href="/teens-adults-martial-arts">Teens &amp; Adults Martial Arts</a>
           <a href="/your-first-class">Your First Class</a>
           {primaryPrograms.map((item) => (
             <a href={item.href}>{item.label}</a>
@@ -41,10 +39,12 @@ import { primaryPrograms, site } from "../data/site";
 
       <a class="header-trial-nav" href="/29-trial">$29 New Student Special</a>
       <details class="nav-group">
-        <summary>About &amp; FAQ</summary>
+        <summary>About &amp; Programs</summary>
         <div class="nav-dropdown">
           <a href="/about">About Burning Tree</a>
           <a href="/faq">Frequently Asked Questions</a>
+          <a href="/kids-martial-arts">Kids Martial Arts</a>
+          <a href="/teens-adults-martial-arts">Teens &amp; Adults Martial Arts</a>
         </div>
       </details>
       <a href="/advice">Advice &amp; Community</a>
@@ -72,8 +72,6 @@ import { primaryPrograms, site } from "../data/site";
         <details class="mobile-submenu">
           <summary>Classes</summary>
           <div class="mobile-submenu-links">
-            <a href="/kids-martial-arts">Kids Martial Arts</a>
-            <a href="/teens-adults-martial-arts">Teens &amp; Adults Martial Arts</a>
             {primaryPrograms.map((item) => (
               <a href={item.href}>{item.label}</a>
             ))}
@@ -82,10 +80,12 @@ import { primaryPrograms, site } from "../data/site";
 
         <div class="mobile-menu-links">
           <details class="mobile-submenu">
-            <summary>About &amp; FAQ</summary>
+            <summary>About &amp; Programs</summary>
             <div class="mobile-submenu-links">
               <a href="/about">About Burning Tree</a>
               <a href="/faq">Frequently Asked Questions</a>
+              <a href="/kids-martial-arts">Kids Martial Arts</a>
+              <a href="/teens-adults-martial-arts">Teens &amp; Adults Martial Arts</a>
             </div>
           </details>
           <a href="/gallery">Gallery</a>
