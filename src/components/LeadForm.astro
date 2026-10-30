@@ -151,6 +151,18 @@ const fields = config?.fields ?? "standard";
             status.textContent = "Thanks! Your inquiry has been saved. We'll follow up soon.";
             status.dataset.state = "success";
           }
+          // Only record success after the website confirms the inquiry was accepted.
+          // Never send names, phone numbers, email addresses or form fields to GA4.
+          try {
+            if (typeof window.gtag === "function") {
+              window.gtag("event", "generate_lead", {
+                send_to: "G-5M75V93ZV5",
+                lead_type: "website_inquiry",
+                form_id: form.id || "site-lead-form",
+                page_path: window.location.pathname
+              });
+            }
+          } catch { /* Analytics must never interfere with contact forms. */ }
         } catch (error) {
           if (status instanceof HTMLElement) {
             status.textContent = error instanceof Error ? error.message : "We could not submit the form right now. Please try again or contact us directly.";
