@@ -105,10 +105,10 @@ export async function POST({ request, locals }) {
     const safeMessage = String(stripeError.message || "")
       .replace(/(?:sk|rk|pk)_(?:live|test)_[A-Za-z0-9_-]+/gi, "[redacted key]")
       .replace(/whsec_[A-Za-z0-9_-]+/gi, "[redacted secret]")
-      .replace(/[A-Za-z0-9_.%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}/g, "[redacted email]")
-      .replace(/\\b(?:acct|cus|pi|cs|req|price|prod|pm)_[A-Za-z0-9_-]{8,}\\b/g, "[redacted reference]")
-      .replace(/https?:\\/\\/[^\\s]+/g, "[redacted URL]")
-      .replace(/[\\r\\n\\t]/g, " ")
+      .replace(/[A-Za-z0-9_.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g, "[redacted email]")
+      .replace(/\b(?:acct|cus|pi|cs|req|price|prod|pm)_[A-Za-z0-9_-]{8,}\b/g, "[redacted reference]")
+      .replace(/https?:\/\/[^\s]+/g, "[redacted URL]")
+      .replace(/[\r\n\t]/g, " ")
       .slice(0, 240);
     console.error("Live Stripe checkout rejected", {
       status: result.status, type, code, param, requestId, message: safeMessage
