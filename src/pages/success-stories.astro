@@ -28,18 +28,66 @@ const stories = [
     relationship: "Community review"
   }
 ];
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: site.primaryDomain },
+    { "@type": "ListItem", position: 2, name: "Parent Success Stories", item: new URL("/success-stories", site.primaryDomain).toString() }
+  ]
+};
+
+const questions = [
+  {
+    question: "Can martial arts help my child build confidence?",
+    answer: "Our junior classes give students age-appropriate challenges, achievable goals and opportunities to practice new skills. Families on this page describe positive experiences with confidence and discipline; each child's progress is different."
+  },
+  {
+    question: "Are Burning Tree martial arts classes suitable for beginners?",
+    answer: "Yes. Children with no previous martial arts experience can start in junior Kenpo Karate, Muay Thai or Wing Chun. We introduce skills step by step and help families choose a class."
+  },
+  {
+    question: "Where is Burning Tree Mixed Martial Arts located?",
+    answer: "Our studio is at 10210 S Dolfield Rd, Owings Mills, MD 21117. We welcome families from Reisterstown, Pikesville, Randallstown and other Baltimore County communities."
+  }
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: questions.map(({ question, answer }) => ({
+    "@type": "Question",
+    name: question,
+    acceptedAnswer: { "@type": "Answer", text: answer }
+  }))
+};
 ---
 
 <BaseLayout
-  title="Parent Success Stories | Kids Martial Arts Reviews in Owings Mills | Burning Tree MMA"
-  description="Hear what real Burning Tree MMA families say about kids martial arts, confidence, focus, and discipline in Owings Mills, Maryland. Explore our $29 beginner special."
+  title="Parent Reviews & Student Success Stories | Burning Tree MMA Owings Mills"
+  description="Read real parent reviews and student success stories from Burning Tree MMA in Owings Mills, MD. See families discuss kids karate, confidence and focus."
   path="/success-stories"
-  keywords={["Burning Tree MMA parent reviews","Owings Mills kids martial arts testimonials","kids karate reviews Owings Mills","martial arts confidence for kids Baltimore County"]}>
+  image="/images/kids-martial-arts-karate-guard.png"
+  keywords={["Burning Tree MMA reviews", "Owings Mills martial arts reviews", "kids karate testimonials Owings Mills", "student success stories martial arts", "parent reviews kids martial arts Baltimore County"]}>
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   <section class="shell stories-hero" aria-labelledby="stories-title">
     <p class="eyebrow">One Tree. One Family.</p>
-    <h1 id="stories-title">Real Families. Real Progress. Real Confidence.</h1>
+    <h1 id="stories-title">Parent Reviews &amp; Student Success Stories in Owings Mills</h1>
     <p class="stories-lead">Every student arrives with a different story. Families at Burning Tree Mixed Martial Arts in Owings Mills share what their children have gained through training—from growing confidence to stronger focus and discipline.</p>
+    <p>Real Families. Real Progress. Real Confidence.</p>
     <a href="/29-trial" class="button">Start With 2 Classes + Free Uniform for $29</a>
+  </section>
+
+  <section class="shell section-divider" aria-labelledby="why-families">
+    <article class="detail-card story-invite">
+      <p class="eyebrow">Kids Martial Arts in Baltimore County</p>
+      <h2 id="why-families">What Parents Look for in a Martial Arts School</h2>
+      <p>When families choose kids martial arts classes in Owings Mills, they often want more than exercise. They look for an encouraging place where children can practice listening, build self-control, make steady progress and feel welcomed. At Burning Tree MMA, our <a href="/kids-martial-arts">junior martial arts programs</a> combine guided instruction with age-appropriate goals.</p>
+      <p>Students can explore <a href="/kenpo-karate">American Kenpo Karate</a>, <a href="/muay-thai">Muay Thai</a> and <a href="/wing-chun">Wing Chun</a>. Every student's journey is different, and we encourage families to judge the experience for themselves through a beginner class.</p>
+      <p>Our Owings Mills location welcomes nearby families from Reisterstown, Pikesville, Randallstown and across Baltimore County. Learn <a href="/your-first-class">what to expect at your first class</a> before visiting.</p>
+    </article>
   </section>
 
   <section class="shell section-divider" aria-labelledby="student-moments">
@@ -98,7 +146,7 @@ const stories = [
       <p><a href="/kids-martial-arts">Explore Kids Martial Arts</a> · <a href="/your-first-class">What to Expect at Your First Class</a></p>
     </div>
   </section>
-<!-- Redeploy marker: refresh Success Stories Google Reviews link -->
+
 </BaseLayout>
 
 <style>
@@ -110,7 +158,7 @@ const stories = [
   .student-moments-grid img { display:block; width:100%; aspect-ratio:4 / 3; height:auto; object-fit:contain; background:#111; }
   .student-moments-grid figcaption { padding:.8rem 1rem; font-weight:700; }
   .google-review-note { margin-top: 1.5rem; }
-  .stories-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1.25rem; margin-top: 1.4rem; }
+  .stories-faq-grid { display:grid; gap:1rem; grid-template-columns:repeat(3,minmax(0,1fr)); margin:1.4rem 0; }\n  .stories-faq-grid h3 { font-size:1.2rem; line-height:1.3; }\n  .stories-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1.25rem; margin-top: 1.4rem; }
   .story-card { background: #1b1b1b; border: 1px solid #543030; border-top: 3px solid #b52525; padding: 1.6rem; min-width: 0; }
   .story-card h3 { margin: .4rem 0 1.2rem; }
   .story-card blockquote { margin: 0; }
@@ -121,5 +169,5 @@ const stories = [
   .story-cta { background: #1b1b1b; border: 1px solid #543030; text-align: center; padding: 3rem 1.6rem; }
   .story-cta p { max-width: 740px; margin-left: auto; margin-right: auto; }
   .story-cta .button { margin: 1rem 0; }
-  @media (max-width: 800px) { .student-moments-grid { grid-template-columns:1fr; } .stories-grid { grid-template-columns: 1fr; } .stories-hero { padding-top: 2.5rem; } .story-cta { padding: 2rem 1rem; } }
+  @media (max-width: 800px) { .stories-faq-grid { grid-template-columns:1fr; } .student-moments-grid { grid-template-columns:1fr; } .stories-grid { grid-template-columns: 1fr; } .stories-hero { padding-top: 2.5rem; } .story-cta { padding: 2rem 1rem; } }
 </style>
