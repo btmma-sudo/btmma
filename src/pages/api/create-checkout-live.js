@@ -48,9 +48,10 @@ export async function POST({ request, locals }) {
   const origin = new URL(request.url).origin;
   const params = new URLSearchParams({
     mode: "payment",
-    // Cash App must be paid directly to $BTMMA, not through Stripe.
-    // Card also preserves supported Apple Pay and Google Pay wallet options.
-    "payment_method_types[0]": "card",
+    // API version 2026-09-30.endive+ no longer accepts payment_method_types.
+    // Filter Stripe's eligible methods to card while preserving supported wallets.
+    // Cash App remains a separate, manually verified payment flow.
+    "allowed_payment_method_types[0]": "card",
     "line_items[0][price_data][currency]": "usd",
     "line_items[0][price_data][unit_amount]": "2900",
     "line_items[0][price_data][product_data][name]": "Burning Tree $29 New Student Special",
@@ -83,7 +84,7 @@ export async function POST({ request, locals }) {
       headers: {
         Authorization: "Bearer " + env.STRIPE_LIVE_SECRET_KEY,
         "Content-Type": "application/x-www-form-urlencoded",
-        "Idempotency-Key": "btmma-live-trial-v1-" + row.id
+        "Idempotency-Key": "btmma-live-trial-v2-" + row.id
       },
       body: params
     });
