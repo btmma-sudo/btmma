@@ -121,12 +121,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <p class="security-caption">Security check</p>
           <div class="cf-turnstile" data-sitekey="0x4AAAAAAD6Ievu-t0Ll1euh" data-size="compact"></div>
         </div>
-        <button type="submit">CONTINUE TO SECURE $29 PAYMENT</button>
+        <p id="setup-note" class="notice" role="status" aria-live="polite">We’ll check eligibility before showing payment options. Cards and Apple Pay use Stripe; direct Cash App payments require manual verification.</p>
+        <p id="registration-next-step" class="fine-print">We’ll check the student’s registration, then show available payment methods. You will not be charged by clicking this button.</p>
+        <button type="submit">VERIFY REGISTRATION &amp; CHOOSE PAYMENT</button>
         <button id="applepay-button" type="button" hidden disabled>APPLE PAY / APPLE CASH — $29</button>
         <button id="checkout-button" type="button" hidden disabled>PAY $29 WITH CREDIT / DEBIT CARD</button>
+        <a id="checkout-fallback" class="cta" hidden rel="noopener noreferrer">OPEN SECURE $29 CARD CHECKOUT</a>
         <button id="cashapp-button" type="button" hidden disabled>PAY $29 DIRECTLY WITH CASH APP</button>
         <p id="applepay-help" class="payment-help" hidden>Apple Pay opens secure Stripe checkout and appears on supported devices. To use your Apple Cash balance, choose your Apple Cash card in Apple Pay. If Apple Pay is unavailable, you can still use a card. These payments are processed by Stripe, not sent directly to a personal Apple Cash account.</p>
-        <p id="setup-note" class="notice" role="status">We’ll check eligibility before showing payment options. Cards and Apple Pay use Stripe; direct Cash App payments require manual verification.</p>
         <div id="cashapp-instructions" class="cashapp-instructions" hidden aria-live="polite">
           <h3>Direct Cash App Payment</h3>
           <p>Send exactly <strong>$29</strong> to <strong>$BTMMA</strong> through Cash App.</p>
@@ -168,6 +170,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     const dobYear = document.getElementById("dobYear");
     const studentDob = document.getElementById("studentDob");
     const checkoutButton = document.getElementById("checkout-button");
+    const checkoutFallback = document.getElementById("checkout-fallback");
     const applePayButton = document.getElementById("applepay-button");
     const applePayHelp = document.getElementById("applepay-help");
     const cashAppButton = document.getElementById("cashapp-button");
@@ -249,42 +252,50 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     let liveMode = null; // null until the server confirms the current checkout mode.
     let pilotOnly = false;
     const openCheckout = async () => {
-      if (!grant || !checkoutButton || liveMode === null) return;
+      if (!grant || !checkoutButton || liveMode === null) {
+        if (notice) notice.textContent = "Please verify the student registration before choosing a payment method.";
+        return;
+      }
       checkoutButton.disabled = true;
       if (applePayButton) applePayButton.disabled = true;
       if (cashAppButton) cashAppButton.disabled = true;
-      notice.textContent = liveMode ? "Preparing secure $29 Stripe checkout..." : "Preparing secure Stripe test checkout...";
+      if (checkoutFallback) {
+        checkoutFallback.hidden = true;
+        checkoutFallback.removeAttribute("href");
+      }
+      notice.textContent = liveMode ? "Connecting to secure $29 Stripe checkout..." : "Connecting to secure Stripe test checkout...";
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 20000);
       try {
         const response = await fetch(liveMode ? "/api/create-checkout-live" : "/api/create-checkout", {
-          method: "POST", headers: { "content-type": "application/json" },
-          body: JSON.stringify({ grant })
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          cache: "no-store",
+          body: JSON.stringify({ grant }),
+          signal: controller.signal
         });
-        const result = await response.json();
-        if (!response.ok || !result.url || !/^https:\/\/checkout\.stripe\.com\//.test(result.url))
-          throw new Error(result.error || "Checkout is unavailable.");
-        // A checkout session was created successfully. Give the analytics
-        // beacon a short chance to send without ever blocking payment.
-        let redirected = false;
-        let redirectTimer;
-        const redirect = () => {
-          if (redirected) return;
-          redirected = true;
-          if (redirectTimer) clearTimeout(redirectTimer);
-          window.location.assign(result.url);
-        };
-        redirectTimer = setTimeout(redirect, 700);
-        if (!trackTrial("begin_checkout", {
-          currency: "USD",
-          value: 29,
-          items: [trialItem],
-          event_callback: redirect,
-          event_timeout: 650
-        })) redirect();
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(result.error || "Secure checkout is temporarily unavailable. Please call (202) 368-4395.");
+        if (typeof result.url !== "string" || !/^https:\/\/checkout\.stripe\.com\//.test(result.url))
+          throw new Error("We couldn't confirm a secure Stripe checkout link. Please call (202) 368-4395.");
+        // Give customers a clickable, verified Stripe link if their browser prevents navigation.
+        if (checkoutFallback) {
+          checkoutFallback.href = result.url;
+          checkoutFallback.hidden = false;
+        }
+        notice.textContent = "Opening secure Stripe checkout. If you are not redirected, tap OPEN SECURE $29 CARD CHECKOUT.";
+        // Analytics must never hold up a payment redirect.
+        trackTrial("begin_checkout", { currency: "USD", value: 29, items: [trialItem] });
+        window.location.assign(result.url);
       } catch (error) {
-        notice.textContent = error?.message || "Checkout is unavailable. Please contact the studio.";
+        notice.textContent = error?.name === "AbortError"
+          ? "Secure checkout took too long to respond. Please try the card button again, or call (202) 368-4395."
+          : error?.message || "Secure checkout is unavailable. Please call (202) 368-4395.";
         checkoutButton.disabled = false;
         if (applePayButton && liveMode) applePayButton.disabled = false;
         if (cashAppButton && liveMode) cashAppButton.disabled = false;
+      } finally {
+        clearTimeout(timeout);
       }
     };
     checkoutButton?.addEventListener("click", openCheckout);
@@ -713,7 +724,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     min-width: 0;
     margin-top: 5px;
   }
-  .trial-page .form button[hidden] { display: none; }
+  .trial-page .form button[hidden],
+  .trial-page #checkout-fallback[hidden] { display: none; }
   .trial-page .form button:disabled { opacity: .55; cursor: not-allowed; }
   .trial-page .form-security {
     width: 100%;
