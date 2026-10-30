@@ -76,6 +76,7 @@ export async function POST({ request, locals }) {
       const schema = await schemaResponse.json();
       const leadTable = schema.tables?.find(t => t.id === "tblZCXEuRKXiPZlc7");
       const paymentField = leadTable?.fields?.find(f => f.name.trim().toLowerCase() === "payment status");
+      const checkoutSessionField = leadTable?.fields?.find(f => f.name.trim().toLowerCase() === "stripe checkout session id" && f.type === "singleLineText");
       const trialField = leadTable?.fields?.find(f =>
         /29/.test(f.name) && /tr(?:ia|ai)l/i.test(f.name) && /used/i.test(f.name)
       );
@@ -92,7 +93,7 @@ export async function POST({ request, locals }) {
       const updated = await fetch(url, {
         method: "PATCH",
         headers: { Authorization: "Bearer " + env.AIRTABLE_API_TOKEN, "Content-Type": "application/json" },
-        body: JSON.stringify({ fields: { [trialField.id]: true, [paymentField.id]: "Paid" }, typecast: false })
+        body: JSON.stringify({ fields: { [trialField.id]: true, [paymentField.id]: "Paid", ...(checkoutSessionField ? { [checkoutSessionField.id]: sessionId } : {}) }, typecast: false })
       });
       if (!updated.ok) {
         let airtableError = {};
