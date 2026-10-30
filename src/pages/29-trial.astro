@@ -481,6 +481,19 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       }
       const payload = Object.fromEntries(values.entries());
       delete payload["cf-turnstile-response"];
+      // Attach optional first-touch metadata. Never put student information in analytics.
+      try {
+        const firstTouch = JSON.parse(window.localStorage.getItem("btmma_first_touch_v1") || "null");
+        if (firstTouch && typeof firstTouch === "object" && !Array.isArray(firstTouch)) {
+          payload.attribution = {
+            firstLandingPage: firstTouch.firstLandingPage || "",
+            acquisitionSource: firstTouch.acquisitionSource || "",
+            acquisitionMedium: firstTouch.acquisitionMedium || "",
+            utmCampaign: firstTouch.utmCampaign || "",
+            originalReferrer: firstTouch.originalReferrer || ""
+          };
+        }
+      } catch { /* Registration must work even without local storage. */ }
       submit.disabled = true;
       notice.textContent = "Checking trial eligibility...";
       trackTrial("trial_form_submitted");
