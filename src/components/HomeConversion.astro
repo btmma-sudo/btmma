@@ -23,6 +23,7 @@ import { homePage, site } from "../data/site";
         <a class="button conversion-primary" href="/29-trial">Claim Your $29 Special</a>
         <a class="button button-ghost conversion-secondary" href="/kids-martial-arts">Explore Kids Classes</a>
       </div>
+      <p class="conversion-quick-paths">Choosing a program? <a href="/teens-adults-martial-arts/">See teen &amp; adult classes</a> or <a href="/your-first-class/">plan your first visit</a>.</p>
       <p class="conversion-contact">Questions? <a href={"tel:" + site.phoneHref}>Call {site.phone}</a> or <a href={"sms:" + site.phoneHref}>text Coach David</a>. No experience needed.</p>
       <p class="conversion-motto">One Tree. One Family. <span>Keepers of the Flame.</span></p>
     </div>
@@ -172,6 +173,8 @@ import { homePage, site } from "../data/site";
   .conversion-actions .button { min-height: 3.1rem; padding: .8rem 1rem; }
   .conversion-primary { flex: 1 1 210px; }
   .conversion-secondary { flex: 0 1 auto; }
+  .conversion-quick-paths { color: #f2eeee; font-size: .94rem; line-height: 1.5; margin: .8rem 0 0; }
+  .conversion-quick-paths a { color: #ffc3bd; text-decoration: underline; text-underline-offset: 3px; }
   .conversion-contact {
     color: #eee;
     margin: 1.15rem 0 .5rem;
