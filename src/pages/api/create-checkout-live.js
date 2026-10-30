@@ -89,11 +89,35 @@ export async function POST({ request, locals }) {
     });
   } catch { return json({ error: "Stripe Checkout is temporarily unavailable." }, 503); }
   if (!result.ok) {
-    console.error("Live Stripe checkout rejected", { status: result.status });
+    // Stripe supplies a machine-readable error code and a request ID. Report
+    // only tightly sanitized diagnostics: never return Stripe credentials,
+    // raw customer data, or the complete Stripe error payload to the browser.
+    const stripeBody = await result.json().catch(() => ({}));
+    const stripeError = stripeBody?.error || {};
+    const safe = value => String(value || "").replace(/[^a-zA-Z0-9_]/g, "").slice(0, 72);
+    const type = safe(stripeError.type);
+    const code = safe(stripeError.code) || (result.status === 403 ? "permission_denied" : "stripe_request_failed");
+    const param = safe(stripeError.param);
+    const requestId = safe(result.headers.get("request-id"));
+    console.error("Live Stripe checkout rejected", {
+      status: result.status, type, code, param, requestId
+    });
     await env.LIVE_TRIAL_DB.prepare(
       "UPDATE trial_registrations SET state='reserved', updated_at=CURRENT_TIMESTAMP WHERE id=? AND state='checkout_open' AND stripe_session_id IS NULL"
     ).bind(row.id).run();
-    return json({ error: "Live checkout could not be created." }, 503);
+    // This reference tells staff which API request to inspect in Stripe Logs.
+    const reason = type === "idempotency_error" ? "idempotency" :
+      result.status === 401 ? "authentication" :
+      result.status === 403 ? "permissions" :
+      result.status === 429 ? "rate limit" :
+      result.status >= 500 ? "Stripe service" : "configuration";
+    return json({
+      error: "Secure $29 checkout could not be opened (" + reason +
+        "; code: " + code + (requestId ? "; request: " + requestId : "") +
+        "). Please call (202) 368-4395 for assistance.",
+      errorCode: code,
+      stripeRequestId: requestId || null
+    }, 503);
   }
   const session = await result.json();
   if (session.livemode !== true || !session.id?.startsWith("cs_live_") || !session.url)
