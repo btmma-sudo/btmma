@@ -118,6 +118,44 @@ const schema = {
       gtag('config', 'G-5M75V93ZV5');
     </script>
     <!-- End Google tag -->
+    <!-- Optional first-touch attribution for CRM reporting; no student details. -->
+    <script is:inline>
+      (() => {
+        try {
+          const key = "btmma_first_touch_v1";
+          const ttl = 30 * 24 * 60 * 60 * 1000;
+          const prior = JSON.parse(window.localStorage.getItem(key) || "null");
+          if (prior && typeof prior.savedAt === "number" &&
+              Date.now() >= prior.savedAt && Date.now() - prior.savedAt < ttl) return;
+          const params = new URLSearchParams(window.location.search);
+          let hostname = "";
+          try { hostname = new URL(document.referrer).hostname.toLowerCase().replace(/^www\./, ""); } catch {}
+          if (/(^|\.)burningtreemma\.com$/.test(hostname)) hostname = "";
+          let source = (params.get("utm_source") || "").trim().slice(0,80).toLowerCase();
+          let medium = (params.get("utm_medium") || "").trim().slice(0,80).toLowerCase();
+          if (!source) {
+            if (params.has("gclid")) { source = "google"; medium ||= "cpc"; }
+            else if (params.has("msclkid")) { source = "bing"; medium ||= "cpc"; }
+            else if (hostname.includes("google.")) { source = "google"; medium ||= "organic"; }
+            else if (hostname.includes("bing.com")) { source = "bing"; medium ||= "organic"; }
+            else if (hostname.includes("yahoo.")) { source = "yahoo"; medium ||= "organic"; }
+            else if (/facebook\.com|instagram\.com/.test(hostname) || params.has("fbclid")) {
+              source = hostname.includes("instagram.") ? "instagram" : "facebook";
+              medium ||= "unknown";
+            } else { source = hostname || "direct"; medium ||= hostname ? "referral" : "none"; }
+          }
+          if (!medium) medium = "campaign";
+          window.localStorage.setItem(key, JSON.stringify({
+            savedAt: Date.now(),
+            firstLandingPage: window.location.pathname.slice(0,160),
+            acquisitionSource: source,
+            acquisitionMedium: medium,
+            utmCampaign: (params.get("utm_campaign") || "").trim().slice(0,120),
+            originalReferrer: hostname.slice(0,160)
+          }));
+        } catch { /* Attribution must never interrupt the website. */ }
+      })();
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
