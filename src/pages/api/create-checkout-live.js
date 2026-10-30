@@ -99,8 +99,19 @@ export async function POST({ request, locals }) {
     const code = safe(stripeError.code) || (result.status === 403 ? "permission_denied" : "stripe_request_failed");
     const param = safe(stripeError.param);
     const requestId = safe(result.headers.get("request-id"));
+    // Stripe sometimes returns only a human-readable message (no error.code).
+    // Redact potential credentials, contact emails, IDs and URLs before sharing
+    // a short diagnostic with the student or displaying it to studio staff.
+    const safeMessage = String(stripeError.message || "")
+      .replace(/(?:sk|rk|pk)_(?:live|test)_[A-Za-z0-9_-]+/gi, "[redacted key]")
+      .replace(/whsec_[A-Za-z0-9_-]+/gi, "[redacted secret]")
+      .replace(/[A-Za-z0-9_.%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}/g, "[redacted email]")
+      .replace(/\\b(?:acct|cus|pi|cs|req|price|prod|pm)_[A-Za-z0-9_-]{8,}\\b/g, "[redacted reference]")
+      .replace(/https?:\\/\\/[^\\s]+/g, "[redacted URL]")
+      .replace(/[\\r\\n\\t]/g, " ")
+      .slice(0, 240);
     console.error("Live Stripe checkout rejected", {
-      status: result.status, type, code, param, requestId
+      status: result.status, type, code, param, requestId, message: safeMessage
     });
     await env.LIVE_TRIAL_DB.prepare(
       "UPDATE trial_registrations SET state='reserved', updated_at=CURRENT_TIMESTAMP WHERE id=? AND state='checkout_open' AND stripe_session_id IS NULL"
@@ -113,8 +124,11 @@ export async function POST({ request, locals }) {
       result.status >= 500 ? "Stripe service" : "configuration";
     return json({
       error: "Secure $29 checkout could not be opened (" + reason +
-        "; code: " + code + (requestId ? "; request: " + requestId : "") +
-        "). Please call (202) 368-4395 for assistance.",
+        "; HTTP: " + result.status + "; type: " + (type || "unknown") +
+        "; code: " + code + (param ? "; parameter: " + param : "") +
+        (requestId ? "; request: " + requestId : "") +
+        "). " + (safeMessage ? "Stripe response: " + safeMessage + ". " : "") +
+        "Please call (202) 368-4395 for assistance.",
       errorCode: code,
       stripeRequestId: requestId || null
     }, 503);
