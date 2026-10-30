@@ -12,7 +12,12 @@ const FIELDS = {
   program: "fldCgzqIPXX8nn4qu",
   notes: "fld26rGp1uVmo2N0C",
   source: "flddgq6iKdUzousLp",
-  stage: "fldkn3uGcmQjOVUpV"
+  stage: "fldkn3uGcmQjOVUpV",
+  firstLandingPage: "fld5pKyFIc2cHaBGY",
+  acquisitionSource: "fldQRK5Sk4DviQPiA",
+  acquisitionMedium: "fldoBSwtfIDnQBU4S",
+  utmCampaign: "fld6kkeJbxMN5aAKx",
+  originalReferrer: "fldUXoAZPEi4NPegv"
 } as const;
 
 function json(data: object, status: number) {
@@ -44,6 +49,13 @@ export const POST: APIRoute = async ({ request, locals }) => {
   const program = formText(form, "programInterest", 120);
   const comments = formText(form, "comments", 3000);
   const source = formText(form, "source", 500) || "/";
+  // These fields are untrusted optional client metadata; trim to the CRM's
+  // conservative lengths, never trust them for authorization or payment.
+  const firstLandingPage = formText(form, "firstLandingPage", 160);
+  const acquisitionSource = formText(form, "acquisitionSource", 80);
+  const acquisitionMedium = formText(form, "acquisitionMedium", 80);
+  const utmCampaign = formText(form, "utmCampaign", 120);
+  const originalReferrer = formText(form, "originalReferrer", 160);
 
   if (!token) {
     return json({ success: false, error: "Please complete the security check and try again." }, 400);
@@ -87,6 +99,11 @@ export const POST: APIRoute = async ({ request, locals }) => {
   if (phone) fields[FIELDS.phone] = phone;
   if (program) fields[FIELDS.program] = program;
   if (comments) fields[FIELDS.notes] = comments;
+  if (firstLandingPage.startsWith("/")) fields[FIELDS.firstLandingPage] = firstLandingPage;
+  if (acquisitionSource) fields[FIELDS.acquisitionSource] = acquisitionSource;
+  if (acquisitionMedium) fields[FIELDS.acquisitionMedium] = acquisitionMedium;
+  if (utmCampaign) fields[FIELDS.utmCampaign] = utmCampaign;
+  if (originalReferrer) fields[FIELDS.originalReferrer] = originalReferrer;
 
   // Only acknowledge success after Airtable confirms creation. Do not forward
   // to the inactive Make webhook (which previously accepted but dropped leads).
