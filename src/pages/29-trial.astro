@@ -325,8 +325,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         if (applePayHelp) applePayHelp.hidden = true;
         if (cashAppInstructions) cashAppInstructions.hidden = false;
         notice.textContent = "Opening Cash App with $BTMMA and $29. Check the details before sending. We'll verify your payment manually.";
-        try { window.sessionStorage.setItem("btmma_cashapp_trial_pending", "1"); }
-        catch { /* Continue even if browser storage is disabled. */ }
+        // Restore receipt instructions only after returning from this approved
+        // Cash App selection, not on every future visit to the trial page.
+        try {
+          const bytes = window.crypto.getRandomValues(new Uint8Array(16));
+          const returnToken = Array.from(bytes, b => b.toString(16).padStart(2, "0")).join("");
+          window.sessionStorage.setItem("btmma_cashapp_trial_return_v2", returnToken);
+          const returnUrl = new URL(window.location.href);
+          returnUrl.searchParams.delete("checkout");
+          returnUrl.searchParams.delete("session_id");
+          returnUrl.searchParams.set("cashapp_return", returnToken);
+          window.history.replaceState(window.history.state, "", returnUrl.pathname + returnUrl.search + returnUrl.hash);
+        } catch { /* Payment directions remain visible if storage is blocked. */ }
         trackTrial("trial_cashapp_payment_selected");
         // Cash App's amount URL is not universally reliable. Keep an on-page
         // fallback and a clear instruction to verify $BTMMA and $29.
@@ -345,8 +355,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     if (!form || !notice || !submit) return;
     submit.disabled = true;
     document.getElementById("cashapp-new-student")?.addEventListener("click", () => {
-      try { window.sessionStorage.removeItem("btmma_cashapp_trial_pending"); }
-      catch { /* Allow reset without storage. */ }
+      try {
+        window.sessionStorage.removeItem("btmma_cashapp_trial_pending");
+        window.sessionStorage.removeItem("btmma_cashapp_trial_return_v2");
+      } catch { /* Allow reset without storage. */ }
       window.location.assign("/29-trial/");
     });
     // Verify Stripe's session server-side. The return URL alone is not a receipt.
@@ -406,11 +418,16 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       })();
       return;
     }
-    // When the customer comes back from Cash App, show the text receipt
-    // instructions rather than accidentally offering a second payment.
+    // Do not let old pending flags block new students from registering.
+    // Receipt help is restored only when the URL and the original tab's
+    // saved token match a verified Cash App selection.
+    const cashAppReturnToken = checkoutReturn.get("cashapp_return");
     let cashAppPending = false;
-    try { cashAppPending = window.sessionStorage.getItem("btmma_cashapp_trial_pending") === "1"; }
-    catch { /* No persistent state available. */ }
+    try {
+      cashAppPending = !!cashAppReturnToken && /^[a-f0-9]{32}$/.test(cashAppReturnToken) &&
+        window.sessionStorage.getItem("btmma_cashapp_trial_return_v2") === cashAppReturnToken;
+      window.sessionStorage.removeItem("btmma_cashapp_trial_pending");
+    } catch { /* Default to a fresh registration form. */ }
     if (cashAppPending) {
       if (cashAppInstructions) cashAppInstructions.hidden = false;
       if (checkoutButton) checkoutButton.hidden = true;
@@ -418,6 +435,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       submit.disabled = true;
       notice.textContent = "Your Cash App payment is pending verification. Please text your receipt to (410) 218-0894. Do not pay twice.";
       return;
+    }
+    // Ignore stale or shared return links without this tab's matching token.
+    if (cashAppReturnToken) {
+      const freshUrl = new URL(window.location.href);
+      freshUrl.searchParams.delete("cashapp_return");
+      window.history.replaceState(window.history.state, "", freshUrl.pathname + freshUrl.search + freshUrl.hash);
     }
     // Fail closed until the server confirms whether checkout is test or live.
     (async () => {
