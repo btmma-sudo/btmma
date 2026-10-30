@@ -727,6 +727,46 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   .trial-page .form button[hidden],
   .trial-page #checkout-fallback[hidden] { display: none; }
   .trial-page .form button:disabled { opacity: .55; cursor: not-allowed; }
+  /* Keep the secure payment choices legible on desktop and narrow phone screens. */
+  .trial-page #applepay-button,
+  .trial-page #checkout-button,
+  .trial-page #cashapp-button,
+  .trial-page #checkout-fallback {
+    background-color: #781010;
+    color: #fff;
+    border: 2px solid #e08c8c;
+    font-family: "Open Sans", Arial, sans-serif;
+    font-size: clamp(1rem, 2.6vw, 1.125rem);
+    font-weight: 800;
+    letter-spacing: .015em;
+    line-height: 1.45;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .4);
+    white-space: normal;
+  }
+  .trial-page #checkout-fallback { width: 100%; }
+  .trial-page #applepay-button:not(:disabled):hover,
+  .trial-page #checkout-button:not(:disabled):hover,
+  .trial-page #cashapp-button:not(:disabled):hover,
+  .trial-page #checkout-fallback:hover {
+    background-color: #951818;
+    color: #fff;
+  }
+  .trial-page #applepay-button:focus-visible,
+  .trial-page #checkout-button:focus-visible,
+  .trial-page #cashapp-button:focus-visible,
+  .trial-page #checkout-fallback:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 3px;
+  }
+  .trial-page #applepay-button:disabled,
+  .trial-page #checkout-button:disabled,
+  .trial-page #cashapp-button:disabled {
+    opacity: 1;
+    background-color: #542020;
+    border-color: #a87878;
+    color: #fff;
+    cursor: not-allowed;
+  }
   .trial-page .form-security {
     width: 100%;
     min-width: 0;
