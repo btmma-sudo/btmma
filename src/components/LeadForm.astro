@@ -101,6 +101,21 @@ const fields = config?.fields ?? "standard";
 
         const currentSource = window.location.pathname + window.location.search + window.location.hash;
         formData.set("source", currentSource || "/");
+        // Preserve the visitor's original marketing source for Airtable reporting.
+        // The first-touch record is set by BaseLayout; never include personal details.
+        try {
+          const firstTouch = JSON.parse(window.localStorage.getItem("btmma_first_touch_v1") || "null");
+          const fields = ["firstLandingPage", "acquisitionSource", "acquisitionMedium", "utmCampaign", "originalReferrer"];
+          if (firstTouch && typeof firstTouch.savedAt === "number" &&
+              firstTouch.savedAt <= Date.now() &&
+              Date.now() - firstTouch.savedAt < 30 * 24 * 60 * 60 * 1000) {
+            for (const field of fields) {
+              if (typeof firstTouch[field] === "string" && firstTouch[field]) {
+                formData.set(field, firstTouch[field]);
+              }
+            }
+          }
+        } catch { /* Inquiry submission must work even if attribution is unavailable. */ }
         if (sourceField instanceof HTMLInputElement) {
           sourceField.value = currentSource || "/";
         }
