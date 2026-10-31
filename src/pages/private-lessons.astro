@@ -1,0 +1,271 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+const packs = [
+  { id:"basic", name:"Basic", eyebrow:"LEVEL UP", tagline:"BUILD SKILLS. GAIN CONFIDENCE.", price:249, sessions:4,
+    photo:"/images/kids-martial-arts-karate-guard.png", alt:"Young karate student demonstrating a technique",
+    features:["Skills assessment","Personal improvement plan","Technique and form development","Footwork and striking practice","Completion certificate"] },
+  { id:"advanced", name:"Advanced", eyebrow:"COMPETITION EDGE", tagline:"PREPARE. PERFORM. STAND OUT.", price:399, sessions:6,
+    photo:"/images/kids-martial-arts-smiling-student.png", alt:"Smiling young martial arts student",
+    features:["Tournament preparation","Forms and technique performance","Timing, strategy and presentation","Video feedback","Written coaching plan"] },
+  { id:"elite", name:"Elite", eyebrow:"PERSONAL PROTECTION", tagline:"REAL SKILLS. REAL CONFIDENCE.", price:499, sessions:8,
+    photo:"/images/burning-tree-womens-self-defense-cropped.webp", alt:"Private self-defense instruction",
+    features:["Situational awareness","De-escalation techniques","Escapes and defensive skills","Distance management","Personal practice guide"] },
+  { id:"mastery", name:"Mastery", eyebrow:"MASTERY ELITE COACHING", tagline:"DEEPER TRAINING. HIGHER LEVELS.", price:799, sessions:10,
+    photo:"/images/about-dana.png", alt:"Burning Tree advanced martial arts instructor",
+    features:["Advanced technical development","Personal goal setting","Progress assessments","Priority scheduling","Recorded feedback with consent","Final evaluation and certificate"] }
+];
+const seo = {
+ "@context":"https://schema.org","@type":"Service",name:"Private martial arts lessons",
+ provider:{"@type":"SportsActivityLocation",name:"Burning Tree Mixed Martial Arts",url:"https://burningtreemma.com",address:{"@type":"PostalAddress",streetAddress:"10210 S Dolfield Rd, Suite C",addressLocality:"Owings Mills",addressRegion:"MD",postalCode:"21117",addressCountry:"US"}},
+ areaServed:["Owings Mills","Reisterstown","Pikesville","Randallstown","Baltimore County"],
+ hasOfferCatalog:{"@type":"OfferCatalog",name:"Private coaching",itemListElement:packs.map(p=>({"@type":"Offer",name:p.name+" "+p.sessions+"-lesson private coaching",price:p.price,priceCurrency:"USD",url:"https://burningtreemma.com/private-lessons/#booking"}))}
+};
+---
+<BaseLayout title="Private Martial Arts Lessons in Owings Mills | Burning Tree MMA"
+ description="One-on-one private karate, Muay Thai, Wing Chun and self-defense coaching in Owings Mills. Choose 4 lessons for $249, 6 for $399, 8 for $499 or 10 for $799. Register and pay online."
+ path="/private-lessons/" image="/images/kids-martial-arts-karate-guard.png"
+ keywords={["private martial arts lessons Owings Mills","one on one karate coaching","private self defense classes near me","martial arts competition coaching Baltimore County","private Muay Thai training","private Wing Chun lessons"]}>
+ <script type="application/ld+json" set:html={JSON.stringify(seo)} />
+ <div class="private">
+  <section class="private-hero">
+   <div class="private-wrap private-hero-grid">
+    <div>
+     <p class="private-eyebrow">BURNING TREE MIXED MARTIAL ARTS · OWINGS MILLS, MD</p>
+     <h1>TAKE YOUR TRAINING <span>TO THE NEXT LEVEL.</span></h1>
+     <p class="private-intro">PERSONAL ATTENTION. <strong>REAL PROGRESS.</strong></p>
+     <p>Focused, one-on-one 60-minute martial arts training for kids, teens and adults. Build confidence, sharpen technique and work directly on your personal goals.</p>
+     <div class="private-buttons"><a class="private-btn" href="#packages">SEE ALL FOUR PACKAGES</a><a class="private-btn private-outline" href="#booking">REGISTER &amp; PAY ONLINE</a></div>
+     <p class="private-motto">ONE TREE. ONE FAMILY.</p>
+    </div>
+    <div class="private-hero-photo">
+     <img src="/images/kids-martial-arts-karate-guard.png" width="800" height="800" alt="Confident Burning Tree karate student preparing to train" />
+     <div class="private-photo-note">LEVEL UP! <small>4–10 PRIVATE LESSONS</small></div>
+    </div>
+   </div>
+  </section>
+
+  <section class="private-wrap private-section" id="packages">
+   <div class="private-heading"><p class="private-eyebrow">PERSONAL ATTENTION. REAL PROGRESS.</p><h2>PRIVATE LESSON <span>PACKAGES</span></h2><p>Every package includes personalized one-on-one instruction. Every lesson is 60 minutes.</p></div>
+   <div class="private-cards">
+    {packs.map(p => (
+     <article class:list={["private-card",p.id==="mastery"&&"private-master"]}>
+      <div class="private-card-photo">
+       <img src={p.photo} alt={p.alt} width="560" height="370" loading="lazy" decoding="async" />
+       <span>{p.eyebrow}</span>
+      </div>
+      <div class="private-card-body">
+       <h3>{p.name} <span>PACKAGE</span></h3>
+       <p class="private-tagline">{p.tagline}</p>
+       <p class="private-price">$<strong>{p.price}</strong></p>
+       <p class="private-duration"><strong>{p.sessions} PRIVATE SESSIONS</strong><br />60 MINUTES EACH</p>
+       <ul>{p.features.map(f => <li>{f}</li>)}</ul>
+       <button class="private-btn private-select" data-package={p.id} type="button">CHOOSE {p.name.toUpperCase()}</button>
+      </div>
+     </article>
+    ))}
+   </div>
+   <p class="private-note">Private coaching packages are separate from our regular monthly tuition and the $29 New Student Special. Session times are arranged individually after verified payment.</p>
+  </section>
+
+  <section class="private-benefit-strip"><div class="private-wrap private-benefit-grid">
+   <div><p class="private-eyebrow">FOCUSED TRAINING</p><h2>DEEPER TRAINING. <span>FASTER PROGRESS.</span></h2><p>Work on Kenpo forms, Muay Thai striking, Wing Chun techniques, self-defense, tournament preparation and the goals that matter most to you.</p></div>
+   <div class="private-benefit-points"><p><strong>01</strong> Personal assessment and coaching plan</p><p><strong>02</strong> One-on-one technique and strategy</p><p><strong>03</strong> Beginner to advanced skill development</p><p><strong>04</strong> Flexible scheduling by arrangement</p></div>
+  </div></section>
+
+  <section class="private-wrap private-section" id="booking">
+   <div class="private-heading"><p class="private-eyebrow">READY TO LEVEL UP?</p><h2>REGISTER FOR <span>PRIVATE COACHING</span></h2><p>Choose your package, enter student information, then select the same payment choices as the $29 promotion.</p></div>
+   <div class="private-booking-grid">
+    <div class="private-panel">
+     <form id="private-order-form">
+      <h3>Student &amp; Contact Information</h3>
+      <label for="private-package">Select a package</label>
+      <select name="package" id="private-package" required>
+       {packs.map(p => <option value={p.id}>{p.name} — {p.sessions} private 60-minute lessons — $ {p.price}</option>)}
+      </select>
+      <label for="private-student">Student's full name</label><input name="studentName" id="private-student" type="text" maxlength="120" autocomplete="name" required />
+      <label for="private-contact">Parent/guardian or contact name</label><input name="contactName" id="private-contact" type="text" maxlength="120" autocomplete="name" required />
+      <div class="private-two"><div><label for="private-email">Email</label><input name="email" id="private-email" type="email" maxlength="254" autocomplete="email" required /></div><div><label for="private-phone">Phone</label><input name="phone" id="private-phone" type="tel" autocomplete="tel" required /></div></div>
+      <label for="private-art">Training focus</label>
+      <select id="private-art" name="martialArt" required><option value="">Choose a training focus</option><option>Kenpo Karate</option><option>Muay Thai</option><option>Wing Chun</option><option>Self-Defense</option><option>Competition Prep</option><option>Not sure yet</option></select>
+      <label for="private-time">Preferred session days/times (optional)</label><input id="private-time" name="preferredTime" type="text" maxlength="240" placeholder="Example: Wednesdays after 5 PM" />
+      <label for="private-goals">Your training goals (optional)</label><textarea id="private-goals" name="goals" maxlength="600" rows="3" placeholder="Tell us what skills you want to improve"></textarea>
+      <div class="private-security"><strong>Security check</strong><div class="cf-turnstile" data-sitekey="0x4AAAAAAD6Ievu-t0Ll1euh" data-size="compact"></div></div>
+      <p class="private-small">By registering, you agree to our <a href="/terms">Terms</a> and <a href="/privacy">Privacy Policy</a>. Lessons will be scheduled with an instructor after your payment is verified.</p>
+      <p class="private-feedback" id="private-feedback" role="status" aria-live="polite">Fill out the information above and choose your preferred payment method. Clicking a method will not charge you before checkout.</p>
+      <h3>Choose Your Payment Method</h3>
+      <div class="private-pay-grid">
+       <button type="button" data-method="apple">APPLE PAY / APPLE CASH</button>
+       <button type="button" data-method="card">CREDIT / DEBIT CARD</button>
+       <button type="button" data-method="cashapp">DIRECT CASH APP</button>
+       <button type="button" data-method="zelle">DIRECT ZELLE</button>
+      </div>
+      <p class="private-small">Apple Pay, eligible Apple Cash cards and credit/debit cards use secure Stripe checkout. Direct Cash App and Zelle require manual verification before lessons can be scheduled.</p>
+      <a id="private-fallback" class="private-btn" hidden rel="noopener noreferrer">OPEN SECURE CARD CHECKOUT</a>
+     </form>
+     <div id="private-manual" class="private-manual" hidden aria-live="polite">
+      <h3 id="private-manual-title">Direct payment — pending verification</h3>
+      <p>Your package: <strong id="private-manual-package"></strong></p>
+      <p>Amount to send: <strong id="private-manual-price"></strong></p>
+      <p>Payment memo / order reference: <strong id="private-manual-ref"></strong></p>
+      <div id="private-cashapp" hidden><p>Open Cash App and send the exact amount to <strong>$BTMMA</strong>. Check the recipient before paying; the link does not prefill the amount.</p><a class="private-btn" href="https://cash.app/$BTMMA" target="_blank" rel="noopener noreferrer">OPEN CASH APP</a></div>
+      <div id="private-zelle" hidden><p>Use Zelle in your bank app and send to Coach David's mobile number <strong>410-218-0894</strong> (not the studio's street address). Verify the recipient name before sending.</p><button class="private-btn" id="private-copy-number" type="button">COPY ZELLE NUMBER</button></div>
+      <p><strong>Your request is saved, but not paid.</strong> After sending, text the student's name, order reference and payment confirmation to Coach David. Your registration remains pending until he verifies the payment. Do not pay a second time through another method.</p>
+      <a class="private-btn" id="private-sms" href="sms:+14102180894">TEXT PAYMENT CONFIRMATION</a>
+      <p id="private-copy-feedback" role="status"></p>
+     </div>
+    </div>
+    <aside class="private-summary">
+     <img src="/images/logo.png" alt="Burning Tree Mixed Martial Arts logo" width="90" height="125" loading="lazy" />
+     <p class="private-eyebrow">YOUR PRIVATE PACKAGE</p>
+     <h3 id="private-summary-title">BASIC</h3>
+     <p class="private-summary-price" id="private-summary-price">$249</p>
+     <p id="private-summary-sessions">4 sessions · 60 minutes each</p><hr />
+     <h4>What happens next?</h4>
+     <ol><li>Choose your program and enter your information.</li><li>Pay by Stripe, Cash App or Zelle.</li><li>After payment verification, contact Coach David to schedule your private lessons.</li></ol>
+     <p>Questions? Call or text <a href="tel:+14102180894">410-218-0894</a>.</p>
+     <p class="private-motto">ONE TREE. ONE FAMILY.</p>
+    </aside>
+   </div>
+  </section>
+  <section id="private-result" class="private-wrap private-section private-result" hidden aria-live="polite"><h2 id="private-result-heading">Verifying your payment…</h2><p id="private-result-text">Checking your secure Stripe receipt.</p><p>Please do not pay a second time while verification is pending.</p><a class="private-btn" href="sms:+14102180894">TEXT COACH DAVID</a></section>
+  <section class="private-wrap private-faq"><h2>PRIVATE LESSONS FAQ</h2><details><summary>How long is a private lesson?</summary><p>Each session is 60 minutes: 4 in Basic, 6 in Advanced, 8 in Elite and 10 in Mastery.</p></details><details><summary>Can beginners take private lessons?</summary><p>Yes. Coaching is personalized for beginners and more experienced students, including children, teens and adults.</p></details><details><summary>How do I book a specific session time?</summary><p>Include preferred days or times in your request. Coach David will coordinate individual appointments after payment is verified; specific times are not automatically reserved during checkout.</p></details><details><summary>Is this separate from the $29 special?</summary><p>Yes. These coaching packages are standalone one-on-one lessons, separate from introductory classes and regular tuition.</p></details></section>
+ </div>
+ <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" is:inline async defer></script>
+ <script is:inline>
+ (() => {
+   const $ = id => document.getElementById(id);
+   const form = $("private-order-form"), select = $("private-package");
+   if (!form || !select) return;
+   const packs = {basic:[249,4],advanced:[399,6],elite:[499,8],mastery:[799,10]};
+   const buttons = [...document.querySelectorAll(".private-pay-grid button")];
+   let submitted = false;
+   const updateSummary = () => {
+     const pack = packs[select.value] || packs.basic;
+     $("private-summary-title").textContent = select.value.toUpperCase();
+     $("private-summary-price").textContent = "$" + pack[0];
+     $("private-summary-sessions").textContent = pack[1] + " sessions · 60 minutes each";
+     const names={apple:"APPLE PAY / APPLE CASH",card:"CREDIT / DEBIT CARD",cashapp:"DIRECT CASH APP",zelle:"DIRECT ZELLE"};
+     buttons.forEach(b=>b.textContent=names[b.dataset.method]+" — $"+pack[0]);
+   };
+   select.addEventListener("change",updateSummary);
+   document.querySelectorAll(".private-select").forEach(b=>b.addEventListener("click",()=>{
+     select.value=b.dataset.package;updateSummary();
+     $("booking").scrollIntoView({behavior:"smooth",block:"start"});
+     select.focus({preventScroll:true});
+   }));
+   updateSummary();
+   const qs = new URLSearchParams(location.search);
+   if(qs.get("checkout")==="success") {
+     $("private-result").hidden=false;
+     const id=qs.get("session_id")||"";
+     if(!/^cs_live_[A-Za-z0-9_]{10,180}$/.test(id)) {
+       $("private-result-heading").textContent="Receipt details missing";
+       $("private-result-text").textContent="Keep your Stripe receipt and text Coach David at 410-218-0894.";
+     }else{
+       fetch("/api/private-lessons-status",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sessionId:id}),cache:"no-store"})
+       .then(async r=>{const data=await r.json();if(!r.ok||!data.confirmed)throw Error(data.error||"Stripe has not confirmed payment.");return data;})
+       .then(data=>{
+         $("private-result-heading").textContent="PAYMENT VERIFIED!";
+         $("private-result-text").textContent="Stripe confirms $"+data.amount+" for your "+data.package+" package ("+data.sessions+" lessons). Keep your receipt and contact Coach David at 410-218-0894 to schedule your first lesson."+(data.recorded?"":" Our records may need manual reconciliation.");
+       }).catch(err=>{$("private-result-heading").textContent="Payment needs verification";$("private-result-text").textContent=err.message+" Keep your receipt and contact Coach David before paying again.";});
+     }
+   } else if(qs.get("checkout")==="cancelled") $("private-feedback").textContent="Stripe checkout was cancelled. No payment was confirmed. Choose your payment method to continue.";
+   buttons.forEach(b=>b.addEventListener("click",async()=>{
+     if(submitted||!form.reportValidity())return;
+     const token=form.querySelector('[name="cf-turnstile-response"]')?.value||window.turnstile?.getResponse?.()||"";
+     if(!token){$("private-feedback").textContent="Complete the security check before choosing payment.";return;}
+     submitted=true;buttons.forEach(x=>x.disabled=true);
+     $("private-feedback").textContent="Saving your request and preparing your payment…";
+     const data=Object.fromEntries(new FormData(form).entries());
+     try{
+       const controller=new AbortController(), timeout=setTimeout(()=>controller.abort(),20000);
+       let response;
+       try{response=await fetch("/api/private-lessons-order",{method:"POST",headers:{"Content-Type":"application/json"},signal:controller.signal,body:JSON.stringify({
+         package:data.package,studentName:data.studentName,contactName:data.contactName,email:data.email,phone:data.phone,
+         martialArt:data.martialArt,preferredTime:data.preferredTime,goals:data.goals,paymentMethod:b.dataset.method,turnstileToken:token
+       })});}finally{clearTimeout(timeout);}
+       const result=await response.json();
+       if(!response.ok)throw Error(result.error||"Could not prepare payment.");
+       if(result.url){
+         if(!/^https:\/\/checkout\.stripe\.com\//.test(result.url))throw Error("Checkout link was not verified.");
+         $("private-fallback").href=result.url;$("private-fallback").hidden=false;
+         $("private-feedback").textContent="Opening secure Stripe checkout. If needed, use the checkout link below.";
+         window.location.assign(result.url);return;
+       }
+       if(!result.saved||!result.pending)throw Error("Payment instructions could not be confirmed.");
+       $("private-manual").hidden=false;
+       $("private-manual-title").textContent=result.paymentMethod==="zelle"?"Zelle — pending verification":"Cash App — pending verification";
+       $("private-manual-package").textContent=result.package;
+       $("private-manual-price").textContent="$"+Number(result.amount).toFixed(2);
+       $("private-manual-ref").textContent=result.orderId;
+       $("private-cashapp").hidden=result.paymentMethod!=="cashapp";
+       $("private-zelle").hidden=result.paymentMethod!=="zelle";
+       $("private-sms").href="sms:+14102180894?body="+encodeURIComponent("Hi Coach David, I registered for "+result.package+" private lessons. Order: "+result.orderId+". Here is my payment confirmation:");
+       $("private-feedback").textContent="Your request was saved! Payment is pending manual confirmation.";
+       $("private-manual").scrollIntoView({behavior:"smooth",block:"start"});
+     }catch(e){$("private-feedback").textContent=e.name==="AbortError"?"Request timed out. Text Coach David before trying again to avoid duplicate orders.":e.message;submitted=false;buttons.forEach(x=>x.disabled=false);window.turnstile?.reset?.();}
+   }));
+   $("private-copy-number")?.addEventListener("click",async()=>{
+     try{await navigator.clipboard.writeText("410-218-0894");$("private-copy-feedback").textContent="Number copied.";}
+     catch{$("private-copy-feedback").textContent="Copy manually: 410-218-0894";}
+   });
+ })();
+ </script>
+ <style>
+ .private{color:#151515;overflow:hidden;--red:#df161d}.private *{box-sizing:border-box}.private [hidden]{display:none!important}
+ .private-wrap{max-width:1240px;margin:auto;padding-left:clamp(18px,4vw,42px);padding-right:clamp(18px,4vw,42px)}
+ .private-eyebrow{font-weight:900;font-size:.8rem;letter-spacing:.11em;color:var(--red)}
+ .private-hero{background:radial-gradient(circle at 80% 70%,#991217,transparent 48%),#111;color:#fff}
+ .private-hero-grid{min-height:570px;display:grid;grid-template-columns:1.1fr .9fr;gap:20px;align-items:center;padding-top:35px;padding-bottom:35px}
+ .private-hero h1{font-size:clamp(2.7rem,5.6vw,5.2rem);font-weight:1000;letter-spacing:-.055em;line-height:1.03;margin:16px 0}
+ .private-hero h1 span{display:block;color:#ff333c}.private-hero p{max-width:570px;line-height:1.6}
+ .private-hero .private-eyebrow{color:#ffc4c4}.private-intro{font-size:1.4rem;font-weight:900}.private-intro strong{color:#ff494e}
+ .private-buttons{display:flex;gap:12px;flex-wrap:wrap;margin:28px 0}
+ .private-btn{display:inline-flex;align-items:center;justify-content:center;text-align:center;min-height:46px;padding:12px 17px;border:2px solid var(--red);border-radius:7px;background:var(--red);color:#fff!important;text-decoration:none!important;cursor:pointer;font-weight:900;font-size:.85rem;line-height:1.25}
+ .private-btn:hover,.private-btn:focus-visible{background:#a80910;border-color:#a80910}
+ .private-outline{border-color:#fff;background:transparent}.private-motto{color:#ffb8ba;font-weight:900;font-style:italic;letter-spacing:.05em}
+ .private-hero-photo{position:relative;min-height:450px;display:flex;align-items:end}.private-hero-photo img{max-height:530px;width:100%;object-fit:contain;filter:drop-shadow(0 8px 18px #111)}
+ .private-photo-note{position:absolute;bottom:15px;left:0;background:var(--red);padding:12px 20px;transform:rotate(-3deg);font-size:1.5rem;font-weight:1000;box-shadow:5px 6px #000}.private-photo-note small{display:block;font-size:.75rem}
+ .private-section{padding-top:70px;padding-bottom:70px;scroll-margin-top:90px}
+ .private-heading{text-align:center;margin:0 auto 32px;max-width:790px}.private-heading h2,.private-benefit-strip h2{font-weight:1000;font-size:clamp(2.3rem,4vw,4rem);letter-spacing:-.045em;line-height:1.06;margin:12px 0}.private-heading h2 span,.private-benefit-strip h2 span{color:var(--red)}
+ .private-heading>p:last-child{line-height:1.65}
+ .private-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}
+ .private-card{border:2px solid #ddd;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 9px 24px #0001;background:#fff}.private-master{border-color:#bd992c}
+ .private-card-photo{height:185px;position:relative;background:#eee}.private-card-photo img{width:100%;height:100%;object-fit:cover;object-position:top}.private-card-photo span{position:absolute;bottom:0;left:0;right:0;padding:9px;background:#0c0c0ce8;color:#fff;text-align:center;font-weight:900;font-size:.76rem;letter-spacing:.08em}
+ .private-card-body{padding:18px 15px;display:flex;flex:1;flex-direction:column}.private-card h3{font-size:1.6rem;line-height:1.1;margin:2px 0;text-transform:uppercase}.private-card h3 span{display:block;color:var(--red);font-size:1.04rem}
+ .private-tagline{font-size:.82rem;font-weight:900;min-height:35px;margin:10px 0}
+ .private-price{font-size:2.3rem;color:var(--red);margin:0;font-weight:900}.private-price strong{font-size:3rem;letter-spacing:-.065em}
+ .private-master .private-price{color:#ba8509}.private-duration{font-size:.85rem;line-height:1.4;margin:6px 0 12px}
+ .private-card ul{margin:0 0 18px;padding:0;list-style:none;flex:1}
+ .private-card li{position:relative;padding:6px 0 6px 23px;font-size:.86rem;line-height:1.3}
+ .private-card li:before{content:"✓";position:absolute;left:0;top:6px;width:17px;height:17px;line-height:17px;border-radius:50%;background:var(--red);color:#fff;text-align:center;font-size:.7rem;font-weight:900}
+ .private-select{width:100%}.private-note{max-width:880px;margin:22px auto 0;text-align:center;font-size:.88rem;line-height:1.5;color:#555}
+ .private-benefit-strip{background:#141414;color:#fff;padding:65px 0}.private-benefit-grid{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:40px}.private-benefit-grid>div>p{line-height:1.6}
+ .private-benefit-points p{background:#272727;border-left:4px solid var(--red);margin:0 0 12px;padding:15px 20px;font-weight:800}.private-benefit-points strong{color:#ff7f84;margin-right:12px}
+ .private-booking-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,.77fr);align-items:start;gap:25px}
+ .private-panel,.private-summary{padding:clamp(18px,3vw,30px);border:1px solid #ddd;border-radius:14px;background:#fff;box-shadow:0 8px 25px #0001}
+ .private-panel h3{font-size:1.4rem;margin:4px 0 20px}
+ .private-panel label{display:block;font-weight:800;margin:15px 0 6px}
+ .private-panel input,.private-panel select,.private-panel textarea{display:block;width:100%;max-width:100%;background:#fff;color:#111;border:1px solid #999;border-radius:7px;padding:11px 12px;font:inherit;font-size:16px;min-height:46px}
+ .private-panel input:focus,.private-panel select:focus,.private-panel textarea:focus{outline:3px solid #f6a7a9;border-color:#ae0000}
+ .private-two{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+ .private-security{border:1px solid #ddd;padding:15px;border-radius:8px;margin-top:20px}.private-security strong{display:block;margin-bottom:10px}
+ .private-small{color:#555;font-size:.85rem;line-height:1.55;margin:16px 0}
+ .private-feedback{background:#fff0f0;border-left:5px solid var(--red);padding:14px 16px;font-weight:700;line-height:1.5}
+ .private-pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+ .private-pay-grid button{border:2px solid #111;border-radius:7px;background:#171717;color:#fff;padding:16px 10px;min-height:66px;font-weight:900;cursor:pointer;font-size:.86rem}
+ .private-pay-grid button:hover,.private-pay-grid button:focus-visible{background:#b80d13;border-color:#b80d13}
+ .private-pay-grid button:disabled{opacity:.55;cursor:wait}
+ .private-summary{position:sticky;top:15px;background:#181818;color:#fff;border:2px solid var(--red)}
+ .private-summary img{display:block;max-width:90px;height:auto;margin:0 auto 15px}
+ .private-summary .private-eyebrow{color:#ff9b9d}.private-summary h3{font-size:2.3rem;font-weight:1000;margin:9px 0}
+ .private-summary-price{font-weight:1000;font-size:3.9rem;color:#ff3039;margin:0}
+ .private-summary hr{border:0;border-top:1px solid #555;margin:22px 0}.private-summary li{padding-bottom:12px;line-height:1.5}.private-summary a{color:#fff;text-decoration:underline}.private-summary p{line-height:1.55}
+ .private-manual{border:2px solid #b60000;border-radius:12px;background:#fff5f5;padding:20px;margin-top:25px;line-height:1.65}.private-manual .private-btn{margin:5px 0 12px}
+ .private-result{background:#f7f7f7;border-top:5px solid var(--red);margin-bottom:40px}
+ .private-faq{padding-bottom:75px}.private-faq h2{font-size:2.1rem}.private-faq details{border:1px solid #ddd;border-radius:9px;background:#fafafa;padding:17px 20px;margin-bottom:12px}.private-faq summary{font-weight:900;cursor:pointer}.private-faq details p{line-height:1.6}
+ @media(max-width:1120px){.private-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.private-card-photo{height:225px}}
+ @media(max-width:740px){.private-hero-grid,.private-benefit-grid,.private-booking-grid{grid-template-columns:1fr}.private-hero-grid{padding-top:45px}.private-hero-photo{min-height:270px;max-height:430px}.private-hero-photo img{max-height:430px}.private-section{padding-top:52px;padding-bottom:52px}.private-summary{position:static}}
+ @media(max-width:530px){.private-cards,.private-two,.private-pay-grid{grid-template-columns:1fr}.private-hero h1{font-size:2.7rem}.private-card-photo{height:245px}.private-buttons{display:grid}}
+ </style>
+</BaseLayout>
