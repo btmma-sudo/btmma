@@ -95,7 +95,7 @@ const eventStructuredData = {
       <div class="seminar-intro">
         <p class="seminar-eyebrow">SAVE YOUR PLACE</p>
         <h2 id="registration-heading">Register &amp; Pay Online</h2>
-        <p>Choose your seminar and admission option, enter attendee names and contact details, then select Apple Pay/Apple Cash, a credit/debit card, or direct Cash App. You can register up to six attendees together.</p>
+        <p>Choose your seminar and admission option, enter attendee names and contact details, then choose Apple Pay/Apple Cash, credit/debit card, direct Cash App, or Zelle. You can register up to six attendees together.</p>
         <p class="seminar-note">For multiple attendees, enter one full name per line. The total updates automatically. Your registration is confirmed only after successful payment.</p>
         <p class="seminar-note"><strong>Signing in person?</strong> Print the <a href="/waivers/united-by-purpose/" target="_blank" rel="noopener noreferrer">United by Purpose waiver</a> or the <a href="/waivers/striking-a-nerve/" target="_blank" rel="noopener noreferrer">Striking a Nerve waiver</a>. One signed form per attendee.</p>
       </div>
@@ -148,7 +148,7 @@ const eventStructuredData = {
           <span id="seminar-total-label">General Admission × 1</span>
           <strong id="seminar-total-amount">$50.00</strong>
         </div>
-        <p class="seminar-note">Review your details to see the same payment choices as our $29 special. Apple Pay (including eligible Apple Cash cards) and credit/debit cards use secure Stripe checkout. Direct Cash App payments are manually verified.</p>
+        <p class="seminar-note">Review your details, sign the required seminar waiver, and choose how to pay. Apple Pay (including eligible Apple Cash cards) and credit/debit cards use secure Stripe checkout. Direct Cash App and Zelle payments require manual verification.</p>
         <p class="seminar-note">We do not collect or store card numbers on this website. By registering, you agree to our <a href="/terms">Terms</a> and <a href="/privacy">Privacy Policy</a>.</p>
         <p id="seminar-form-message" class="seminar-message" role="status" aria-live="polite"></p>
         <button id="seminar-submit" class="seminar-cta seminar-checkout" type="submit">REVIEW REGISTRATION &amp; SIGN WAIVERS</button>
@@ -160,6 +160,7 @@ const eventStructuredData = {
           <button id="seminar-applepay" class="seminar-cta seminar-pay-choice" type="button">APPLE PAY / APPLE CASH</button>
           <button id="seminar-card" class="seminar-cta seminar-pay-choice" type="button">PAY WITH CREDIT / DEBIT CARD</button>
           <button id="seminar-cashapp" class="seminar-cta seminar-pay-choice" type="button">PAY DIRECTLY WITH CASH APP</button>
+          <button id="seminar-zelle" class="seminar-cta seminar-pay-choice" type="button">PAY DIRECTLY WITH ZELLE</button>
           <p class="seminar-note">Apple Pay and card payments open the same secure Stripe checkout. Apple Pay appears only on supported devices. To use an eligible Apple Cash balance, select the Apple Cash card in Apple Pay. A credit or debit card remains available as a fallback.</p>
           <p class="seminar-note">Signed acknowledgments are saved separately in Burning Tree's seminar waiver records before payment is offered.</p>
         </div>
@@ -176,6 +177,26 @@ const eventStructuredData = {
           <p id="seminar-copy-message" class="seminar-note" role="status"></p>
           <p class="seminar-cashapp-warning"><strong>Registration pending:</strong> Cash App does not automatically confirm an attendee on this website. Your place is confirmed by Burning Tree after we verify your payment and attendee details. Do not pay a second time through Stripe.</p>
           <button type="button" id="seminar-back-to-payments" class="seminar-cta seminar-pay-choice">CHANGE PAYMENT METHOD</button>
+        </div>
+        <div id="seminar-zelle-instructions" class="seminar-cashapp-instructions" hidden aria-live="polite">
+          <h3>Direct Zelle Payment</h3>
+          <p><strong>Amount to send:</strong> <strong id="seminar-zelle-amount"></strong></p>
+          <p><strong>Zelle recipient:</strong> Coach David's enrolled <strong>mobile phone number (410) 218-0894</strong>. This is a phone number for payment, <strong>not a studio address</strong>.</p>
+          <button id="seminar-copy-zelle-number" class="seminar-cta seminar-pay-choice" type="button">COPY ZELLE PHONE NUMBER</button>
+          <p id="seminar-zelle-number-message" class="seminar-note" role="status"></p>
+          <ol class="seminar-zelle-steps">
+            <li>Open your bank or credit union app, and choose <strong>Send with Zelle</strong> (if your bank supports it).</li>
+            <li>Enter <strong>410-218-0894</strong> as the recipient's mobile phone number.</li>
+            <li><strong>Check the recipient name displayed by your bank.</strong> If it is not the person you intended to pay, do not send the money. Contact Coach David to confirm first.</li>
+            <li>Enter the exact seminar amount shown above. In the payment memo (if available), enter <strong id="seminar-zelle-memo"></strong>.</li>
+            <li>Once your bank confirms the transfer, text your payment confirmation and the attendee information below to <a href="sms:+14102180894">(410) 218-0894</a>.</li>
+          </ol>
+          <label for="seminar-zelle-details" class="seminar-copy-label">Registration details to send with your Zelle receipt</label>
+          <textarea id="seminar-zelle-details" rows="6" readonly aria-label="Seminar Zelle payment and registration details"></textarea>
+          <button id="seminar-copy-zelle-details" type="button" class="seminar-cta seminar-pay-choice">COPY REGISTRATION DETAILS</button>
+          <p id="seminar-zelle-copy-message" class="seminar-note" role="status"></p>
+          <p class="seminar-cashapp-warning"><strong>Registration pending:</strong> Zelle is not connected to automatic website confirmation. Your place is confirmed only after Burning Tree personally verifies the Zelle payment and attendee details. Do not pay a second time by card or Cash App.</p>
+          <button id="seminar-zelle-back-to-payments" type="button" class="seminar-cta seminar-pay-choice">CHANGE PAYMENT METHOD</button>
         </div>
         <p class="seminar-note">Seminar questions? Call or text <a href="tel:+14102180894">(410) 218-0894</a>.</p>
       </form>
@@ -234,7 +255,9 @@ const eventStructuredData = {
       const cardButton = $("seminar-card");
       const cashAppButton = $("seminar-cashapp");
       const cashAppInstructions = $("seminar-cashapp-instructions");
-      const paymentButtons = [applePayButton, cardButton, cashAppButton];
+      const zelleButton = $("seminar-zelle");
+      const zelleInstructions = $("seminar-zelle-instructions");
+      const paymentButtons = [applePayButton, cardButton, cashAppButton, zelleButton];
       const waiverSection = $("seminar-waiver-section");
       const waiverSignerFields = $("seminar-waiver-signers");
       const waiverDefinitions = JSON.parse($("seminar-waiver-data").textContent || "{}");
@@ -258,6 +281,7 @@ const eventStructuredData = {
         signaturePhase = false;
         choices.hidden = true;
         cashAppInstructions.hidden = true;
+        zelleInstructions.hidden = true;
         waiverSection.hidden = true;
         waiverSignerFields.replaceChildren();
         if (waiverWidgetId !== null) window.turnstile?.reset?.(waiverWidgetId);
@@ -533,10 +557,12 @@ const eventStructuredData = {
           applePayButton.textContent = "APPLE PAY / APPLE CASH — " + total;
           cardButton.textContent = "PAY " + total + " WITH CREDIT / DEBIT CARD";
           cashAppButton.textContent = "PAY " + total + " DIRECTLY WITH CASH APP";
+          zelleButton.textContent = "PAY " + total + " DIRECTLY WITH ZELLE";
           verifyButton.hidden = true;
           waiverSection.hidden = true;
           choices.hidden = false;
           cashAppInstructions.hidden = true;
+          zelleInstructions.hidden = true;
           message.textContent = "Signed waiver records saved for all " + reviewed.count +
             " attendee(s). Choose your payment method. No payment has been charged.";
           choices.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -653,6 +679,63 @@ const eventStructuredData = {
         }
       });
 
+      zelleButton.addEventListener("click", () => {
+        if (!reviewed || isClosed(reviewed.event, reviewed.ticket)) {
+          resetPaymentChoices();
+          message.textContent = "Please review the seminar registration and sign the waivers before paying.";
+          return;
+        }
+        const eventName = reviewed.event === "united" ? "United by Purpose" : "Striking a Nerve";
+        const reference = reviewed.waiverGroupId.slice(0, 8);
+        const memo = "BTMMA " + reviewed.event.toUpperCase() + " " + reference;
+        $("seminar-zelle-amount").textContent = dollars(reviewed.totalCents);
+        $("seminar-zelle-memo").textContent = memo;
+        $("seminar-zelle-details").value = "Burning Tree seminar - Zelle payment\n" +
+          "Event: " + eventName + "\n" +
+          "Ticket: " + reviewed.ticketName + " x " + reviewed.count + "\n" +
+          "Amount: " + dollars(reviewed.totalCents) + "\n" +
+          "Zelle recipient mobile: 410-218-0894 (Coach David)\n" +
+          "Payment memo: " + memo + "\n" +
+          "Contact: " + reviewed.contactName + "\n" +
+          "Email: " + reviewed.email + "\n" +
+          "Phone: " + reviewed.phone + "\n" +
+          "Attendees:\n" + reviewed.attendees + "\n" +
+          "Signed waiver group: " + reviewed.waiverGroupId + "\n" +
+          "Payment confirmation: [attach Zelle payment receipt after paying]";
+        choices.hidden = true;
+        zelleInstructions.hidden = false;
+        cashAppInstructions.hidden = true;
+        message.textContent = "Zelle selected. Pay to Coach David's mobile number and send your receipt. Your registration is pending verification.";
+        zelleInstructions.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      });
+
+      $("seminar-copy-zelle-number").addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText("4102180894");
+          $("seminar-zelle-number-message").textContent = "Copied 410-218-0894. Enter it as a mobile number in your bank's Zelle service.";
+        } catch {
+          $("seminar-zelle-number-message").textContent = "Copy this Zelle mobile number: 410-218-0894.";
+        }
+      });
+      $("seminar-copy-zelle-details").addEventListener("click", async () => {
+        const details = $("seminar-zelle-details");
+        try {
+          await navigator.clipboard.writeText(details.value);
+          $("seminar-zelle-copy-message").textContent = "Details copied. Text them with your Zelle receipt to (410) 218-0894.";
+        } catch {
+          details.focus();
+          details.select();
+          $("seminar-zelle-copy-message").textContent = "Details selected. Copy and text them with your receipt to (410) 218-0894.";
+        }
+      });
+      $("seminar-zelle-back-to-payments").addEventListener("click", () => {
+        if (!reviewed) return;
+        zelleInstructions.hidden = true;
+        choices.hidden = false;
+        message.textContent = "If you've already sent a Zelle payment, do not select another method. Contact Coach David first.";
+        choices.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      });
+
       $("seminar-back-to-payments").addEventListener("click", () => {
         if (!reviewed) return;
         cashAppInstructions.hidden = true;
@@ -766,6 +849,8 @@ const eventStructuredData = {
     color: #111; font: 400 .9rem/1.55 'Open Sans', Arial, sans-serif;
     border: 1px solid #777; border-radius: 6px; padding: 12px;
   }
+  .seminar-page .seminar-zelle-steps { color: #171717; line-height: 1.65; padding-left: 1.35rem; }
+  .seminar-page .seminar-zelle-steps li { margin: .65rem 0; color: #171717; }
   .seminar-page .seminar-cashapp-warning {
     background: #fff3f3; color: #671111; border-left: 4px solid #b91c1c;
     padding: .9rem; line-height: 1.55;
