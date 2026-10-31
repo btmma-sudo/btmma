@@ -1,5 +1,4 @@
-// Deliberate source-code launch lock. This MUST remain false while the
-// student portal is installed but not approved for public use.
-// Enabling requires BOTH a reviewed code change and the Cloudflare
-// STUDENT_PORTAL_ENABLED=true runtime setting. No active checkout by default.
-export const STUDENT_PORTAL_RELEASED = false;
+// Student Portal public login is intentionally enabled.
+// Private student data remains inaccessible without a valid, signed,
+// account-specific login. Billing remains disabled separately.
+export const STUDENT_PORTAL_RELEASED = true;

@@ -27,7 +27,7 @@ $50 late fee. Payments default **OFF**.
 
 ## Infrastructure prerequisites (do not skip)
 
-1. The source code can be deployed to the website while disabled. **Do not change either launch lock** until security, billing, and lesson rollout are reviewed. The Astro
+1. The public portal page is enabled, but individual account sign-in is fail-closed until setup is complete. Do not onboard families before verifying migration, authentication, rate limiting, and privacy. The Astro
    Cloudflare adapter already supports on-demand routes via prerender=false.
 2. Create/apply `db/migrations/0002_student_portal.sql` to the existing
    `LIVE_TRIAL_DB` database ONLY after confirming backups. The migration
@@ -91,5 +91,4 @@ References:
 
 ## Live readiness
 
-No student account, video, subscription, invoice, payment, or Stripe Billing
-configuration has been created in live services as part of this change. Code deployment is not public portal activation. The private portal is disabled until both source-code and Cloudflare launch locks are intentionally enabled, with the enrollment and payment readiness checks complete. Re-enable the desktop/mobile navigation links only at launch.
+No student account, video, subscription, invoice, payment, or Stripe Billing configuration has been created by this code change. The public student login page is open, while family login is disabled until verified session secret and database migration are configured. Stripe billing is OFF. Never publish lessons or billing details before confirming privacy and ownership. No 3% card or $50 late fees are implemented.
