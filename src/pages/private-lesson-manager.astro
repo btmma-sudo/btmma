@@ -55,14 +55,15 @@ Astro.response.headers.set("Content-Security-Policy",
         <h1>Manage Private Lessons</h1>
         <p class="muted">You control exactly which appointments appear on the public calendar. Students can book only the times you add. This calendar does not yet read your personal Google/Outlook appointments; check for conflicts before publishing.</p>
         <section class="box" aria-labelledby="new-title">
-          <h2 id="new-title">Release an Available Time</h2>
+          <h2 id="new-title">Release Available Appointment Times</h2>
+          <p class="muted"><strong>Weekly starting hours (Eastern):</strong> Monday–Thursday at 8:00 PM, Friday at 7:00 PM, and Saturday after 11:30 AM (first slot at noon). No Sundays. You choose each day's ending time; no late hours are published automatically.</p>
           <form class="grid" id="add-slot">
             <label>Date<input id="slot-date" name="date" type="date" required /></label>
-            <label>Starting time (Eastern)<input id="slot-time" name="time" type="time" required /></label>
-            <label>Duration<select id="slot-duration" name="duration"><option value="30">30 minutes</option><option value="45" selected>45 minutes</option><option value="60">60 minutes</option><option value="90">90 minutes</option></select></label>
-            <button type="submit" id="add-submit">ADD TIME</button>
+            <label>Available from (Eastern)<input id="slot-time" name="startTime" type="time" step="1800" required /></label>
+            <label>Available until (Eastern)<input id="slot-end" name="endTime" type="time" step="1800" required /></label>
+            <button type="submit" id="add-submit">PUBLISH TIMES</button>
           </form>
-          <p class="hint">Only future appointments at least 24 hours away, up to 90 days ahead, can be published. Avoid class times and other commitments.</p>
+          <p class="hint">Example: Tuesday, 8:00–10:00 PM creates four half-hour openings. Students can choose 30 minutes or 1 hour, provided two consecutive openings are available. Only publish days you are free. Slots must be at least 24 hours ahead and within 90 days.</p>
           <p id="add-status" class="status" role="status" aria-live="polite"></p>
         </section>
         <section class="box" aria-labelledby="bookings-title">
@@ -72,7 +73,7 @@ Astro.response.headers.set("Content-Security-Policy",
         </section>
         <section class="box" aria-labelledby="slots-title">
           <h2 id="slots-title">Published Appointment Slots</h2>
-          <p class="muted">You can close an unbooked slot at any time. Booked times remain reserved until cancelled.</p>
+          <p class="muted">Openings are displayed in 30-minute blocks. You can close an unbooked block at any time. A booked one-hour lesson reserves two adjacent blocks.</p>
           <div class="records" id="private-slots"><p class="muted">Loading schedule…</p></div>
         </section>
         <p class="hint">For booking assistance: Coach David, <a href="tel:+14102180894" class="navlink">(410) 218-0894</a> · <a href="/student-portal/" class="navlink">Return to Student Portal</a></p>
@@ -85,6 +86,20 @@ Astro.response.headers.set("Content-Security-Policy",
           const now=new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
           const nowDate=Object.fromEntries(now.filter(p=>p.type!=='literal').map(p=>[p.type,p.value]));
           $('slot-date').min=nowDate.year+'-'+nowDate.month+'-'+nowDate.day;
+          function updateStartTime(){
+            const day=$('slot-date').value;
+            if(!day)return;
+            const dow=new Date(day+'T12:00:00Z').getUTCDay();
+            const earliest=(dow>=1&&dow<=4)?'20:00':dow===5?'19:00':dow===6?'12:00':'';
+            const start=$('slot-time'),end=$('slot-end');
+            start.min=earliest||'00:00';start.value=earliest;
+            end.min=earliest||'00:00';end.value='';
+            $('add-status').textContent=earliest?'Choose an ending time for this day.':'Private lessons are not available on Sundays.';
+          }
+          $('slot-date').addEventListener('change',updateStartTime);
+          $('slot-time').addEventListener('change',()=>{
+            $('slot-end').min=$('slot-time').value||'00:00';
+          });
           const info=(parent,value)=>parent.append(el('p',value));
           async function api(method,body) {
             const response=await fetch('/api/private-lessons/manage',{
@@ -126,7 +141,7 @@ Astro.response.headers.set("Content-Security-Policy",
             const box=$('private-slots');box.replaceChildren();
             if(!rows.length){box.append(el('p','No slots added yet. Choose a date and time above.','muted'));return;}
             for(const s of rows){
-              const card=el('article',undefined,'record'),top=el('div',undefined,'record-head'),name=el('h3',dateFmt(s.date)+' · '+timeFmt(s.time)+' · '+s.duration+' min');
+              const card=el('article',undefined,'record'),top=el('div',undefined,'record-head'),name=el('h3',dateFmt(s.date)+' · '+timeFmt(s.time)+' · 30-min opening');
               top.append(name,el('span',s.booked?'BOOKED':s.isOpen===1?'OPEN':'CLOSED','tag'+(s.booked?' booked':'')));card.append(top);
               if(s.isOpen===1&&!s.booked){
                 const actions=el('div',undefined,'record-actions'),button=el('button','CLOSE THIS SLOT','grey'),status=el('span','','status');
@@ -141,8 +156,8 @@ Astro.response.headers.set("Content-Security-Policy",
             catch(e){$('private-bookings').textContent=e.message;$('private-slots').textContent='Setup or database access is incomplete.';}
           }
           $('add-slot').addEventListener('submit',async e=>{
-            e.preventDefault();const date=$('slot-date').value,time=$('slot-time').value,duration=Number($('slot-duration').value);
-            await act({action:'add',date,time,duration},$('add-status'),$('add-submit'));
+            e.preventDefault();const date=$('slot-date').value,startTime=$('slot-time').value,endTime=$('slot-end').value;
+            await act({action:'publish-window',date,startTime,endTime},$('add-status'),$('add-submit'));
           });
           reload();
         })();
