@@ -104,7 +104,7 @@ function staffPage(row,auth,error=""){
  '<style>body{font:16px system-ui;background:#121212;color:#fff;max-width:640px;padding:26px;margin:auto;line-height:1.5}h1{color:#ff6868}label{display:block;margin:14px 0}input{display:block;padding:12px;width:100%;box-sizing:border-box;background:#252525;color:white;border:1px solid #aaa}button{background:#c82027;border:0;color:#fff;font-size:16px;font-weight:bold;padding:14px 22px;cursor:pointer}aside{color:#ffd3d3}</style></head><body><h1>Birthday Party Request</h1>'+
  '<p><b>Contact:</b> '+esc(row.contact_name)+' — '+esc(row.email)+'<br><b>Phone:</b> '+esc(row.phone)+
  '<br><b>Birthday child:</b> '+esc(row.birthday_name)+' ('+esc(row.age_group)+')<br><b>Guests:</b> '+row.guests+
- '<br><b>Activities:</b> '+esc(row.package_interest)+'<br><b>Duration:</b> 2 hours<br><b>Calculated total:</b> 
+ '<br><b>Activities:</b> '+esc(row.package_interest)+'<br><b>Duration:</b> 2 hours<br><b>Calculated total:</b> $'+(partyPriceCents(row.guests)/100).toFixed(2)+'<br><b>Requested:</b> '+esc(row.preferred_date)+' at '+esc(row.preferred_time)+' Eastern'+
  '<br><b>Notes:</b> '+esc(row.notes||"None")+'<br><b>Current status:</b> '+esc(row.status)+'</p>'+
  (error?'<aside>'+esc(error)+'</aside>':"")+
  (row.status==="requested" ? '<h2>Confirm this date and deposit</h2><p>Only confirm after checking the studio calendar and group capacity. The 2-hour party price is calculated automatically ($350 for up to 15 children, then $10 for each extra child). Enter the deposit to collect after approval.</p>'+
