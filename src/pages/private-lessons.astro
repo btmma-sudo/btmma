@@ -102,8 +102,6 @@ import { site } from "../data/site";
     <p><a href={"sms:" + site.textPhoneHref}>Text {site.textPhone}</a> <span>or</span> <a href={"tel:" + site.textPhoneHref}>Call Coach David</a></p>
     <p class="pl-admin-link">Instructor access: <a href="/instructor-private-lessons/">Manage appointment availability</a></p>
   </section>
-</BaseLayout>
-
 <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script is:inline>
 (() => {
@@ -326,3 +324,4 @@ import { site } from "../data/site";
   @media(max-width:840px){.pl-layout{grid-template-columns:1fr}.pl-hero{grid-template-columns:1fr}.pl-logo-frame{display:none}}
   @media(max-width:540px){.pl-hero{padding:32px 0 25px}.pl-section{padding-top:14px}.pl-panel{padding:17px}.pl-two{grid-template-columns:1fr}.pl-day{min-height:39px}.pl-weekdays,.pl-days{gap:3px}}
 </style>
+</BaseLayout>
