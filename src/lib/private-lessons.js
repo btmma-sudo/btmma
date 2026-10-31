@@ -2,7 +2,7 @@
 import {getPortalEnv,getPortalAccount,secureHeaders,validSameOrigin} from "./student-portal-auth.js";
 
 export const PROGRAMS = ["American Kenpo Karate","Muay Thai","Wing Chun","Self-Defense","Leadership","Not sure yet"];
-export const DURATIONS = [30,60];
+export const DURATIONS = [60];
 export const STEP_MINUTES = 30;
 const ZONE = "America/New_York";
 const et = new Intl.DateTimeFormat("en-US", {timeZone:ZONE,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"});
@@ -38,7 +38,7 @@ export function privateHoursWindows(day) {
   if(weekday===6)return [{start:12*60,end:17*60}];
   return [{start:9*60,end:14*60},{start:16*60,end:18*60}];
 }
-export function allowedBookingWindow(day,time,duration=30) {
+export function allowedBookingWindow(day,time,duration=60) {
   if(!validTime(time)||![30,60].includes(duration))return false;
   const start=minutes(time);
   return start%STEP_MINUTES===0 &&
