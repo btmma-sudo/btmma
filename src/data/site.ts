@@ -790,14 +790,16 @@ export const programPages: ProgramPage[] = [
   {
     slug: "birthday-parties",
     seo: {
-      title: "Kids Martial Arts Birthday Parties & Reservations | Owings Mills",
+      title: "2-Hour Kids Birthday Parties from $350 | Burning Tree MMA",
     description:
-      "Explore kids martial arts birthday party activities in Owings Mills, MD. Request a weekend date, receive a confirmed price and pay a secure deposit after approval.",
+      "Host a 2-hour martial arts birthday party in Owings Mills, MD: $350 for up to 15 kids, plus $10 per extra child. Request a date, then pay a deposit after confirmation.",
       keywords: [
         "martial arts birthday parties",
         "kids party Owings Mills",
         "birthday entertainment",
         "kids birthday party reservations Owings Mills",
+        "2-hour kids birthday parties",
+        "martial arts birthday party $350",
         "birthday party date requests",
         "martial arts events"
       ]
@@ -810,9 +812,9 @@ export const programPages: ProgramPage[] = [
     },
     audience: "Families",
     curriculum: {
-      title: "An event built around fun and movement.",
+      title: "Two hours of fun for $350 — up to 15 kids.",
       copy:
-        "The Birthday Party Program at Burning Tree MMA in Owings Mills combines fun, fitness, and focus for an unforgettable celebration. Kids take part in exciting martial arts games, team challenges, and beginner-friendly lessons that build confidence, coordination, and respect. Whether it is their first time trying martial arts or they are already training, every child leaves smiling, energized, and proud of what they accomplished."
+        "Birthday parties are $350 for up to 15 children for 2 hours. Each additional child is $10. The Birthday Party Program at Burning Tree MMA in Owings Mills combines fun, fitness, and focus for an unforgettable celebration. Kids take part in exciting martial arts games, team challenges, and beginner-friendly lessons that build confidence, coordination, and respect. Whether it is their first time trying martial arts or they are already training, every child leaves smiling, energized, and proud of what they accomplished."
     },
     benefits: {
       title: "What families can expect",
@@ -831,7 +833,7 @@ export const programPages: ProgramPage[] = [
     mobileCta: "Contact Us",
     leadForm: {
       title: "Ask About Birthday Parties",
-      intro: "Tell us your preferred date, age group, and party goals and we will follow up with details.",
+      intro: "Birthday parties are $350 for up to 15 children for 2 hours, plus $10 for every extra child. Share your preferred date, and we will confirm availability and the deposit.",
       defaultProgram: "Birthday Parties",
       hideProgramSelect: true
     }
