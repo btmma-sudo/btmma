@@ -220,7 +220,7 @@ export async function POST({request,locals}){
       "<br>Age group: "+esc(row.age_group)+"<br>Guest count: "+row.guests+"<br>Duration: 2 hours<br>Party total: $"+(partyPriceCents(row.guests)/100).toFixed(2)+"<br>Party interest: "+esc(row.package_interest)+
       "<br>Requested date: "+esc(row.preferred_date)+" at "+esc(row.preferred_time)+" Eastern"+
       "<br>Notes: "+esc(row.notes)+"<br>Airtable CRM: "+(crmSaved?"Saved":"Needs reconciliation")+"</p>"+
-      "<p><a href='"+esc(review.href)+"'>Review date, set package price and deposit, and approve</a></p>"+
+      "<p><a href='"+esc(review.href)+"'>Review date, confirm calculated total, set deposit, and approve</a></p>"+
       "<p>Do not send this private approval link to the customer.</p>");
    await send(env,row.email,"We received your Burning Tree birthday party request",
      "<h2>Thanks for thinking of Burning Tree!</h2><p>We received your request for "+esc(row.preferred_date)+
