@@ -9,6 +9,7 @@ export async function GET({locals}) {
     const rows=await env.LIVE_TRIAL_DB.prepare(
       `SELECT s.id,s.local_date AS date,s.local_time AS time
        FROM private_lesson_slots s WHERE s.is_open=1
+         AND s.local_date BETWEEN date('now','-1 day') AND date('now','+91 days')
          AND NOT EXISTS (
            SELECT 1 FROM private_lesson_booking_blocks b WHERE b.slot_id=s.id
          ) ORDER BY s.local_date,s.local_time LIMIT 1000`
