@@ -1,4 +1,5 @@
 // Isolated student-portal authentication. Never use shared passwords.
+import { STUDENT_PORTAL_RELEASED } from "./student-portal-launch.js";
 const enc = new TextEncoder();
 const hex = bytes => [...bytes].map(v => v.toString(16).padStart(2, "0")).join("");
 const unhex = value => new Uint8Array((value.match(/.{2}/g) || []).map(x => parseInt(x, 16)));
@@ -10,7 +11,7 @@ const maxAge = 12 * 60 * 60;
 export function getPortalEnv(locals) {
   const env = locals?.runtime?.env ?? {};
   // Fail closed until launch is explicitly approved in Cloudflare.
-  if (env.STUDENT_PORTAL_ENABLED !== "true") return null;
+  if (!STUDENT_PORTAL_RELEASED || env.STUDENT_PORTAL_ENABLED !== "true") return null;
   if (!env.LIVE_TRIAL_DB || typeof env.STUDENT_PORTAL_SESSION_SECRET !== "string" ||
     env.STUDENT_PORTAL_SESSION_SECRET.length < 32) return null;
   return env;
