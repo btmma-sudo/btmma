@@ -1,0 +1,122 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+function secureUrl(raw: unknown): string {
+  try {
+    const url = new URL(String(raw || "").trim());
+    return url.protocol === "https:" ? url.toString() : "";
+  } catch {
+    return "";
+  }
+}
+
+const contracts = [
+  {
+    name: "Main Parent / Monthly Membership",
+    title: "Main Membership Agreement",
+    description: "For parents or guardians enrolling a child and adults joining a standard membership.",
+    signingUrl: secureUrl(import.meta.env.PUBLIC_CONTRACT_MAIN_SIGN_URL)
+  },
+  {
+    name: "Six-Month Membership",
+    title: "6-Month Agreement",
+    description: "The six-month agreement. The complete payment and cancellation terms appear in the document before signing.",
+    signingUrl: secureUrl(import.meta.env.PUBLIC_CONTRACT_SIX_MONTH_SIGN_URL)
+  },
+  {
+    name: "Eighteen-Month Membership",
+    title: "18-Month Agreement",
+    description: "The 18-month agreement. Review all payment, notice and early-termination terms before signing.",
+    signingUrl: secureUrl(import.meta.env.PUBLIC_CONTRACT_EIGHTEEN_MONTH_SIGN_URL)
+  }
+];
+const isReady = contracts.every((contract) => Boolean(contract.signingUrl));
+---
+<BaseLayout
+  title="Digital Membership Agreements | Burning Tree MMA"
+  description="Review and electronically sign Burning Tree Mixed Martial Arts membership agreements securely using your phone, tablet or computer."
+  path="/contracts/"
+  image="/images/logo.png">
+  <div class="contract-hub">
+    <section class="contract-hero">
+      <div class="contract-container">
+        <img class="contract-logo" src="/images/logo.png" alt="Burning Tree Mixed Martial Arts logo" width="116" height="116" />
+        <p class="contract-eyebrow">BURNING TREE MIXED MARTIAL ARTS • OWINGS MILLS, MD</p>
+        <h1>ENROLLMENT <span>AGREEMENTS</span></h1>
+        <p class="contract-subtitle">Complete your paperwork electronically. One Tree. One Family.</p>
+        <div class="contract-steps" aria-label="Electronic enrollment contract process">
+          <div><strong>1</strong><span>CHOOSE YOUR CONTRACT</span></div>
+          <div><strong>2</strong><span>REVIEW THE AGREEMENT</span></div>
+          <div><strong>3</strong><span>SIGN SECURELY</span></div>
+          <div><strong>4</strong><span>RECEIVE YOUR COPY</span></div>
+        </div>
+      </div>
+    </section>
+    <section class="contract-container contract-selection" aria-labelledby="contract-selection-title">
+      <p class="contract-eyebrow">SELECT YOUR AGREEMENT</p>
+      <h2 id="contract-selection-title">CHOOSE THE <span>RIGHT CONTRACT</span></h2>
+      <p class="contract-lead">Choose the agreement provided by Burning Tree. Read the entire document and confirm your payment terms before signing. For a student under 18, a parent or legal guardian must sign.</p>
+      {!isReady && <div class="contract-setup-warning" role="status">
+        <strong>Digital signing is not yet active.</strong>
+        We are preparing the secure signing links. Please ask the studio for your agreement until setup is complete. This page does not collect signatures or personal information.
+      </div>}
+      <div class="contract-cards">
+        {contracts.map((contract) => (
+          <article class="contract-card">
+            <div class="contract-card-stripe" aria-hidden="true"></div>
+            <div class="contract-card-inner">
+              <p class="contract-card-kicker">{contract.name}</p>
+              <h3>{contract.title}</h3>
+              <p>{contract.description}</p>
+              {contract.signingUrl
+                ? <a class="contract-action" href={contract.signingUrl} rel="noopener noreferrer">REVIEW &amp; SIGN CONTRACT <span aria-hidden="true">↗</span></a>
+                : <p class="contract-inactive">Secure signing link coming soon</p>}
+            </div>
+          </article>
+        ))}
+      </div>
+      <div class="contract-faq">
+        <h2>WHAT HAPPENS AFTER I SIGN?</h2>
+        <p>After the secure signing service is activated, you and Burning Tree will receive a completed copy of the signed agreement. Your contract is separate from any payment authorization, and you should never enter a credit card number or security code into this page.</p>
+        <p><strong>Need assistance or the correct agreement?</strong> Text <a href="sms:+14102180894">410-218-0894</a> or speak with us at the studio. Do not sign a document unless you agree with its terms.</p>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+<style>
+  .contract-hub { background: #111; color: #f9f9f9; min-height: 75vh; }
+  .contract-container { width: min(1100px, calc(100% - 32px)); margin: 0 auto; }
+  .contract-hero { padding: clamp(36px, 6vw, 68px) 0; background: radial-gradient(circle at 80% 10%, #6d1515 0%, #240c0c 33%, #121212 76%); border-bottom: 4px solid #c92323; text-align: center; }
+  .contract-logo { object-fit: contain; display: block; margin: 0 auto 14px; height: 116px; width: 116px; }
+  .contract-eyebrow { color: #ffbaba; font: 700 .78rem/1.6 "Open Sans",sans-serif; letter-spacing: .11em; }
+  .contract-hero h1,.contract-selection h2,.contract-faq h2 { font-family: "Black Ops One",cursive; color: #fff; -webkit-text-stroke: 0; }
+  .contract-hero h1 { font-size: clamp(2rem,5vw,3.65rem); line-height:1.15; }
+  .contract-hero h1 span,.contract-selection h2 span { color: #f55757; }
+  .contract-subtitle { color: #fff; font-size: 1.15rem; }
+  .contract-steps { display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:32px 0 0; }
+  .contract-steps div { padding:17px 8px;background:#211b1b;border:1px solid #654040;border-radius:8px;display:flex;flex-direction:column;align-items:center;gap:9px; }
+  .contract-steps strong { display:grid;place-items:center;background:#c92323;border-radius:50%;width:35px;height:35px;color:#fff;font-size:1.1rem; }
+  .contract-steps span { font:700 .76rem/1.5 "Open Sans",sans-serif;color:#fff; }
+  .contract-selection { padding:56px 0 78px; }
+  .contract-selection > h2 { font-size:clamp(1.6rem,3vw,2.5rem); }
+  .contract-lead { max-width:800px; color:#ededed; }
+  .contract-setup-warning { padding:18px 20px; margin:22px 0; border:2px solid #e39a44;border-radius:7px;background:#3a2b1d;color:#fff;line-height:1.6; }
+  .contract-setup-warning strong { display:block;color:#ffe5af; }
+  .contract-cards { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:24px; }
+  .contract-card { background:#1c1c1c;border:1px solid #5f4545;border-radius:10px;overflow:hidden; }
+  .contract-card-stripe { height:7px;background:#c92323; }
+  .contract-card-inner { padding:24px 22px;display:flex;flex-direction:column;min-height:300px; }
+  .contract-card-kicker { color:#ffbaba;font-size:.75rem;letter-spacing:.06em;font-weight:700;text-transform:uppercase; }
+  .contract-card h3 { color:#fff;-webkit-text-stroke:0;font-size:1.35rem;line-height:1.25; }
+  .contract-card p { color:#f1f1f1; }
+  .contract-action,.contract-inactive { margin-top:auto;display:block;text-align:center;padding:12px;border-radius:4px;font-weight:700; }
+  .contract-action { text-decoration:none;background:#c92323;color:#fff;border:2px solid #e34b4b; }
+  .contract-action:hover,.contract-action:focus-visible { background:#9e1111;color:#fff;outline:3px solid #fff;outline-offset:3px; }
+  .contract-inactive { background:#393939;border:1px solid #6c6c6c;color:#fff; }
+  .contract-faq { margin-top:46px;padding:24px;border:1px solid #474747;background:#191919;border-radius:8px; }
+  .contract-faq h2 { font-size:clamp(1.25rem,2.4vw,1.8rem); }
+  .contract-faq p { color:#f1f1f1; }
+  .contract-faq a { color:#ffbaba;text-decoration:underline; }
+  @media (max-width:800px) { .contract-cards { grid-template-columns:1fr; }.contract-card-inner{min-height:0;gap:8px;}.contract-inactive,.contract-action {margin-top:15px;} }
+  @media (max-width:600px) { .contract-steps { grid-template-columns:repeat(2,minmax(0,1fr)); }.contract-selection {padding:36px 0 54px;} }
+</style>
