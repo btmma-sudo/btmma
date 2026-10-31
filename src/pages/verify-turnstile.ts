@@ -17,7 +17,9 @@ const FIELDS = {
   acquisitionSource: "fldQRK5Sk4DviQPiA",
   acquisitionMedium: "fldoBSwtfIDnQBU4S",
   utmCampaign: "fld6kkeJbxMN5aAKx",
-  originalReferrer: "fldUXoAZPEi4NPegv"
+  originalReferrer: "fldUXoAZPEi4NPegv",
+  smsConsent: "fldnhZMo4eWpK0hOD",
+  smsConsentRecordedAt: "fldewgpFJYCZ4I5oG"
 } as const;
 
 function json(data: object, status: number) {
@@ -46,6 +48,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
   const email = formText(form, "email", 254);
   const name = formText(form, "fullName", 140);
   const phone = formText(form, "phone", 40);
+  // Only an explicit, optional, checked website opt-in counts as permission.
+  const smsConsent = phone.length > 0 && formText(form, "smsConsent", 10) === "yes";
   const program = formText(form, "programInterest", 120);
   const comments = formText(form, "comments", 3000);
   const source = formText(form, "source", 500) || "/";
@@ -90,13 +94,17 @@ export const POST: APIRoute = async ({ request, locals }) => {
     return json({ success: false, error: "Security verification is temporarily unavailable. Please try again." }, 503);
   }
 
-  const fields: Record<string, string> = {
+  const fields: Record<string, string | boolean> = {
     [FIELDS.name]: name || "Website inquiry",
     [FIELDS.email]: email,
     [FIELDS.source]: source.startsWith("/") ? source : "/",
     [FIELDS.stage]: "New"
   };
   if (phone) fields[FIELDS.phone] = phone;
+  if (smsConsent) {
+    fields[FIELDS.smsConsent] = true;
+    fields[FIELDS.smsConsentRecordedAt] = new Date().toISOString();
+  }
   if (program) fields[FIELDS.program] = program;
   if (comments) fields[FIELDS.notes] = comments;
   if (firstLandingPage.startsWith("/")) fields[FIELDS.firstLandingPage] = firstLandingPage;
