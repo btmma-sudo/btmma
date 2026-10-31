@@ -1,4 +1,5 @@
 import { defineMiddleware } from "astro:middleware";
+import { STUDENT_PORTAL_RELEASED } from "./lib/student-portal-launch.js";
 
 // The portal is installed in the site code but must NOT be public until
 // STUDENT_PORTAL_ENABLED is intentionally set to "true" at launch.
@@ -12,7 +13,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
     pathname.startsWith("/api/student-portal/");
   if (portalRoute) {
     const env = (context.locals as any)?.runtime?.env;
-    if (env?.STUDENT_PORTAL_ENABLED !== "true") {
+    if (!STUDENT_PORTAL_RELEASED || env?.STUDENT_PORTAL_ENABLED !== "true") {
       return new Response("Not found", {
         status: 404,
         headers: {
