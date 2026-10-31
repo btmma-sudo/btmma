@@ -188,7 +188,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <p class="questionnaire-eyebrow">STEP 3 OF 3 — AFTER VERIFIED PAYMENT</p>
           <h3 id="questionnaire-title">Tell Us About Your Goals</h3>
           <p>Your payment is verified. We already have your name, contact information, date of birth and chosen martial art from Step 1.</p>
-          <p class="questionnaire-note">Choose all answers that apply. If you're unsure about a question, you can leave it blank and discuss it with Coach David later.</p>
+          <p class="questionnaire-note">Please share your main goal in Question 3. All other questions are optional, and you can discuss them with Coach David later.</p>
 <details class="question-group" open><summary>1 / Your goals & motivation<span class="question-hint">Tap to expand or collapse</span></summary><div class="question-content"><div class="question-line"><p class="question-label">1. What interests you about martial arts?</p><div class="question-options"><label class="question-option"><input type="checkbox" name="q1" value="Self-defense" /><span>Self-defense</span></label>
 <label class="question-option"><input type="checkbox" name="q1" value="Confidence" /><span>Confidence</span></label>
 <label class="question-option"><input type="checkbox" name="q1" value="Discipline / focus" /><span>Discipline / focus</span></label>
@@ -235,7 +235,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 <label class="question-option"><input type="checkbox" name="q11" value="No" /><span>No</span></label>
 <label class="question-option"><input type="checkbox" name="q11" value="Maybe later" /><span>Maybe later</span></label></div><label class="question-subfield" for="q11Count">How many additional family members?<input id="q11Count" name="q11Count" type="text" maxlength="120" /></label></div>
 <div class="question-line"><label for="q12" class="question-label">12. Anything you would like instructors to know before the first class?</label><textarea id="q12" name="q12" rows="2" maxlength="500" placeholder="Training preferences or questions (optional). Please discuss medical or safety accommodations privately with us."></textarea></div></div></details>
-<details class="question-group" open><summary>3 / Programs & schedule<span class="question-hint">Tap to expand or collapse</span></summary><div class="question-content"><div class="question-line"><p class="question-label">14. How often would you like to train?</p><div class="question-options"><label class="question-option"><input type="radio" name="q14" value="Once weekly" /><span>Once weekly</span></label>
+<details class="question-group" open><summary>3 / Training schedule<span class="question-hint">Tap to expand or collapse</span></summary><div class="question-content"><div class="question-line"><p class="question-label">14. How often would you like to train?</p><div class="question-options"><label class="question-option"><input type="radio" name="q14" value="Once weekly" /><span>Once weekly</span></label>
 <label class="question-option"><input type="radio" name="q14" value="Twice weekly" /><span>Twice weekly</span></label>
 <label class="question-option"><input type="radio" name="q14" value="3+ times weekly" /><span>3+ times weekly</span></label>
 <label class="question-option"><input type="radio" name="q14" value="Unlimited" /><span>Unlimited</span></label></div></div>
@@ -274,6 +274,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
         <p id="post-payment-status" class="notice" role="status" aria-live="polite">Tell us about your main goal, then send your answers securely.</p>
         <button id="post-payment-submit" type="submit">FINISH REGISTRATION — SEND QUESTIONNAIRE</button>
+        <button id="step3-new-student" type="button" class="register-more-students">REGISTER ANOTHER STUDENT</button>
       </form>
       <div id="post-payment-done" hidden>
         <h3>All set! Welcome to the Burning Tree family.</h3>
@@ -484,6 +485,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       } finally {
         if (postSubmit) postSubmit.disabled = false;
       }
+    });
+    document.getElementById("step3-new-student")?.addEventListener("click", () => {
+      try { window.localStorage.removeItem(accessKey); } catch { /* Optional. */ }
+      window.location.assign("/29-trial/#registration");
     });
     document.querySelectorAll(".check-step-three").forEach(button => {
       button.addEventListener("click", () => { void checkStepThree(); });
