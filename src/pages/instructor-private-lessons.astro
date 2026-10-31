@@ -1,0 +1,229 @@
+---
+import { authorizedInstructor } from "../lib/instructor-video-manager.js";
+import { secureHeaders } from "../lib/student-portal-auth.js";
+export const prerender = false;
+const staff = await authorizedInstructor(Astro.request, Astro.locals);
+if (!staff || staff.staff.can_publish !== 1) Astro.response.status = 404;
+for (const [key, value] of Object.entries(secureHeaders())) Astro.response.headers.set(key, value);
+Astro.response.headers.set("Content-Security-Policy",
+  "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="robots" content="noindex,nofollow,noarchive"/>
+  <title>Private Lesson Calendar Manager | Burning Tree MMA</title>
+  <style is:inline>
+    *,*:before,*:after{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#111416;color:#f5f5f5;line-height:1.5}
+    a{color:#ffb7ad}.container{width:min(100% - 32px,1080px);margin-inline:auto}
+    .top{background:#080b0d;border-bottom:1px solid #3b4549}
+    .topinner{display:flex;justify-content:space-between;align-items:center;gap:15px;min-height:90px}
+    .brand{display:flex;gap:12px;align-items:center;text-decoration:none;color:white;font-weight:850;font-size:.95rem}
+    .brand img{width:47px;height:64px;object-fit:contain}
+    .links{display:flex;flex-wrap:wrap;gap:14px;font-size:.88rem}
+    .hero{padding:40px 0 22px}
+    .eyebrow{font-size:.77rem;letter-spacing:.13em;font-weight:900;color:#ff9991}
+    h1{font-size:clamp(2rem,5vw,3rem);line-height:1.15;margin:8px 0 15px}
+    h1 span{color:#fa8279}
+    h2{font-size:1.35rem;margin:0 0 12px}
+    .muted{color:#c7cbd0}
+    .notice{border-left:4px solid #fa8279;background:#302423;padding:14px 17px;border-radius:6px;margin-bottom:18px;color:#fff}
+    .notice.good{background:#20342c;border-color:#82cb9a}
+    .grid{display:grid;grid-template-columns:minmax(0,.76fr) minmax(0,1.24fr);gap:18px;align-items:start;padding-bottom:70px}
+    .panel{background:#1d2226;border:1px solid #4a545b;border-radius:14px;padding:24px;min-width:0}
+    form{display:grid;gap:14px}
+    label{display:grid;gap:6px;font-size:.9rem;font-weight:750}
+    input,select{width:100%;background:#fff;color:#151515;padding:12px 14px;border:1px solid #b4b9bc;border-radius:7px;font:inherit}
+    input:focus,select:focus{outline:2px solid #ec4b42}
+    button{font:inherit;cursor:pointer}
+    .btn{background:#bd2c26;color:#fff;border:1px solid #cf3a34;padding:12px 17px;border-radius:8px;font-weight:850}
+    .btn:hover:not(:disabled){background:#a51f1a}
+    .btn:disabled{opacity:.55;cursor:not-allowed}
+    .btn-secondary{background:#343e44;border-color:#748089;font-size:.78rem;padding:8px 11px}
+    .btn-secondary:hover:not(:disabled){background:#49545c}
+    .list{display:grid;gap:11px}
+    .slot{border:1px solid #4b555b;border-radius:10px;padding:14px;background:#15191b}
+    .slot-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
+    .slot h3{margin:0;font-size:1.02rem}
+    .slot p{margin:6px 0;color:#d7dce0;font-size:.86rem}
+    .actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:9px}
+    .pill{font-weight:800;font-size:.7rem;padding:4px 9px;border-radius:18px;border:1px solid #aa7772;color:#ffc2bb}
+    .pill.booked{border-color:#a1c5a6;color:#b4e5bd}
+    .pill.closed{border-color:#737b81;color:#ccc}
+    .small{font-size:.8rem;color:#bfc7ca}
+    #status{min-height:24px;color:#ffb3ad}
+    @media(max-width:800px){.grid{grid-template-columns:1fr}.topinner{padding-block:10px}.panel{padding:18px}}
+    @media(max-width:460px){.topinner{flex-wrap:wrap}.links{width:100%;padding-bottom:13px}}
+  </style>
+</head>
+<body>
+  {staff && staff.staff.can_publish === 1 ? <>
+    <header class="top">
+      <div class="container topinner">
+        <a href="/student-portal/" class="brand">
+          <img src="/images/logo.png" alt="Burning Tree MMA logo" width="47" height="64"/>
+          <span>BURNING TREE<br/>PRIVATE LESSON MANAGER</span>
+        </a>
+        <div class="links">
+          <a href="/private-lessons/">View Booking Page</a>
+          <a href="/student-portal/">Student Portal</a>
+        </div>
+      </div>
+    </header>
+    <main class="container">
+      <div class="hero">
+        <p class="eyebrow">INSTRUCTOR ACCESS ONLY</p>
+        <h1>Control Your <span>Private Lesson Calendar.</span></h1>
+        <p class="muted">Open exactly the appointments you want students to book. See reservations and contact details below. Booked times cannot be removed accidentally.</p>
+      </div>
+      <div id="launch-status" class="notice" role="status">Checking booking status…</div>
+      <div class="grid">
+        <section class="panel" aria-labelledby="add-title">
+          <h2 id="add-title">Open an Appointment</h2>
+          <p class="muted">Appointments can be opened up to 90 days ahead, at least 24 hours in advance. Choose only times you can personally teach.</p>
+          <form id="add-form">
+            <label>Lesson date
+              <input id="add-date" name="date" type="date" required/>
+            </label>
+            <label>Start time (Eastern)
+              <input name="time" type="time" step="900" required/>
+            </label>
+            <label>Lesson duration
+              <select name="duration" required>
+                <option value="30">30 minutes</option>
+                <option value="45">45 minutes</option>
+                <option value="60" selected>60 minutes</option>
+                <option value="90">90 minutes</option>
+              </select>
+            </label>
+            <button class="btn" type="submit">OPEN THIS APPOINTMENT</button>
+            <div class="small">An appointment is available for booking only after you open it here and public booking has been enabled.</div>
+          </form>
+        </section>
+        <section class="panel" aria-labelledby="appointments-title">
+          <h2 id="appointments-title">Upcoming Appointments</h2>
+          <p class="muted">Reserved students appear here with their contact information. Closing an open slot removes it from the public calendar. Booked appointments remain protected.</p>
+          <div class="actions"><button id="refresh" class="btn btn-secondary" type="button">Refresh Calendar</button></div>
+          <p id="status" role="status" aria-live="polite"></p>
+          <div id="slots" class="list"></div>
+        </section>
+      </div>
+    </main>
+  </> : <main class="container"><h1>Not Found</h1></main>}
+  <script>
+    const form = document.getElementById("add-form");
+    const list = document.getElementById("slots");
+    const status = document.getElementById("status");
+    const banner = document.getElementById("launch-status");
+    if (form && list && status && banner) {
+      const today = () => {
+        const p = new Intl.DateTimeFormat("en-US", {
+          timeZone:"America/New_York", year:"numeric",month:"2-digit",day:"2-digit"
+        }).formatToParts(new Date());
+        const a = Object.fromEntries(p.map(x => [x.type,x.value]));
+        return a.year + "-" + a.month + "-" + a.day;
+      };
+      document.getElementById("add-date").min = today();
+      function labelDate(s) {
+        return new Intl.DateTimeFormat("en-US", {
+          month:"short",day:"numeric",year:"numeric",weekday:"short",timeZone:"UTC"
+        }).format(new Date(s + "T12:00:00Z"));
+      }
+      function labelTime(s) {
+        const h = Number(s.slice(0,2));
+        return (h%12||12) + ":" + s.slice(3) + (h<12?" AM":" PM");
+      }
+      async function callApi(data) {
+        const response = await fetch("/api/private-lessons/manage", {
+          method:"POST", headers:{"Content-Type":"application/json"},
+          body:JSON.stringify(data)
+        });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error || "Could not save appointment.");
+        return payload;
+      }
+      function field(parent,label,value) {
+        const p = document.createElement("p");
+        const strong = document.createElement("strong");
+        strong.textContent = label + ": ";
+        p.append(strong,document.createTextNode(value || ""));
+        parent.append(p);
+      }
+      async function render() {
+        status.textContent = "Loading appointment calendar…";
+        list.replaceChildren();
+        try {
+          const resp = await fetch("/api/private-lessons/manage", {cache:"no-store"});
+          const data = await resp.json();
+          if (!resp.ok) throw new Error(data.error || "Could not read appointments.");
+          banner.textContent = data.publicBookingEnabled ?
+            "Public booking is enabled. Open slots below are visible to students." :
+            "Public booking is OFF. You can prepare open slots here, but nobody can book until PRIVATE_LESSON_BOOKINGS_ENABLED is set to true.";
+          banner.classList.toggle("good", data.publicBookingEnabled);
+          const slots = data.slots || [];
+          status.textContent = slots.length ?
+            slots.length + " upcoming appointment time(s)." :
+            "No appointments have been opened yet.";
+          slots.forEach(slot => {
+            const article = document.createElement("article"); article.className="slot";
+            const top = document.createElement("div"); top.className="slot-head";
+            const title = document.createElement("h3");
+            title.textContent = labelDate(slot.lesson_date) + " · " + labelTime(slot.start_time) +
+              " · " + slot.duration_minutes + " min";
+            const badge = document.createElement("span");
+            badge.className = "pill " + slot.status;
+            badge.textContent = slot.status.toUpperCase();
+            top.append(title,badge); article.append(top);
+            if (slot.status === "booked") {
+              field(article,"Program",slot.program);
+              field(article,"Student",slot.student_name);
+              field(article,"Contact",slot.contact_name);
+              field(article,"Email",slot.contact_email);
+              field(article,"Phone",slot.contact_phone);
+              if (slot.notes) field(article,"Requested focus",slot.notes);
+            }
+            const actions = document.createElement("div"); actions.className="actions";
+            if (slot.status === "open" || slot.status === "closed") {
+              const button = document.createElement("button");
+              button.className = "btn btn-secondary";
+              button.type = "button";
+              const action = slot.status === "open" ? "close" : "reopen";
+              button.textContent = action === "close" ? "Close This Slot" : "Reopen This Slot";
+              button.addEventListener("click", async () => {
+                button.disabled=true; status.textContent="Saving appointment…";
+                try { await callApi({action,id:slot.id}); await render(); }
+                catch (err) {status.textContent=err.message;button.disabled=false;}
+              });
+              actions.append(button);
+            } else {
+              const note = document.createElement("span");note.className="small";
+              note.textContent="Reserved. Contact the student directly to arrange changes.";
+              actions.append(note);
+            }
+            article.append(actions);
+            list.append(article);
+          });
+        } catch (error) { status.textContent = error.message; }
+      }
+      document.getElementById("refresh").addEventListener("click", render);
+      form.addEventListener("submit", async e => {
+        e.preventDefault();
+        if (!form.reportValidity()) return;
+        const fields = Object.fromEntries(new FormData(form));
+        const btn = form.querySelector("button");
+        btn.disabled=true;status.textContent="Opening appointment…";
+        try {
+          await callApi({ action:"open",date:fields.date,time:fields.time,duration:Number(fields.duration) });
+          status.textContent="Appointment added.";
+          await render();
+        } catch (error) {status.textContent=error.message;}
+        finally {btn.disabled=false;}
+      });
+      render();
+    }
+  </script>
+</body>
+</html>
