@@ -23,6 +23,19 @@ async function verified(env,msg,provided){
   return diff===0;
 }
 function envReady(env){return !!(env.LIVE_TRIAL_DB && typeof env[KEY]==="string" && env[KEY].length>24);}
+
+const PARTY_SCHEMA = [
+  "CREATE TABLE IF NOT EXISTS birthday_party_requests (id TEXT PRIMARY KEY, contact_name TEXT NOT NULL, email TEXT NOT NULL, phone TEXT NOT NULL, birthday_name TEXT NOT NULL, age_group TEXT NOT NULL, guests INTEGER NOT NULL CHECK(guests BETWEEN 1 AND 75), package_interest TEXT NOT NULL, preferred_date TEXT NOT NULL, preferred_time TEXT NOT NULL, notes TEXT NOT NULL DEFAULT '', status TEXT NOT NULL DEFAULT 'requested' CHECK(status IN ('requested','approved','checkout_open','deposit_paid','cancelled')), total_cents INTEGER, deposit_cents INTEGER, stripe_session_id TEXT UNIQUE, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, approved_at TEXT, paid_at TEXT)",
+  "CREATE INDEX IF NOT EXISTS idx_birthday_party_requests_date ON birthday_party_requests(preferred_date,preferred_time,status)",
+  "CREATE UNIQUE INDEX IF NOT EXISTS idx_birthday_party_confirmed_slot ON birthday_party_requests(preferred_date,preferred_time) WHERE status IN ('approved','checkout_open','deposit_paid')"
+];
+// Standalone idempotent first-use initialization. Never alter the $29 tables.
+async function ensurePartySchema(db) {
+  await db.prepare(PARTY_SCHEMA[0]).run();
+  await db.prepare(PARTY_SCHEMA[1]).run();
+  await db.prepare(PARTY_SCHEMA[2]).run();
+}
+
 function validDate(value){
   if(!/^\d{4}-\d{2}-\d{2}$/.test(value||""))return false;
   const d=new Date(value+"T12:00:00Z");
@@ -87,7 +100,9 @@ function staffPage(row,auth,error=""){
 export async function GET({request,locals}){
  const env=locals?.runtime?.env??{};
  if(!envReady(env))return json({error:"Birthday party reservations are being configured."},503);
+ try { await ensurePartySchema(env.LIVE_TRIAL_DB); } catch { return json({error:"Birthday party database is not ready."},503); }
  const u=new URL(request.url),action=u.searchParams.get("action"),ref=u.searchParams.get("ref")||"",auth=u.searchParams.get("auth")||"";
+ if(action==="readiness")return json({ready:true});
  if(action==="review"){
    if(!/^[a-f0-9-]{36}$/i.test(ref)||!await verified(env,"staff|"+ref,auth))return html("<h1>Invalid or expired approval link.</h1>",403);
    const row=await env.LIVE_TRIAL_DB.prepare("SELECT * FROM birthday_party_requests WHERE id=?").bind(ref).first();
@@ -120,6 +135,7 @@ export async function GET({request,locals}){
 export async function POST({request,locals}){
  const env=locals?.runtime?.env??{};
  if(!envReady(env))return json({error:"Birthday party reservations are being configured. Text 410-218-0894."},503);
+ try { await ensurePartySchema(env.LIVE_TRIAL_DB); } catch { return json({error:"Birthday party database is not ready. Text 410-218-0894."},503); }
  const contentType=request.headers.get("content-type")?.split(";")[0];
  const origin=request.headers.get("origin");
  if(origin&&origin!==new URL(request.url).origin)return json({error:"Use the Burning Tree website to submit."},403);
