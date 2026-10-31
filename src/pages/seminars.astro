@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { SEMINAR_WAIVERS } from "../data/seminar-waivers.js";
+import SeminarDonations from "../components/SeminarDonations.astro";
 const eventStructuredData = {
   "@context": "https://schema.org",
   "@graph": [
@@ -43,8 +44,9 @@ const eventStructuredData = {
       <div class="shell">
         <p class="seminar-eyebrow">BURNING TREE MIXED MARTIAL ARTS · OWINGS MILLS, MD</p>
         <h1 id="seminar-heading">Two Seminars. <span>One Community.</span></h1>
-        <p>Join us this November for a community fundraising seminar and a special two-day martial arts education event. Choose your seminar, register online, and pay through secure Stripe checkout or direct Cash App.</p>
+        <p>Join us this November for a community fundraising seminar and a special two-day martial arts education event. Register for a seminar, or make a separate donation to support Burning Tree whether or not you can attend.</p>
         <a class="seminar-cta" href="#events">EXPLORE BOTH SEMINARS</a>
+        <a class="seminar-cta" href="#donate">DONATE WITHOUT ATTENDING</a>
         <p class="seminar-motto">One Tree. One Family.</p>
       </div>
     </section>
@@ -66,7 +68,7 @@ const eventStructuredData = {
           </div>
           <p class="seminar-note">All include hands-on instruction and a certificate of participation. Community Supporters receive a special Flame Certificate; Flame Sponsors receive a Sponsor Burning Flame Certificate.</p>
           <button class="seminar-cta select-seminar" data-event="united" type="button">REGISTER FOR UNITED BY PURPOSE</button>
-          <p class="seminar-note">Can't attend but want to support the school? Text Coach David at <a href="sms:+14102180894">410-218-0894</a> to ask about donating. A donation by itself is not an event registration.</p>
+          <p class="seminar-note">Can't attend but want to support the school? <a href="#donate">Donate directly online here</a>. Your contribution is separate from event registration.</p>
         </div>
       </article>
 
@@ -90,6 +92,8 @@ const eventStructuredData = {
         </div>
       </article>
     </section>
+
+    <SeminarDonations />
 
     <section class="shell seminar-registration" id="registration" aria-labelledby="registration-heading">
       <div class="seminar-intro">
