@@ -2,6 +2,7 @@
 // The $29 trial, seminar and private-coaching checkouts are untouched.
 export const prerender = false;
 const TABLE = "tblFwkhYKzcc6cFoi";
+const CRM_LEADS_TABLE = "tblZCXEuRKXiPZlc7";
 const PACKAGES = Object.freeze({
   essential: {name:"Essential Workshop",price:350,limit:10},
   empowerment:{name:"Corporate Empowerment",price:500,limit:20},
@@ -14,9 +15,44 @@ const respond=(obj,status=200)=>new Response(JSON.stringify(obj),{status,headers
 const clean=(v,n=120)=>typeof v==="string"?v.trim().slice(0,n+1):"";
 const safeText=v=>!/[<>\r\n]/.test(v);
 const escape=v=>String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+async function saveToCrmLeads(env,fields,corporateId){
+  // The main Airtable Leads table is also the CRM. Keep a distinct corporate
+  // stage so the existing Stage=New $29 trial email drips do not trigger.
+  const summary=[
+    "Organization: "+fields["Organization"],
+    "Workshop: "+fields["Package"]+" — $"+fields["Price"],
+    "Participants: "+fields["Participants"],
+    "Preferred date: "+(fields["Preferred Date"]||"Not specified"),
+    "Preferred time: "+(fields["Preferred Time"]||"Not specified"),
+    "Location: "+fields["Location"],
+    "Organization type: "+fields["Organization Type"],
+    "Payment preference: "+fields["Payment Preference"],
+    "Notes: "+(fields["Goals and Notes"]||"Not provided"),
+    "Corporate request reference: "+corporateId
+  ].join("\n");
+  const crmFields={
+    "Name":fields["Contact Name"],
+    "Phone Number":fields["Contact Phone"],
+    "Email":fields["Contact Email"],
+    "Lead Source":"Corporate Workshop Website",
+    "Stage":"Corporate Inquiry",
+    "Program Of Interest":"Corporate & Group Self-Defense",
+    "Additional Notes":summary
+  };
+  const response=await fetch("https://api.airtable.com/v0/"+
+    encodeURIComponent(env.AIRTABLE_BASE_ID)+"/"+CRM_LEADS_TABLE,{
+    method:"POST",
+    headers:{Authorization:"Bearer "+env.AIRTABLE_API_TOKEN,"Content-Type":"application/json"},
+    body:JSON.stringify({records:[{fields:crmFields}],typecast:true})
+  });
+  if(!response.ok)throw new Error("CRM sync failed "+response.status);
+  const data=await response.json(),id=data.records?.[0]?.id;
+  if(!/^rec[A-Za-z0-9]+$/.test(id||""))throw new Error("CRM did not return a record ID");
+  return id;
+}
 async function notify(env,fields,id){
   if(!env.RESEND_API_KEY)return;
-  const recipient=String(env.CORPORATE_WORKSHOP_NOTIFICATION_EMAIL||env.PRIVATE_LESSON_NOTIFICATION_EMAIL||"david@burningtreemma.com").trim();
+  const recipient=String(env.CORPORATE_WORKSHOP_NOTIFICATION_EMAIL||"hybridkenpokarare@gmail.com").trim();
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient))return;
   const line=Object.entries(fields).map(([k,v])=>"<p><strong>"+escape(k)+":</strong> "+escape(v)+"</p>").join("");
   try{await fetch("https://api.resend.com/emails",{method:"POST",headers:{Authorization:"Bearer "+env.RESEND_API_KEY,"Content-Type":"application/json"},body:JSON.stringify({from:"Burning Tree MMA <noreply@burningtreemma.com>",to:[recipient],subject:"New Corporate Workshop Request: "+fields["Organization"],html:"<h2>New Corporate Workshop Inquiry</h2>"+line+"<p>Airtable reference: "+escape(id)+"</p><p>Please contact the organizer to confirm availability and payment before booking.</p>"})});}catch{}
@@ -66,7 +102,15 @@ export async function POST({request,locals}){
     if(!res.ok)throw new Error("Save failed "+res.status);
     const payload=await res.json(),id=payload.records?.[0]?.id;
     if(!/^rec[A-Za-z0-9]+$/.test(id||""))throw new Error("No record returned");
-    await notify(env,fields,id);
+    let crmId=null;
+    try{
+      crmId=await saveToCrmLeads(env,fields,id);
+    }catch(crmError){
+      // The corporate request is already safely saved; do not make the
+      // customer resubmit and create a duplicate when the CRM is unavailable.
+      console.error("Corporate CRM lead sync failed",String(crmError).slice(0,120));
+    }
+    await notify(env,{...fields,"CRM Lead Sync":crmId?"Saved in Leads ("+crmId+")":"Needs manual CRM reconciliation"},id);
     return respond({ok:true,reference:id,message:"Your workshop request was received. We will contact you to confirm the date, location, and payment arrangement. No payment has been taken."});
   }catch(e){
     console.error("Corporate workshop inquiry save failed",String(e).slice(0,100));
