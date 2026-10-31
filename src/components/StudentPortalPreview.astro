@@ -1,140 +1,111 @@
 ---
 /**
- * Public, read-only design tour. Intentionally uses NO account/session data,
- * invoice lookups, Cloudflare video URLs, or tuition API links.
- * Never put real student or household information into this component.
+ * Public screenshot-style preview ONLY. No student or payment records are ever
+ * queried or embedded here. Never put real names, videos, or billing data here.
  */
 ---
-<section class="demo" aria-labelledby="demo-title">
-  <div class="demo-banner" role="status">
-    <strong>VIEW-ONLY DEMONSTRATION</strong>
-    <span>Explore the student portal without a password. No real student information, playable videos, or payments appear in this preview.</span>
-  </div>
-
-  <section class="panel demo-intro">
-    <div>
-      <p class="eyebrow">INSIDE THE BURNING TREE STUDENT PORTAL</p>
-      <h2 id="demo-title">Your Family Dashboard</h2>
-      <p class="muted">This is an example of what families will see after signing in. Explore each section below, then return to the login page whenever you are ready.</p>
-    </div>
-    <a class="btn demo-signin" href="/student-portal/">RETURN TO FAMILY LOGIN</a>
+<div class="screenshot-demo" aria-label="Example student dashboard with sample information">
+  <section class="panel demo-welcome">
+    <p class="eyebrow">SIGNED IN · EXAMPLE</p>
+    <h2>Welcome back, Burning Tree Family!</h2>
+    <p>Your private training dashboard.</p>
   </section>
 
-  <nav class="demo-jump" aria-label="Explore student portal sections">
-    <a href="#demo-students">My Students</a>
-    <a href="#demo-lessons">Video Lessons</a>
-    <a href="#demo-tuition">Monthly Tuition</a>
-  </nav>
-
-  <section id="demo-students" class="panel demo-panel" aria-labelledby="demo-students-title">
-    <div class="demo-section-head">
-      <div><p class="eyebrow">TRAINING PROFILES</p><h2 id="demo-students-title">My Students</h2></div>
-      <span class="demo-example">EXAMPLE ONLY</span>
+  <section class="panel demo-students">
+    <h2>My Students</h2>
+    <div class="student-profile">
+      <strong>Student Profile</strong>
+      <p>Kenpo Karate · Beginner Belt</p>
     </div>
-    <div class="grid demo-grid">
-      <article class="demo-tile">
-        <span class="demo-avatar" aria-hidden="true">🥋</span>
-        <div>
-          <strong>Example Student</strong>
-          <p class="muted">Kenpo Karate · Beginner</p>
-          <p class="demo-small">Families will see only the students associated with their own account.</p>
+  </section>
+
+  <section class="demo-lessons" aria-labelledby="demo-lessons-title">
+    <h2 id="demo-lessons-title">My Video Lessons</h2>
+    <div class="lesson-grid">
+      <article class="lesson-card">
+        <span class="rank-pill">KENPO KARATE</span>
+        <div class="video-placeholder" aria-label="Video placeholder">
+          <span class="play-ring" aria-hidden="true"><span class="play-triangle"></span></span>
         </div>
-      </article>
-      <article class="demo-tile demo-explainer">
-        <strong>Programs &amp; Progress</strong>
-        <p class="muted">Your training styles, rank, and instructor-assigned lessons can appear here as they are added.</p>
-      </article>
-    </div>
-  </section>
-
-  <section id="demo-lessons" class="demo-lessons" aria-labelledby="demo-lessons-title">
-    <div class="demo-section-head">
-      <div><p class="eyebrow">CONTINUE LEARNING BEYOND THE MATS</p><h2 id="demo-lessons-title">My Video Lessons</h2></div>
-      <span class="demo-example">SAMPLE LESSONS</span>
-    </div>
-    <div class="grid demo-grid">
-      <article class="panel demo-lesson">
-        <span class="pill">AMERICAN KENPO</span>
-        <div class="demo-video" aria-label="Video placeholder, not playable"><span class="demo-play" aria-hidden="true">▶</span></div>
         <h3>Beginner Fundamentals</h3>
-        <p class="muted">Stances, hand positions, and basic technique practice.</p>
-        <small>Video available once assigned by your instructor</small>
+        <p>Private instructional lesson</p>
       </article>
-      <article class="panel demo-lesson">
-        <span class="pill">MUAY THAI</span>
-        <div class="demo-video" aria-label="Video placeholder, not playable"><span class="demo-play" aria-hidden="true">▶</span></div>
-        <h3>Striking Foundations</h3>
-        <p class="muted">Footwork, guard, and controlled combinations.</p>
-        <small>Video available once assigned by your instructor</small>
+      <article class="lesson-card">
+        <span class="rank-pill">MUAY THAI</span>
+        <div class="video-placeholder" aria-label="Video placeholder">
+          <span class="play-ring" aria-hidden="true"><span class="play-triangle"></span></span>
+        </div>
+        <h3>Striking Basics</h3>
+        <p>Private instructional lesson</p>
       </article>
-      <article class="panel demo-lesson">
-        <span class="pill">WING CHUN</span>
-        <div class="demo-video" aria-label="Video placeholder, not playable"><span class="demo-play" aria-hidden="true">▶</span></div>
-        <h3>Forms &amp; Principles</h3>
-        <p class="muted">Structure, balance, centerline, and forms.</p>
-        <small>Video available once assigned by your instructor</small>
+      <article class="lesson-card">
+        <span class="rank-pill">WING CHUN</span>
+        <div class="video-placeholder" aria-label="Video placeholder">
+          <span class="play-ring" aria-hidden="true"><span class="play-triangle"></span></span>
+        </div>
+        <h3>Forms &amp; Techniques</h3>
+        <p>Private instructional lesson</p>
       </article>
     </div>
-    <p class="demo-small">These are examples of possible lesson categories, not actual uploaded lesson videos. Real video playback requires an authorized student account.</p>
   </section>
 
-  <section id="demo-tuition" class="panel demo-panel" aria-labelledby="demo-tuition-title">
-    <div class="demo-section-head">
-      <div><p class="eyebrow">PRIVATE FAMILY BILLING</p><h2 id="demo-tuition-title">Monthly Tuition &amp; Payment History</h2></div>
-      <span class="demo-example">NOT ACTIVE</span>
+  <section class="panel demo-tuition">
+    <h2>Monthly Tuition &amp; Payments</h2>
+    <p class="tuition-intro">Example only — actual balances and due dates will come from each family's verified account.</p>
+    <div class="tuition-rows" aria-label="Example tuition dashboard">
+      <div class="tuition-row"><span>Tuition Balance</span><strong>Displayed after setup</strong></div>
+      <div class="tuition-row"><span>Next Due Date</span><strong>From your account</strong></div>
+      <div class="tuition-row"><span>Payment History</span><strong>Private to your family</strong></div>
     </div>
-    <p class="muted">After verified account setup, families can review their own tuition and secure payment history. No personal financial details are shown in this preview.</p>
-    <div class="demo-billing-grid">
-      <div class="demo-billing-item"><span>Tuition balance</span><strong>Private to family</strong></div>
-      <div class="demo-billing-item"><span>Next due date</span><strong>From billing account</strong></div>
-      <div class="demo-billing-item"><span>Payment history</span><strong>Available after setup</strong></div>
-    </div>
-    <div class="demo-disabled-pay" aria-disabled="true">TUITION PAYMENT — COMING SOON</div>
-    <p class="demo-small">This demonstration cannot charge cards, display bills, or assess fees.</p>
+    <span class="disabled-pay" aria-disabled="true">TUITION BILLING — NOT ACTIVE</span>
+    <p class="preview-disclaimer">Preview only. No real student data, live videos, or payment processing are available without an authorized account.</p>
   </section>
-
-  <div class="demo-end">
-    <strong>One Tree. One Family.</strong>
-    <p class="muted">Finished looking around? The login page is available now, and individual student accounts will be added as they're approved.</p>
-    <a class="btn" href="/student-portal/">BACK TO STUDENT LOGIN</a>
-  </div>
-</section>
+</div>
 
 <style>
-  .demo{padding-bottom:10px}
-  .demo-banner{display:flex;gap:9px;flex-direction:column;background:#382425;border:1px solid #854843;border-radius:12px;padding:14px 18px;color:#fceeee;font-size:.9rem;line-height:1.5}
-  .demo-banner strong{font-size:.8rem;letter-spacing:.1em;color:#ffb2aa}
-  .demo-intro{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
-  .demo-intro>div{max-width:660px}
-  .demo-intro h2{font-size:clamp(1.5rem,3vw,2rem);margin:4px 0}
-  .demo-signin{white-space:normal}
-  .demo-jump{display:flex;gap:11px;flex-wrap:wrap;margin:18px 0 26px}
-  .demo-jump a{background:#292f33;color:#fff;padding:11px 16px;font-size:.88rem;border-radius:8px;border:1px solid #555e63;text-decoration:none;font-weight:700}
-  .demo-jump a:hover,.demo-jump a:focus-visible{background:#732a29;border-color:#d66660}
-  .demo-section-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
-  .demo-section-head h2{font-size:1.45rem;margin:3px 0 0}
-  .demo-example{color:#ffd0cb;border:1px solid #984742;padding:5px 11px;border-radius:30px;font-size:.72rem;letter-spacing:.07em;font-weight:800}
-  .demo-tile{display:flex;align-items:center;gap:16px;padding:20px;border:1px solid #495058;background:#121619;border-radius:12px;min-height:135px}
-  .demo-tile strong{font-size:1.05rem}
-  .demo-tile .muted{margin:4px 0}
-  .demo-avatar{width:58px;height:58px;flex:0 0 58px;display:grid;place-items:center;font-size:2rem;background:#2d3135;border-radius:50%}
-  .demo-explainer{display:block}
-  .demo-explainer strong{display:block;margin-bottom:8px}
-  .demo-small,.demo-lesson small{font-size:.8rem;color:#c4c9cb;line-height:1.5}
-  .demo-lessons{margin:28px 0}
-  .demo-lesson{margin-top:0;display:flex;flex-direction:column;gap:8px}
-  .demo-lesson h3{font-size:1.13rem;margin:5px 0 0}
-  .demo-lesson .muted{font-size:.9rem;margin:0;flex:1}
-  .demo-lesson .pill{align-self:start}
-  .demo-video{width:100%;aspect-ratio:16/9;border-radius:10px;background:radial-gradient(circle at 50% 45%,#4f3736,#191d21 75%);border:1px solid #40484c;display:grid;place-items:center;margin:9px 0}
-  .demo-play{display:grid;place-items:center;background:#b92a26;width:49px;height:49px;border-radius:50%;font-size:1.2rem;padding-left:3px}
-  .demo-billing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:16px 0}
-  .demo-billing-item{background:#111719;border:1px solid #475056;padding:16px;border-radius:10px;display:flex;flex-direction:column;gap:7px}
-  .demo-billing-item span{font-size:.83rem;color:#cbd0d2}
-  .demo-billing-item strong{font-size:.98rem}
-  .demo-disabled-pay{background:#68312d;display:inline-flex;padding:13px 18px;border-radius:9px;font-size:.82rem;font-weight:800;letter-spacing:.015em;color:#fff}
-  .demo-end{text-align:center;padding:25px 10px}
-  .demo-end strong{font-size:1.14rem}
-  .demo-end .muted{max-width:660px;margin:10px auto 16px}
-  @media(max-width:540px){.demo-intro .btn{width:100%;text-align:center}.demo-jump a{flex:1;text-align:center}.demo-tile{padding:16px}}
+  .screenshot-demo{width:100%;max-width:980px;margin:0 auto;padding:1px 0 24px;color:#f4f5f7}
+  .screenshot-demo *{box-sizing:border-box}
+  .screenshot-demo h2,.screenshot-demo h3,.screenshot-demo strong{color:#f7f7f8}
+  .screenshot-demo .panel{border:1px solid #40494e;border-radius:16px;background:#1c2226;box-shadow:none}
+  .demo-welcome{padding:24px 22px;margin:0 0 18px}
+  .demo-welcome .eyebrow{margin:0 0 10px;color:#f08077;font-weight:800;letter-spacing:.18em;font-size:.78rem}
+  .demo-welcome h2{font-size:clamp(1.35rem,4.7vw,1.95rem);font-weight:800;letter-spacing:-.02em;line-height:1.26;margin:0 0 10px}
+  .demo-welcome p:last-child{color:#c0c7cb;margin:0;font-size:1rem}
+  .demo-students{padding:24px 22px;margin:0 0 24px}
+  .demo-students h2,.demo-lessons>h2,.demo-tuition h2{font-size:clamp(1.55rem,4.4vw,2rem);line-height:1.18;font-weight:800;letter-spacing:-.035em;margin:0 0 18px;color:#f5f6f7}
+  .student-profile{border:1px solid #444d52;border-radius:12px;padding:18px 16px;background:#1b2024}
+  .student-profile strong{font-size:1.05rem;font-weight:800}
+  .student-profile p{font-size:1rem;color:#bfc7ca;margin:2px 0 0}
+  .demo-lessons{margin:16px 0 26px}
+  .demo-lessons>h2{margin:0 0 18px}
+  .lesson-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:860px}
+  .lesson-card{min-width:0;display:flex;flex-direction:column;border:1px solid #424a50;border-radius:15px;background:#1c2226;padding:17px 15px 18px;box-shadow:none}
+  .rank-pill{align-self:flex-start;border:1px solid #c14a46;border-radius:999px;color:#f8a39d;padding:5px 9px;font-weight:750;font-size:.71rem;white-space:nowrap;max-width:100%;line-height:1.35;letter-spacing:.015em}
+  .video-placeholder{width:100%;aspect-ratio:16/10;border-radius:9px;background:linear-gradient(135deg,#25272b,#101214);display:grid;place-items:center;margin:16px 0 16px}
+  .play-ring{width:49px;height:49px;border:2px solid #e5e6e7;border-radius:50%;display:grid;place-items:center}
+  .play-triangle{width:0;height:0;margin-left:4px;border-top:10px solid transparent;border-bottom:10px solid transparent;border-left:15px solid #fff}
+  .lesson-card h3{font-size:clamp(.99rem,3.25vw,1.26rem);line-height:1.42;font-weight:800;letter-spacing:-.02em;margin:0;color:#f4f6f6;overflow-wrap:break-word}
+  .lesson-card p{font-size:clamp(.85rem,2.75vw,1rem);line-height:1.35;margin:1px 0 0;color:#bfc6ca}
+  .demo-tuition{padding:25px 22px 27px;margin:24px 0}
+  .demo-tuition h2{margin-bottom:13px}
+  .tuition-intro{font-size:.98rem;color:#bec7cb;margin:0 0 17px;line-height:1.55}
+  .tuition-row{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px 18px;border-bottom:1px solid #444b4f;padding:13px 0;font-size:.93rem;color:#d7d9dc}
+  .tuition-row strong{font-size:.92rem;text-align:right;font-weight:700;color:#f5f5f6;margin-left:auto}
+  .tuition-row:last-child{border-bottom:0}
+  .disabled-pay{display:inline-block;background:#9c302b;color:white;border-radius:9px;padding:13px 18px;font-size:.86rem;letter-spacing:.01em;font-weight:800;margin-top:20px;opacity:.75}
+  .preview-disclaimer{font-size:.76rem;color:#c0c5c8;line-height:1.5;margin:12px 0 0}
+  @media(min-width:850px){.lesson-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}}
+  @media(max-width:440px){
+    .screenshot-demo .panel{border-radius:14px}
+    .demo-welcome,.demo-students,.demo-tuition{padding:20px 16px}
+    .lesson-grid{gap:10px}
+    .lesson-card{padding:14px 11px 16px;border-radius:13px}
+    .rank-pill{font-size:.64rem;padding:4px 8px}
+    .video-placeholder{margin:13px 0 15px}
+    .play-ring{width:45px;height:45px}
+    .tuition-row{font-size:.85rem}
+    .tuition-row strong{font-size:.85rem}
+    .disabled-pay{font-size:.8rem}
+  }
+  @media(max-width:330px){.lesson-grid{gap:8px}.lesson-card{padding:12px 8px}.rank-pill{font-size:.57rem}}
 </style>
