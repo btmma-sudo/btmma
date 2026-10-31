@@ -232,7 +232,11 @@ const eventStructuredData = {
       const cashAppButton = $("seminar-cashapp");
       const cashAppInstructions = $("seminar-cashapp-instructions");
       const paymentButtons = [applePayButton, cardButton, cashAppButton];
+      const waiverSection = $("seminar-waiver-section");
+      const waiverSignerFields = $("seminar-waiver-signers");
+      const waiverDefinitions = JSON.parse($("seminar-waiver-data").textContent || "{}");
       let reviewed = null;
+      let signaturePhase = false;
 
       const names = () => attendeesInput.value.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
       const dollars = cents => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(cents / 100);
@@ -241,9 +245,14 @@ const eventStructuredData = {
 
       function resetPaymentChoices() {
         reviewed = null;
+        signaturePhase = false;
         choices.hidden = true;
         cashAppInstructions.hidden = true;
+        waiverSection.hidden = true;
+        waiverSignerFields.replaceChildren();
         verifyButton.hidden = false;
+        verifyButton.disabled = false;
+        verifyButton.textContent = "REVIEW REGISTRATION & SIGN WAIVERS";
         paymentButtons.forEach(button => { button.disabled = false; });
         message.textContent = "";
       }
@@ -271,7 +280,12 @@ const eventStructuredData = {
 
       eventSelect.addEventListener("change", () => setEvent(eventSelect.value));
       ticketSelect.addEventListener("change", () => { resetPaymentChoices(); updateTotal(); });
-      form.addEventListener("input", () => { resetPaymentChoices(); updateTotal(); });
+      form.addEventListener("input", event => {
+        // Signing fields must not clear themselves as a signer types their name.
+        if (event.target.closest("#seminar-waiver-section")) return;
+        resetPaymentChoices();
+        updateTotal();
+      });
       document.querySelectorAll(".select-seminar").forEach(selectButton => {
         selectButton.addEventListener("click", () => {
           setEvent(selectButton.dataset.event);
@@ -327,42 +341,196 @@ const eventStructuredData = {
         }
       }
 
-      form.addEventListener("submit", event => {
+
+      function buildWaiverSigners(attendeeNames) {
+        const waiver = waiverDefinitions[eventSelect.value];
+        $("seminar-waiver-title").textContent = waiver.heading + " — " + waiver.event;
+        $("seminar-waiver-fulltext").textContent = waiver.body;
+        waiverSignerFields.replaceChildren();
+
+        const addField = (fieldset, text, type, value, required = true) => {
+          const label = document.createElement("label");
+          label.className = "seminar-waiver-label";
+          const span = document.createElement("span");
+          span.textContent = text;
+          const input = document.createElement("input");
+          input.type = type;
+          input.required = required;
+          input.maxLength = 120;
+          input.autocomplete = "off";
+          if (value) input.value = value;
+          label.append(span, input);
+          fieldset.appendChild(label);
+          return input;
+        };
+        const addCheck = (fieldset, text) => {
+          const label = document.createElement("label");
+          label.className = "seminar-waiver-check";
+          const input = document.createElement("input");
+          input.type = "checkbox";
+          input.required = true;
+          const span = document.createElement("span");
+          span.textContent = text;
+          label.append(input, span);
+          fieldset.appendChild(label);
+          return input;
+        };
+        attendeeNames.forEach((name, i) => {
+          const fieldset = document.createElement("fieldset");
+          fieldset.className = "seminar-waiver-person";
+          const legend = document.createElement("legend");
+          legend.textContent = "Attendee " + (i + 1) + ": " + name;
+          fieldset.appendChild(legend);
+
+          const label = document.createElement("label");
+          label.className = "seminar-waiver-label";
+          label.appendChild(document.createTextNode("Participant type"));
+          const minor = document.createElement("select");
+          minor.required = true;
+          for (const [value, text] of [["adult", "Adult (18 or older) — sign for yourself"], ["minor", "Minor (under 18) — parent / guardian signs"]]) {
+            const opt = document.createElement("option");
+            opt.value = value;
+            opt.textContent = text;
+            minor.appendChild(opt);
+          }
+          label.appendChild(minor);
+          fieldset.appendChild(label);
+
+          const signer = addField(fieldset, "Legal name of the person signing", "text", name);
+          const signature = addField(fieldset, "Type your full legal name again as your electronic signature", "text", "");
+          const roleHelp = document.createElement("p");
+          roleHelp.className = "seminar-note";
+          roleHelp.textContent = "The adult attendee must personally sign. For a minor, the parent or legal guardian must personally sign. Do not sign for another adult.";
+          fieldset.appendChild(roleHelp);
+          minor.addEventListener("change", () => {
+            signer.value = minor.value === "adult" ? name : "";
+            signature.value = "";
+            signer.focus();
+          });
+          const risks = addCheck(fieldset, "I have read the complete event-specific risk acknowledgment above, understand the inherent risks of martial arts participation, and voluntarily agree to the stated safety conditions.");
+          const electronic = addCheck(fieldset, "I separately agree to use electronic records and signatures for this seminar waiver and intend my typed name above to serve as my legally binding electronic signature.");
+          fieldset._waiverInputs = { name, minor, signer, signature, risks, electronic };
+          waiverSignerFields.appendChild(fieldset);
+        });
+      }
+
+      function signedWaiverEntries() {
+        return Array.from(waiverSignerFields.querySelectorAll("fieldset")).map(fieldset => {
+          const f = fieldset._waiverInputs;
+          return {
+            name: f.name,
+            minor: f.minor.value === "minor",
+            signer: f.signer.value.trim(),
+            signature: f.signature.value.trim(),
+            relationship: f.minor.value === "minor" ? "Parent or legal guardian" : "Adult attendee",
+            acceptedRisks: f.risks.checked,
+            electronicConsent: f.electronic.checked
+          };
+        });
+      }
+
+      form.addEventListener("submit", async event => {
         event.preventDefault();
         const attendeeNames = names();
-        if (attendeeNames.length < 1 || attendeeNames.length > 6 || attendeeNames.some(name => name.length < 2 || name.length > 75 || /[<>\r\n]/.test(name))) {
-          resetPaymentChoices();
-          message.textContent = "Enter 1 to 6 attendee names, one per line, with a valid full name for each person.";
+        if (attendeeNames.length < 1 || attendeeNames.length > 6 ||
+            attendeeNames.some(name => name.length < 2 || name.length > 75 || /[<>\r\n]/.test(name)) ||
+            new Set(attendeeNames.map(s => s.toLowerCase())).size !== attendeeNames.length) {
+          message.textContent = "Enter 1 to 6 distinct attendee names, one per line.";
           attendeesInput.focus();
           return;
         }
         if (isClosed(eventSelect.value, ticketSelect.value)) {
-          resetPaymentChoices();
           message.textContent = "Registration for this seminar session has closed. Please contact the studio.";
           return;
         }
-        const tier = ticketFor(eventSelect.value, ticketSelect.value);
-        reviewed = {
+        if (!signaturePhase) {
+          buildWaiverSigners(attendeeNames);
+          signaturePhase = true;
+          waiverSection.hidden = false;
+          verifyButton.textContent = "SAVE SIGNED WAIVERS & CHOOSE PAYMENT";
+          message.textContent = "Read the waiver, then have each attendee (or parent/guardian for a minor) sign. Nothing is charged.";
+          waiverSection.scrollIntoView({ behavior: "smooth", block: "start" });
+          return;
+        }
+        const signatures = signedWaiverEntries();
+        for (const item of signatures) {
+          if (item.signer !== item.signature ||
+              (!item.minor && item.signer.toLowerCase() !== item.name.toLowerCase()) ||
+              !item.acceptedRisks || !item.electronicConsent) {
+            message.textContent = "Each signer must type the same legal name in both fields, sign only for themselves (or a minor), and check both acknowledgment boxes.";
+            return;
+          }
+        }
+        const token = waiverSection.querySelector("[name='cf-turnstile-response']")?.value || "";
+        if (!token) {
+          message.textContent = "Please complete the security check beneath the waiver signatures.";
+          waiverSection.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          return;
+        }
+        verifyButton.disabled = true;
+        verifyButton.textContent = "SAVING ELECTRONIC SIGNATURES...";
+        message.textContent = "Saving signed waiver records before payment. No payment has been charged.";
+        const payload = {
           event: eventSelect.value,
           ticket: ticketSelect.value,
           contactName: $("seminar-contact-name").value.trim(),
           email: $("seminar-contact-email").value.trim(),
           phone: $("seminar-contact-phone").value.trim(),
-          attendees: attendeeNames.join("\n"),
-          count: attendeeNames.length,
-          ticketName: tier.name,
-          totalCents: tier.cents * attendeeNames.length
+          attendees: signatures,
+          turnstileToken: token
         };
-        const total = dollars(reviewed.totalCents);
-        $("seminar-reviewed-total").textContent = reviewed.ticketName + " × " + reviewed.count + " = " + total;
-        applePayButton.textContent = "APPLE PAY / APPLE CASH — " + total;
-        cardButton.textContent = "PAY " + total + " WITH CREDIT / DEBIT CARD";
-        cashAppButton.textContent = "PAY " + total + " DIRECTLY WITH CASH APP";
-        verifyButton.hidden = true;
-        choices.hidden = false;
-        cashAppInstructions.hidden = true;
-        message.textContent = "Details reviewed. Choose your payment method below. Nothing has been charged.";
-        choices.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        try {
+          const res = await fetch("/api/seminar-waiver-sign", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            cache: "no-store",
+            body: JSON.stringify(payload)
+          });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok || data.saved !== true || !data.groupId) throw new Error(data.error || "Waivers could not be saved.");
+          // If any contact or attendee changes before the response, do not allow
+          // payment against a signature set for stale registration information.
+          if (eventSelect.value !== payload.event || ticketSelect.value !== payload.ticket ||
+              names().join("\n") !== payload.attendees.map(x => x.name).join("\n") ||
+              $("seminar-contact-email").value.trim() !== payload.email ||
+              $("seminar-contact-name").value.trim() !== payload.contactName ||
+              $("seminar-contact-phone").value.trim() !== payload.phone) {
+            resetPaymentChoices();
+            message.textContent = "Registration details changed. Please review and sign the waivers again.";
+            return;
+          }
+          const tier = ticketFor(eventSelect.value, ticketSelect.value);
+          reviewed = {
+            event: eventSelect.value,
+            ticket: ticketSelect.value,
+            contactName: payload.contactName,
+            email: payload.email,
+            phone: payload.phone,
+            attendees: payload.attendees.map(x => x.name).join("\n"),
+            count: payload.attendees.length,
+            ticketName: tier.name,
+            totalCents: tier.cents * payload.attendees.length,
+            waiverGroupId: data.groupId
+          };
+          const total = dollars(reviewed.totalCents);
+          $("seminar-reviewed-total").textContent = reviewed.ticketName + " × " + reviewed.count + " = " + total;
+          applePayButton.textContent = "APPLE PAY / APPLE CASH — " + total;
+          cardButton.textContent = "PAY " + total + " WITH CREDIT / DEBIT CARD";
+          cashAppButton.textContent = "PAY " + total + " DIRECTLY WITH CASH APP";
+          verifyButton.hidden = true;
+          waiverSection.hidden = true;
+          choices.hidden = false;
+          cashAppInstructions.hidden = true;
+          message.textContent = "Signed waiver records saved for all " + reviewed.count +
+            " attendee(s). Choose your payment method. No payment has been charged.";
+          choices.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        } catch (err) {
+          message.textContent = err.message || "Unable to save the signed waiver. No payment has been charged.";
+          window.turnstile?.reset?.();
+        } finally {
+          verifyButton.disabled = false;
+          if (!reviewed) verifyButton.textContent = "SAVE SIGNED WAIVERS & CHOOSE PAYMENT";
+        }
       });
 
       const openStripeCheckout = async () => {
@@ -370,12 +538,6 @@ const eventStructuredData = {
           message.textContent = "Please review your registration again before paying.";
           resetPaymentChoices();
           message.textContent = "Registration details must be reviewed before paying, or this session has closed.";
-          return;
-        }
-        const token = document.querySelector("#seminar-form [name='cf-turnstile-response']")?.value || "";
-        if (!token) {
-          message.textContent = "Please complete the security check under the payment buttons to use card or Apple Pay.";
-          $("seminar-payment-options").scrollIntoView({ behavior: "smooth", block: "nearest" });
           return;
         }
         paymentButtons.forEach(button => { button.disabled = true; });
@@ -394,7 +556,7 @@ const eventStructuredData = {
               email: reviewed.email,
               phone: reviewed.phone,
               attendees: reviewed.attendees,
-              turnstileToken: token
+              waiverGroupId: reviewed.waiverGroupId
             })
           });
           const data = await r.json().catch(() => ({}));
@@ -565,4 +727,17 @@ const eventStructuredData = {
     background: #fff3f3; color: #671111; border-left: 4px solid #b91c1c;
     padding: .9rem; line-height: 1.55;
   }
+
+  .seminar-page .seminar-waiver-section { color: #171717; border: 2px solid #811717; border-radius: 10px; padding: 1rem; background: #fff9f9; margin: 1rem 0; }
+  .seminar-page .seminar-waiver-section h3, .seminar-page .seminar-waiver-section h4 { color: #161616; }
+  .seminar-page .seminar-waiver-copy { padding: .85rem; background: #fff; border: 1px solid #777; border-radius: 6px; }
+  .seminar-page .seminar-waiver-copy summary { color: #861010; font-weight: 800; cursor: pointer; }
+  .seminar-page .seminar-waiver-copy pre { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 330px; overflow-y: auto; margin: .8rem 0; font: 400 .9rem/1.6 'Open Sans', Arial, sans-serif; color: #171717; }
+  .seminar-page .seminar-waiver-person { min-width: 0; border: 1px solid #a8a8a8; border-radius: 8px; margin: 1.2rem 0; padding: 1rem; background: #fff; }
+  .seminar-page .seminar-waiver-person legend { padding: 0 .3rem; color: #181818; font-weight: 800; }
+  .seminar-page .seminar-waiver-label { color: #161616; display: flex; flex-direction: column; gap: .35rem; margin: .8rem 0; font-weight: 700; }
+  .seminar-page .seminar-waiver-label input, .seminar-page .seminar-waiver-label select { background: #fff; color: #171717; width: 100%; font: 400 1rem 'Open Sans', Arial, sans-serif; border: 2px solid #666; border-radius: 6px; padding: .7rem; }
+  .seminar-page .seminar-waiver-check { display: flex; align-items: start; gap: .65rem; font: 600 .95rem/1.5 'Open Sans', Arial, sans-serif; color: #171717; margin: 1.1rem 0; }
+  .seminar-page .seminar-waiver-check input { flex: 0 0 auto; width: 22px; height: 22px; margin-top: .15rem; }
+  .seminar-page .seminar-waiver-person .seminar-note { color: #424242; }
 </style>
