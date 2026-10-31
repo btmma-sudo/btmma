@@ -198,7 +198,7 @@ Astro.response.headers.set("Content-Security-Policy", "default-src 'none'; scrip
       <section class="panel" aria-labelledby="login-title">
         <h2 id="login-title">Family Login</h2>
         <p class="muted">Only currently authorized Burning Tree families may sign in. Parents or guardians should manage accounts for minor students.</p>
-        {!loginReady && <p class="notice" role="status">We’re getting individual family accounts ready. You can view the portal design now, but student sign-in is not accepting logins yet. Contact the studio if you need tuition assistance.</p>}
+        {!loginReady && <p class="notice" role="status">We’re getting individual family accounts ready. You can view the portal design now, but student sign-in is not accepting logins yet. For account help, call or text Coach David at 410-218-0894.</p>}
         {err && <p class="notice" role="alert">{err}</p>}
         <form method="post" action="/api/student-portal/login" class="fields">
           <label>Email Address<input name="email" type="email" autocomplete="username" maxlength="254" disabled={!loginReady} required /></label>
@@ -206,7 +206,7 @@ Astro.response.headers.set("Content-Security-Policy", "default-src 'none'; scrip
           {loginReady && <div class="cf-turnstile" data-sitekey="0x4AAAAAAD6Ievu-t0Ll1euh" data-theme="dark"></div>}
           <button type="submit" class="btn" disabled={!loginReady}>{loginReady ? "SECURE SIGN IN" : "STUDENT LOGINS COMING SOON"}</button>
         </form>
-        <p class="muted">Need an account or a password reset? Contact the studio at <a href="tel:+12023684395">(202) 368-4395</a>. Accounts are created by staff; public registration is disabled.</p>
+        <p class="muted">Need help with your account, signing in, or a password reset? Contact Coach David directly at <a href="tel:+14102180894">410-218-0894</a> (call or <a href="sms:+14102180894">text</a>). Accounts are created by staff; public registration is disabled.</p>
         {loginReady && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
       </section>
       </>
@@ -251,6 +251,6 @@ Astro.response.headers.set("Content-Security-Policy", "default-src 'none'; scrip
       </>
     )}
   </main>
-  <footer class="foot"><div class="shell"><strong>Keepers of the Flame · One Tree. One Family.</strong><p>Burning Tree Mixed Martial Arts · Owings Mills, Maryland</p></div></footer>
+  <footer class="foot"><div class="shell"><strong>Keepers of the Flame · One Tree. One Family.</strong><p>Need help with your student account? Call or text Coach David at <a href="tel:+14102180894">410-218-0894</a>.</p><p>Burning Tree Mixed Martial Arts · Owings Mills, Maryland</p></div></footer>
 </body>
 </html>
