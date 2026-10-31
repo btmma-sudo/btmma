@@ -1,29 +1,33 @@
 ---
 /* Standalone party request + confirmed-deposit experience.
-   Prices are entered by staff after confirming the requested date. */
+   Birthday party totals are fixed by guest count; deposits are set upon date confirmation. */
 ---
 <section class="party-booking-section" id="birthday-reservations" aria-labelledby="birthday-reservations-heading">
   <div class="shell">
     <header class="party-heading">
       <p class="party-kicker">BURNING TREE MMA · OWINGS MILLS, MD</p>
       <h2 id="birthday-reservations-heading">Plan a Birthday Party They’ll Remember</h2>
-      <p>Celebrate with real martial arts games, confidence-building activities, and team challenges. Choose your preferred date below. We’ll confirm the time, package price, and deposit before asking you to pay.</p>
+      <p>Celebrate with real martial arts games, confidence-building activities, and team challenges. Every birthday celebration is 2 hours. Choose your preferred date below. We’ll confirm the time and deposit before asking you to pay.</p>
     </header>
+    <div class="party-pricing" aria-label="Birthday party price and duration">
+      <div class="party-pricing-major"><span>2-HOUR BIRTHDAY PARTY</span><strong>$350</strong><small>For up to 15 children</small></div>
+      <div class="party-pricing-details"><strong>Each additional child: $10</strong><p>All party activity options use the same birthday party price. Your total updates automatically based on your estimated number of children.</p><p>Requested dates and party size must be confirmed by Burning Tree before a deposit is due.</p></div>
+    </div>
     <div class="party-steps" aria-label="How party reservations work">
       <div><span>1</span><strong>Choose your party</strong><small>Tell us your group size and preferred activities.</small></div>
-      <div><span>2</span><strong>Request a date</strong><small>We check the studio calendar and confirm pricing.</small></div>
+      <div><span>2</span><strong>Request a date</strong><small>We confirm the two-hour time, total and deposit.</small></div>
       <div><span>3</span><strong>Pay your deposit</strong><small>Secure Stripe checkout only after our confirmation.</small></div>
     </div>
     <div class="party-payment-result" id="birthday-payment-result" hidden aria-live="polite"></div>
     <div class="party-booking-flow" id="birthday-booking-flow">
       <div class="party-form-intro">
         <h3>Explore Your Party Options</h3>
-        <p>Choose the kind of celebration you’d like. These are planning options, not fixed-price packages. We’ll confirm the activities, group capacity, total cost, and required deposit with you before booking.</p>
+        <p>Choose your preferred activities. All options are $350 for a two-hour birthday party with up to 15 children, plus $10 per additional child. We’ll confirm the time, group capacity and deposit.</p>
       </div>
       <div class="party-package-grid" role="group" aria-label="Party activity options">
-        <label class="party-package"><input type="radio" name="party-option" value="Martial Arts Games" checked form="birthday-request-form" /><strong>Martial Arts Games</strong><span>Beginner-friendly movement, guided martial arts games and fun.</span><b>Pricing confirmed with your quote</b></label>
-        <label class="party-package"><input type="radio" name="party-option" value="Team Challenges" form="birthday-request-form" /><strong>Team Challenges</strong><span>Group activities emphasizing confidence, teamwork and coordination.</span><b>Pricing confirmed with your quote</b></label>
-        <label class="party-package"><input type="radio" name="party-option" value="Custom Celebration" form="birthday-request-form" /><strong>Custom Celebration</strong><span>Tell us about the party you have in mind; we'll discuss the details.</span><b>Custom quote after review</b></label>
+        <label class="party-package"><input type="radio" name="party-option" value="Martial Arts Games" checked form="birthday-request-form" /><strong>Martial Arts Games</strong><span>Beginner-friendly movement, guided martial arts games and fun.</span><b>Same $350 party pricing</b></label>
+        <label class="party-package"><input type="radio" name="party-option" value="Team Challenges" form="birthday-request-form" /><strong>Team Challenges</strong><span>Group activities emphasizing confidence, teamwork and coordination.</span><b>Same $350 party pricing</b></label>
+        <label class="party-package"><input type="radio" name="party-option" value="Custom Celebration" form="birthday-request-form" /><strong>Custom Celebration</strong><span>Tell us about the party you have in mind; we'll discuss the details.</span><b>Same $350 party pricing</b></label>
       </div>
       <div class="party-request-card">
         <form id="birthday-request-form">
@@ -60,9 +64,14 @@
                 <label>Age group
                   <select id="birthday-age" required><option value="">Select age</option><option>4–6</option><option>7–9</option><option>10–12</option><option>13+</option></select>
                 </label>
-                <label>Estimated guests
+                <label>Number of children
                   <input id="birthday-guests" type="number" min="1" max="75" required placeholder="Number of children" />
                 </label>
+              </div>
+              <div class="party-price-preview" role="status" aria-live="polite" aria-atomic="true">
+                <span>Estimated party total (2 hours)</span>
+                <strong id="birthday-estimated-total">$350</strong>
+                <small id="birthday-price-breakdown">Includes up to 15 children. $10 for each additional child.</small>
               </div>
               <label>Anything we should know? (optional)
                 <textarea id="birthday-notes" rows="3" maxlength="700" placeholder="Party goals, special requests, or questions"></textarea>
@@ -70,7 +79,7 @@
               <div class="cf-turnstile" data-sitekey="0x4AAAAAAD6Ievu-t0Ll1euh"></div>
               <p class="party-legal">By submitting, you agree to our <a href="/privacy">Privacy Policy</a> and <a href="/terms">Terms of Service</a>. There is no payment at this step.</p>
               <p id="birthday-request-status" class="party-status" role="status" aria-live="polite"></p>
-              <button class="party-primary" id="birthday-submit" type="submit">Request Date &amp; Package Quote</button>
+              <button class="party-primary" id="birthday-submit" type="submit">Request Date &amp; Confirm Booking Details</button>
             </div>
           </div>
         </form>
@@ -144,6 +153,18 @@
         paymentResult.textContent="Online reservation requests are temporarily unavailable. Please use the contact form below or text 410-218-0894. No payment has been taken.";
       }
     });
+  const guestsField=qs("birthday-guests");
+  const updatePrice=()=>{
+    const guests=Number(guestsField.value);
+    const valid=Number.isInteger(guests)&&guests>=1&&guests<=75;
+    const extra=valid?Math.max(0,guests-15):0;
+    qs("birthday-estimated-total").textContent=valid?"$"+String(350+extra*10):"—";
+    qs("birthday-price-breakdown").textContent=valid
+      ?(extra>0?"$350 for 15 children + "+extra+" additional "+(extra===1?"child":"children")+" × $10.":"Includes up to 15 children. $10 for each additional child.")
+      :"Enter the number of children (1–75) to estimate the price.";
+  };
+  guestsField.addEventListener("input",updatePrice);
+  updatePrice();
   const status=qs("birthday-request-status");
   form.addEventListener("submit",async event=>{
     event.preventDefault();status.textContent="";
@@ -161,10 +182,10 @@
       if(!r.ok)throw Error(data.error||"We could not save your request.");
       status.textContent=data.message||"Request received. No payment was taken.";
       status.classList.add("party-success");
-      form.reset();selected.value="";renderCalendar();updateTimes();
+      form.reset();selected.value="";renderCalendar();updateTimes();updatePrice();
       if(window.turnstile?.reset)window.turnstile.reset();
     }catch(e){status.classList.remove("party-success");status.textContent=e.message||"Something went wrong.";}
-    finally{button.disabled=false;button.textContent="Request Date & Package Quote";}
+    finally{button.disabled=false;button.textContent="Request Date & Confirm Booking Details";}
   });
   const query=new URLSearchParams(location.search);
   const paymentResult=qs("birthday-payment-result"),flow=qs("birthday-booking-flow"),deposit=qs("birthday-confirmed-deposit");
@@ -206,6 +227,17 @@
 .party-kicker{color:#ffb1b1;font-size:.8rem;font-weight:800;letter-spacing:.12em}
 .party-heading h2{color:#fff;font-size:clamp(2rem,4.8vw,3.25rem);line-height:1.14;margin:9px 0 18px}
 .party-heading p:not(.party-kicker){color:#ededed;line-height:1.65}
+.party-pricing{display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.3fr);align-items:center;gap:22px;border:2px solid #ed636a;background:#191519;border-radius:14px;padding:clamp(17px,4vw,28px);margin:0 auto 26px}
+.party-pricing-major{display:flex;flex-direction:column;gap:4px;align-items:center;text-align:center}
+.party-pricing-major span{font-size:.82rem;font-weight:850;letter-spacing:.09em;color:#ffe0e0}
+.party-pricing-major strong{font-size:clamp(3rem,7vw,5rem);line-height:1.1;color:#fff}
+.party-pricing-major small{font-size:1rem;color:#fff;font-weight:750}
+.party-pricing-details strong{font-size:clamp(1.05rem,2.8vw,1.35rem);color:#fff}
+.party-pricing-details p{color:#ece6e6;line-height:1.5;margin:10px 0}
+.party-price-preview{border:1px solid #fb777d;border-radius:10px;background:#432126;padding:16px;display:flex;flex-direction:column;gap:5px}
+.party-price-preview span{color:#fff;font-weight:750}
+.party-price-preview strong{color:#fff;font-size:2rem;line-height:1.2}
+.party-price-preview small{color:#f3e5e5;line-height:1.5}
 .party-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:25px auto 36px}
 .party-steps>div{background:#242124;border:1px solid #784449;padding:19px;border-radius:12px;display:grid;grid-template-columns:34px 1fr;gap:3px 10px;align-items:center}
 .party-steps span{grid-row:span 2;background:#b81c26;color:#fff;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-weight:900}
@@ -246,6 +278,6 @@
 .party-confirmed-deposit h3{margin:8px 0}
 .party-bottom-help{text-align:center;color:#eee;line-height:1.6;margin:24px 0 0}
 .party-booking-section a{color:#ffbbbb;text-decoration:underline}
-@media(max-width:740px){.party-steps,.party-package-grid,.party-booking-columns{grid-template-columns:1fr}.party-package{min-height:0}.party-steps{gap:8px}.party-steps>div{padding:13px}.party-request-card{padding:18px}.party-date{font-size:1rem}.party-fields-pair{grid-template-columns:1fr 1fr}}
+@media(max-width:740px){.party-pricing,.party-steps,.party-package-grid,.party-booking-columns{grid-template-columns:1fr}.party-package{min-height:0}.party-steps{gap:8px}.party-steps>div{padding:13px}.party-request-card{padding:18px}.party-date{font-size:1rem}.party-fields-pair{grid-template-columns:1fr 1fr}}
 @media(max-width:385px){.party-fields-pair{grid-template-columns:1fr}.party-calendar-grid{gap:2px}}
 </style>
