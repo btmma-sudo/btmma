@@ -71,6 +71,11 @@ const curriculumBlocks = !hasVariants ? program.curriculum.copy.split("\n\n") : 
       )}
 
       {isBirthday && <BirthdayPartyBooking />}
+      {isBirthday && (
+        <div id="birthday-fallback" class="hero-form-float" hidden>
+          <LeadForm config={{ ...program.leadForm, title: "Ask About a Birthday Party", intro: "Online date requests are temporarily unavailable. Send your contact details and preferred date so we can help you plan." }} formId="birthday-fallback-lead" />
+        </div>
+      )}
 
       {useSplitLayout ? (
         <section class="shell section-divider">
