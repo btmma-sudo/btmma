@@ -71,7 +71,7 @@ function buildQuestionnaire(raw) {
     "Step 1 already captured student name, date of birth, contact details and selected program.",
     "This form is for first-class preparation, not a membership agreement.",
     "",
-    ...answered.map(x => x.key.slice(1) + ". " + x.question + "\n" + (x.answer || "(not answered)") + "\n"),
+    ...answered.map((x, index) => (index + 1) + ". " + x.question + "\n" + (x.answer || "(not answered)") + "\n"),
     ...extras.map(x => x.label + ": " + x.answer)
   ].join("\n").slice(0, 18000);
 }
@@ -104,10 +104,10 @@ async function verifiedPayment(env, row, lead, sessionId) {
       session.payment_status === "paid";
   }
   // Cash App / Zelle are not paid on selection: only staff-verification in Airtable unlocks Step 3.
-  const notes = typeof lead.fields?.["Additional Notes"] === "string"
-    ? lead.fields["Additional Notes"] : "";
-  return row.state === "manual_review" && lead.fields?.["Payment Status"] === "Paid" &&
-    /(?:Cash App direct payment selected:|Zelle direct \$29 trial payment selected:)/.test(notes);
+  // A staff-confirmed Paid status plus the manual-only D1 reservation
+  // proves an external transfer was reconciled. Do not require a notes marker:
+  // Cash App notes can occasionally fail to write even after selection succeeds.
+  return row.state === "manual_review" && lead.fields?.["Payment Status"] === "Paid";
 }
 export async function POST({ request, locals }) {
   const env = locals?.runtime?.env ?? {};
