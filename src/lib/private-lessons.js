@@ -4,7 +4,7 @@ import {getPortalEnv,getPortalAccount,secureHeaders,validSameOrigin} from "./stu
 export const PROGRAMS = ["American Kenpo Karate","Muay Thai","Wing Chun","Self-Defense","Leadership","Not sure yet"];
 export const DURATIONS = [30,45,60,90];
 const ZONE = "America/New_York";
-const et = new Intl.DateTimeFormat("en-US", {timeZone: ZONE, year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false});
+const et = new Intl.DateTimeFormat("en-US", {timeZone: ZONE, year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"});
 export const json = (value,status=200) => new Response(JSON.stringify(value),{
   status,headers:{"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store","X-Content-Type-Options":"nosniff"}
 });
