@@ -1,0 +1,150 @@
+---
+import {authorizedInstructor, PROGRAMS, RANKS, videoConfig} from "../lib/instructor-video-manager.js";
+import {secureHeaders} from "../lib/student-portal-auth.js";
+export const prerender = false;
+const staff = await authorizedInstructor(Astro.request, Astro.locals);
+if (!staff) Astro.response.status = 404;
+const ready = !!staff && videoConfig(staff.env);
+let lessons: any[] = [];
+let broken = false;
+if (staff) {
+  try {
+    const list = await staff.env.LIVE_TRIAL_DB.prepare(
+      `SELECT id,title,description,program,belt_level,upload_status,published,created_at
+        FROM portal_lessons ORDER BY created_at DESC, rowid DESC LIMIT 100`
+    ).all();
+    lessons = list.results || [];
+  } catch { broken = true; }
+}
+for (const [key,value] of Object.entries(secureHeaders())) Astro.response.headers.set(key,value);
+Astro.response.headers.set("Content-Security-Policy",
+  "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://upload.videodelivery.net; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="robots" content="noindex,nofollow,noarchive"/>
+    <title>{staff ? "Instructor Video Manager | Burning Tree" : "Not Found"}</title>
+    <style is:inline>
+      *,*::before,*::after{box-sizing:border-box}
+      :root{color-scheme:dark}body{margin:0;background:#111315;color:#f6f7f8;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
+      .wrap{width:min(100% - 36px,1040px);margin-inline:auto}
+      .top{background:#080a0c;border-bottom:1px solid #3d4248}
+      .top .wrap{min-height:85px;display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:8px}
+      .brand{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none;font-weight:850;font-size:.87rem;letter-spacing:.04em}
+      .brand img{background:#fff;width:46px;height:61px;object-fit:contain;border-radius:6px}
+      .back{border:1px solid #5b6366;border-radius:9px;padding:9px 12px;text-decoration:none;font-size:.85rem;color:#fff}
+      .hero{padding:40px 0 16px}.eyebrow{color:#f17f77;letter-spacing:.14em;font-size:.78rem;font-weight:850}
+      h1{font-size:clamp(1.8rem,5vw,2.8rem);line-height:1.13;letter-spacing:-.04em;margin:7px 0 12px}
+      h2{font-size:1.45rem;margin:0 0 13px}h3{font-size:1.13rem;margin:0}
+      .muted{color:#c8cdd0}.panel{background:#1d2226;border:1px solid #42494f;border-radius:17px;padding:24px;margin-bottom:19px}
+      .highlight{color:#ff7b71}.badge{font-size:.7rem;color:#ffaea6;border:1px solid #a84b47;border-radius:50px;padding:4px 10px;font-weight:800;letter-spacing:.05em}
+      .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+      .field{display:grid;gap:6px;font-size:.85rem;font-weight:750;color:#f3f4f5}
+      input,select,textarea{width:100%;background:#111619;border:1px solid #60676c;border-radius:9px;padding:12px 13px;color:#fff;font:inherit}
+      input:focus,textarea:focus,select:focus{outline:2px solid #f77c73;outline-offset:2px}
+      input[type=file]{font-size:.85rem}
+      textarea{min-height:100px;resize:vertical}
+      .full{grid-column:1/-1}
+      button{font:inherit;cursor:pointer}.btn{background:#c52d28;border:1px solid #c52d28;padding:12px 18px;border-radius:10px;color:#fff;font-weight:850;font-size:.87rem}
+      .btn:hover,.btn:focus-visible{background:#9f2420}.btn:disabled{cursor:not-allowed;opacity:.55}
+      .btn.grey{background:#2e363a;border-color:#626a6f}.btn.grey:hover{background:#41494c}
+      .actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+      .callout{padding:14px 16px;border-left:4px solid #ea655d;background:#332423;border-radius:6px;color:#ffe0dd;margin-bottom:20px}
+      .callout.ok{background:#1c302b;border-color:#77bd98;color:#d7f5e2}
+      .lesson-list{display:grid;gap:12px}.lesson{background:#171b1f;border:1px solid #495056;padding:19px;border-radius:12px}
+      .lesson-head{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:start;margin-bottom:7px}
+      .lesson p{margin:4px 0 0}.meta{font-size:.84rem;color:#c0c6c9}
+      .status{color:#ffcec8;font-size:.8rem;font-weight:700}
+      .status.published{color:#9de3b4}
+      .note{font-size:.78rem;color:#c4cacd}
+      .footer{padding:25px 0 40px;font-size:.8rem;color:#c4c9cb}
+      @media(max-width:640px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.panel{padding:19px}.top .wrap{min-height:74px}.brand img{width:37px;height:52px}.brand{font-size:.75rem}.hero{padding-top:29px}}
+    </style>
+  </head>
+  <body>
+    {staff ? <>
+      <header class="top">
+        <div class="wrap">
+          <a class="brand" href="/student-portal/">
+            <img src="/images/logo.png" alt="Burning Tree logo" width="46" height="61"/>
+            <span>BURNING TREE<br/>INSTRUCTOR VIDEO MANAGER</span>
+          </a>
+          <a class="back" href="/student-portal/">Student Portal</a>
+        </div>
+      </header>
+      <main class="wrap">
+        <section class="hero">
+          <p class="eyebrow">STAFF ACCESS ONLY · KEEPERS OF THE FLAME</p>
+          <h1>Build Your <span class="highlight">Video Library.</span></h1>
+          <p class="muted">Upload a lesson, choose its martial art and belt level, then publish it to eligible active student families.</p>
+        </section>
+        {!ready && <div class="callout" role="alert">Cloudflare Stream is not connected. Uploads are disabled until the video hosting account and API token are configured.</div>}
+        {broken && <div class="callout" role="alert">The instructor database migration has not been installed. Contact your website administrator before uploading lessons.</div>}
+        <section class="panel" aria-labelledby="upload-title">
+          <h2 id="upload-title">Add a New Video Lesson</h2>
+          <p class="muted">Upload MP4, MOV or WebM. First version supports files up to 190 MB. Videos start as private drafts, not visible to students.</p>
+          <form id="lesson-form" class="grid" autocomplete="off">
+            <label class="field full">Lesson title<input name="title" maxlength="120" required placeholder="Example: Kenpo Basic Stances"/></label>
+            <label class="field">Martial art
+              <select name="program" required>
+                {PROGRAMS.map(name=><option value={name}>{name}</option>)}
+              </select>
+            </label>
+            <label class="field">Belt level
+              <select name="belt_level" required>
+                {RANKS.map(name=><option value={name}>{name}</option>)}
+              </select>
+            </label>
+            <label class="field full">Lesson description (optional)
+              <textarea name="description" maxlength="1000" placeholder="What will students learn and practice?"></textarea>
+            </label>
+            <label class="field full">Video file
+              <input name="file" type="file" accept=".mp4,.mov,.webm,video/mp4,video/quicktime,video/webm" required/>
+            </label>
+            <div class="full">
+              <p class="note">Belt access is exact: choosing Yellow Belt assigns to active students recorded as Yellow Belt in that martial art. “All Levels” includes every active student enrolled in that program.</p>
+              <div class="actions">
+                <button type="submit" class="btn" disabled={!ready || broken || staff.staff.can_upload !== 1}>UPLOAD PRIVATE DRAFT</button>
+                <span id="upload-status" class="muted" role="status" aria-live="polite"></span>
+              </div>
+            </div>
+          </form>
+        </section>
+        <section class="panel" aria-labelledby="library-title">
+          <h2 id="library-title">Your Video Lessons</h2>
+          <p class="muted">After uploading, click Check Status. When processing is complete, you can publish the video. Publishing assigns it to active student families matching the program and exact belt level.</p>
+          <p class="note">Refresh this page to see new uploads. Only approved staff members can upload or publish.</p>
+          <div class="lesson-list">
+          {lessons.length ? lessons.map((lesson:any)=>
+            <article class="lesson" data-lesson={lesson.id}>
+              <div class="lesson-head">
+                <div>
+                  <h3>{lesson.title}</h3>
+                  <p class="meta">{lesson.program} · {lesson.belt_level}</p>
+                </div>
+                <span class={lesson.published===1 ? "status published" : "status"}>
+                  {lesson.published===1 ? "PUBLISHED" : "PRIVATE DRAFT"}
+                </span>
+              </div>
+              {lesson.description && <p class="meta">{lesson.description}</p>}
+              <p class="meta">Video: <span class="video-status">{lesson.upload_status}</span></p>
+              <div class="actions">
+                <button type="button" class="btn grey video-action" data-action="status" data-id={lesson.id}>CHECK STATUS</button>
+                {lesson.published===1 ?
+                  <button type="button" class="btn video-action" data-action="unpublish" data-id={lesson.id} disabled={staff.staff.can_publish!==1}>UNPUBLISH</button>
+                : <button type="button" class="btn video-action" data-action="publish" data-id={lesson.id} disabled={staff.staff.can_publish!==1}>PUBLISH TO STUDENTS</button>}
+              </div>
+              <p class="note action-feedback" role="status"></p>
+            </article>
+          ) : <p class="muted">No lessons yet. Upload the first private draft above.</p>}
+          </div>
+        </section>
+      </main>
+      <footer class="footer wrap">Private instructor tools · One Tree. One Family. · Account help: Coach David, <a href="tel:+14102180894">410-218-0894</a></footer>
+      <script is:inline src="/js/instructor-video-manager.js" defer></script>
+    </> : <main class="wrap"><h1>Not Found</h1><p>This page is not available.</p></main>}
+  </body>
+</html>
