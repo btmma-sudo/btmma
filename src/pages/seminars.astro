@@ -188,6 +188,8 @@ const eventStructuredData = {
   <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <script is:inline>
     (() => {
+      // These are display amounts only. The dedicated /api/seminar-checkout
+      // endpoint independently owns and enforces all Stripe ticket prices.
       const priceLists = {
         united: [
           { id: "general", label: "General Admission — $50 per person", name: "General Admission", cents: 5000 },
@@ -200,15 +202,39 @@ const eventStructuredData = {
           { id: "both", label: "Both days — $190 per person", name: "Both Days", cents: 19000 }
         ]
       };
+      const closingTimes = {
+        united: { general: "2026-11-15T19:00:00Z", supporter: "2026-11-15T19:00:00Z", sponsor: "2026-11-15T19:00:00Z" },
+        nerve: { day1: "2026-11-21T17:00:00Z", day2: "2026-11-22T17:00:00Z", both: "2026-11-21T17:00:00Z" }
+      };
       const $ = id => document.getElementById(id);
       const form = $("seminar-form");
       const eventSelect = $("seminar-event");
       const ticketSelect = $("seminar-ticket");
       const attendeesInput = $("seminar-attendees");
       const message = $("seminar-form-message");
-      const button = $("seminar-submit");
+      const verifyButton = $("seminar-submit");
+      const choices = $("seminar-payment-options");
+      const applePayButton = $("seminar-applepay");
+      const cardButton = $("seminar-card");
+      const cashAppButton = $("seminar-cashapp");
+      const cashAppInstructions = $("seminar-cashapp-instructions");
+      const paymentButtons = [applePayButton, cardButton, cashAppButton];
+      let reviewed = null;
+
       const names = () => attendeesInput.value.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
       const dollars = cents => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(cents / 100);
+      const ticketFor = (eventId, ticketId) => priceLists[eventId]?.find(item => item.id === ticketId);
+      const isClosed = (eventId, ticketId) => Date.now() >= Date.parse(closingTimes[eventId]?.[ticketId] || "1970-01-01T00:00:00Z");
+
+      function resetPaymentChoices() {
+        reviewed = null;
+        choices.hidden = true;
+        cashAppInstructions.hidden = true;
+        verifyButton.hidden = false;
+        paymentButtons.forEach(button => { button.disabled = false; });
+        message.textContent = "";
+      }
+
       function setEvent(value) {
         eventSelect.value = value === "nerve" ? "nerve" : "united";
         ticketSelect.replaceChildren();
@@ -218,30 +244,35 @@ const eventStructuredData = {
           option.textContent = item.label;
           ticketSelect.appendChild(option);
         });
+        resetPaymentChoices();
         updateTotal();
       }
+
       function updateTotal() {
-        const tier = priceLists[eventSelect.value].find(item => item.id === ticketSelect.value);
+        const tier = ticketFor(eventSelect.value, ticketSelect.value);
+        if (!tier) return;
         const count = names().length || 1;
         $("seminar-total-label").textContent = tier.name + " × " + count + (count > 6 ? " (maximum 6)" : "");
         $("seminar-total-amount").textContent = dollars(tier.cents * count);
       }
+
       eventSelect.addEventListener("change", () => setEvent(eventSelect.value));
-      ticketSelect.addEventListener("change", updateTotal);
-      attendeesInput.addEventListener("input", updateTotal);
+      ticketSelect.addEventListener("change", () => { resetPaymentChoices(); updateTotal(); });
+      form.addEventListener("input", () => { resetPaymentChoices(); updateTotal(); });
       document.querySelectorAll(".select-seminar").forEach(selectButton => {
         selectButton.addEventListener("click", () => {
           setEvent(selectButton.dataset.event);
-          message.textContent = "";
           $("registration").scrollIntoView({ behavior: "smooth", block: "start" });
         });
       });
-      const selected = new URLSearchParams(location.search).get("event");
-      setEvent(selected === "nerve" ? "nerve" : "united");
-      if (new URLSearchParams(location.search).get("checkout") === "cancelled") {
-        message.textContent = "Checkout was cancelled. No registration has been confirmed. You can try again.";
-      }
+
       const params = new URLSearchParams(location.search);
+      setEvent(params.get("event") === "nerve" ? "nerve" : "united");
+      if (params.get("checkout") === "cancelled") {
+        message.textContent = "Checkout was cancelled. No registration has been confirmed. You can choose another payment method.";
+      }
+
+      // Do not mark a seminar paid based on a redirect alone.
       if (params.get("checkout") === "success") {
         const result = $("registration-result");
         result.hidden = false;
@@ -264,8 +295,17 @@ const eventStructuredData = {
             .then(data => {
               if (data.confirmed) {
                 const seminar = data.event === "united" ? "United by Purpose" : "Striking a Nerve";
-                show("You're registered!", "Stripe confirms payment of " + dollars(data.amount) + " for " + data.quantity + " attendee" + (data.quantity === 1 ? "" : "s") + " at " + seminar + ".", "Keep your Stripe receipt. Questions? Call (202) 368-4395. One Tree. One Family.");
-                try { window.gtag?.("event", "purchase", { transaction_id: id, currency: "USD", value: data.amount / 100, items: [{ item_id: "btmma_seminar_" + data.event + "_" + data.ticket, item_name: seminar, quantity: data.quantity, price: data.amount / 100 / data.quantity }] }); } catch {}
+                show("You're registered!", "Stripe confirms payment of " + dollars(data.amount) + " for " + data.quantity + " attendee" + (data.quantity === 1 ? "" : "s") + " at " + seminar + ".", "Keep your Stripe receipt. Questions? Call (410) 218-0894. One Tree. One Family.");
+                try {
+                  const key = "btmma_seminar_ga4_purchase_" + id;
+                  if (window.sessionStorage.getItem(key) !== "sent") {
+                    window.gtag?.("event", "purchase", {
+                      transaction_id: id, currency: "USD", value: data.amount / 100,
+                      items: [{ item_id: "btmma_seminar_" + data.event + "_" + data.ticket, item_name: seminar, quantity: data.quantity, price: data.amount / 100 / data.quantity }]
+                    });
+                    window.sessionStorage.setItem(key, "sent");
+                  }
+                } catch { /* Analytics cannot affect payment verification. */ }
               } else {
                 show("Payment has not been confirmed", "Your checkout is not marked paid by Stripe yet.", "Do not pay again until checking your receipt or contacting the studio.");
               }
@@ -273,45 +313,134 @@ const eventStructuredData = {
             .catch(error => show("Verification is temporarily unavailable", error.message, "Please check your Stripe payment receipt or contact the studio before paying again."));
         }
       }
-      form.addEventListener("submit", async event => {
+
+      form.addEventListener("submit", event => {
         event.preventDefault();
-        const attendees = names();
-        if (attendees.length < 1 || attendees.length > 6 || attendees.some(name => name.length < 2 || name.length > 75)) {
-          message.textContent = "Enter 1 to 6 attendee names, one per line.";
+        const attendeeNames = names();
+        if (attendeeNames.length < 1 || attendeeNames.length > 6 || attendeeNames.some(name => name.length < 2 || name.length > 75 || /[<>\r\n]/.test(name))) {
+          resetPaymentChoices();
+          message.textContent = "Enter 1 to 6 attendee names, one per line, with a valid full name for each person.";
           attendeesInput.focus();
+          return;
+        }
+        if (isClosed(eventSelect.value, ticketSelect.value)) {
+          resetPaymentChoices();
+          message.textContent = "Registration for this seminar session has closed. Please contact the studio.";
+          return;
+        }
+        const tier = ticketFor(eventSelect.value, ticketSelect.value);
+        reviewed = {
+          event: eventSelect.value,
+          ticket: ticketSelect.value,
+          contactName: $("seminar-contact-name").value.trim(),
+          email: $("seminar-contact-email").value.trim(),
+          phone: $("seminar-contact-phone").value.trim(),
+          attendees: attendeeNames.join("\n"),
+          count: attendeeNames.length,
+          ticketName: tier.name,
+          totalCents: tier.cents * attendeeNames.length
+        };
+        const total = dollars(reviewed.totalCents);
+        $("seminar-reviewed-total").textContent = reviewed.ticketName + " × " + reviewed.count + " = " + total;
+        applePayButton.textContent = "APPLE PAY / APPLE CASH — " + total;
+        cardButton.textContent = "PAY " + total + " WITH CREDIT / DEBIT CARD";
+        cashAppButton.textContent = "PAY " + total + " DIRECTLY WITH CASH APP";
+        verifyButton.hidden = true;
+        choices.hidden = false;
+        cashAppInstructions.hidden = true;
+        message.textContent = "Details reviewed. Choose your payment method below. Nothing has been charged.";
+        choices.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      });
+
+      const openStripeCheckout = async () => {
+        if (!reviewed || isClosed(reviewed.event, reviewed.ticket)) {
+          message.textContent = "Please review your registration again before paying.";
+          resetPaymentChoices();
+          message.textContent = "Registration details must be reviewed before paying, or this session has closed.";
           return;
         }
         const token = document.querySelector("#seminar-form [name='cf-turnstile-response']")?.value || "";
         if (!token) {
-          message.textContent = "Please complete the security check before continuing.";
+          message.textContent = "Please complete the security check under the payment buttons to use card or Apple Pay.";
+          $("seminar-payment-options").scrollIntoView({ behavior: "smooth", block: "nearest" });
           return;
         }
-        button.disabled = true;
-        button.textContent = "OPENING SECURE CHECKOUT...";
-        message.textContent = "Preparing your secure Stripe checkout. No payment has been charged yet.";
+        paymentButtons.forEach(button => { button.disabled = true; });
+        message.textContent = "Connecting to secure Stripe checkout. No charge has been made yet.";
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 20000);
         try {
           const r = await fetch("/api/seminar-checkout", {
-            method: "POST",
+            method: "POST", cache: "no-store",
             headers: { "content-type": "application/json" },
+            signal: controller.signal,
             body: JSON.stringify({
-              event: eventSelect.value,
-              ticket: ticketSelect.value,
-              contactName: $("seminar-contact-name").value,
-              email: $("seminar-contact-email").value,
-              phone: $("seminar-contact-phone").value,
-              attendees: attendees.join("\n"),
+              event: reviewed.event,
+              ticket: reviewed.ticket,
+              contactName: reviewed.contactName,
+              email: reviewed.email,
+              phone: reviewed.phone,
+              attendees: reviewed.attendees,
               turnstileToken: token
             })
           });
-          const data = await r.json();
-          if (!r.ok || !/^https:\/\/checkout\.stripe\.com\//.test(data.url || "")) throw new Error(data.error || "Could not open checkout.");
+          const data = await r.json().catch(() => ({}));
+          if (!r.ok || !/^https:\/\/checkout\.stripe\.com\//.test(data.url || "")) throw new Error(data.error || "Could not open secure checkout.");
           window.location.assign(data.url);
         } catch (err) {
           message.textContent = err.message || "Checkout is unavailable. Please try again.";
-          button.disabled = false;
-          button.textContent = "CONTINUE TO SECURE PAYMENT";
+          paymentButtons.forEach(button => { button.disabled = false; });
           window.turnstile?.reset?.();
+        } finally {
+          clearTimeout(timeout);
         }
+      };
+      applePayButton.addEventListener("click", openStripeCheckout);
+      cardButton.addEventListener("click", openStripeCheckout);
+
+      cashAppButton.addEventListener("click", () => {
+        if (!reviewed || isClosed(reviewed.event, reviewed.ticket)) {
+          resetPaymentChoices();
+          message.textContent = "Please review the current seminar and ticket before paying.";
+          return;
+        }
+        const eventName = reviewed.event === "united" ? "United by Purpose" : "Striking a Nerve";
+        const note = "BTMMA " + eventName + " - " + reviewed.ticketName + " x " + reviewed.count;
+        $("seminar-cashapp-amount").textContent = dollars(reviewed.totalCents);
+        $("seminar-cashapp-note").textContent = note;
+        $("seminar-cashapp-details").value = "Burning Tree seminar - Cash App payment\n" +
+          "Event: " + eventName + "\n" +
+          "Ticket: " + reviewed.ticketName + " x " + reviewed.count + "\n" +
+          "Amount: " + dollars(reviewed.totalCents) + " to $BTMMA\n" +
+          "Contact: " + reviewed.contactName + "\n" +
+          "Email: " + reviewed.email + "\n" +
+          "Phone: " + reviewed.phone + "\n" +
+          "Attendees:\n" + reviewed.attendees + "\n" +
+          "Payment confirmation: [attach Cash App receipt after paying]";
+        choices.hidden = true;
+        cashAppInstructions.hidden = false;
+        message.textContent = "Direct Cash App selected. Your registration is pending until Burning Tree verifies payment.";
+        cashAppInstructions.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      });
+
+      $("seminar-copy-details").addEventListener("click", async () => {
+        const details = $("seminar-cashapp-details");
+        try {
+          await navigator.clipboard.writeText(details.value);
+          $("seminar-copy-message").textContent = "Registration details copied. Paste into a text to (410) 218-0894 and attach your payment receipt.";
+        } catch {
+          details.focus();
+          details.select();
+          $("seminar-copy-message").textContent = "Details selected. Copy the text and send it to (410) 218-0894 with your receipt.";
+        }
+      });
+
+      $("seminar-back-to-payments").addEventListener("click", () => {
+        if (!reviewed) return;
+        cashAppInstructions.hidden = true;
+        choices.hidden = false;
+        message.textContent = "Do not select another payment method if you've already sent a Cash App payment. Contact the studio instead.";
+        choices.scrollIntoView({ behavior: "smooth", block: "nearest" });
       });
     })();
   </script>
@@ -361,6 +490,7 @@ const eventStructuredData = {
   .seminar-security { margin: 1.3rem 0; }
   .seminar-message { color: #991b1b; font-weight: 700; min-height: 1.2rem; }
   .seminar-checkout { display: block; width: 100%; font-size: 1.02rem; }
+  .seminar-page [hidden] { display: none !important; }
   .seminar-confirmation[hidden], .seminar-form[hidden] { display: none; }
   .seminar-confirmation h3 { color: #181818; font-size: 1.65rem; }
   .seminar-confirmation .seminar-cta { color: #fff; text-decoration: none; }
@@ -379,5 +509,45 @@ const eventStructuredData = {
     .seminar-prices > div { flex-basis: 95px; }
     .seminar-total { flex-wrap: wrap; }
     .seminar-cta { width: 100%; }
+  }
+
+  /* Payment choices intentionally match the high-contrast $29 promotion controls,
+     while all selectors remain scoped to seminars only. */
+  .seminar-page .seminar-payment-options, .seminar-page .seminar-cashapp-instructions {
+    margin: 1.1rem 0; border: 2px solid #a91b1b; border-radius: 12px;
+    padding: 1rem; background: #f9f9f9; color: #171717;
+  }
+  .seminar-page .seminar-payment-options h3, .seminar-page .seminar-cashapp-instructions h3 {
+    color: #171717; margin: .4rem 0 .9rem; font-size: 1.28rem;
+  }
+  .seminar-page .seminar-reviewed-total {
+    padding: .8rem; background: #f0e9e9; border-left: 4px solid #a91b1b;
+    font-weight: 800; color: #171717;
+  }
+  .seminar-page .seminar-pay-choice, .seminar-page .seminar-cashapp-link, .seminar-page .seminar-checkout {
+    display: flex; width: 100%; min-height: 52px; align-items: center;
+    justify-content: center; margin: .6rem 0; padding: 14px 18px;
+    background: #781010; border: 2px solid #e08c8c;
+    border-radius: 9px; color: #fff; font: 800 clamp(1rem, 2.6vw, 1.125rem)/1.45 'Open Sans', Arial, sans-serif;
+    text-align: center; text-decoration: none; text-shadow: 0 1px 1px #0007;
+    white-space: normal;
+  }
+  .seminar-page .seminar-pay-choice:not(:disabled):hover, .seminar-page .seminar-cashapp-link:hover,
+  .seminar-page .seminar-checkout:hover { color: #fff; background: #951818; }
+  .seminar-page .seminar-pay-choice:disabled { opacity: .6; cursor: wait; }
+  .seminar-page .seminar-pay-choice:focus-visible, .seminar-page .seminar-cashapp-link:focus-visible {
+    outline: 3px solid #a91b1b; outline-offset: 2px;
+  }
+  .seminar-page .seminar-payment-options .seminar-note { color: #333; }
+  .seminar-page .seminar-security .cf-turnstile { max-width: 100%; min-height: 80px; }
+  .seminar-page .seminar-copy-label { color: #171717; display: block; font-weight: 800; }
+  .seminar-page #seminar-cashapp-details {
+    width: 100%; min-height: 150px; margin-top: .5rem; background: #fff;
+    color: #111; font: 400 .9rem/1.55 'Open Sans', Arial, sans-serif;
+    border: 1px solid #777; border-radius: 6px; padding: 12px;
+  }
+  .seminar-page .seminar-cashapp-warning {
+    background: #fff3f3; color: #671111; border-left: 4px solid #b91c1c;
+    padding: .9rem; line-height: 1.55;
   }
 </style>
