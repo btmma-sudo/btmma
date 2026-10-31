@@ -325,6 +325,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       cashAppButton.disabled = true;
       checkoutButton.disabled = true;
       if (applePayButton) applePayButton.disabled = true;
+      if (zelleButton) zelleButton.disabled = true;
       notice.textContent = "Preparing direct Cash App payment instructions...";
       try {
         const response = await fetch("/api/trial-cashapp-live", {
@@ -341,6 +342,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         checkoutButton.hidden = true;
         if (applePayButton) applePayButton.hidden = true;
         if (applePayHelp) applePayHelp.hidden = true;
+        if (zelleButton) zelleButton.hidden = true;
         if (cashAppInstructions) cashAppInstructions.hidden = false;
         notice.textContent = "Opening Cash App with $BTMMA and $29. Check the details before sending. We'll verify your payment manually.";
         // Restore receipt instructions only after returning from this approved
@@ -367,6 +369,71 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         cashAppButton.disabled = false;
         checkoutButton.disabled = false;
         if (applePayButton) applePayButton.disabled = false;
+        if (zelleButton) zelleButton.disabled = false;
+      }
+    });
+    zelleButton?.addEventListener("click", async () => {
+      if (!grant || !zelleButton || !checkoutButton || liveMode !== true) {
+        if (notice) notice.textContent = "Please verify the student's registration before choosing Zelle.";
+        return;
+      }
+      zelleButton.disabled = true;
+      checkoutButton.disabled = true;
+      if (applePayButton) applePayButton.disabled = true;
+      if (cashAppButton) cashAppButton.disabled = true;
+      notice.textContent = "Preparing secure registration instructions for Zelle. No payment has been charged.";
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 15000);
+        let response;
+        try {
+          response = await fetch("/api/trial-zelle-live", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            cache: "no-store",
+            body: JSON.stringify({ grant }),
+            signal: controller.signal
+          });
+        } finally {
+          clearTimeout(timeout);
+        }
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || result.success !== true ||
+            result.state !== "pending_manual_verification" ||
+            result.recipientPhone !== "410-218-0894" || result.amount !== 29) {
+          throw new Error(result.error || "Zelle instructions could not be verified. Please contact Coach David.");
+        }
+        // Zelle is a bank-to-bank transfer outside Stripe. Never claim paid.
+        grant = null;
+        zelleButton.hidden = true;
+        checkoutButton.hidden = true;
+        if (applePayButton) applePayButton.hidden = true;
+        if (cashAppButton) cashAppButton.hidden = true;
+        if (applePayHelp) applePayHelp.hidden = true;
+        if (checkoutFallback) { checkoutFallback.hidden = true; checkoutFallback.removeAttribute("href"); }
+        if (cashAppInstructions) cashAppInstructions.hidden = true;
+        if (zelleInstructions) zelleInstructions.hidden = false;
+        notice.textContent = "Zelle selected: $29 to Coach David's mobile (410) 218-0894. Registration stays pending until we verify payment.";
+        try {
+          const bytes = window.crypto.getRandomValues(new Uint8Array(16));
+          const returnToken = Array.from(bytes, b => b.toString(16).padStart(2, "0")).join("");
+          window.sessionStorage.setItem("btmma_zelle_trial_return_v1", returnToken);
+          const url = new URL(window.location.href);
+          url.searchParams.delete("checkout");
+          url.searchParams.delete("session_id");
+          url.searchParams.set("zelle_return", returnToken);
+          window.history.replaceState(window.history.state, "", url.pathname + url.search + url.hash);
+        } catch { /* Payment instructions remain visible without storage. */ }
+        trackTrial("trial_zelle_payment_selected");
+        zelleInstructions?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      } catch (error) {
+        notice.textContent = error?.name === "AbortError"
+          ? "Zelle selection timed out. Please contact Coach David before sending a payment."
+          : error?.message || "Zelle is unavailable. Call or text (410) 218-0894.";
+        zelleButton.disabled = false;
+        checkoutButton.disabled = false;
+        if (applePayButton) applePayButton.disabled = false;
+        if (cashAppButton) cashAppButton.disabled = false;
       }
     });
     const submit = form?.querySelector('button[type="submit"]');
