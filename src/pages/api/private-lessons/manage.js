@@ -1,6 +1,6 @@
 import {
   adminAccess,adminJson,canWrite,readBody,validDate,validTime,
-  futureDateTime,minutes,clock,startOfPrivateHours
+  futureDateTime,minutes,clock,allowedPublishWindow
 } from "../../../lib/private-lessons.js";
 export const prerender=false;
 export async function GET({request,locals}) {
@@ -35,13 +35,10 @@ export async function POST({request,locals}) {
   try {
     if(body?.action==="publish-window"){
       const {date,startTime,endTime}=body;
-      const minimum=startOfPrivateHours(date);
-      if(!validDate(date)||!validTime(startTime)||!validTime(endTime)||minimum===null)
-        return adminJson({ok:false,error:"Private lessons are available Monday–Saturday only."},400);
+      if(!validDate(date)||!validTime(startTime)||!validTime(endTime)||
+         !allowedPublishWindow(date,startTime,endTime)||!futureDateTime(date,startTime))
+        return adminJson({ok:false,error:"Choose a 30-minute-aligned opening within the approved daily hours, at least 24 hours ahead. Saturday ends at 5 PM; Sunday is 9 AM–2 PM or 4–6 PM."},400);
       const start=minutes(startTime), end=minutes(endTime);
-      if(start<minimum||start%30!==0||end%30!==0||end<=start||
-         end>24*60||end-start>12*60||!futureDateTime(date,startTime))
-        return adminJson({ok:false,error:"Choose a 30-minute-aligned window after the day's starting time, at least 24 hours ahead."},400);
       const statements=[];
       for(let m=start;m<end;m+=30) {
         statements.push(db.prepare(
