@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import PrivateLessonCalendar from "../components/PrivateLessonCalendar.astro";
 const packs = [
   { id:"basic", name:"Basic", eyebrow:"LEVEL UP", tagline:"BUILD SKILLS. GAIN CONFIDENCE.", price:249, sessions:4,
     photo:"/images/private-coaching/private-basic-card.webp", alt:"Young karate student demonstrating a technique",
@@ -33,8 +34,8 @@ const seo = {
      <p class="private-eyebrow">BURNING TREE MIXED MARTIAL ARTS · OWINGS MILLS, MD</p>
      <h1>TAKE YOUR TRAINING <span>TO THE NEXT LEVEL.</span></h1>
      <p class="private-intro">PERSONAL ATTENTION. <strong>REAL PROGRESS.</strong></p>
-     <p>Focused, one-on-one 60-minute martial arts training for kids, teens and adults. Build confidence, sharpen technique and work directly on your personal goals.</p>
-     <div class="private-buttons"><a class="private-btn" href="#packages">SEE ALL FOUR PACKAGES</a><a class="private-btn private-outline" href="#booking">REGISTER &amp; PAY ONLINE</a></div>
+     <p>Focused, one-on-one martial arts coaching for kids, teens and adults. Build confidence, sharpen technique and work directly on your personal goals. Choose 30 minutes or 1 hour when booking your appointment.</p>
+     <div class="private-buttons"><a class="private-btn" href="#packages">SEE ALL FOUR PACKAGES</a><a class="private-btn private-outline" href="#booking">REGISTER &amp; PAY ONLINE</a><a class="private-btn private-outline" href="#appointment-calendar">VIEW LESSON CALENDAR</a></div>
      <p class="private-motto">ONE TREE. ONE FAMILY.</p>
     </div>
     <div class="private-hero-photo">
@@ -76,6 +77,15 @@ const seo = {
    <div><p class="private-eyebrow">FOCUSED TRAINING</p><h2>DEEPER TRAINING. <span>FASTER PROGRESS.</span></h2><p>Work on Kenpo forms, Muay Thai striking, Wing Chun techniques, self-defense, tournament preparation and the goals that matter most to you.</p></div>
    <div class="private-benefit-points"><p><strong>01</strong> Personal assessment and coaching plan</p><p><strong>02</strong> One-on-one technique and strategy</p><p><strong>03</strong> Beginner to advanced skill development</p><p><strong>04</strong> Flexible scheduling by arrangement</p></div>
   </div></section>
+
+  <section class="private-wrap private-section" id="appointment-calendar" aria-labelledby="private-calendar-title">
+    <div class="private-heading">
+      <p class="private-eyebrow">CHOOSE A TIME THAT WORKS FOR YOU</p>
+      <h2 id="private-calendar-title">PRIVATE LESSON <span>BOOKING CALENDAR</span></h2>
+      <p>Choose a 30-minute or 1-hour private lesson, then select a date and an opening released by Coach David. Online appointment booking is separate from purchasing a private coaching package. If no appointments are open yet, you can still register and pay below or text Coach David at <a href="sms:+14102180894">410-218-0894</a>.</p>
+    </div>
+    <PrivateLessonCalendar />
+  </section>
 
   <section class="private-wrap private-section" id="booking">
    <div class="private-heading"><p class="private-eyebrow">READY TO LEVEL UP?</p><h2>REGISTER FOR <span>PRIVATE COACHING</span></h2><p>Choose your package, enter student information, then select the same payment choices as the $29 promotion.</p></div>
@@ -126,14 +136,14 @@ const seo = {
      <p class="private-summary-price" id="private-summary-price">$249</p>
      <p id="private-summary-sessions">4 sessions · 60 minutes each</p><hr />
      <h4>What happens next?</h4>
-     <ol><li>Choose your program and enter your information.</li><li>Pay by Stripe, Cash App or Zelle.</li><li>After payment verification, contact Coach David to schedule your private lessons.</li></ol>
+     <ol><li>Choose your program and enter your information.</li><li>Pay by Stripe, Cash App or Zelle.</li><li>After payment verification, select a time in the lesson calendar above when online booking is open, or contact Coach David for scheduling.</li></ol>
      <p>Questions? Call or text <a href="tel:+14102180894">410-218-0894</a>.</p>
      <p class="private-motto">ONE TREE. ONE FAMILY.</p>
     </aside>
    </div>
   </section>
   <section id="private-result" class="private-wrap private-section private-result" hidden aria-live="polite"><h2 id="private-result-heading">Verifying your payment…</h2><p id="private-result-text">Checking your secure Stripe receipt.</p><p>Please do not pay a second time while verification is pending.</p><a class="private-btn" href="sms:+14102180894">TEXT COACH DAVID</a></section>
-  <section class="private-wrap private-faq"><h2>PRIVATE LESSONS FAQ</h2><details><summary>How long is a private lesson?</summary><p>Each session is 60 minutes: 4 in Basic, 6 in Advanced, 8 in Elite and 10 in Mastery.</p></details><details><summary>Can beginners take private lessons?</summary><p>Yes. Coaching is personalized for beginners and more experienced students, including children, teens and adults.</p></details><details><summary>How do I book a specific session time?</summary><p>Include preferred days or times in your request. Coach David will coordinate individual appointments after payment is verified; specific times are not automatically reserved during checkout.</p></details><details><summary>Is this separate from the $29 special?</summary><p>Yes. These coaching packages are standalone one-on-one lessons, separate from introductory classes and regular tuition.</p></details></section>
+  <section class="private-wrap private-faq"><h2>PRIVATE LESSONS FAQ</h2><details><summary>How long is a private lesson?</summary><p>Appointments in the calendar are available in either 30-minute or 60-minute increments. Our Basic, Advanced, Elite and Mastery packages are listed and priced as 60-minute sessions. Contact Coach David to confirm how a 30-minute appointment applies to your package.</p></details><details><summary>Can beginners take private lessons?</summary><p>Yes. Coaching is personalized for beginners and more experienced students, including children, teens and adults.</p></details><details><summary>How do I book a specific session time?</summary><p>Use the booking calendar on this page once appointment availability has been released. Choose 30 minutes or 1 hour, then your preferred date and time. Package checkout does not automatically reserve an appointment. If online booking is not open yet, text Coach David at 410-218-0894 to arrange a time after payment verification.</p></details><details><summary>Is this separate from the $29 special?</summary><p>Yes. These coaching packages are standalone one-on-one lessons, separate from introductory classes and regular tuition.</p></details></section>
  </div>
  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" is:inline async defer></script>
  <script is:inline>
@@ -229,14 +239,14 @@ const seo = {
  .private-btn{display:inline-flex;align-items:center;justify-content:center;text-align:center;min-height:46px;padding:12px 17px;border:2px solid var(--red);border-radius:7px;background:var(--red);color:#fff!important;text-decoration:none!important;cursor:pointer;font-weight:900;font-size:.85rem;line-height:1.25}
  .private-btn:hover,.private-btn:focus-visible{background:#a80910;border-color:#a80910}
  .private-outline{border-color:#fff;background:transparent}.private-motto{color:#ffb8ba;font-weight:900;font-style:italic;letter-spacing:.05em}
- .private-hero-photo{position:relative;min-height:450px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}.private-hero-photo img{display:block;width:100%;height:auto;max-height:530px;object-fit:contain;object-position:center;filter:drop-shadow(0 8px 18px #111)}
- .private-photo-note{position:relative;align-self:center;background:var(--red);padding:12px 20px;transform:rotate(-3deg);font-size:1.5rem;font-weight:1000;box-shadow:5px 6px #000}.private-photo-note small{display:block;font-size:.75rem}
+ .private-hero-photo{position:relative;min-height:450px;display:flex;align-items:end}.private-hero-photo img{max-height:530px;width:100%;object-fit:contain;filter:drop-shadow(0 8px 18px #111)}
+ .private-photo-note{position:absolute;bottom:15px;left:0;background:var(--red);padding:12px 20px;transform:rotate(-3deg);font-size:1.5rem;font-weight:1000;box-shadow:5px 6px #000}.private-photo-note small{display:block;font-size:.75rem}
  .private-section{padding-top:70px;padding-bottom:70px;scroll-margin-top:90px}
  .private-heading{text-align:center;margin:0 auto 32px;max-width:790px}.private-heading h2,.private-benefit-strip h2{font-weight:1000;font-size:clamp(2.3rem,4vw,4rem);letter-spacing:-.045em;line-height:1.06;margin:12px 0}.private-heading h2 span,.private-benefit-strip h2 span{color:var(--red)}
  .private-heading>p:last-child{line-height:1.65}
  .private-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}
  .private-card{border:2px solid #ddd;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 9px 24px #0001;background:#fff}.private-master{border-color:#bd992c}
- .private-card-photo{display:grid;grid-template-rows:minmax(0,1fr) auto;aspect-ratio:4/3;height:auto;min-height:0;background:#fff}.private-card-photo img{display:block;width:100%;height:100%;min-height:0;max-width:100%;object-fit:contain;object-position:center}.private-card-photo span{display:block;position:static;padding:9px;background:#0c0c0c;color:#fff;text-align:center;font-weight:900;font-size:.76rem;letter-spacing:.08em}
+ .private-card-photo{height:185px;position:relative;background:#eee}.private-card-photo img{width:100%;height:100%;object-fit:cover;object-position:top}.private-card-photo span{position:absolute;bottom:0;left:0;right:0;padding:9px;background:#0c0c0ce8;color:#fff;text-align:center;font-weight:900;font-size:.76rem;letter-spacing:.08em}
  .private-card-body{padding:18px 15px;display:flex;flex:1;flex-direction:column}.private-card h3{font-size:1.6rem;line-height:1.1;margin:2px 0;text-transform:uppercase}.private-card h3 span{display:block;color:var(--red);font-size:1.04rem}
  .private-tagline{font-size:.82rem;font-weight:900;min-height:35px;margin:10px 0}
  .private-price{font-size:2.3rem;color:var(--red);margin:0;font-weight:900}.private-price strong{font-size:3rem;letter-spacing:-.065em}
@@ -271,12 +281,12 @@ const seo = {
  .private-faq{padding-bottom:75px}.private-faq h2{font-size:2.1rem}.private-faq details{border:1px solid #ddd;border-radius:9px;background:#fafafa;padding:17px 20px;margin-bottom:12px}.private-faq summary{font-weight:900;cursor:pointer}.private-faq details p{line-height:1.6}
  .private-flyer-detail{margin:0 0 14px;padding:10px;border:1px solid #ddd;border-radius:8px;background:#fff}
  .private-flyer-detail summary{font-size:.82rem;font-weight:900;cursor:pointer;line-height:1.4}
- .private-flyer-detail img{display:block;width:100%;max-width:100%;height:auto;object-fit:contain;object-position:center;margin:12px auto 0}
+ .private-flyer-detail img{display:block;width:100%;height:auto;object-fit:contain;margin-top:12px}
  .private-full-overview{margin:45px auto 0;max-width:800px;text-align:center;padding:18px;background:#fff;border:1px solid #e4e4e4;border-radius:12px}
  .private-full-overview h3{font-size:clamp(1.2rem,2.5vw,1.8rem);margin:7px 0 22px}
- .private-full-overview img{display:block;width:100%;max-width:650px;height:auto;object-fit:contain;object-position:center;margin:auto}
- @media(max-width:1120px){.private-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
- @media(max-width:740px){.private-hero-grid,.private-benefit-grid,.private-booking-grid{grid-template-columns:1fr}.private-hero-grid{padding-top:45px}.private-hero-photo{min-height:0;max-height:none}.private-hero-photo img{max-height:430px}.private-section{padding-top:52px;padding-bottom:52px}.private-summary{position:static}}
- @media(max-width:530px){.private-cards,.private-two,.private-pay-grid{grid-template-columns:1fr}.private-hero h1{font-size:2.7rem}.private-buttons{display:grid}}
+ .private-full-overview img{display:block;width:100%;max-width:650px;height:auto;object-fit:contain;margin:auto}
+ @media(max-width:1120px){.private-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.private-card-photo{height:225px}}
+ @media(max-width:740px){.private-hero-grid,.private-benefit-grid,.private-booking-grid{grid-template-columns:1fr}.private-hero-grid{padding-top:45px}.private-hero-photo{min-height:270px;max-height:430px}.private-hero-photo img{max-height:430px}.private-section{padding-top:52px;padding-bottom:52px}.private-summary{position:static}}
+ @media(max-width:530px){.private-cards,.private-two,.private-pay-grid{grid-template-columns:1fr}.private-hero h1{font-size:2.7rem}.private-card-photo{height:245px}.private-buttons{display:grid}}
  </style>
 </BaseLayout>
