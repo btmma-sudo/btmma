@@ -1,10 +1,11 @@
-// Isolated private lesson scheduling: no $29 trial/seminal billing tables are changed.
+// Isolated private lesson scheduling; no $29 trial or seminar billing changes.
 import {getPortalEnv,getPortalAccount,secureHeaders,validSameOrigin} from "./student-portal-auth.js";
 
 export const PROGRAMS = ["American Kenpo Karate","Muay Thai","Wing Chun","Self-Defense","Leadership","Not sure yet"];
-export const DURATIONS = [30,45,60,90];
+export const DURATIONS = [30,60];
+export const STEP_MINUTES = 30;
 const ZONE = "America/New_York";
-const et = new Intl.DateTimeFormat("en-US", {timeZone: ZONE, year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"});
+const et = new Intl.DateTimeFormat("en-US", {timeZone:ZONE,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"});
 export const json = (value,status=200) => new Response(JSON.stringify(value),{
   status,headers:{"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store","X-Content-Type-Options":"nosniff"}
 });
@@ -25,6 +26,24 @@ export function validDate(s) {
   return Number.isFinite(d.getTime()) && d.toISOString().slice(0,10)===s;
 }
 export function validTime(s) {return typeof s==="string" && /^([01]\d|2[0-3]):[0-5]\d$/.test(s);}
+export function minutes(time) {return Number(time.slice(0,2))*60+Number(time.slice(3,5));}
+export function clock(mins) {return String(Math.floor(mins/60)).padStart(2,"0")+":"+String(mins%60).padStart(2,"0");}
+// Monday-Thursday from 8 PM, Friday from 7 PM, Saturdays after 11:30 AM
+// (first 30-minute interval begins at noon). No Sundays.
+export function startOfPrivateHours(day) {
+  if(!validDate(day)) return null;
+  const dayOfWeek=new Date(day+"T12:00:00Z").getUTCDay();
+  if(dayOfWeek>=1 && dayOfWeek<=4) return 20*60;
+  if(dayOfWeek===5) return 19*60;
+  if(dayOfWeek===6) return 12*60;
+  return null;
+}
+export function allowedHalfHour(day,time) {
+  const minimum=startOfPrivateHours(day);
+  return minimum!==null && validTime(time) &&
+    minutes(time)>=minimum && minutes(time)%STEP_MINUTES===0 &&
+    minutes(time)+STEP_MINUTES<=24*60;
+}
 export function futureDateTime(day,time) {
   if(!validDate(day)||!validTime(time)) return false;
   const earliest=easternParts(new Date(Date.now()+24*3600000));
@@ -32,7 +51,6 @@ export function futureDateTime(day,time) {
   return day+"T"+time >= earliest.date+"T"+earliest.time &&
     day <= latest.date;
 }
-export function minutes(time) {return Number(time.slice(0,2))*60+Number(time.slice(3,5));}
 export function safeString(v,max) {return typeof v==="string" ? v.trim().slice(0,max+1) : "";}
 export function validName(v) {return v.length>=2 && v.length<=120 && !/[<>\r\n]/.test(v);}
 export async function adminAccess(request,locals) {
