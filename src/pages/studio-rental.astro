@@ -1,0 +1,257 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const purposes = [
+  {name:"Martial Arts Instructors",copy:"Explore occasional training sessions, guest instruction, or supplemental classes."},
+  {name:"Fitness & Wellness",copy:"Request space for small-group movement, stretching, or wellness programming."},
+  {name:"Workshops & Seminars",copy:"An adaptable setting for demonstrations, learning events, or community gatherings."},
+  {name:"Private Group Events",copy:"Tell us what you have planned, and we'll review whether our space is a good fit."}
+];
+const steps = [
+  {number:"01",heading:"REQUEST YOUR SPACE",copy:"Share your event type, group size, preferred date, and duration."},
+  {number:"02",heading:"CONFIRM THE DETAILS",copy:"We'll review the schedule, appropriate use, capacity, rental price, and any requirements."},
+  {number:"03",heading:"FINALIZE YOUR RENTAL",copy:"After approval, we'll arrange your rental agreement and payment before the date is reserved."}
+];
+const structured={
+  "@context":"https://schema.org",
+  "@type":"Service",
+  name:"Studio Space Rental in Owings Mills, Maryland",
+  serviceType:"Martial arts studio rental and flexible training space rental inquiries",
+  description:"Request training-floor studio rental for workshops, martial arts instructors, fitness and wellness classes, and small group events, subject to approval.",
+  areaServed:["Owings Mills, Maryland","Reisterstown, Maryland","Pikesville, Maryland","Randallstown, Maryland","Baltimore County, Maryland"],
+  provider:{"@type":"SportsActivityLocation",name:"Burning Tree Mixed Martial Arts",url:"https://burningtreemma.com",address:{"@type":"PostalAddress",streetAddress:"10210 S Dolfield Rd",addressLocality:"Owings Mills",addressRegion:"MD",addressCountry:"US"}},
+  url:"https://burningtreemma.com/studio-rental/"
+};
+---
+<BaseLayout
+  title="Studio Space Rental in Owings Mills, MD | Burning Tree MMA"
+  description="Looking for a martial arts studio or flexible training space to rent in Owings Mills, Maryland? Request space for workshops, fitness classes, training, and small group events."
+  path="/studio-rental/"
+  image="/images/about-hero.jpg"
+  keywords={["studio rental Owings Mills MD","martial arts space rental Baltimore County","training room rental Owings Mills","fitness class space rental Maryland","workshop venue Owings Mills","martial arts studio hire near me"]}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(structured)} />
+  <div class="studio-page">
+    <section class="studio-hero" aria-labelledby="studio-title">
+      <div class="studio-container studio-hero-inner">
+        <div class="studio-hero-copy">
+          <p class="studio-eyebrow">BURNING TREE MIXED MARTIAL ARTS · OWINGS MILLS, MD</p>
+          <h1 id="studio-title">YOUR EVENT.<br /><span>OUR SPACE.</span></h1>
+          <p class="studio-intro">RENT OUR STUDIO FOR TRAINING, WORKSHOPS &amp; PRIVATE GROUP EVENTS</p>
+          <p>Looking for an inspiring place to bring people together? Our martial arts training space is available for select outside rentals when our class and event schedule allows.</p>
+          <div class="studio-actions">
+            <a class="studio-btn" href="#rental-request">REQUEST RENTAL AVAILABILITY</a>
+            <a class="studio-btn studio-btn-outline" href="#studio-how">HOW IT WORKS</a>
+          </div>
+          <p class="studio-hero-foot">One Tree. One Family. <span>Every rental is reviewed and approved individually.</span></p>
+        </div>
+        <figure class="studio-image">
+          <img src="/images/about-hero.jpg" alt="Inside Burning Tree Mixed Martial Arts in Owings Mills, with its training floor and studio interior" loading="eager" decoding="async" />
+          <figcaption>A real look inside Burning Tree MMA</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="studio-uses studio-container" aria-labelledby="studio-uses-heading">
+      <div class="studio-section-heading">
+        <p class="studio-eyebrow">MAKE THE SPACE YOUR OWN</p>
+        <h2 id="studio-uses-heading">A FLEXIBLE PLACE TO <span>GATHER &amp; GROW</span></h2>
+        <p>Share what you have in mind. We'll help determine whether the studio is the right setting.</p>
+      </div>
+      <div class="studio-use-grid">
+        {purposes.map((p)=><article class="studio-use-card"><h3>{p.name}</h3><p>{p.copy}</p></article>)}
+      </div>
+      <p class="studio-uses-note">Our training floor is primarily a martial arts facility. Special equipment, room layouts, permitted uses, supervision, attendance limits and any insurance requirements must be discussed before approval. Rental does not include an instructor unless separately arranged.</p>
+    </section>
+
+    <section class="studio-method" id="studio-how" aria-labelledby="studio-method-title">
+      <div class="studio-container">
+        <div class="studio-section-heading">
+          <p class="studio-eyebrow">SIMPLE &amp; PERSONAL</p>
+          <h2 id="studio-method-title">THREE EASY <span>STEPS</span></h2>
+          <p>We review requests individually to protect our existing classes and help you plan a successful event.</p>
+        </div>
+        <div class="studio-steps">
+          {steps.map((step)=><article><span class="studio-step-number">{step.number}</span><h3>{step.heading}</h3><p>{step.copy}</p></article>)}
+        </div>
+        <p class="studio-pricing"><strong>Rental pricing:</strong> Request a custom quote based on the date, time, length of rental and planned use. <strong>No deposit or payment is collected through this inquiry form.</strong></p>
+      </div>
+    </section>
+
+    <section class="studio-container studio-form-section" id="rental-request" aria-labelledby="studio-form-heading">
+      <div class="studio-section-heading">
+        <p class="studio-eyebrow">LET'S PLAN SOMETHING GREAT</p>
+        <h2 id="studio-form-heading">REQUEST YOUR <span>STUDIO RENTAL</span></h2>
+        <p>Tell us a little about your plans. Sending this request does not reserve a date.</p>
+      </div>
+      <div class="studio-form-layout">
+        <form id="studio-rental-form" class="studio-form">
+          <div class="studio-two">
+            <label>Full name <span aria-hidden="true">*</span><input name="name" type="text" maxlength="120" autocomplete="name" required /></label>
+            <label>Organization or business (optional)<input name="organization" maxlength="120" autocomplete="organization" /></label>
+          </div>
+          <div class="studio-two">
+            <label>Email address <span aria-hidden="true">*</span><input name="email" type="email" maxlength="254" autocomplete="email" required /></label>
+            <label>Phone number <span aria-hidden="true">*</span><input name="phone" type="tel" maxlength="30" autocomplete="tel" required /></label>
+          </div>
+          <div class="studio-two">
+            <label>What would you like to use the space for? <span aria-hidden="true">*</span>
+              <select name="purpose" required>
+                <option value="">Select an event type</option>
+                <option>Martial arts training</option><option>Fitness or wellness class</option>
+                <option>Seminar or workshop</option><option>Community meeting</option>
+                <option>Private group event</option><option>Other</option>
+              </select>
+            </label>
+            <label>Estimated number of attendees <span aria-hidden="true">*</span>
+              <input name="guests" type="number" min="1" max="999" placeholder="Including organizers" required />
+            </label>
+          </div>
+          <div class="studio-two">
+            <label>Preferred date (optional if flexible)<input name="date" type="date" /></label>
+            <label>Time of day <span aria-hidden="true">*</span>
+              <select name="time" required><option value="">Choose a preference</option><option>Morning</option><option>Afternoon</option><option>Evening</option><option>Flexible</option></select>
+            </label>
+          </div>
+          <label>How long do you need the space? <span aria-hidden="true">*</span>
+            <select name="duration" required>
+              <option value="">Choose rental length</option>
+              <option>1 hour</option><option>2 hours</option><option>3 hours</option><option>4 hours</option>
+              <option>6 hours</option><option>8 hours</option><option>Custom / discuss</option>
+            </select>
+          </label>
+          <label>Tell us more about your event (optional)<textarea name="notes" maxlength="1000" rows="4" placeholder="Activity plans, equipment you may need, preferred dates, questions or other details"></textarea></label>
+          <div class="studio-verification">
+            <strong>Security verification</strong>
+            <div class="cf-turnstile" data-sitekey="0x4AAAAAAD6Ievu-t0Ll1euh" data-theme="light"></div>
+          </div>
+          <p class="studio-privacy">We'll use your details only to respond to your rental inquiry, as described in our <a href="/privacy">Privacy Policy</a>. This is a request, not an accepted reservation or rental contract.</p>
+          <button id="studio-submit" class="studio-btn studio-submit" type="submit">SEND RENTAL REQUEST</button>
+          <p id="studio-status" class="studio-status" role="status" aria-live="polite"></p>
+        </form>
+        <aside class="studio-sidebar">
+          <img src="/images/logo.png" width="90" height="125" alt="Burning Tree Mixed Martial Arts logo" loading="lazy" />
+          <h3>YOUR SPACE. YOUR VISION.</h3>
+          <p><strong>Location</strong><span>10210 S Dolfield Rd<br />Owings Mills, MD</span></p>
+          <p><strong>Availability</strong><span>Outside scheduled classes, private instruction, birthday parties, and existing events, subject to approval.</span></p>
+          <p><strong>Rental quote</strong><span>We confirm price and space requirements after reviewing your request.</span></p>
+          <p><strong>Have questions?</strong><span>Call or text Coach David at <a href="tel:+14102180894">410-218-0894</a>.</span></p>
+          <div class="studio-related">
+            <strong>Looking for something else?</strong>
+            <a href="/birthday-parties">Martial arts birthday parties</a>
+            <a href="/corporate-self-defense/">Corporate self-defense workshops</a>
+          </div>
+          <small>Dates are not held until confirmed. A rental agreement, any required documentation and payment arrangements will be finalized before the event.</small>
+        </aside>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" is:inline async defer></script>
+  <script is:inline>
+    (() => {
+      const form=document.getElementById("studio-rental-form");
+      const status=document.getElementById("studio-status");
+      const button=document.getElementById("studio-submit");
+      if(!form||!status||!button)return;
+      form.addEventListener("submit",async(e)=>{
+        e.preventDefault();
+        status.className="studio-status";status.textContent="";
+        if(!form.reportValidity())return;
+        const data=Object.fromEntries(new FormData(form).entries());
+        const turnstileToken=String(data["cf-turnstile-response"]||"");
+        if(!turnstileToken){status.textContent="Please complete the security verification before submitting.";return;}
+        delete data["cf-turnstile-response"];
+        button.disabled=true;button.textContent="SENDING REQUEST…";
+        let success=false;
+        try{
+          const controller=new AbortController();
+          const timeout=setTimeout(()=>controller.abort(),18000);
+          let response;
+          try{response=await fetch("/api/studio-rental-request",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({...data,turnstileToken}),signal:controller.signal});}
+          finally{clearTimeout(timeout);}
+          const payload=await response.json();
+          if(!response.ok||!payload.ok)throw new Error(payload.error||"We could not save your request.");
+          success=true;
+          status.classList.add("studio-success");
+          status.textContent="Thank you! Your studio rental inquiry was received. Reference: "+payload.reference+". We will contact you to review the details. No payment was collected.";
+          form.querySelectorAll("input,select,textarea").forEach(input=>input.disabled=true);
+          status.scrollIntoView({behavior:"smooth",block:"nearest"});
+        }catch(err){
+          status.textContent=err.name==="AbortError"?"The request timed out. Please text 410-218-0894 before trying again so we can check for duplicates.":err.message;
+          window.turnstile?.reset?.();
+        }finally{
+          button.disabled=success;
+          button.textContent=success?"REQUEST RECEIVED":"SEND RENTAL REQUEST";
+        }
+      });
+    })();
+  </script>
+  <style>
+    .studio-page{color:#161616;background:#fff;--studio-red:#bc141d}
+    .studio-page *{box-sizing:border-box}
+    .studio-container{max-width:1220px;margin:0 auto;padding:0 clamp(18px,4vw,45px)}
+    .studio-hero{background:radial-gradient(circle at 30% 20%,#4c1719 0,transparent 42%),#121212;color:#fff;padding:clamp(44px,7vw,92px) 0}
+    .studio-hero-inner{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(24px,5vw,62px);align-items:center}
+    .studio-eyebrow{font-size:.77rem;font-weight:900;letter-spacing:.11em;color:var(--studio-red);line-height:1.5;margin:0 0 15px}
+    .studio-hero .studio-eyebrow{color:#ff9fa3}
+    .studio-hero h1,.studio-page h2,.studio-page h3{font-family:"Open Sans",Arial,sans-serif;text-transform:uppercase;letter-spacing:-.035em;-webkit-text-stroke:0;font-weight:1000}
+    .studio-hero h1{font-size:clamp(2.8rem,6vw,5.5rem);line-height:1.05;color:#fff;margin:0 0 16px}
+    .studio-hero h1 span,.studio-page h2 span{color:#e32c35}
+    .studio-hero-copy>p:not(.studio-eyebrow){font-size:1.04rem;line-height:1.75;color:#f0eded;max-width:640px}
+    .studio-hero .studio-intro{font-weight:900;color:#fff!important;font-size:1.1rem!important;letter-spacing:.025em}
+    .studio-actions{display:flex;gap:12px;flex-wrap:wrap;margin:27px 0 18px}
+    .studio-btn{min-height:51px;display:inline-flex;align-items:center;justify-content:center;background:var(--studio-red);border:2px solid var(--studio-red);color:#fff!important;border-radius:7px;text-align:center;font-size:.87rem;font-weight:900;letter-spacing:.02em;line-height:1.35;padding:13px 18px;text-decoration:none;cursor:pointer}
+    .studio-btn:hover,.studio-btn:focus-visible{background:#8f0a13;border-color:#8f0a13}
+    .studio-btn-outline{background:transparent;border-color:#fff}
+    .studio-hero-foot{font-weight:900;color:#ffb4b6!important}
+    .studio-hero-foot span{display:block;font-weight:500;font-size:.86rem;color:#f2eeee}
+    .studio-image{margin:0;background:#242424;border:2px solid #682226;border-radius:15px;padding:12px;box-shadow:0 18px 40px #0008}
+    .studio-image img{display:block;width:100%;height:auto;max-height:500px;object-fit:contain;object-position:center;border-radius:6px}
+    .studio-image figcaption{font-size:.8rem;text-align:center;color:#e4d8d8;padding:10px 0 2px}
+    .studio-uses,.studio-form-section{padding-top:70px;padding-bottom:75px}
+    .studio-section-heading{text-align:center;max-width:900px;margin:0 auto 32px}
+    .studio-section-heading h2{font-size:clamp(1.9rem,4vw,3.25rem);line-height:1.13;color:#131313;margin:0 0 12px}
+    .studio-section-heading p:not(.studio-eyebrow){color:#454545;font-size:1.05rem;line-height:1.65}
+    .studio-use-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+    .studio-use-card{border:1px solid #ddd;border-top:5px solid var(--studio-red);padding:25px 22px;border-radius:10px;background:#fafafa}
+    .studio-use-card h3{font-size:1.15rem;line-height:1.3;color:#151515;margin:0 0 14px}
+    .studio-use-card p{color:#444;line-height:1.65;margin:0;font-size:.94rem}
+    .studio-uses-note{margin:25px auto 0;color:#555;max-width:930px;font-size:.88rem;text-align:center;line-height:1.65}
+    .studio-method{background:#f4f4f4;padding:65px 0}
+    .studio-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+    .studio-steps article{background:#fff;border:1px solid #ddd;border-radius:12px;padding:28px}
+    .studio-step-number{display:block;font-size:2.55rem;line-height:1;font-weight:1000;color:var(--studio-red);margin-bottom:20px}
+    .studio-steps h3{color:#181818;font-size:1.06rem;margin-bottom:12px}
+    .studio-steps p{color:#414141;line-height:1.65;font-size:.95rem}
+    .studio-pricing{margin:25px 0 0;text-align:center;color:#292929;line-height:1.7}
+    .studio-form-layout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(270px,.8fr);gap:26px;align-items:start}
+    .studio-form{border:1px solid #dedede;border-radius:14px;padding:clamp(22px,4vw,38px);background:#fff;box-shadow:0 9px 29px #0000000d}
+    .studio-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+    .studio-form label{display:block;margin:0 0 17px;color:#242424;font-size:.9rem;font-weight:850;line-height:1.5}
+    .studio-form label span{color:#b5151c}
+    .studio-form input,.studio-form select,.studio-form textarea{width:100%;display:block;margin-top:8px;min-height:49px;padding:10px 12px;border:1.5px solid #929292;border-radius:6px;background:#fff;color:#191919;font-size:1rem;font-family:inherit;font-weight:500;line-height:1.4}
+    .studio-form textarea{min-height:116px;resize:vertical}
+    .studio-form input:focus-visible,.studio-form select:focus-visible,.studio-form textarea:focus-visible{outline:3px solid #f5a7ab;outline-offset:1px;border-color:var(--studio-red)}
+    .studio-verification{padding:14px 0}
+    .studio-verification strong{display:block;margin-bottom:12px}
+    .studio-privacy{font-size:.78rem;line-height:1.6;color:#535353}
+    .studio-privacy a{color:#ad1019;text-decoration:underline}
+    .studio-submit{width:100%;margin-top:12px;font-size:1rem}
+    .studio-submit:disabled{opacity:.72;cursor:not-allowed}
+    .studio-status{min-height:1.5rem;font-weight:700;color:#ae111b;line-height:1.65}
+    .studio-status.studio-success{color:#08652e}
+    .studio-sidebar{padding:30px;background:#171717;border:2px solid #bd3038;border-radius:13px;color:#fff}
+    .studio-sidebar>img{width:72px;height:auto;margin:0 auto 22px}
+    .studio-sidebar h3{font-size:1.5rem;color:#fff;text-align:center;line-height:1.3;margin-bottom:22px}
+    .studio-sidebar>p{border-top:1px solid #4a4a4a;padding:15px 0;margin:0;line-height:1.65}
+    .studio-sidebar>p strong{display:block;color:#ffb6ba;margin-bottom:3px}
+    .studio-sidebar>p span{color:#f1f1f1;font-size:.92rem}
+    .studio-sidebar a{color:#fff;text-decoration:underline;font-weight:750}
+    .studio-related{border-top:1px solid #555;margin-top:8px;padding-top:18px;display:grid;gap:12px}
+    .studio-related strong{color:#ffb6ba}
+    .studio-sidebar small{display:block;margin-top:25px;color:#ddd;font-size:.79rem;line-height:1.6}
+    @media(max-width:900px){.studio-hero-inner{grid-template-columns:1fr}.studio-image{max-width:730px}.studio-use-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.studio-form-layout{grid-template-columns:1fr}.studio-sidebar{max-width:100%}}
+    @media(max-width:610px){.studio-use-grid,.studio-steps,.studio-two{grid-template-columns:1fr}.studio-actions{flex-direction:column}.studio-btn{width:100%}.studio-uses,.studio-form-section{padding-top:44px;padding-bottom:48px}.studio-method{padding:48px 0}.studio-hero{padding:44px 0}.studio-hero h1{font-size:clamp(2.7rem,12vw,4rem)}.studio-form{padding:20px}.studio-steps article{padding:24px}}
+  </style>
+</BaseLayout>
