@@ -1,0 +1,213 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+const flyer="/images/corporate-self-defense/burning-tree-corporate-self-defense-workshops.webp";
+const packages=[
+ {id:"essential",title:"Essential Workshop",price:350,duration:"60 minutes",count:10,subtitle:"Foundational personal safety for your team",
+  points:["Situational awareness","Personal safety basics","Boundary-setting","Practical introductory defensive techniques"]},
+ {id:"empowerment",title:"Corporate Empowerment",price:500,duration:"90 minutes",count:20,subtitle:"Our most popular group training option",
+  points:["Recognizing potential threats","Verbal de-escalation techniques","Escape principles","Hands-on defensive skills","Customized for your team's specific needs"]},
+ {id:"ultimate",title:"Ultimate Safety Experience",price:750,duration:"2 hours",count:25,subtitle:"An immersive, customized safety experience",
+  points:["Comprehensive hands-on training","Real-world scenarios","Team exercises","Personal safety planning","Participant completion certificates","Customized content for your organization"]}
+];
+const structured={"@context":"https://schema.org","@type":"Service",name:"Corporate and Group Self-Defense Workshops",
+ description:"Customized workplace and group self-defense training for businesses, healthcare teams, schools, community groups and organizations in Owings Mills and Baltimore County, Maryland.",
+ provider:{"@type":"SportsActivityLocation",name:"Burning Tree Mixed Martial Arts",url:"https://burningtreemma.com",telephone:"+14102180894"},
+ areaServed:["Owings Mills","Baltimore County","Reisterstown","Pikesville","Randallstown","Maryland"],
+ hasOfferCatalog:{"@type":"OfferCatalog",name:"Corporate and Group Self-Defense Training",itemListElement:packages.map(p=>({"@type":"Offer",name:p.title,price:p.price,priceCurrency:"USD",url:"https://burningtreemma.com/corporate-self-defense/#request"}))}};
+---
+<BaseLayout title="Corporate & Group Self-Defense Training in Owings Mills | Burning Tree MMA"
+  description="Corporate and group self-defense workshops in Owings Mills and Baltimore County: $350 for up to 10 participants, $500 for up to 20, or $750 for up to 25. Request a workshop for your team."
+  path="/corporate-self-defense/" image={flyer}
+  keywords={["corporate self defense training Owings Mills","workplace self defense workshop Baltimore County","employee safety training Maryland","group self defense classes Owings Mills","self defense team building Baltimore","corporate wellness martial arts workshop"]}>
+ <script type="application/ld+json" set:html={JSON.stringify(structured)} />
+ <main class="cw">
+  <section class="cw-hero" aria-labelledby="cw-title">
+   <div class="cw-shell cw-hero-grid">
+    <div>
+     <p class="cw-eyebrow">BURNING TREE MIXED MARTIAL ARTS · OWINGS MILLS, MARYLAND</p>
+     <h1 id="cw-title">A SAFER TEAM.<br/><span>A STRONGER TEAM.</span></h1>
+     <p class="cw-large">CORPORATE &amp; GROUP SELF-DEFENSE TRAINING</p>
+     <p>Bring practical safety awareness, confidence, and team-building skills to your workplace or community group. Our instructor-led workshops are designed for beginners and tailored to your organization's needs.</p>
+     <div class="cw-actions"><a class="cw-button" href="#packages">EXPLORE WORKSHOPS</a><a class="cw-button cw-button-outline" href="#request">REQUEST YOUR WORKSHOP</a></div>
+     <p class="cw-slogan">ONE TREE. ONE FAMILY.</p>
+    </div>
+    <div class="cw-hero-note">
+      <strong>WORKSHOPS START AT <span>$350</span></strong>
+      <p>Three group options · Up to 25 participants · At your location or our studio by arrangement</p>
+    </div>
+   </div>
+  </section>
+  <section class="cw-shell cw-flyer-section" aria-labelledby="cw-flyer-heading">
+   <div class="cw-section-lead">
+     <p class="cw-eyebrow">YOUR TEAM'S SAFETY MATTERS</p>
+     <h2 id="cw-flyer-heading">REAL SKILLS. REAL CONFIDENCE. <span>REAL-WORLD SAFETY.</span></h2>
+     <p>Here are the original corporate and private-group self-defense workshop options from Burning Tree.</p>
+   </div>
+   <figure class="cw-original-flyer">
+    <img src={flyer} width="1445" height="1088" alt="Original Burning Tree Corporate and Private Group Self-Defense Training flyer with the three workshops: Essential Workshop $350 for 60 minutes up to 10 participants; Corporate Empowerment $500 for 90 minutes up to 20; and Ultimate Safety Experience $750 for two hours up to 25." loading="eager" decoding="async" />
+    <figcaption>Original Burning Tree corporate self-defense flyer — displayed in full without cropping. <a href={flyer} target="_blank" rel="noopener noreferrer">Open full-size flyer</a></figcaption>
+   </figure>
+  </section>
+  <section class="cw-packages" id="packages" aria-labelledby="cw-packages-heading">
+   <div class="cw-shell">
+    <div class="cw-section-lead"><p class="cw-eyebrow">CHOOSE THE RIGHT EXPERIENCE</p><h2 id="cw-packages-heading">THREE WAYS TO <span>PROTECT AND EMPOWER</span></h2><p>One-time, instructor-led workshops for teams and private groups. Pricing is per workshop, not per person.</p></div>
+    <div class="cw-card-grid">
+     {packages.map((pack)=>(
+      <article class:list={["cw-card",pack.id==="empowerment"&&"cw-featured"]}>
+       {pack.id==="empowerment"&&<p class="cw-popular">MOST POPULAR</p>}
+       <div class="cw-card-top">
+        <h3>{pack.title}</h3>
+        <p class="cw-card-price">${pack.price}</p>
+        <p class="cw-card-meta"><strong>{pack.duration}</strong><span>UP TO {pack.count} PARTICIPANTS</span></p>
+        <p class="cw-card-subtitle">{pack.subtitle}</p>
+       </div>
+       <ul>{pack.points.map((point)=><li>{point}</li>)}</ul>
+       <button class="cw-button cw-choose" type="button" data-cw-package={pack.id}>REQUEST THIS WORKSHOP</button>
+      </article>
+     ))}
+    </div>
+    <p class="cw-packages-note">Groups larger than the listed maximum, travel arrangements, and custom programs can be discussed with Coach David before confirming a quote. A request is not a confirmed reservation.</p>
+   </div>
+  </section>
+  <section class="cw-audience">
+   <div class="cw-shell">
+     <div class="cw-section-lead"><p class="cw-eyebrow">CUSTOMIZED FOR YOUR GROUP</p><h2>WHO CAN <span>TRAIN WITH US?</span></h2></div>
+     <div class="cw-audience-grid">
+      <div><span aria-hidden="true">✚</span><strong>Healthcare Organizations</strong><p>Staff safety awareness and practical personal protection.</p></div>
+      <div><span aria-hidden="true">▣</span><strong>Corporate Offices</strong><p>Employee wellness, confidence and shared learning.</p></div>
+      <div><span aria-hidden="true">⌂</span><strong>Apartments &amp; Communities</strong><p>Accessible safety workshops for residential groups.</p></div>
+      <div><span aria-hidden="true">♧</span><strong>Churches &amp; Community Groups</strong><p>Practical, beginner-friendly training and outreach.</p></div>
+      <div><span aria-hidden="true">▤</span><strong>Schools &amp; Colleges</strong><p>Group awareness, de-escalation and personal safety basics.</p></div>
+     </div>
+   </div>
+  </section>
+  <section class="cw-shell cw-request-section" id="request" aria-labelledby="cw-request-title">
+    <div class="cw-section-lead"><p class="cw-eyebrow">LET'S BUILD A SAFER TEAM</p><h2 id="cw-request-title">REQUEST YOUR <span>WORKSHOP</span></h2><p>Tell us about your organization. We'll follow up to confirm the date, location, group size and payment arrangement before anything is booked or charged.</p></div>
+    <div class="cw-request-grid">
+     <form class="cw-form" id="cw-request-form">
+      <div class="cw-row">
+       <label>Organization or group name <input name="organization" maxlength="120" autocomplete="organization" required /></label>
+       <label>Contact full name <input name="contact" maxlength="120" autocomplete="name" required /></label>
+      </div>
+      <div class="cw-row">
+       <label>Email address <input name="email" type="email" maxlength="254" autocomplete="email" required /></label>
+       <label>Phone number <input name="phone" type="tel" maxlength="30" autocomplete="tel" required /></label>
+      </div>
+      <div class="cw-row">
+       <label>Workshop package
+        <select name="package" id="cw-package" required>
+         <option value="essential">Essential Workshop — $350 / 60 min / up to 10</option>
+         <option value="empowerment">Corporate Empowerment — $500 / 90 min / up to 20</option>
+         <option value="ultimate">Ultimate Safety Experience — $750 / 2 hrs / up to 25</option>
+        </select>
+       </label>
+       <label>Number of participants <input name="participants" id="cw-participants" type="number" min="1" max="10" value="10" required /></label>
+      </div>
+      <div class="cw-row">
+       <label>Type of organization
+         <select name="organizationType" required>
+          <option value="">Choose your organization type</option>
+          <option>Corporate office</option><option>Healthcare</option><option>School or college</option><option>Church or community group</option><option>Apartment or residential</option><option>Other</option>
+         </select>
+       </label>
+       <label>Preferred location
+        <select name="location" required>
+         <option value="">Choose a location</option>
+         <option>At our organization</option><option>Burning Tree studio</option><option>Discuss options</option>
+        </select>
+       </label>
+      </div>
+      <div class="cw-row">
+       <label>Preferred date (optional) <input name="preferredDate" type="date" /></label>
+       <label>Preferred time (optional) <input name="preferredTime" maxlength="100" placeholder="Morning, afternoon, or a specific time" /></label>
+      </div>
+      <label>Preferred payment arrangement
+       <select name="paymentPreference" required>
+        <option value="Request invoice">Request an invoice</option><option value="Card / Apple Pay">Card / Apple Pay after confirmation</option>
+        <option value="Cash App">Cash App after confirmation</option><option value="Zelle">Zelle after confirmation</option><option value="Discuss with Coach David">Discuss options with Coach David</option>
+       </select>
+      </label>
+      <label>Goals, questions or accommodations (optional) <textarea name="notes" maxlength="700" rows="4" placeholder="What would you like your team to learn?"></textarea></label>
+      <div class="cw-security"><strong>Security verification</strong><div class="cf-turnstile" data-sitekey="0x4AAAAAAD6Ievu-t0Ll1euh" data-theme="light"></div></div>
+      <p class="cw-privacy">By submitting, you agree to our <a href="/privacy">Privacy Policy</a>. We will use your information to respond to your workshop inquiry. No payment is collected on this form.</p>
+      <button class="cw-button cw-submit" id="cw-submit" type="submit">SEND WORKSHOP REQUEST</button>
+      <p id="cw-response" class="cw-response" role="status" aria-live="polite"></p>
+     </form>
+     <aside class="cw-side" aria-label="How workshop requests work">
+      <img src="/images/logo.png" width="90" height="125" alt="Burning Tree Mixed Martial Arts logo" loading="lazy" />
+      <h3>YOUR GROUP. OUR COMMITMENT.</h3>
+      <p>Here is what happens next:</p>
+      <ol><li><strong>Request your package</strong> and share your team's details.</li><li><strong>Confirm the workshop</strong> date, venue and customized training plan with Coach David.</li><li><strong>Arrange payment</strong> via an invoice, card/Apple Pay, Cash App or Zelle once details are agreed.</li></ol>
+      <p><strong>No payment today. No automatic booking.</strong> Every event is confirmed directly with our team.</p>
+      <p>Need a custom workshop? <a href="tel:+14102180894">Call 410-218-0894</a> or <a href="sms:+14102180894">send a text</a>.</p>
+      <p class="cw-slogan">ONE TREE. ONE FAMILY.</p>
+     </aside>
+    </div>
+  </section>
+  <section class="cw-bottom">
+   <div class="cw-shell"><h2>QUESTIONS ABOUT GROUP SELF-DEFENSE?</h2><p>We welcome businesses and community organizations in Owings Mills, Reisterstown, Pikesville, Randallstown and surrounding Baltimore County communities. Instructors, location, and specific curriculum are confirmed when we review your request.</p><a class="cw-button" href="tel:+14102180894">CALL COACH DAVID · 410-218-0894</a><a class="cw-bottom-link" href="/private-lessons/">Looking for one-on-one private lessons instead?</a></div>
+  </section>
+ </main>
+ <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" is:inline async defer></script>
+ <script is:inline>
+ (() => {
+   const form=document.getElementById("cw-request-form"),choose=document.getElementById("cw-package"),participants=document.getElementById("cw-participants"),response=document.getElementById("cw-response"),button=document.getElementById("cw-submit");
+   if(!form)return;
+   const limits={essential:10,empowerment:20,ultimate:25};
+   const refresh=()=>{const limit=limits[choose.value]||10;participants.max=String(limit);if(!Number(participants.value)||Number(participants.value)>limit)participants.value=String(limit)};
+   choose.addEventListener("change",refresh);
+   document.querySelectorAll("[data-cw-package]").forEach(b=>b.addEventListener("click",()=>{choose.value=b.dataset.cwPackage;refresh();document.getElementById("request").scrollIntoView({behavior:"smooth",block:"start"});}));
+   form.addEventListener("submit",async event=>{
+     event.preventDefault();response.textContent="";
+     if(!form.reportValidity())return;
+     const data=Object.fromEntries(new FormData(form).entries());
+     const turnstileToken=String(data["cf-turnstile-response"]||"");
+     if(!turnstileToken){response.textContent="Complete the security verification before sending your request.";return;}
+     delete data["cf-turnstile-response"];
+     button.disabled=true;button.textContent="SENDING REQUEST…";
+     try{
+       const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),18000);
+       let fetchResult;try{fetchResult=await fetch("/api/corporate-workshop-request",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({...data,turnstileToken}),signal:controller.signal})}finally{clearTimeout(timeout)}
+       const result=await fetchResult.json();if(!fetchResult.ok||!result.ok)throw Error(result.error||"We couldn't save your request.");
+       response.classList.add("cw-success");response.textContent="Your request was received! Reference: "+result.reference+". We'll contact you to confirm details. No payment has been collected.";
+       form.querySelectorAll("input,select,textarea,button").forEach(el=>el.disabled=true);
+       response.scrollIntoView({behavior:"smooth",block:"nearest"});
+     }catch(e){response.classList.remove("cw-success");response.textContent=e.name==="AbortError"?"The request timed out. Please text 410-218-0894 before submitting again to avoid duplicates.":e.message;window.turnstile?.reset?.();}
+     finally{button.disabled=!!response.classList.contains("cw-success");if(!button.disabled)button.textContent="SEND WORKSHOP REQUEST";}
+   });
+ })();
+ </script>
+ <style>
+  .cw{color:#171717;--cw-red:#cf151d}.cw *{box-sizing:border-box}.cw-shell{max-width:1220px;margin:0 auto;padding:0 clamp(17px,4vw,45px)}
+  .cw-hero{background:radial-gradient(ellipse at 80% 50%,#771318 0,transparent 53%),#111;color:#fff;padding:clamp(48px,6vw,80px) 0}
+  .cw-hero-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(230px,.65fr);align-items:center;gap:50px}
+  .cw-eyebrow{font-size:.77rem;font-weight:1000;letter-spacing:.11em;color:#bd1921;line-height:1.55}
+  .cw-hero .cw-eyebrow{color:#ffb6b8}.cw-hero h1{font-size:clamp(2.65rem,5.8vw,5.4rem);font-weight:1000;line-height:1;letter-spacing:-.055em;margin:10px 0 19px;color:#fff}.cw-hero h1 span{color:#ff3c45}
+  .cw-hero p{line-height:1.66;color:#f1eded;max-width:680px}.cw-large{font-size:1.18rem;font-weight:900;letter-spacing:.04em}
+  .cw-actions{display:flex;gap:12px;flex-wrap:wrap;margin:30px 0 16px}
+  .cw-button{display:inline-flex;justify-content:center;align-items:center;min-height:50px;padding:12px 19px;border:2px solid var(--cw-red);border-radius:8px;background:var(--cw-red);font-weight:900;font-size:.85rem;letter-spacing:.02em;color:#fff!important;text-align:center;text-decoration:none!important;cursor:pointer;line-height:1.4}
+  .cw-button:hover,.cw-button:focus-visible{background:#a60d15;border-color:#a60d15}.cw-button-outline{background:transparent;border-color:#fff}.cw-slogan{font-weight:950;font-style:italic;color:#ffc3c5!important;letter-spacing:.06em}
+  .cw-hero-note{border:2px solid #e8474c;border-radius:18px;background:#1b1a1a;padding:clamp(22px,4vw,36px);box-shadow:10px 12px 0 #0005}.cw-hero-note strong{display:block;font-size:clamp(1.5rem,3vw,2.3rem);line-height:1.25;color:#fff}.cw-hero-note strong span{color:#ff454e;display:block;font-size:clamp(3.3rem,6vw,5rem)}
+  .cw-section-lead{text-align:center;max-width:830px;margin:0 auto 30px}.cw-section-lead h2{font-size:clamp(2.1rem,4vw,3.4rem);font-weight:1000;line-height:1.08;margin:9px 0 12px;letter-spacing:-.04em}.cw-section-lead h2 span{color:#c5151e}.cw-section-lead p:last-child{color:#444;line-height:1.7}
+  .cw-flyer-section{padding-top:68px;padding-bottom:74px}.cw-original-flyer{margin:0 auto;max-width:1160px;padding:clamp(8px,2vw,18px);background:#fff;border:1px solid #e0e0e0;border-radius:14px;box-shadow:0 18px 40px #0002}
+  .cw-original-flyer img{display:block;width:100%;height:auto;max-height:none;object-fit:contain;object-position:center}
+  .cw-original-flyer figcaption{text-align:center;font-size:.82rem;line-height:1.55;color:#555;padding:13px 8px 3px}.cw-original-flyer figcaption a{color:#a50b13;text-decoration:underline}
+  .cw-packages{background:#f7f7f7;padding:75px 0 83px;scroll-margin-top:95px}.cw-card-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch;gap:22px}
+  .cw-card{position:relative;background:#fff;border:2px solid #dcdcdc;border-radius:16px;padding:26px 24px;display:flex;flex-direction:column;box-shadow:0 10px 22px #0001}.cw-featured{border:3px solid #d22228}
+  .cw-popular{position:absolute;right:-2px;top:-19px;background:#cf151d;color:#fff;padding:9px 14px;font-size:.76rem;font-weight:1000;border-radius:7px}.cw-card h3{font-size:1.35rem;line-height:1.25;font-weight:1000;text-transform:uppercase;min-height:53px;margin:0}
+  .cw-card-price{font-size:3.8rem;color:#cf151d;font-weight:1000;letter-spacing:-.06em;margin:10px 0}.cw-card-meta{font-weight:900;display:flex;flex-direction:column;gap:3px;margin:0 0 12px}.cw-card-meta span{font-size:.79rem;color:#484848}.cw-card-subtitle{min-height:45px;line-height:1.5;font-weight:700;color:#373737;border-bottom:1px solid #ddd;padding-bottom:17px;margin:6px 0 14px}
+  .cw-card ul{padding:0;margin:0 0 24px;list-style:none;flex:1}.cw-card li{padding:7px 0 7px 26px;position:relative;font-size:.91rem;line-height:1.4}.cw-card li::before{content:"✓";position:absolute;left:0;top:8px;color:#cf151d;font-weight:1000}
+  .cw-choose{width:100%}.cw-packages-note{text-align:center;max-width:800px;margin:22px auto 0;line-height:1.6;font-size:.9rem;color:#555}
+  .cw-audience{background:#191919;color:#fff;padding:70px 0}.cw-audience .cw-section-lead h2{color:#fff}.cw-audience .cw-section-lead .cw-eyebrow{color:#ff9da1}.cw-audience-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}.cw-audience-grid>div{background:#2b2b2b;border-top:4px solid #dc272f;padding:20px 15px;border-radius:8px}.cw-audience-grid>div>span{font-size:2rem;color:#ff555c;display:block;margin-bottom:10px}.cw-audience-grid strong{font-size:.95rem;line-height:1.35;display:block}.cw-audience-grid p{color:#eee;font-size:.8rem;line-height:1.6}
+  .cw-request-section{padding-top:75px;padding-bottom:85px;scroll-margin-top:90px}.cw-request-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,.78fr);gap:25px;align-items:start}
+  .cw-form{background:#fff;padding:clamp(20px,3vw,32px);border:1px solid #dcdcdc;border-radius:14px;display:grid;gap:16px;box-shadow:0 10px 25px #0001}
+  .cw-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}.cw-form label{display:flex;flex-direction:column;font-weight:850;gap:7px;font-size:.9rem}.cw-form input,.cw-form select,.cw-form textarea{width:100%;min-width:0;max-width:100%;background:#fff;color:#111;font:inherit;font-size:16px;padding:12px;border:1px solid #929292;border-radius:7px}.cw-form input,.cw-form select{min-height:48px}.cw-form :is(input,select,textarea):focus{outline:3px solid #f4a6a9;border-color:#bf141a}
+  .cw-security{border:1px solid #ddd;border-radius:8px;padding:14px}.cw-security strong{display:block;margin-bottom:12px}.cw-privacy{font-size:.8rem;line-height:1.6;color:#505050;margin:0}.cw-privacy a{color:#ae1119;text-decoration:underline}.cw-submit{width:100%;font-size:1rem}.cw-submit:disabled{opacity:.6;cursor:wait}
+  .cw-response{font-weight:800;font-size:.92rem;line-height:1.55;color:#ae1119;margin:0}.cw-response:empty{display:none}.cw-response.cw-success{padding:15px;background:#effbf2;border-left:4px solid #217344;color:#15492b}
+  .cw-side{position:sticky;top:16px;background:#1b1b1b;color:#fff;border-radius:14px;border:2px solid #db282e;padding:28px 23px}.cw-side img{display:block;width:75px;height:auto;margin:0 auto 15px}.cw-side h3{font-size:1.55rem;font-weight:1000;line-height:1.15;color:#fff}.cw-side p,.cw-side li{line-height:1.6;color:#f3f3f3}.cw-side li{margin-bottom:12px}.cw-side a{color:#fff;text-decoration:underline}.cw-side .cw-slogan{margin-top:22px}
+  .cw-bottom{padding:70px 0;background:#f1f1f1;text-align:center}.cw-bottom h2{font-size:clamp(1.75rem,3.3vw,2.7rem);font-weight:1000;margin:0 0 14px}.cw-bottom p{max-width:800px;margin:0 auto 20px;line-height:1.7}.cw-bottom-link{display:block;font-weight:800;color:#b30d17;margin:20px auto 0;text-decoration:underline}
+  @media(max-width:1000px){.cw-audience-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.cw-hero-grid{gap:25px}}
+  @media(max-width:820px){.cw-card-grid{grid-template-columns:1fr}.cw-hero-grid,.cw-request-grid{grid-template-columns:1fr}.cw-hero-note{max-width:480px}.cw-side{position:static}.cw-card h3{min-height:auto}}
+  @media(max-width:590px){.cw-audience-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cw-row{grid-template-columns:1fr}.cw-hero{padding:46px 0}.cw-flyer-section{padding-top:45px;padding-bottom:55px}.cw-packages,.cw-request-section,.cw-audience{padding-top:52px;padding-bottom:56px}.cw-actions{display:grid}.cw-button{width:100%}.cw-hero-note strong span{font-size:3.8rem}}
+ </style>
+</BaseLayout>
