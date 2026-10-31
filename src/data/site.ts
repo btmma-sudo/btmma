@@ -792,7 +792,7 @@ export const programPages: ProgramPage[] = [
     seo: {
       title: "2-Hour Kids Birthday Parties from $350 | Burning Tree MMA",
     description:
-      "Host a 2-hour martial arts birthday party in Owings Mills, MD: $350 for up to 15 kids, plus $10 per extra child. Request a date, then pay a deposit after confirmation.",
+      "Host a 2-hour martial arts birthday party in Owings Mills, MD: $350 for up to 15 kids, plus $10 per extra child. Request a date, then pay a $150 deposit after approval.",
       keywords: [
         "martial arts birthday parties",
         "kids party Owings Mills",
@@ -814,7 +814,7 @@ export const programPages: ProgramPage[] = [
     curriculum: {
       title: "Two hours of fun for $350 — up to 15 kids.",
       copy:
-        "Birthday parties are $350 for up to 15 children for 2 hours. Each additional child is $10. The Birthday Party Program at Burning Tree MMA in Owings Mills combines fun, fitness, and focus for an unforgettable celebration. Kids take part in exciting martial arts games, team challenges, and beginner-friendly lessons that build confidence, coordination, and respect. Whether it is their first time trying martial arts or they are already training, every child leaves smiling, energized, and proud of what they accomplished."
+        "Birthday parties are $350 for up to 15 children for 2 hours. Each additional child is $10. A $150 deposit is required after the studio confirms your date and is applied toward the party total. The Birthday Party Program at Burning Tree MMA in Owings Mills combines fun, fitness, and focus for an unforgettable celebration. Kids take part in exciting martial arts games, team challenges, and beginner-friendly lessons that build confidence, coordination, and respect. Whether it is their first time trying martial arts or they are already training, every child leaves smiling, energized, and proud of what they accomplished."
     },
     benefits: {
       title: "What families can expect",
@@ -833,7 +833,7 @@ export const programPages: ProgramPage[] = [
     mobileCta: "Contact Us",
     leadForm: {
       title: "Ask About Birthday Parties",
-      intro: "Birthday parties are $350 for up to 15 children for 2 hours, plus $10 for every extra child. Share your preferred date, and we will confirm availability and the deposit.",
+      intro: "Birthday parties are $350 for up to 15 children for 2 hours, plus $10 for every extra child. Share your preferred date, and we will confirm availability before requesting the $150 deposit.",
       defaultProgram: "Birthday Parties",
       hideProgramSelect: true
     }
