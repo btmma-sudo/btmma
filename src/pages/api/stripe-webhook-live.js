@@ -33,6 +33,32 @@ export async function POST({ request, locals }) {
   if (typeof event.id !== "string" || !event.id.startsWith("evt_")) return reply("Invalid event", 400);
   if (!["checkout.session.completed", "checkout.session.async_payment_succeeded", "checkout.session.async_payment_failed"].includes(event.type)) return reply("Ignored", 200);
   if (event.livemode !== true || !/^((sk|rk)_live_)/.test(String(env.STRIPE_LIVE_SECRET_KEY))) return reply("Live key required", 503);
+  // Separate birthday deposit fulfillment, verified against Stripe and the saved
+  // studio-approved amount. Do not run $29 trial logic for this event.
+  if (event.data?.object?.metadata?.btmma_source === "btmma_birthday_deposit_v1") {
+    const id = event.data?.object?.id;
+    if (typeof id !== "string" || !/^cs_live_[\w]+$/.test(id)) return reply("Invalid birthday checkout", 400);
+    const booking = await env.LIVE_TRIAL_DB.prepare("SELECT * FROM birthday_party_requests WHERE stripe_session_id = ?").bind(id).first();
+    if (!booking || !Number.isInteger(booking.deposit_cents) || booking.deposit_cents <= 0) return reply("Unknown birthday checkout", 503);
+    const already = await env.LIVE_TRIAL_DB.prepare("SELECT event_id FROM stripe_webhook_events WHERE event_id = ?").bind(event.id).first();
+    if (already) return reply("Already processed", 200);
+    const check = await fetch("https://api.stripe.com/v1/checkout/sessions/" + encodeURIComponent(id), {
+      headers: { Authorization: "Bearer " + env.STRIPE_LIVE_SECRET_KEY }
+    });
+    if (!check.ok) return reply("Birthday Stripe verification unavailable", 503);
+    const session = await check.json();
+    if (session.livemode !== true || session.mode !== "payment" || session.currency !== "usd" ||
+        session.client_reference_id !== booking.id || session.metadata?.btmma_source !== "btmma_birthday_deposit_v1" ||
+        session.amount_total !== booking.deposit_cents) return reply("Birthday deposit mismatch", 409);
+    if (session.payment_status === "paid") {
+      await env.LIVE_TRIAL_DB.prepare(
+        "UPDATE birthday_party_requests SET status='deposit_paid',paid_at=COALESCE(paid_at,CURRENT_TIMESTAMP),updated_at=CURRENT_TIMESTAMP WHERE id=? AND status IN ('approved','checkout_open','deposit_paid')"
+      ).bind(booking.id).run();
+    }
+    await env.LIVE_TRIAL_DB.prepare("INSERT OR IGNORE INTO stripe_webhook_events (event_id,event_type) VALUES (?,?)")
+      .bind(event.id,event.type).run();
+    return reply(session.payment_status === "paid" ? "Birthday party deposit paid" : "Birthday payment not yet completed",200);
+  }
   // Account-level webhook also receives Checkout from unrelated Stripe products.
   // Only this enrollment integration's signed Stripe events are ours.
   if (event.data?.object?.metadata?.btmma_source !== "btmma_29_trial_live_v1")
