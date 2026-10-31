@@ -9,6 +9,8 @@ const maxAge = 12 * 60 * 60;
 
 export function getPortalEnv(locals) {
   const env = locals?.runtime?.env ?? {};
+  // Fail closed until launch is explicitly approved in Cloudflare.
+  if (env.STUDENT_PORTAL_ENABLED !== "true") return null;
   if (!env.LIVE_TRIAL_DB || typeof env.STUDENT_PORTAL_SESSION_SECRET !== "string" ||
     env.STUDENT_PORTAL_SESSION_SECRET.length < 32) return null;
   return env;
