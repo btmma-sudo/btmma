@@ -1,5 +1,6 @@
 ---
 import {getPortalEnv, getPortalAccount, secureHeaders} from "../lib/student-portal-auth.js";
+import StudentPortalPreview from "../components/StudentPortalPreview.astro";
 export const prerender = false;
 const env = getPortalEnv(Astro.locals);
 const account = await getPortalAccount(Astro.request,env);
@@ -13,6 +14,8 @@ if (env?.TURNSTILE_SECRET_KEY) {
 const errors = {invalid:"Your login could not be verified. Check your details and try again.",security:"Please complete the security check and try again."};
 const code = Astro.url.searchParams.get("error");
 const err = code === "invalid" ? errors.invalid : code === "security" ? errors.security : "";
+// Demo view is static and contains NO real student information or payment operations.
+const showPreview = Astro.url.searchParams.get("preview") === "1";
 let students = [], lessons = [], invoices = [], stripeNotice = "";
 let billingReady = false;
 let paymentEnabled = false;
@@ -85,6 +88,12 @@ Astro.response.headers.set("Content-Security-Policy", "default-src 'none'; scrip
     /* Portal-only logo treatment: the existing Burning Tree mark plus the
        Keepers of the Flame motto, without altering any public-site branding. */
     .btn:disabled{cursor:not-allowed;opacity:.58;background:#6e2927}.fields input:disabled{background:#c9ced0;color:#444;cursor:not-allowed}
+    .portal-preview-callout{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;border-color:#a44842}
+    .portal-preview-callout>div{max-width:610px}
+    .portal-preview-callout h2{margin:3px 0 8px;font-size:1.45rem}
+    .portal-preview-callout p.muted{margin:0}
+    .portal-preview-callout .btn{white-space:normal;text-align:center}
+    @media(max-width:620px){.portal-preview-callout .btn{width:100%}}
     .brand .brand-title{display:block;font-size:12px;letter-spacing:.09em;line-height:1.25}
     .brand .brand-subtitle{display:block;color:#ffb6af;font-size:11px;letter-spacing:.12em;line-height:1.5}
     .top .brand img{width:54px;height:74px;object-fit:contain}
@@ -114,7 +123,18 @@ Astro.response.headers.set("Content-Security-Policy", "default-src 'none'; scrip
         <figcaption>“KEEPERS OF THE FLAME”</figcaption>
       </figure>
     </section>
-    {!account ? (
+    {!account && showPreview ? (
+      <StudentPortalPreview />
+    ) : !account ? (
+      <>
+      <section class="panel portal-preview-callout" aria-labelledby="preview-invite-title">
+        <div>
+          <p class="eyebrow">NO LOGIN REQUIRED</p>
+          <h2 id="preview-invite-title">Want to see what is inside?</h2>
+          <p class="muted">Explore a sample student dashboard, video lesson library, and tuition area before student accounts are ready. This view contains no actual family information.</p>
+        </div>
+        <a class="btn" href="/student-portal/?preview=1">VIEW INSIDE THE PORTAL</a>
+      </section>
       <section class="panel" aria-labelledby="login-title">
         <h2 id="login-title">Family Login</h2>
         <p class="muted">Only currently authorized Burning Tree families may sign in. Parents or guardians should manage accounts for minor students.</p>
@@ -129,6 +149,7 @@ Astro.response.headers.set("Content-Security-Policy", "default-src 'none'; scrip
         <p class="muted">Need an account or a password reset? Contact the studio at <a href="tel:+12023684395">(202) 368-4395</a>. Accounts are created by staff; public registration is disabled.</p>
         {loginReady && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
       </section>
+      </>
     ) : (
       <>
         <section class="panel">
