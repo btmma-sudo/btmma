@@ -3,16 +3,16 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import PrivateLessonCalendar from "../components/PrivateLessonCalendar.astro";
 const packs = [
   { id:"basic", name:"Basic", eyebrow:"LEVEL UP", tagline:"BUILD SKILLS. GAIN CONFIDENCE.", price:249, sessions:4,
-    photo:"/images/private-coaching/private-basic-card.webp", alt:"Young karate student demonstrating a technique",
+    photo:"/images/private-coaching/private-basic-flyer.webp", alt:"Complete Burning Tree Level Up Basic private coaching flyer, $249 for four sessions",
     features:["Skills assessment","Personal improvement plan","Technique and form development","Footwork and striking practice","Completion certificate"] },
   { id:"advanced", name:"Advanced", eyebrow:"COMPETITION EDGE", tagline:"PREPARE. PERFORM. STAND OUT.", price:399, sessions:6,
-    photo:"/images/private-coaching/private-advanced-card.webp", alt:"Smiling young martial arts student",
+    photo:"/images/private-coaching/private-advanced-flyer.webp", alt:"Complete Competition Edge Advanced private coaching flyer, $399 for six sessions",
     features:["Tournament preparation","Forms and technique performance","Timing, strategy and presentation","Video feedback","Written coaching plan"] },
   { id:"elite", name:"Elite", eyebrow:"PERSONAL PROTECTION", tagline:"REAL SKILLS. REAL CONFIDENCE.", price:499, sessions:8,
-    photo:"/images/private-coaching/private-elite-card.webp", alt:"Private self-defense instruction",
+    photo:"/images/private-coaching/private-elite-flyer.webp", alt:"Complete Personal Protection Elite private coaching flyer, $499 for eight sessions",
     features:["Situational awareness","De-escalation techniques","Escapes and defensive skills","Distance management","Personal practice guide"] },
   { id:"mastery", name:"Mastery", eyebrow:"MASTERY ELITE COACHING", tagline:"DEEPER TRAINING. HIGHER LEVELS.", price:799, sessions:10,
-    photo:"/images/private-coaching/private-mastery-card.webp", alt:"Burning Tree advanced martial arts instructor",
+    photo:"/images/private-coaching/private-mastery-flyer.webp", alt:"Complete Mastery Elite Coaching flyer, $799 for ten sessions",
     features:["Advanced technical development","Personal goal setting","Progress assessments","Priority scheduling","Recorded feedback with consent","Final evaluation and certificate"] }
 ];
 const seo = {
@@ -24,7 +24,7 @@ const seo = {
 ---
 <BaseLayout title="Private Martial Arts Lessons in Owings Mills | Burning Tree MMA"
  description="One-on-one private karate, Muay Thai, Wing Chun and self-defense coaching in Owings Mills. Choose 4 lessons for $249, 6 for $399, 8 for $499 or 10 for $799. Register and pay online."
- path="/private-lessons/" image="/images/kids-martial-arts-karate-guard.png"
+ path="/private-lessons/" image="/images/private-coaching/private-overview-flyer.webp"
  keywords={["private martial arts lessons Owings Mills","one on one karate coaching","private self defense classes near me","martial arts competition coaching Baltimore County","private Muay Thai training","private Wing Chun lessons"]}>
  <script type="application/ld+json" set:html={JSON.stringify(seo)} />
  <div class="private">
@@ -39,8 +39,8 @@ const seo = {
      <p class="private-motto">ONE TREE. ONE FAMILY.</p>
     </div>
     <div class="private-hero-photo">
-     <img src="/images/private-coaching/private-basic-card.webp" width="720" height="540" alt="Confident boy from the original Burning Tree Level Up private lessons flyer" />
-     <div class="private-photo-note">LEVEL UP! <small>4–10 PRIVATE LESSONS</small></div>
+     <img src="/images/private-coaching/private-overview-flyer.webp" width="900" height="1097" alt="Full Burning Tree private lesson packages flyer, Basic $249, Advanced $399, Elite $499, Mastery $799" />
+     <div class="private-photo-note">PRIVATE COACHING <small>4–10 PRIVATE LESSONS</small></div>
     </div>
    </div>
   </section>
@@ -51,7 +51,7 @@ const seo = {
     {packs.map(p => (
      <article class:list={["private-card",p.id==="mastery"&&"private-master"]}>
       <div class="private-card-photo">
-       <img src={p.photo} alt={p.alt} width="560" height="370" loading="lazy" decoding="async" />
+       <img src={p.photo} alt={p.alt} loading="lazy" decoding="async" />
        <span>{p.eyebrow}</span>
       </div>
       <div class="private-card-body">
@@ -60,10 +60,7 @@ const seo = {
        <p class="private-price">$<strong>{p.price}</strong></p>
        <p class="private-duration"><strong>{p.sessions} PRIVATE SESSIONS</strong><br />60 MINUTES EACH</p>
        <ul>{p.features.map(f => <li>{f}</li>)}</ul>
-       <details class="private-flyer-detail">
-        <summary>VIEW FULL {p.name.toUpperCase()} FLYER</summary>
-        <img src={"/images/private-coaching/private-" + p.id + "-flyer.webp"} alt={p.name + " private lesson package flyer showing full benefits and original price"} width="1050" loading="lazy" decoding="async" />
-       </details>
+       <a class="private-fullsize-link" href={p.photo} target="_blank" rel="noopener noreferrer" aria-label={"Open the full-size " + p.name + " coaching flyer"}>VIEW FULL-SIZE {p.name.toUpperCase()} FLYER</a>
        <button class="private-btn private-select" data-package={p.id} type="button">CHOOSE {p.name.toUpperCase()}</button>
       </div>
      </article>
@@ -244,9 +241,9 @@ const seo = {
  .private-section{padding-top:70px;padding-bottom:70px;scroll-margin-top:90px}
  .private-heading{text-align:center;margin:0 auto 32px;max-width:790px}.private-heading h2,.private-benefit-strip h2{font-weight:1000;font-size:clamp(2.3rem,4vw,4rem);letter-spacing:-.045em;line-height:1.06;margin:12px 0}.private-heading h2 span,.private-benefit-strip h2 span{color:var(--red)}
  .private-heading>p:last-child{line-height:1.65}
- .private-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}
+ .private-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:stretch}
  .private-card{border:2px solid #ddd;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 9px 24px #0001;background:#fff}.private-master{border-color:#bd992c}
- .private-card-photo{display:grid;grid-template-rows:minmax(0,1fr) auto;aspect-ratio:4/3;height:auto;min-height:0;background:#fff}.private-card-photo img{display:block;width:100%;height:100%;min-height:0;max-width:100%;object-fit:contain;object-position:center}.private-card-photo span{display:block;position:static;padding:9px;background:#0c0c0c;color:#fff;text-align:center;font-weight:900;font-size:.76rem;letter-spacing:.08em}
+ .private-card-photo{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;height:auto!important;min-height:0;aspect-ratio:auto;overflow:visible;background:#fff}.private-card-photo img{display:block;width:100%;max-width:100%;height:auto!important;max-height:none!important;aspect-ratio:auto;object-fit:contain;object-position:center}.private-card-photo span{display:block;position:static;flex:0 0 auto;padding:10px;background:#0c0c0c;color:#fff;text-align:center;font-weight:900;font-size:.76rem;letter-spacing:.08em}
  .private-card-body{padding:18px 15px;display:flex;flex:1;flex-direction:column}.private-card h3{font-size:1.6rem;line-height:1.1;margin:2px 0;text-transform:uppercase}.private-card h3 span{display:block;color:var(--red);font-size:1.04rem}
  .private-tagline{font-size:.82rem;font-weight:900;min-height:35px;margin:10px 0}
  .private-price{font-size:2.3rem;color:var(--red);margin:0;font-weight:900}.private-price strong{font-size:3rem;letter-spacing:-.065em}
@@ -279,14 +276,12 @@ const seo = {
  .private-manual{border:2px solid #b60000;border-radius:12px;background:#fff5f5;padding:20px;margin-top:25px;line-height:1.65}.private-manual .private-btn{margin:5px 0 12px}
  .private-result{background:#f7f7f7;border-top:5px solid var(--red);margin-bottom:40px}
  .private-faq{padding-bottom:75px}.private-faq h2{font-size:2.1rem}.private-faq details{border:1px solid #ddd;border-radius:9px;background:#fafafa;padding:17px 20px;margin-bottom:12px}.private-faq summary{font-weight:900;cursor:pointer}.private-faq details p{line-height:1.6}
- .private-flyer-detail{margin:0 0 14px;padding:10px;border:1px solid #ddd;border-radius:8px;background:#fff}
- .private-flyer-detail summary{font-size:.82rem;font-weight:900;cursor:pointer;line-height:1.4}
- .private-flyer-detail img{display:block;width:100%;max-width:100%;height:auto;object-fit:contain;object-position:center;margin:12px auto 0}
+ .private-fullsize-link{display:block;margin:0 0 16px;padding:10px 8px;border:1px solid #bbb;border-radius:8px;text-align:center;color:#1a1a1a;text-decoration:underline;text-underline-offset:3px;font-size:.85rem;font-weight:900} .private-fullsize-link:hover,.private-fullsize-link:focus-visible{border-color:var(--red);color:#b10f16}
  .private-full-overview{margin:45px auto 0;max-width:800px;text-align:center;padding:18px;background:#fff;border:1px solid #e4e4e4;border-radius:12px}
  .private-full-overview h3{font-size:clamp(1.2rem,2.5vw,1.8rem);margin:7px 0 22px}
  .private-full-overview img{display:block;width:100%;max-width:650px;height:auto;object-fit:contain;object-position:center;margin:auto}
- @media(max-width:1120px){.private-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+ @media(max-width:1120px){.private-cards{gap:18px}}
  @media(max-width:740px){.private-hero-grid,.private-benefit-grid,.private-booking-grid{grid-template-columns:1fr}.private-hero-grid{padding-top:45px}.private-hero-photo{min-height:0;max-height:none}.private-hero-photo img{max-height:430px}.private-section{padding-top:52px;padding-bottom:52px}.private-summary{position:static}}
- @media(max-width:530px){.private-cards,.private-two,.private-pay-grid{grid-template-columns:1fr}.private-hero h1{font-size:2.7rem}.private-buttons{display:grid}}
+ @media(max-width:760px){.private-cards{grid-template-columns:1fr}} @media(max-width:530px){.private-two,.private-pay-grid{grid-template-columns:1fr}.private-hero h1{font-size:2.7rem}.private-buttons{display:grid}}
  </style>
 </BaseLayout>
