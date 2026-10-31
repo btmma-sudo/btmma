@@ -790,13 +790,15 @@ export const programPages: ProgramPage[] = [
   {
     slug: "birthday-parties",
     seo: {
-      title: "Martial Arts Birthday Parties in Owings Mills, MD",
+      title: "Kids Martial Arts Birthday Parties & Reservations | Owings Mills",
     description:
-      "Plan a fun, active martial arts birthday party at Burning Tree MMA in Owings Mills. Explore guided activities and contact us about dates and party options.",
+      "Explore kids martial arts birthday party activities in Owings Mills, MD. Request a weekend date, receive a confirmed price and pay a secure deposit after approval.",
       keywords: [
         "martial arts birthday parties",
         "kids party Owings Mills",
         "birthday entertainment",
+        "kids birthday party reservations Owings Mills",
+        "birthday party date requests",
         "martial arts events"
       ]
     },
