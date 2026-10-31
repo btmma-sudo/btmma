@@ -95,8 +95,8 @@ Astro.response.headers.set("Content-Security-Policy",
             const day=$('slot-date').value;
             if(!day)return null;
             const dow=new Date(day+'T12:00:00Z').getUTCDay();
-            if(dow>=1&&dow<=4)return {start:1200,end:1430};
-            if(dow===5)return {start:1140,end:1430};
+            if(dow>=1&&dow<=4)return {start:1200,end:1410};
+            if(dow===5)return {start:1140,end:1410};
             if(dow===6)return {start:720,end:1020};
             return $('slot-session').value==='evening'?{start:960,end:1080}:{start:540,end:840};
           }
