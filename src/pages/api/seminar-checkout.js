@@ -13,7 +13,7 @@ const EVENTS = {
       supporter: { name: "Community Supporter", cents: 7500 },
       sponsor: { name: "Flame Sponsor", cents: 10000 }
     },
-    deadline: "2026-11-15T20:00:00Z" // 3 PM Eastern
+    deadline: "2026-11-15T19:00:00Z" // 2 PM Eastern — matches the official seminar flyer
   },
   nerve: {
     name: "Striking a Nerve — November 21–22, 2026",
