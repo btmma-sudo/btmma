@@ -50,7 +50,7 @@ export function allowedHalfHour(day,time) {
 export function allowedPublishWindow(day,startTime,endTime) {
   if(!validTime(startTime)||!validTime(endTime))return false;
   const start=minutes(startTime),end=minutes(endTime);
-  return start%STEP_MINUTES===0 && end%STEP_MINUTES===0 && end>start &&
+  return start%STEP_MINUTES===0 && end%STEP_MINUTES===0 && end-start>=60 &&
     privateHoursWindows(day).some(w=>start>=w.start && end<=w.end);
 }
 export function futureDateTime(day,time) {
