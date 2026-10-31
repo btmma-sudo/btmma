@@ -1,6 +1,6 @@
 # Private Student Portal — deployment and security checklist
 
-This is a **review branch**, not a live student portal. It does not alter the
+Student portal code may be merged into the website but it is **OFF by default**. The server-side `STUDENT_PORTAL_ENABLED` switch must be explicitly set to `true` to open the routes. Until that launch step, requests to both `/student-portal/` and `/api/student-portal/*` return HTTP 404, and there is no public navigation link. It does not alter the
 existing $29 special, seminar checkouts, webhook handlers, or recurring tuition
 agreements. The portal deliberately **does not add** a 3% card surcharge or
 $50 late fee. Payments default **OFF**.
@@ -27,7 +27,7 @@ $50 late fee. Payments default **OFF**.
 
 ## Infrastructure prerequisites (do not skip)
 
-1. Deploy only after review and test on a staging environment. The Astro
+1. The source code can be deployed to the website while disabled. **Do not set** `STUDENT_PORTAL_ENABLED` in Cloudflare until security, billing, and lesson rollout are reviewed. The Astro
    Cloudflare adapter already supports on-demand routes via prerender=false.
 2. Create/apply `db/migrations/0002_student_portal.sql` to the existing
    `LIVE_TRIAL_DB` database ONLY after confirming backups. The migration
@@ -92,5 +92,4 @@ References:
 ## Live readiness
 
 No student account, video, subscription, invoice, payment, or Stripe Billing
-configuration has been created in live services by this branch. The private
-dashboard is only **code staged for review**. Do not describe as deployed.
+configuration has been created in live services as part of this change. Code deployment is not public portal activation. The private portal is disabled until `STUDENT_PORTAL_ENABLED=true` is set intentionally, with the enrollment and payment readiness checks complete. Re-enable the desktop/mobile navigation links only at launch.
