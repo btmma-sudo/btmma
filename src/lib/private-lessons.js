@@ -28,21 +28,30 @@ export function validDate(s) {
 export function validTime(s) {return typeof s==="string" && /^([01]\d|2[0-3]):[0-5]\d$/.test(s);}
 export function minutes(time) {return Number(time.slice(0,2))*60+Number(time.slice(3,5));}
 export function clock(mins) {return String(Math.floor(mins/60)).padStart(2,"0")+":"+String(mins%60).padStart(2,"0");}
-// Monday-Thursday from 8 PM, Friday from 7 PM, Saturdays after 11:30 AM
-// (first 30-minute interval begins at noon). No Sundays.
-export function startOfPrivateHours(day) {
-  if(!validDate(day)) return null;
-  const dayOfWeek=new Date(day+"T12:00:00Z").getUTCDay();
-  if(dayOfWeek>=1 && dayOfWeek<=4) return 20*60;
-  if(dayOfWeek===5) return 19*60;
-  if(dayOfWeek===6) return 12*60;
-  return null;
+// Monday-Thursday from 8 PM; Fridays from 7 PM; Saturdays noon-5 PM.
+// Sundays have two separate windows, 9 AM-2 PM and 4-6 PM. All Eastern.
+export function privateHoursWindows(day) {
+  if(!validDate(day)) return [];
+  const weekday=new Date(day+"T12:00:00Z").getUTCDay();
+  if(weekday>=1 && weekday<=4)return [{start:20*60,end:24*60}];
+  if(weekday===5)return [{start:19*60,end:24*60}];
+  if(weekday===6)return [{start:12*60,end:17*60}];
+  return [{start:9*60,end:14*60},{start:16*60,end:18*60}];
+}
+export function allowedBookingWindow(day,time,duration=30) {
+  if(!validTime(time)||![30,60].includes(duration))return false;
+  const start=minutes(time);
+  return start%STEP_MINUTES===0 &&
+    privateHoursWindows(day).some(w=>start>=w.start && start+duration<=w.end);
 }
 export function allowedHalfHour(day,time) {
-  const minimum=startOfPrivateHours(day);
-  return minimum!==null && validTime(time) &&
-    minutes(time)>=minimum && minutes(time)%STEP_MINUTES===0 &&
-    minutes(time)+STEP_MINUTES<=24*60;
+  return allowedBookingWindow(day,time,30);
+}
+export function allowedPublishWindow(day,startTime,endTime) {
+  if(!validTime(startTime)||!validTime(endTime))return false;
+  const start=minutes(startTime),end=minutes(endTime);
+  return start%STEP_MINUTES===0 && end%STEP_MINUTES===0 && end>start &&
+    privateHoursWindows(day).some(w=>start>=w.start && end<=w.end);
 }
 export function futureDateTime(day,time) {
   if(!validDate(day)||!validTime(time)) return false;
