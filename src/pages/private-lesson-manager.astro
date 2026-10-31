@@ -1,0 +1,186 @@
+---
+import {adminAccess} from "../lib/private-lessons.js";
+import {secureHeaders} from "../lib/student-portal-auth.js";
+export const prerender=false;
+const staff=await adminAccess(Astro.request,Astro.locals);
+if(!staff) Astro.response.status=404;
+for(const [key,value] of Object.entries(secureHeaders())) Astro.response.headers.set(key,value);
+Astro.response.headers.set("Content-Security-Policy",
+  "default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="robots" content="noindex,nofollow,noarchive"/>
+    <title>{staff?"Private Lesson Manager | Burning Tree":"Not Found"}</title>
+    <style is:inline>
+      *,*::before,*::after{box-sizing:border-box}
+      body{margin:0;background:#121416;color:#f4f4f4;font:16px/1.5 system-ui,-apple-system,sans-serif}
+      .wrap{max-width:1040px;margin:auto;padding:18px}
+      .top{background:#090a0b;border-bottom:1px solid #353b40}
+      .top .wrap{display:flex;justify-content:space-between;align-items:center;gap:12px}
+      .brand{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none;font-weight:850}
+      .brand img{width:45px;height:60px;object-fit:contain;background:#fff;border-radius:6px}
+      .navlink{color:#ffaaa4;text-decoration:underline}
+      h1{font-size:clamp(2rem,5vw,2.8rem);line-height:1.15;margin:20px 0 8px}h2{font-size:1.38rem;margin:0 0 10px}
+      .eyebrow{color:#f78a81;letter-spacing:.12em;font-weight:800;font-size:.76rem}
+      .muted{color:#c6ced1}.box{background:#1d2226;border:1px solid #444d52;border-radius:16px;padding:22px;margin:20px 0}
+      .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) auto;gap:12px;align-items:end}.grid [hidden]{display:none!important}
+      label{display:grid;gap:5px;color:#f8fafb;font-weight:750;font-size:.86rem}
+      input,select{min-width:0;width:100%;padding:12px;background:#111618;color:#fff;border:1px solid #798087;border-radius:8px;font:inherit}
+      button{border:0;border-radius:9px;padding:11px 14px;background:#c52d28;color:#fff;font:inherit;font-weight:800;cursor:pointer}
+      button:hover{background:#9c211e}button:disabled{opacity:.48;cursor:not-allowed}
+      button.grey{background:#383e43;border:1px solid #6e767e}button.grey:hover{background:#50595f}
+      .records{display:grid;gap:12px}.record{border:1px solid #4b5359;background:#14191c;border-radius:11px;padding:15px}
+      .record h3{margin:0 0 5px;font-size:1.06rem}.record p{margin:4px 0;font-size:.9rem}
+      .record-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:start;gap:12px}
+      .record-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+      .tag{font-size:.74rem;padding:3px 8px;border-radius:20px;border:1px solid #bc7770;color:#ffc4bf}
+      .tag.booked{color:#a7eac1;border-color:#478768}
+      .status{min-height:20px;color:#ffc5be}.hint{font-size:.8rem;color:#cbd0d3}
+      .unavailable{color:#f6b0aa}
+      @media(max-width:680px){.grid{grid-template-columns:1fr 1fr}.grid button{grid-column:1/-1}.box{padding:16px}}
+    </style>
+  </head>
+  <body>
+    {staff ? <>
+      <header class="top"><div class="wrap">
+        <a href="/student-portal/" class="brand"><img src="/images/logo.png" width="45" height="60" alt="Burning Tree logo"/><span>BURNING TREE<br/>PRIVATE LESSON MANAGER</span></a>
+        <a href="/private-lessons/" class="navlink">Public Calendar</a>
+      </div></header>
+      <main class="wrap">
+        <p class="eyebrow">COACH DAVID · SECURE INSTRUCTOR AREA</p>
+        <h1>Manage Private Lessons</h1>
+        <p class="muted">You control exactly which appointments appear on the public calendar. Students can book only the times you add. This calendar does not yet read your personal Google/Outlook appointments; check for conflicts before publishing.</p>
+        <section class="box" aria-labelledby="new-title">
+          <h2 id="new-title">Release Available Appointment Times</h2>
+          <p class="muted"><strong>Approved hours (Eastern):</strong> Monday–Thursday from 8 PM; Friday from 7 PM; Saturday noon–5 PM; and Sunday 9 AM–2 PM or 4–6 PM. You still decide exactly which times within these hours to publish. Sunday’s afternoon break stays blocked.</p>
+          <form class="grid" id="add-slot">
+            <label>Date<input id="slot-date" name="date" type="date" required /></label>
+            <label id="slot-session-label" hidden>Sunday session
+              <select id="slot-session"><option value="morning">9 AM–2 PM</option><option value="evening">4–6 PM</option></select>
+            </label>
+            <label>Available from (Eastern)<input id="slot-time" name="startTime" type="time" step="1800" required /></label>
+            <label>Available until (Eastern)<input id="slot-end" name="endTime" type="time" step="1800" required /></label>
+            <button type="submit" id="add-submit">PUBLISH TIMES</button>
+          </form>
+          <p class="hint">Example: Tuesday, 8–10 PM creates four half-hour openings. On Sunday, select the 9 AM–2 PM or 4–6 PM session separately. Students can choose 30 minutes or 1 hour when consecutive openings exist. Only publish days you are personally free, at least 24 hours ahead and within 90 days.</p>
+          <p id="add-status" class="status" role="status" aria-live="polite"></p>
+        </section>
+        <section class="box" aria-labelledby="bookings-title">
+          <h2 id="bookings-title">Student Appointments</h2>
+          <p class="muted">Only staff with private-lesson management permission can view contact details. Cancellation does not automatically email the student: contact them directly.</p>
+          <div class="records" id="private-bookings"><p class="muted">Loading appointments…</p></div>
+        </section>
+        <section class="box" aria-labelledby="slots-title">
+          <h2 id="slots-title">Published Appointment Slots</h2>
+          <p class="muted">Openings are displayed in 30-minute blocks. You can close an unbooked block at any time. A booked one-hour lesson reserves two adjacent blocks.</p>
+          <div class="records" id="private-slots"><p class="muted">Loading schedule…</p></div>
+        </section>
+        <p class="hint">For booking assistance: Coach David, <a href="tel:+14102180894" class="navlink">(410) 218-0894</a> · <a href="/student-portal/" class="navlink">Return to Student Portal</a></p>
+      </main>
+      <script is:inline>
+        (() => {
+          const $=id=>document.getElementById(id),dateFmt=d=>new Date(d+'T12:00:00Z').toLocaleDateString('en-US',{timeZone:'UTC',weekday:'short',month:'short',day:'numeric',year:'numeric'});
+          const timeFmt=t=>{const h=Number(t.slice(0,2));return (h%12||12)+':'+t.slice(3)+' '+(h>=12?'PM':'AM');};
+          const el=(tag,text,cls)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;if(cls)node.className=cls;return node;};
+          const now=new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+          const nowDate=Object.fromEntries(now.filter(p=>p.type!=='literal').map(p=>[p.type,p.value]));
+          $('slot-date').min=nowDate.year+'-'+nowDate.month+'-'+nowDate.day;
+          const fmtTime=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+          const minuteVal=t=>Number(t.slice(0,2))*60+Number(t.slice(3,5));
+          function currentWindow(){
+            const day=$('slot-date').value;
+            if(!day)return null;
+            const dow=new Date(day+'T12:00:00Z').getUTCDay();
+            if(dow>=1&&dow<=4)return {start:1200,end:1410};
+            if(dow===5)return {start:1140,end:1410};
+            if(dow===6)return {start:720,end:1020};
+            return $('slot-session').value==='evening'?{start:960,end:1080}:{start:540,end:840};
+          }
+          function updateStartTime(){
+            const day=$('slot-date').value;
+            if(!day)return;
+            const dow=new Date(day+'T12:00:00Z').getUTCDay();
+            $('slot-session-label').hidden=dow!==0;
+            const w=currentWindow(),start=$('slot-time'),end=$('slot-end');
+            start.min=fmtTime(w.start);start.max=fmtTime(w.end-30);start.value=fmtTime(w.start);
+            end.min=fmtTime(w.start+30);end.max=fmtTime(w.end);end.value='';
+            $('add-status').textContent='Choose your ending time for this available window.';
+          }
+          $('slot-date').addEventListener('change',updateStartTime);
+          $('slot-session').addEventListener('change',updateStartTime);
+          $('slot-time').addEventListener('change',()=>{
+            const w=currentWindow();
+            if(!w)return;
+            const end=$('slot-end'),earliest=minuteVal($('slot-time').value||'00:00')+30;
+            end.min=fmtTime(Math.min(w.end,earliest));
+            if(end.value&&minuteVal(end.value)<earliest)end.value='';
+          });
+          const info=(parent,value)=>parent.append(el('p',value));
+          async function api(method,body) {
+            const response=await fetch('/api/private-lessons/manage',{
+              method,cache:'no-store',headers:body?{'Content-Type':'application/json'}:{},
+              body:body?JSON.stringify(body):undefined
+            });
+            const d=await response.json();if(!response.ok||!d.ok)throw Error(d.error||'Unable to load the calendar.');
+            return d;
+          }
+          async function act(body,statusNode,button) {
+            if(button)button.disabled=true;
+            statusNode.textContent='Saving…';
+            try{const data=await api('POST',body);statusNode.textContent=data.message||'Updated successfully.';await reload();}
+            catch(e){statusNode.textContent=e.message;}
+            finally{if(button)button.disabled=false;}
+          }
+          function renderBookings(rows){
+            const box=$('private-bookings');box.replaceChildren();
+            if(!rows.length){box.append(el('p','No private lessons are currently booked.','muted'));return;}
+            for(const b of rows){
+              const card=el('article',undefined,'record'),top=el('div',undefined,'record-head'),heading=el('div');
+              heading.append(el('h3',dateFmt(b.date)+' · '+timeFmt(b.time)+' · '+b.duration+' min'));
+              heading.append(el('p',b.studentName+' · '+b.program));
+              top.append(heading,el('span',b.status.toUpperCase(),'tag'+(b.status==='confirmed'?' booked':'')));
+              card.append(top);
+              info(card,'Booking contact: '+b.contactName);
+              info(card,'Email: '+b.email);
+              info(card,'Phone: '+b.phone);
+              if(b.goals)info(card,'Goals: '+b.goals);
+              if(b.status==='confirmed'){
+                const actions=el('div',undefined,'record-actions'),button=el('button','CANCEL BOOKING','grey'),status=el('span','','status');
+                button.type='button';button.addEventListener('click',()=>{if(confirm('Cancel this appointment? Remember to notify the student personally.'))act({action:'cancel',bookingId:b.id},status,button);});
+                actions.append(button,status);card.append(actions);
+              }
+              box.append(card);
+            }
+          }
+          function renderSlots(rows){
+            const box=$('private-slots');box.replaceChildren();
+            if(!rows.length){box.append(el('p','No slots added yet. Choose a date and time above.','muted'));return;}
+            for(const s of rows){
+              const card=el('article',undefined,'record'),top=el('div',undefined,'record-head'),name=el('h3',dateFmt(s.date)+' · '+timeFmt(s.time)+' · 30-min opening');
+              top.append(name,el('span',s.booked?'BOOKED':s.isOpen===1?'OPEN':'CLOSED','tag'+(s.booked?' booked':'')));card.append(top);
+              if(s.isOpen===1&&!s.booked){
+                const actions=el('div',undefined,'record-actions'),button=el('button','CLOSE THIS SLOT','grey'),status=el('span','','status');
+                button.type='button';button.addEventListener('click',()=>act({action:'close',slotId:s.id},status,button));
+                actions.append(button,status);card.append(actions);
+              }
+              box.append(card);
+            }
+          }
+          async function reload(){
+            try{const data=await api('GET');renderBookings(data.bookings);renderSlots(data.slots);}
+            catch(e){$('private-bookings').textContent=e.message;$('private-slots').textContent='Setup or database access is incomplete.';}
+          }
+          $('add-slot').addEventListener('submit',async e=>{
+            e.preventDefault();const date=$('slot-date').value,startTime=$('slot-time').value,endTime=$('slot-end').value;
+            await act({action:'publish-window',date,startTime,endTime},$('add-status'),$('add-submit'));
+          });
+          reload();
+        })();
+      </script>
+    </>:<main class="wrap"><h1>Not Found</h1><p>This private instructor page is not available.</p><a href="/student-portal/" class="navlink">Student Portal</a></main>}
+  </body>
+</html>
