@@ -106,8 +106,8 @@ Astro.response.headers.set("Content-Security-Policy",
             const dow=new Date(day+'T12:00:00Z').getUTCDay();
             $('slot-session-label').hidden=dow!==0;
             const w=currentWindow(),start=$('slot-time'),end=$('slot-end');
-            start.min=fmtTime(w.start);start.max=fmtTime(w.end-30);start.value=fmtTime(w.start);
-            end.min=fmtTime(w.start+30);end.max=fmtTime(w.end);end.value='';
+            start.min=fmtTime(w.start);start.max=fmtTime(w.end-60);start.value=fmtTime(w.start);
+            end.min=fmtTime(w.start+60);end.max=fmtTime(w.end);end.value='';
             $('add-status').textContent='Choose your ending time for this available window.';
           }
           $('slot-date').addEventListener('change',updateStartTime);
@@ -115,7 +115,7 @@ Astro.response.headers.set("Content-Security-Policy",
           $('slot-time').addEventListener('change',()=>{
             const w=currentWindow();
             if(!w)return;
-            const end=$('slot-end'),earliest=minuteVal($('slot-time').value||'00:00')+30;
+            const end=$('slot-end'),earliest=minuteVal($('slot-time').value||'00:00')+60;
             end.min=fmtTime(Math.min(w.end,earliest));
             if(end.value&&minuteVal(end.value)<earliest)end.value='';
           });
