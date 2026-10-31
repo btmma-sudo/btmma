@@ -131,12 +131,14 @@ export async function POST({ request, locals }) {
     /^cs_live_[A-Za-z0-9_]{10,240}$/.test(input.sessionId) ? input.sessionId : null;
   if (!accessRecordId && !sessionId) return json({ error: "Secure registration reference required." }, 403);
   try {
-    row = accessRecordId
-      ? await env.LIVE_TRIAL_DB.prepare("SELECT id, state, airtable_record_id, stripe_session_id FROM trial_registrations WHERE airtable_record_id=?").bind(accessRecordId).first()
-      : await env.LIVE_TRIAL_DB.prepare("SELECT id, state, airtable_record_id, stripe_session_id FROM trial_registrations WHERE stripe_session_id=?").bind(sessionId).first();
+    // A Stripe return may coexist with an older student's saved token.
+    // Prefer the independently verifiable Checkout session in that case.
+    row = sessionId
+      ? await env.LIVE_TRIAL_DB.prepare("SELECT id, state, airtable_record_id, stripe_session_id FROM trial_registrations WHERE stripe_session_id=?").bind(sessionId).first()
+      : await env.LIVE_TRIAL_DB.prepare("SELECT id, state, airtable_record_id, stripe_session_id FROM trial_registrations WHERE airtable_record_id=?").bind(accessRecordId).first();
   } catch { return json({ error: "Unable to verify registration." }, 503); }
   if (!row || (sessionId && row.stripe_session_id !== sessionId) ||
-      (accessRecordId && row.airtable_record_id !== accessRecordId))
+      (!sessionId && accessRecordId && row.airtable_record_id !== accessRecordId))
     return json({ error: "Registration could not be verified." }, 403);
   try {
     const lead = await getLead(env, row.airtable_record_id);
