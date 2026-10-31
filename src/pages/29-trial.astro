@@ -945,26 +945,229 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   .trial-page #post-payment { max-width: 820px; margin: 20px auto; }
   .trial-page #post-payment-done { padding: 24px; background: #171717; border: 2px solid #cb312e; border-radius: 14px; }
   .trial-page .manual-step3-help { color: #fff; font-weight: 600; }
-  .trial-page .questionnaire-online { text-align: left; margin: 24px auto; padding: clamp(16px, 3.5vw, 28px); max-width: 720px; background: #171717; color: #fff; border: 1px solid #d73b39; border-radius: 16px; }
-  .trial-page .questionnaire-eyebrow { color: #ffb5b5; font-size: .78rem; font-weight: 900; letter-spacing: .1em; margin: 0 0 6px; }
-  .trial-page .questionnaire-online h3 { font-size: clamp(1.35rem, 4vw, 1.9rem); margin: 0 0 12px; color: #fff; }
-  .trial-page .questionnaire-online p { line-height: 1.6; }
-  .trial-page .questionnaire-note { color: #ebd9d9; font-size: .9rem; }
-  .trial-page .question-group { margin: 14px 0; background: #202020; border: 1px solid #555; border-radius: 12px; overflow: hidden; }
-  .trial-page .question-group summary { cursor: pointer; padding: 15px; background: #2a2a2a; color: #fff; font-weight: 800; list-style-position: inside; }
-  .trial-page .question-hint { display: block; font-size: .73rem; color: #ddd; font-weight: 400; padding-left: 17px; }
-  .trial-page .question-content { padding: 5px 16px 14px; }
-  .trial-page .question-line { border-bottom: 1px solid #434343; padding: 14px 0; margin: 0; }
+  /* Step 3 is part of the same $29 registration page, not a separate visual theme.
+     Reuse the existing dark surfaces, red accents, yellow headings and form widths. */
+  .trial-page #post-payment { max-width: 700px; }
+  .trial-page #post-payment .form { gap: 12px; }
+  .trial-page .questionnaire-online {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    color: var(--text);
+  }
+  .trial-page .questionnaire-eyebrow {
+    color: #ff9e9e;
+    font-size: .78rem;
+    font-weight: 800;
+    letter-spacing: .07em;
+    line-height: 1.5;
+    margin: 0 0 9px;
+    text-transform: uppercase;
+  }
+  .trial-page .questionnaire-online h3 {
+    color: var(--heading);
+    font-family: "Black Ops One", cursive;
+    font-size: clamp(1.35rem, 4vw, 1.9rem);
+    line-height: 1.2;
+    margin: 0 0 14px;
+  }
+  .trial-page .questionnaire-online > p { margin: 0 0 14px; line-height: 1.6; }
+  .trial-page .questionnaire-online .questionnaire-note {
+    color: var(--muted);
+    font-size: .9rem;
+    line-height: 1.55;
+  }
+  .trial-page .question-group {
+    margin: 14px 0;
+    padding: 0;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-top: 2px solid var(--accent);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .trial-page .question-group summary {
+    cursor: pointer;
+    padding: 15px 16px;
+    background: var(--surface);
+    color: var(--text);
+    font-family: "Open Sans", Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1.5;
+    list-style-position: inside;
+  }
+  .trial-page .question-group[open] > summary { border-bottom: 1px solid var(--line); }
+  .trial-page .question-group summary:hover,
+  .trial-page .question-group summary:focus-visible { background: var(--surface-soft); }
+  .trial-page .question-group summary:focus-visible {
+    outline: 2px solid var(--accent-soft);
+    outline-offset: -3px;
+  }
+  .trial-page .question-hint {
+    display: block;
+    color: var(--muted);
+    font-size: .77rem;
+    font-weight: 400;
+    line-height: 1.5;
+    padding-left: 18px;
+  }
+  .trial-page .question-content {
+    padding: 4px 16px 16px;
+    background: var(--surface-strong);
+  }
+  .trial-page .question-line {
+    border-bottom: 1px solid var(--line);
+    padding: 16px 0;
+    margin: 0;
+  }
   .trial-page .question-line:last-child { border-bottom: none; }
-  .trial-page .question-label { margin: 0 0 10px; display: block; font-weight: 800; color: #fff; font-size: .98rem; line-height: 1.45; }
-  .trial-page .question-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); gap: 8px; }
-  .trial-page .question-option { display: flex; gap: 9px; align-items: center; padding: 8px; border: 1px solid #656565; border-radius: 8px; background: #303030; font-weight: 500; font-size: .9rem; cursor: pointer; color: #fff; }
-  .trial-page .form .questionnaire-online input[type="checkbox"], .trial-page .form .questionnaire-online input[type="radio"] { display: inline-block; width: 18px; height: 18px; min-width: 18px; min-height: 18px; flex: 0 0 18px; padding: 0; accent-color: #e23c38; margin: 0; background: #fff; color: #111; vertical-align: middle; }
+  .trial-page .question-label {
+    display: block;
+    margin: 0 0 10px;
+    color: var(--text);
+    font-family: "Open Sans", Arial, sans-serif;
+    font-weight: 700;
+    font-size: .98rem;
+    line-height: 1.55;
+  }
+  .trial-page .question-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+    gap: 9px;
+  }
+  .trial-page .question-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 48px;
+    margin: 0;
+    padding: 10px 12px;
+    border: 1px solid #777;
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--text);
+    font-family: "Open Sans", Arial, sans-serif;
+    font-size: .94rem;
+    font-weight: 600;
+    line-height: 1.45;
+    cursor: pointer;
+  }
+  .trial-page .question-option:hover,
+  .trial-page .question-option:focus-within { border-color: var(--accent-soft); }
+  .trial-page .question-option:has(input:checked) {
+    border-color: #e69e9e;
+    background: #361b1b;
+  }
+  /* The shared input rule gives all inputs a 48px minimum; explicitly reset it
+     for radios and checkboxes so Step 3 controls do not become oversized. */
+  .trial-page .form .questionnaire-online input[type="checkbox"],
+  .trial-page .form .questionnaire-online input[type="radio"] {
+    display: inline-block;
+    flex: 0 0 19px;
+    width: 19px;
+    height: 19px;
+    min-width: 19px;
+    min-height: 19px;
+    max-width: 19px;
+    max-height: 19px;
+    margin: 0;
+    padding: 0;
+    border-radius: 3px;
+    accent-color: #d73b39;
+    vertical-align: middle;
+    cursor: pointer;
+  }
   .trial-page .question-option span { flex: 1; }
-  .trial-page .form .questionnaire-online textarea, .trial-page .form .questionnaire-online input[type="text"] { box-sizing: border-box; display: block; width: 100%; max-width: 100%; padding: 12px; margin-top: 6px; font-size: 16px; background: #fff; color: #181818; border: 1px solid #bdbdbd; border-radius: 8px; }
-  .trial-page .question-subfield { display: block; font-size: .88rem; font-weight: 600; margin: 10px 0 0; color: #fff; }
-  .trial-page .questionnaire-permission { display: flex; gap: 12px; align-items: flex-start; margin: 14px 0; font-size: .85rem; color: #fff; line-height: 1.5; }
-  .trial-page .questionnaire-bottom { margin: 20px 0 0; padding-top: 14px; border-top: 1px solid #535353; font-size: .9rem; color: #fff; }
+  .trial-page .form .questionnaire-online textarea,
+  .trial-page .form .questionnaire-online input[type="text"] {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    min-height: 48px;
+    margin-top: 7px;
+    padding: 11px 12px;
+    border: 1px solid #777;
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--text);
+    font-family: "Open Sans", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  .trial-page .form .questionnaire-online textarea { min-height: 90px; resize: vertical; }
+  .trial-page .form .questionnaire-online input::placeholder,
+  .trial-page .form .questionnaire-online textarea::placeholder { color: #c2c2c2; opacity: 1; }
+  .trial-page .form .questionnaire-online textarea:focus-visible,
+  .trial-page .form .questionnaire-online input[type="text"]:focus-visible {
+    outline: 2px solid var(--accent-soft);
+    outline-offset: 2px;
+  }
+  .trial-page .question-subfield {
+    display: block;
+    margin: 12px 0 0;
+    color: var(--text);
+    font-size: .9rem;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+  .trial-page .questionnaire-permission {
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    margin: 16px 0 0;
+    color: var(--text);
+    font-size: .9rem;
+    line-height: 1.55;
+    cursor: pointer;
+  }
+  .trial-page .questionnaire-permission input { margin-top: 3px !important; }
+  .trial-page .questionnaire-bottom {
+    margin: 20px 0 0;
+    padding: 16px 0 0;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: .9rem;
+    line-height: 1.55;
+  }
+  .trial-page #post-payment-status {
+    margin: 6px 0;
+    padding: 12px 14px;
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--text);
+  }
+  .trial-page .form button#post-payment-submit {
+    background: #741010;
+    color: #fff;
+    border: 2px solid #e69e9e;
+    font-family: "Open Sans", Arial, sans-serif;
+    font-size: clamp(1rem, 2.7vw, 1.2rem);
+    font-weight: 800;
+    line-height: 1.4;
+    white-space: normal;
+    padding: 15px 20px;
+    text-shadow: 0 1px 1px rgba(0,0,0,.5);
+  }
+  .trial-page .form button#post-payment-submit:hover { background: #901818; }
+  .trial-page .form button#post-payment-submit:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 3px;
+  }
+  @media (max-width: 600px) {
+    .trial-page .question-group summary { padding: 13px 12px; }
+    .trial-page .question-content { padding: 2px 12px 12px; }
+    .trial-page .question-options { grid-template-columns: minmax(0, 1fr); }
+    .trial-page .question-option { min-height: 48px; }
+    .trial-page .questionnaire-online h3 { font-size: clamp(1.25rem, 5.2vw, 1.65rem); }
+  }
   .trial-page .payment-help {
     margin: 0 0 8px;
     padding: 10px 12px;
