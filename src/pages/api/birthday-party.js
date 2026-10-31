@@ -156,7 +156,8 @@ export async function POST({request,locals}){
    if(row.contact_name.length<2||row.contact_name.length>120||row.birthday_name.length<2||row.birthday_name.length>120||
       !emailRe.test(row.email)||!/^[-+()\d .]{7,30}$/.test(row.phone)||!["4–6","7–9","10–12","13+"].includes(row.age_group)||
       !Number.isInteger(row.guests)||row.guests<1||row.guests>75||!choices.includes(row.package_interest)||
-      !validDate(row.preferred_date)||!times.includes(row.preferred_time)||row.notes.length>700||
+      !validDate(row.preferred_date)||!times.includes(row.preferred_time)||
+      (new Date(row.preferred_date+"T12:00:00Z").getUTCDay()===0 && !["14:30","16:00"].includes(row.preferred_time))||row.notes.length>700||
       [row.contact_name,row.birthday_name,row.notes].some(s=>/[<>]/.test(s)))
      return json({error:"Please check the child, contact, party size, Saturday/Sunday date, and time."},400);
    try{if(!await verifyCaptcha(env,request,data.turnstileToken))return json({error:"Security check expired. Please try again."},403);}catch{return json({error:"Security check is unavailable. Please try again."},503);}
