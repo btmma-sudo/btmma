@@ -33,15 +33,27 @@ function envReady(env){return !!(env.LIVE_TRIAL_DB && typeof env[KEY]==="string"
 const PARTY_SCHEMA = [
   "CREATE TABLE IF NOT EXISTS birthday_party_requests (id TEXT PRIMARY KEY, contact_name TEXT NOT NULL, email TEXT NOT NULL, phone TEXT NOT NULL, birthday_name TEXT NOT NULL, age_group TEXT NOT NULL, guests INTEGER NOT NULL CHECK(guests BETWEEN 1 AND 75), package_interest TEXT NOT NULL, preferred_date TEXT NOT NULL, preferred_time TEXT NOT NULL, notes TEXT NOT NULL DEFAULT '', status TEXT NOT NULL DEFAULT 'requested' CHECK(status IN ('requested','approved','checkout_open','deposit_paid','cancelled')), total_cents INTEGER, deposit_cents INTEGER, stripe_session_id TEXT UNIQUE, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, approved_at TEXT, paid_at TEXT)",
   "CREATE INDEX IF NOT EXISTS idx_birthday_party_requests_date ON birthday_party_requests(preferred_date,preferred_time,status)",
-  "CREATE UNIQUE INDEX IF NOT EXISTS idx_birthday_party_confirmed_slot ON birthday_party_requests(preferred_date,preferred_time) WHERE status IN ('approved','checkout_open','deposit_paid')"
+  "CREATE UNIQUE INDEX IF NOT EXISTS idx_birthday_party_confirmed_slot ON birthday_party_requests(preferred_date,preferred_time) WHERE status IN ('approved','checkout_open','deposit_paid')",
+  "CREATE TABLE IF NOT EXISTS birthday_party_confirmed_blocks (local_date TEXT NOT NULL,local_time TEXT NOT NULL,request_id TEXT NOT NULL REFERENCES birthday_party_requests(id),PRIMARY KEY(local_date,local_time))"
 ];
 // Standalone idempotent first-use initialization. Never alter the $29 tables.
 async function ensurePartySchema(db) {
   await db.prepare(PARTY_SCHEMA[0]).run();
   await db.prepare(PARTY_SCHEMA[1]).run();
   await db.prepare(PARTY_SCHEMA[2]).run();
+  await db.prepare(PARTY_SCHEMA[3]).run();
 }
 
+// Occupy the full two hours in 30-minute increments so overlapping
+// confirmed parties cannot be approved even when start times differ.
+function approvedBlocks(time){
+  const [hours,mins]=time.split(":").map(Number);
+  const start=hours*60+mins;
+  return [0,30,60,90].map(add=>{
+    const t=start+add;
+    return String(Math.floor(t/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0");
+  });
+}
 function validDate(value){
   if(!/^\d{4}-\d{2}-\d{2}$/.test(value||""))return false;
   const d=new Date(value+"T12:00:00Z");
@@ -158,9 +170,17 @@ export async function POST({request,locals}){
    if(!total||!deposit||deposit>total)return html(staffPage(row,auth,"Please enter a positive deposit amount, not more than the calculated party total."),400);
    if(!validDate(row.preferred_date))return html(staffPage(row,auth,"This date is now outside the booking window."),409);
    try{
-     const result=await env.LIVE_TRIAL_DB.prepare("UPDATE birthday_party_requests SET status='approved',total_cents=?,deposit_cents=?,approved_at=CURRENT_TIMESTAMP,updated_at=CURRENT_TIMESTAMP WHERE id=? AND status='requested'").bind(total,deposit,ref).run();
-     if(result.meta?.changes!==1)return html("<h1>Already reviewed.</h1>",409);
-   }catch{return html(staffPage(row,auth,"Date and time have already been confirmed for another party, or the database is unavailable."),409);}
+     // The D1 batch is atomic: overlapping two-hour blocks cannot be claimed
+     // for two different parties on the same date.
+     const statements=[
+       env.LIVE_TRIAL_DB.prepare("UPDATE birthday_party_requests SET status='approved',total_cents=?,deposit_cents=?,approved_at=CURRENT_TIMESTAMP,updated_at=CURRENT_TIMESTAMP WHERE id=? AND status='requested'").bind(total,deposit,ref),
+       ...approvedBlocks(row.preferred_time).map(localTime=>
+         env.LIVE_TRIAL_DB.prepare("INSERT INTO birthday_party_confirmed_blocks (local_date,local_time,request_id) VALUES (?,?,?)").bind(row.preferred_date,localTime,ref)
+       )
+     ];
+     const results=await env.LIVE_TRIAL_DB.batch(statements);
+     if(results[0]?.meta?.changes!==1)return html("<h1>This request was already reviewed.</h1>",409);
+   }catch{return html(staffPage(row,auth,"A party was already confirmed during these two hours, or the calendar database is unavailable. Please select another date and time with the family."),409);}
    const payToken=await signature(env,"pay|"+ref+"|"+deposit);
    const url=new URL("/birthday-parties/",request.url);url.searchParams.set("ref",ref);url.searchParams.set("pay",payToken);
    const sent=await send(env,row.email,"Your Burning Tree birthday party date is confirmed",
