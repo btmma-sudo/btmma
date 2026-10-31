@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import PrivateLessonCalendar from "../components/PrivateLessonCalendar.astro";
 const packs = [
   { id:"basic", name:"Basic", eyebrow:"LEVEL UP", tagline:"BUILD SKILLS. GAIN CONFIDENCE.", price:249, sessions:4,
     photo:"/images/private-coaching/private-basic-card.webp", alt:"Young karate student demonstrating a technique",
@@ -33,8 +34,8 @@ const seo = {
      <p class="private-eyebrow">BURNING TREE MIXED MARTIAL ARTS · OWINGS MILLS, MD</p>
      <h1>TAKE YOUR TRAINING <span>TO THE NEXT LEVEL.</span></h1>
      <p class="private-intro">PERSONAL ATTENTION. <strong>REAL PROGRESS.</strong></p>
-     <p>Focused, one-on-one 60-minute martial arts training for kids, teens and adults. Build confidence, sharpen technique and work directly on your personal goals.</p>
-     <div class="private-buttons"><a class="private-btn" href="#packages">SEE ALL FOUR PACKAGES</a><a class="private-btn private-outline" href="#booking">REGISTER &amp; PAY ONLINE</a></div>
+     <p>Focused, one-on-one martial arts coaching for kids, teens and adults. Build confidence, sharpen technique and work directly on your personal goals. Choose 30 minutes or 1 hour when booking your appointment.</p>
+     <div class="private-buttons"><a class="private-btn" href="#packages">SEE ALL FOUR PACKAGES</a><a class="private-btn private-outline" href="#booking">REGISTER &amp; PAY ONLINE</a><a class="private-btn private-outline" href="#appointment-calendar">VIEW LESSON CALENDAR</a></div>
      <p class="private-motto">ONE TREE. ONE FAMILY.</p>
     </div>
     <div class="private-hero-photo">
@@ -76,6 +77,15 @@ const seo = {
    <div><p class="private-eyebrow">FOCUSED TRAINING</p><h2>DEEPER TRAINING. <span>FASTER PROGRESS.</span></h2><p>Work on Kenpo forms, Muay Thai striking, Wing Chun techniques, self-defense, tournament preparation and the goals that matter most to you.</p></div>
    <div class="private-benefit-points"><p><strong>01</strong> Personal assessment and coaching plan</p><p><strong>02</strong> One-on-one technique and strategy</p><p><strong>03</strong> Beginner to advanced skill development</p><p><strong>04</strong> Flexible scheduling by arrangement</p></div>
   </div></section>
+
+  <section class="private-wrap private-section" id="appointment-calendar" aria-labelledby="private-calendar-title">
+    <div class="private-heading">
+      <p class="private-eyebrow">CHOOSE A TIME THAT WORKS FOR YOU</p>
+      <h2 id="private-calendar-title">PRIVATE LESSON <span>BOOKING CALENDAR</span></h2>
+      <p>Choose a 30-minute or 1-hour private lesson, then select a date and an opening released by Coach David. Online appointment booking is separate from purchasing a private coaching package. If no appointments are open yet, you can still register and pay below or text Coach David at <a href="sms:+14102180894">410-218-0894</a>.</p>
+    </div>
+    <PrivateLessonCalendar />
+  </section>
 
   <section class="private-wrap private-section" id="booking">
    <div class="private-heading"><p class="private-eyebrow">READY TO LEVEL UP?</p><h2>REGISTER FOR <span>PRIVATE COACHING</span></h2><p>Choose your package, enter student information, then select the same payment choices as the $29 promotion.</p></div>
@@ -126,14 +136,14 @@ const seo = {
      <p class="private-summary-price" id="private-summary-price">$249</p>
      <p id="private-summary-sessions">4 sessions · 60 minutes each</p><hr />
      <h4>What happens next?</h4>
-     <ol><li>Choose your program and enter your information.</li><li>Pay by Stripe, Cash App or Zelle.</li><li>After payment verification, contact Coach David to schedule your private lessons.</li></ol>
+     <ol><li>Choose your program and enter your information.</li><li>Pay by Stripe, Cash App or Zelle.</li><li>After payment verification, select a time in the lesson calendar above when online booking is open, or contact Coach David for scheduling.</li></ol>
      <p>Questions? Call or text <a href="tel:+14102180894">410-218-0894</a>.</p>
      <p class="private-motto">ONE TREE. ONE FAMILY.</p>
     </aside>
    </div>
   </section>
   <section id="private-result" class="private-wrap private-section private-result" hidden aria-live="polite"><h2 id="private-result-heading">Verifying your payment…</h2><p id="private-result-text">Checking your secure Stripe receipt.</p><p>Please do not pay a second time while verification is pending.</p><a class="private-btn" href="sms:+14102180894">TEXT COACH DAVID</a></section>
-  <section class="private-wrap private-faq"><h2>PRIVATE LESSONS FAQ</h2><details><summary>How long is a private lesson?</summary><p>Each session is 60 minutes: 4 in Basic, 6 in Advanced, 8 in Elite and 10 in Mastery.</p></details><details><summary>Can beginners take private lessons?</summary><p>Yes. Coaching is personalized for beginners and more experienced students, including children, teens and adults.</p></details><details><summary>How do I book a specific session time?</summary><p>Include preferred days or times in your request. Coach David will coordinate individual appointments after payment is verified; specific times are not automatically reserved during checkout.</p></details><details><summary>Is this separate from the $29 special?</summary><p>Yes. These coaching packages are standalone one-on-one lessons, separate from introductory classes and regular tuition.</p></details></section>
+  <section class="private-wrap private-faq"><h2>PRIVATE LESSONS FAQ</h2><details><summary>How long is a private lesson?</summary><p>Appointments in the calendar are available in either 30-minute or 60-minute increments. Our Basic, Advanced, Elite and Mastery packages are listed and priced as 60-minute sessions. Contact Coach David to confirm how a 30-minute appointment applies to your package.</p></details><details><summary>Can beginners take private lessons?</summary><p>Yes. Coaching is personalized for beginners and more experienced students, including children, teens and adults.</p></details><details><summary>How do I book a specific session time?</summary><p>Use the booking calendar on this page once appointment availability has been released. Choose 30 minutes or 1 hour, then your preferred date and time. Package checkout does not automatically reserve an appointment. If online booking is not open yet, text Coach David at 410-218-0894 to arrange a time after payment verification.</p></details><details><summary>Is this separate from the $29 special?</summary><p>Yes. These coaching packages are standalone one-on-one lessons, separate from introductory classes and regular tuition.</p></details></section>
  </div>
  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" is:inline async defer></script>
  <script is:inline>
