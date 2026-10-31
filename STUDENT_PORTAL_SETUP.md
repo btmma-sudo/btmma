@@ -1,6 +1,6 @@
 # Private Student Portal — deployment and security checklist
 
-Student portal code may be merged into the website but it is **OFF by default**. The server-side `STUDENT_PORTAL_ENABLED` switch must be explicitly set to `true` to open the routes. Until that launch step, requests to both `/student-portal/` and `/api/student-portal/*` return HTTP 404, and there is no public navigation link. It does not alter the
+Student portal code may be merged into the website but it is **OFF by default**. Two launch locks must be explicitly released to open the routes: (1) change `STUDENT_PORTAL_RELEASED` from `false` to `true` in `src/lib/student-portal-launch.js` in a reviewed deployment, and (2) set the Cloudflare runtime setting `STUDENT_PORTAL_ENABLED=true`. Either lock independently keeps the portal inaccessible. Until that launch step, requests to both `/student-portal/` and `/api/student-portal/*` return HTTP 404, and there is no public navigation link. It does not alter the
 existing $29 special, seminar checkouts, webhook handlers, or recurring tuition
 agreements. The portal deliberately **does not add** a 3% card surcharge or
 $50 late fee. Payments default **OFF**.
@@ -27,7 +27,7 @@ $50 late fee. Payments default **OFF**.
 
 ## Infrastructure prerequisites (do not skip)
 
-1. The source code can be deployed to the website while disabled. **Do not set** `STUDENT_PORTAL_ENABLED` in Cloudflare until security, billing, and lesson rollout are reviewed. The Astro
+1. The source code can be deployed to the website while disabled. **Do not change either launch lock** until security, billing, and lesson rollout are reviewed. The Astro
    Cloudflare adapter already supports on-demand routes via prerender=false.
 2. Create/apply `db/migrations/0002_student_portal.sql` to the existing
    `LIVE_TRIAL_DB` database ONLY after confirming backups. The migration
@@ -92,4 +92,4 @@ References:
 ## Live readiness
 
 No student account, video, subscription, invoice, payment, or Stripe Billing
-configuration has been created in live services as part of this change. Code deployment is not public portal activation. The private portal is disabled until `STUDENT_PORTAL_ENABLED=true` is set intentionally, with the enrollment and payment readiness checks complete. Re-enable the desktop/mobile navigation links only at launch.
+configuration has been created in live services as part of this change. Code deployment is not public portal activation. The private portal is disabled until both source-code and Cloudflare launch locks are intentionally enabled, with the enrollment and payment readiness checks complete. Re-enable the desktop/mobile navigation links only at launch.
