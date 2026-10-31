@@ -25,3 +25,12 @@ CREATE INDEX IF NOT EXISTS idx_birthday_party_requests_date ON birthday_party_re
 CREATE UNIQUE INDEX IF NOT EXISTS idx_birthday_party_confirmed_slot
 ON birthday_party_requests(preferred_date,preferred_time)
 WHERE status IN ('approved','checkout_open','deposit_paid');
+
+-- Atomic two-hour availability protection (four 30-minute blocks per approved party).
+-- Pricing rules are server-owned: $350 for up to 15 kids; $10 for each additional child.
+CREATE TABLE IF NOT EXISTS birthday_party_confirmed_blocks (
+  local_date TEXT NOT NULL,
+  local_time TEXT NOT NULL,
+  request_id TEXT NOT NULL REFERENCES birthday_party_requests(id),
+  PRIMARY KEY(local_date, local_time)
+);
