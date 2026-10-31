@@ -154,6 +154,8 @@ const eventStructuredData = {
         <div id="seminar-payment-options" class="seminar-payment-options" hidden>
           <h3>Choose Your Payment Method</h3>
           <p id="seminar-reviewed-total" class="seminar-reviewed-total" aria-live="polite"></p>
+          <button id="seminar-download-waivers" class="seminar-cta seminar-pay-choice" type="button">DOWNLOAD MY SIGNED WAIVER COPIES</button>
+          <p class="seminar-note">Keep these signed copies for your records. Burning Tree also retains a separate signed record for each attendee.</p>
           <button id="seminar-applepay" class="seminar-cta seminar-pay-choice" type="button">APPLE PAY / APPLE CASH</button>
           <button id="seminar-card" class="seminar-cta seminar-pay-choice" type="button">PAY WITH CREDIT / DEBIT CARD</button>
           <button id="seminar-cashapp" class="seminar-cta seminar-pay-choice" type="button">PAY DIRECTLY WITH CASH APP</button>
@@ -520,7 +522,10 @@ const eventStructuredData = {
             count: payload.attendees.length,
             ticketName: tier.name,
             totalCents: tier.cents * payload.attendees.length,
-            waiverGroupId: data.groupId
+            waiverGroupId: data.groupId,
+            signatures: payload.attendees,
+            signedAt: data.signedAt,
+            waiverVersion: data.waiverVersion
           };
           const total = dollars(reviewed.totalCents);
           $("seminar-reviewed-total").textContent = reviewed.ticketName + " × " + reviewed.count + " = " + total;
@@ -541,6 +546,32 @@ const eventStructuredData = {
           verifyButton.disabled = false;
           if (!reviewed) verifyButton.textContent = "SAVE SIGNED WAIVERS & CHOOSE PAYMENT";
         }
+      });
+
+      $("seminar-download-waivers").addEventListener("click", () => {
+        if (!reviewed?.waiverGroupId) return;
+        const waiver = waiverDefinitions[reviewed.event];
+        const title = waiver.heading + "\n" + waiver.event + "\n\n" + waiver.body + "\n\n";
+        const signatures = reviewed.signatures.map((item, i) =>
+          "Attendee " + (i + 1) + ": " + item.name + "\n" +
+          "Signer: " + item.signature + "\n" +
+          "Capacity: " + item.relationship + "\n" +
+          "Risk acknowledgment: Accepted\n" +
+          "Electronic records and signature: Separately consented\n" +
+          "Signed at (UTC): " + reviewed.signedAt + "\n"
+        ).join("\n");
+        const complete = title + signatures +
+          "\nSigned waiver group reference: " + reviewed.waiverGroupId +
+          "\nWaiver version: " + reviewed.waiverVersion + "\n";
+        const blob = new Blob([complete], { type: "text/plain;charset=utf-8" });
+        const href = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = href;
+        a.download = "burning-tree-" + reviewed.event + "-signed-waivers.txt";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(href), 1000);
       });
 
       const openStripeCheckout = async () => {
