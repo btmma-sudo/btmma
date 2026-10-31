@@ -1,5 +1,5 @@
 import {
-  envForBookings,json,PROGRAMS,DURATIONS,futureDateTime,allowedHalfHour,clock,minutes,
+  envForBookings,json,PROGRAMS,DURATIONS,futureDateTime,allowedBookingWindow,allowedHalfHour,clock,minutes,
   canWrite,readBody,validName,safeString,verifyTurnstile,escapeHtml
 } from "../../../lib/private-lessons.js";
 export const prerender=false;
@@ -31,7 +31,7 @@ export async function POST({request,locals}) {
   if(typeof slotId!=="string"||!/^[a-f0-9-]{36}$/i.test(slotId)||!DURATIONS.includes(duration)||
      !validName(name)||!validName(student)||!validEmail(email)||!validPhone(phone)||
      !PROGRAMS.includes(program)||goals.length>500)
-    return json({ok:false,error:"Please choose a 30-minute or 1-hour lesson and complete all required fields."},400);
+    return json({ok:false,error:"Please choose a 60-minute lesson and complete all required fields."},400);
   if(!await verifyTurnstile(env,request,body?.turnstileToken))
     return json({ok:false,error:"Security check expired. Complete it again and retry."},403);
   const db=env.LIVE_TRIAL_DB;
@@ -41,11 +41,12 @@ export async function POST({request,locals}) {
       "SELECT id,local_date AS date,local_time AS time FROM private_lesson_slots WHERE id=? AND is_open=1"
     ).bind(slotId).first();
   } catch {return json({ok:false,error:"Booking is temporarily unavailable."},503);}
-  if(!slot||!futureDateTime(slot.date,slot.time)||!allowedHalfHour(slot.date,slot.time)||
+  if(!slot||!futureDateTime(slot.date,slot.time)||!allowedBookingWindow(slot.date,slot.time,duration)||
      minutes(slot.time)+duration>1440)
     return json({ok:false,error:"That time is no longer available. Please choose another."},409);
 
   let secondBlock=null;
+  // Every reservation occupies two adjacent 30-minute database blocks.
   if(duration===60) {
     const nextTime=clock(minutes(slot.time)+30);
     try {
@@ -54,12 +55,12 @@ export async function POST({request,locals}) {
       ).bind(slot.date,nextTime).first();
     } catch{return json({ok:false,error:"Booking is temporarily unavailable."},503);}
     if(!secondBlock||!allowedHalfHour(slot.date,nextTime))
-      return json({ok:false,error:"A full hour is not available at that start time. Select a different time or 30 minutes."},409);
+      return json({ok:false,error:"A full 60-minute lesson is not available at that start time. Select another time."},409);
   }
   const id=crypto.randomUUID();
   try {
     // Cloudflare D1 batch is transactional. The unique block PK prevents an
-    // overlapping 30- or 60-minute lesson even under concurrent requests.
+    // overlapping private lesson even under concurrent requests.
     // The trigger disallows claiming blocks that staff have since closed.
     const statements=[
       db.prepare(
