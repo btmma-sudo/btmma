@@ -140,7 +140,7 @@ const eventStructuredData = {
           <div id="seminar-waiver-signers"></div>
           <div class="seminar-security">
             <p class="seminar-note"><strong>Security check before saving signed waivers</strong></p>
-            <div class="cf-turnstile" data-sitekey="0x4AAAAAAD6Ievu-t0Ll1euh" data-size="normal"></div>
+            <div id="seminar-waiver-turnstile"></div>
           </div>
         </section>
         <div class="seminar-total" aria-live="polite">
@@ -237,6 +237,13 @@ const eventStructuredData = {
       const waiverDefinitions = JSON.parse($("seminar-waiver-data").textContent || "{}");
       let reviewed = null;
       let signaturePhase = false;
+      let waiverWidgetId = null;
+      const ensureTurnstile = () => {
+        if (!window.turnstile || waiverWidgetId !== null) return;
+        try { waiverWidgetId = window.turnstile.render("#seminar-waiver-turnstile", {
+          sitekey: "0x4AAAAAAD6Ievu-t0Ll1euh"
+        }); } catch { /* Retry when the service is available. */ }
+      };
 
       const names = () => attendeesInput.value.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
       const dollars = cents => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(cents / 100);
@@ -250,6 +257,7 @@ const eventStructuredData = {
         cashAppInstructions.hidden = true;
         waiverSection.hidden = true;
         waiverSignerFields.replaceChildren();
+        if (waiverWidgetId !== null) window.turnstile?.reset?.(waiverWidgetId);
         verifyButton.hidden = false;
         verifyButton.disabled = false;
         verifyButton.textContent = "REVIEW REGISTRATION & SIGN WAIVERS";
@@ -447,6 +455,7 @@ const eventStructuredData = {
           buildWaiverSigners(attendeeNames);
           signaturePhase = true;
           waiverSection.hidden = false;
+          ensureTurnstile();
           verifyButton.textContent = "SAVE SIGNED WAIVERS & CHOOSE PAYMENT";
           message.textContent = "Read the waiver, then have each attendee (or parent/guardian for a minor) sign. Nothing is charged.";
           waiverSection.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -461,7 +470,8 @@ const eventStructuredData = {
             return;
           }
         }
-        const token = waiverSection.querySelector("[name='cf-turnstile-response']")?.value || "";
+        ensureTurnstile();
+        const token = waiverWidgetId !== null ? window.turnstile?.getResponse?.(waiverWidgetId) || "" : "";
         if (!token) {
           message.textContent = "Please complete the security check beneath the waiver signatures.";
           waiverSection.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -526,7 +536,7 @@ const eventStructuredData = {
           choices.scrollIntoView({ behavior: "smooth", block: "nearest" });
         } catch (err) {
           message.textContent = err.message || "Unable to save the signed waiver. No payment has been charged.";
-          window.turnstile?.reset?.();
+          if (waiverWidgetId !== null) window.turnstile?.reset?.(waiverWidgetId);
         } finally {
           verifyButton.disabled = false;
           if (!reviewed) verifyButton.textContent = "SAVE SIGNED WAIVERS & CHOOSE PAYMENT";
@@ -565,7 +575,7 @@ const eventStructuredData = {
         } catch (err) {
           message.textContent = err.message || "Checkout is unavailable. Please try again.";
           paymentButtons.forEach(button => { button.disabled = false; });
-          window.turnstile?.reset?.();
+          if (waiverWidgetId !== null) window.turnstile?.reset?.(waiverWidgetId);
         } finally {
           clearTimeout(timeout);
         }
@@ -591,6 +601,7 @@ const eventStructuredData = {
           "Email: " + reviewed.email + "\n" +
           "Phone: " + reviewed.phone + "\n" +
           "Attendees:\n" + reviewed.attendees + "\n" +
+          "Signed waiver group: " + reviewed.waiverGroupId + "\n" +
           "Payment confirmation: [attach Cash App receipt after paying]";
         choices.hidden = true;
         cashAppInstructions.hidden = false;
