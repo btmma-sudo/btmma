@@ -73,7 +73,9 @@ if (account) {
   }
 }
 for (const [key,value] of Object.entries(secureHeaders())) Astro.response.headers.set(key,value);
-Astro.response.headers.set("Content-Security-Policy", "default-src 'none'; script-src https://challenges.cloudflare.com; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; frame-src https://challenges.cloudflare.com https://iframe.videodelivery.net; connect-src 'self' https://challenges.cloudflare.com; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
+// Astro compiles page/component <style> blocks into same-origin /_astro/*.css assets.
+// Allow same-origin stylesheets and scripts; keep unrelated external origins blocked.
+Astro.response.headers.set("Content-Security-Policy", "default-src 'none'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; frame-src https://challenges.cloudflare.com https://iframe.videodelivery.net; connect-src 'self' https://challenges.cloudflare.com; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
 ---
 <!doctype html>
 <html lang="en">
