@@ -128,6 +128,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         <button id="checkout-button" type="button" hidden disabled>PAY $29 WITH CREDIT / DEBIT CARD</button>
         <a id="checkout-fallback" class="cta" hidden rel="noopener noreferrer">OPEN SECURE $29 CARD CHECKOUT</a>
         <button id="cashapp-button" type="button" hidden disabled>PAY $29 DIRECTLY WITH CASH APP</button>
+        <button id="zelle-button" type="button" hidden disabled>PAY $29 DIRECTLY WITH ZELLE</button>
         <p id="applepay-help" class="payment-help" hidden>Apple Pay opens secure Stripe checkout and appears on supported devices. To use your Apple Cash balance, choose your Apple Cash card in Apple Pay. If Apple Pay is unavailable, you can still use a card. These payments are processed by Stripe, not sent directly to a personal Apple Cash account.</p>
         <div id="cashapp-instructions" class="cashapp-instructions" hidden aria-live="polite">
           <h3>Direct Cash App Payment</h3>
@@ -138,6 +139,19 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <p><strong>Your registration is pending.</strong> We will confirm it only after verifying the $29 payment in our Cash App account. Do not pay again through Stripe.</p>
           <p>Need to change payment methods? Call <a href="tel:+12023684395">(202) 368-4395</a>.</p>
           <button type="button" id="cashapp-new-student">REGISTER ANOTHER STUDENT</button>
+        </div>
+        <div id="zelle-instructions" class="cashapp-instructions" hidden aria-live="polite">
+          <h3>Direct Zelle Payment — $29</h3>
+          <p><strong>Send exactly $29</strong> through Zelle to <strong>410-218-0894</strong>, Coach David's Zelle-enrolled mobile number. This is a <strong>phone number, not a mailing or studio address</strong>.</p>
+          <button id="zelle-copy-number" type="button">COPY ZELLE PHONE NUMBER</button>
+          <p id="zelle-copy-status" class="fine-print" role="status"></p>
+          <p>Open the Zelle option in your bank or credit union's app, enter the mobile number <strong>410-218-0894</strong> and the exact amount <strong>$29.00</strong>.</p>
+          <p><strong>Check the recipient name your bank displays before sending.</strong> If the name does not match the person you intend to pay or you're uncertain, do not send the money; contact Coach David first.</p>
+          <p>Include <strong>BTMMA $29 New Student Special</strong> in the payment note, if your bank supports payment notes.</p>
+          <p>After sending, <strong>text the student's name and your Zelle payment confirmation</strong> to <a href="sms:+14102180894">(410) 218-0894</a>.</p>
+          <p><strong>Your registration is pending.</strong> Burning Tree will confirm it only after verifying the $29 transfer was received through Zelle. Choosing this option does not automatically confirm payment. <strong>Do not pay a second time</strong> by card, Apple Pay or Cash App.</p>
+          <p>Need help or want to change payment methods? Call or text <a href="tel:+14102180894">(410) 218-0894</a> before sending another payment.</p>
+          <button type="button" id="zelle-new-student">REGISTER ANOTHER STUDENT</button>
         </div>
       </form>
     </section>
@@ -175,6 +189,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     const applePayHelp = document.getElementById("applepay-help");
     const cashAppButton = document.getElementById("cashapp-button");
     const cashAppInstructions = document.getElementById("cashapp-instructions");
+    const zelleButton = document.getElementById("zelle-button");
+    const zelleInstructions = document.getElementById("zelle-instructions");
     const pilotFields = document.getElementById("pilotFields");
     const pilotCode = document.getElementById("pilotCode");
 
@@ -259,6 +275,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       checkoutButton.disabled = true;
       if (applePayButton) applePayButton.disabled = true;
       if (cashAppButton) cashAppButton.disabled = true;
+      if (zelleButton) zelleButton.disabled = true;
       if (checkoutFallback) {
         checkoutFallback.hidden = true;
         checkoutFallback.removeAttribute("href");
@@ -294,6 +311,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         checkoutButton.disabled = false;
         if (applePayButton && liveMode) applePayButton.disabled = false;
         if (cashAppButton && liveMode) cashAppButton.disabled = false;
+        if (zelleButton && liveMode) zelleButton.disabled = false;
       } finally {
         clearTimeout(timeout);
       }
@@ -307,6 +325,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       cashAppButton.disabled = true;
       checkoutButton.disabled = true;
       if (applePayButton) applePayButton.disabled = true;
+      if (zelleButton) zelleButton.disabled = true;
       notice.textContent = "Preparing direct Cash App payment instructions...";
       try {
         const response = await fetch("/api/trial-cashapp-live", {
@@ -323,6 +342,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         checkoutButton.hidden = true;
         if (applePayButton) applePayButton.hidden = true;
         if (applePayHelp) applePayHelp.hidden = true;
+        if (zelleButton) zelleButton.hidden = true;
         if (cashAppInstructions) cashAppInstructions.hidden = false;
         notice.textContent = "Opening Cash App with $BTMMA and $29. Check the details before sending. We'll verify your payment manually.";
         // Restore receipt instructions only after returning from this approved
@@ -349,6 +369,71 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         cashAppButton.disabled = false;
         checkoutButton.disabled = false;
         if (applePayButton) applePayButton.disabled = false;
+        if (zelleButton) zelleButton.disabled = false;
+      }
+    });
+    zelleButton?.addEventListener("click", async () => {
+      if (!grant || !zelleButton || !checkoutButton || liveMode !== true) {
+        if (notice) notice.textContent = "Please verify the student's registration before choosing Zelle.";
+        return;
+      }
+      zelleButton.disabled = true;
+      checkoutButton.disabled = true;
+      if (applePayButton) applePayButton.disabled = true;
+      if (cashAppButton) cashAppButton.disabled = true;
+      notice.textContent = "Preparing secure registration instructions for Zelle. No payment has been charged.";
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 15000);
+        let response;
+        try {
+          response = await fetch("/api/trial-zelle-live", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            cache: "no-store",
+            body: JSON.stringify({ grant }),
+            signal: controller.signal
+          });
+        } finally {
+          clearTimeout(timeout);
+        }
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || result.success !== true ||
+            result.state !== "pending_manual_verification" ||
+            result.recipientPhone !== "410-218-0894" || result.amount !== 29) {
+          throw new Error(result.error || "Zelle instructions could not be verified. Please contact Coach David.");
+        }
+        // Zelle is a bank-to-bank transfer outside Stripe. Never claim paid.
+        grant = null;
+        zelleButton.hidden = true;
+        checkoutButton.hidden = true;
+        if (applePayButton) applePayButton.hidden = true;
+        if (cashAppButton) cashAppButton.hidden = true;
+        if (applePayHelp) applePayHelp.hidden = true;
+        if (checkoutFallback) { checkoutFallback.hidden = true; checkoutFallback.removeAttribute("href"); }
+        if (cashAppInstructions) cashAppInstructions.hidden = true;
+        if (zelleInstructions) zelleInstructions.hidden = false;
+        notice.textContent = "Zelle selected: $29 to Coach David's mobile (410) 218-0894. Registration stays pending until we verify payment.";
+        try {
+          const bytes = window.crypto.getRandomValues(new Uint8Array(16));
+          const returnToken = Array.from(bytes, b => b.toString(16).padStart(2, "0")).join("");
+          window.sessionStorage.setItem("btmma_zelle_trial_return_v1", returnToken);
+          const url = new URL(window.location.href);
+          url.searchParams.delete("checkout");
+          url.searchParams.delete("session_id");
+          url.searchParams.set("zelle_return", returnToken);
+          window.history.replaceState(window.history.state, "", url.pathname + url.search + url.hash);
+        } catch { /* Payment instructions remain visible without storage. */ }
+        trackTrial("trial_zelle_payment_selected");
+        zelleInstructions?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      } catch (error) {
+        notice.textContent = error?.name === "AbortError"
+          ? "Zelle selection timed out. Please contact Coach David before sending a payment."
+          : error?.message || "Zelle is unavailable. Call or text (410) 218-0894.";
+        zelleButton.disabled = false;
+        checkoutButton.disabled = false;
+        if (applePayButton) applePayButton.disabled = false;
+        if (cashAppButton) cashAppButton.disabled = false;
       }
     });
     const submit = form?.querySelector('button[type="submit"]');
@@ -359,6 +444,20 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         window.sessionStorage.removeItem("btmma_cashapp_trial_pending");
         window.sessionStorage.removeItem("btmma_cashapp_trial_return_v2");
       } catch { /* Allow reset without storage. */ }
+      window.location.assign("/29-trial/");
+    });
+    document.getElementById("zelle-copy-number")?.addEventListener("click", async () => {
+      const status = document.getElementById("zelle-copy-status");
+      try {
+        await navigator.clipboard.writeText("4102180894");
+        if (status) status.textContent = "Copied 410-218-0894. Enter it as a mobile number in your bank's Zelle app.";
+      } catch {
+        if (status) status.textContent = "Copy this Zelle recipient mobile number: 410-218-0894.";
+      }
+    });
+    document.getElementById("zelle-new-student")?.addEventListener("click", () => {
+      try { window.sessionStorage.removeItem("btmma_zelle_trial_return_v1"); }
+      catch { /* Continue to a fresh registration if storage is disabled. */ }
       window.location.assign("/29-trial/");
     });
     // Verify Stripe's session server-side. The return URL alone is not a receipt.
@@ -442,6 +541,30 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       freshUrl.searchParams.delete("cashapp_return");
       window.history.replaceState(window.history.state, "", freshUrl.pathname + freshUrl.search + freshUrl.hash);
     }
+    // Zelle receipt instructions are restored only in the same browser tab
+    // after a successful manual-payment selection. A URL alone is not proof.
+    const zelleReturnToken = checkoutReturn.get("zelle_return");
+    let zellePending = false;
+    try {
+      zellePending = !!zelleReturnToken && /^[a-f0-9]{32}$/.test(zelleReturnToken) &&
+        window.sessionStorage.getItem("btmma_zelle_trial_return_v1") === zelleReturnToken;
+    } catch { /* Default to fresh registration if browser storage is unavailable. */ }
+    if (zellePending) {
+      if (zelleInstructions) zelleInstructions.hidden = false;
+      if (checkoutButton) checkoutButton.hidden = true;
+      if (applePayButton) applePayButton.hidden = true;
+      if (cashAppButton) cashAppButton.hidden = true;
+      if (zelleButton) zelleButton.hidden = true;
+      if (applePayHelp) applePayHelp.hidden = true;
+      submit.disabled = true;
+      notice.textContent = "Your $29 Zelle registration is pending manual payment verification. Text your receipt and student's name to (410) 218-0894. Do not pay twice.";
+      return;
+    }
+    if (zelleReturnToken) {
+      const cleanUrl = new URL(window.location.href);
+      cleanUrl.searchParams.delete("zelle_return");
+      window.history.replaceState(window.history.state, "", cleanUrl.pathname + cleanUrl.search + cleanUrl.hash);
+    }
     // Fail closed until the server confirms whether checkout is test or live.
     (async () => {
       try {
@@ -486,6 +609,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       if (applePayHelp) applePayHelp.hidden = true;
       if (cashAppButton) { cashAppButton.hidden = true; cashAppButton.disabled = true; }
       if (cashAppInstructions) cashAppInstructions.hidden = true;
+      if (zelleButton) { zelleButton.hidden = true; zelleButton.disabled = true; }
+      if (zelleInstructions) zelleInstructions.hidden = true;
       if (liveMode === null) {
         notice.textContent = "Registration is temporarily unavailable. Please call (202) 368-4395.";
         return;
@@ -539,7 +664,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           if (applePayButton) { applePayButton.hidden = false; applePayButton.disabled = false; }
           if (applePayHelp) applePayHelp.hidden = false;
           if (cashAppButton) { cashAppButton.hidden = false; cashAppButton.disabled = false; }
-          notice.textContent = "Registration approved! Choose Apple Pay / Apple Cash, credit or debit card, or direct Cash App. Apple Pay appears on eligible devices; Cash App requires staff verification.";
+          if (zelleButton) { zelleButton.hidden = false; zelleButton.disabled = false; }
+          notice.textContent = "Registration approved! Choose Apple Pay / Apple Cash, credit or debit card, direct Cash App, or Zelle. Wallets appear on eligible devices; Cash App and Zelle require manual payment verification.";
         }
       } catch (error) {
         notice.textContent = error?.name === "AbortError"
@@ -792,6 +918,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   .trial-page #applepay-button,
   .trial-page #checkout-button,
   .trial-page #cashapp-button,
+  .trial-page #zelle-button,
   .trial-page #checkout-fallback {
     background-color: #781010;
     color: #fff;
@@ -808,6 +935,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   .trial-page #applepay-button:not(:disabled):hover,
   .trial-page #checkout-button:not(:disabled):hover,
   .trial-page #cashapp-button:not(:disabled):hover,
+  .trial-page #zelle-button:not(:disabled):hover,
   .trial-page #checkout-fallback:hover {
     background-color: #951818;
     color: #fff;
@@ -815,13 +943,15 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   .trial-page #applepay-button:focus-visible,
   .trial-page #checkout-button:focus-visible,
   .trial-page #cashapp-button:focus-visible,
+  .trial-page #zelle-button:focus-visible,
   .trial-page #checkout-fallback:focus-visible {
     outline: 3px solid #fff;
     outline-offset: 3px;
   }
   .trial-page #applepay-button:disabled,
   .trial-page #checkout-button:disabled,
-  .trial-page #cashapp-button:disabled {
+  .trial-page #cashapp-button:disabled,
+  .trial-page #zelle-button:disabled {
     opacity: 1;
     background-color: #542020;
     border-color: #a87878;
