@@ -30,7 +30,8 @@ export async function POST({ request, locals }) {
         maxDurationSeconds: 1800,
         expiry:new Date(Date.now() + 20 * 60 * 1000).toISOString(),
         requireSignedURLs:true,
-        allowedOrigins:["burningtreemma.com"],
+        // Signed playback tokens are required; do not also require a referrer
+        // because the student iframe deliberately uses no-referrer.
         meta:{name:lesson.title,portalLessonId:id}
       })
     });
