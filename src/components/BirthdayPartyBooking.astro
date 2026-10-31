@@ -1,28 +1,28 @@
 ---
 /* Standalone party request + confirmed-deposit experience.
-   Birthday party totals are fixed by guest count; deposits are set upon date confirmation. */
+   Birthday party totals and the $150 deposit are fixed by the server; payment only after date confirmation. */
 ---
 <section class="party-booking-section" id="birthday-reservations" aria-labelledby="birthday-reservations-heading">
   <div class="shell">
     <header class="party-heading">
       <p class="party-kicker">BURNING TREE MMA · OWINGS MILLS, MD</p>
       <h2 id="birthday-reservations-heading">Plan a Birthday Party They’ll Remember</h2>
-      <p>Celebrate with real martial arts games, confidence-building activities, and team challenges. Every birthday celebration is 2 hours. Choose your preferred date below. We’ll confirm the time and deposit before asking you to pay.</p>
+      <p>Celebrate with real martial arts games, confidence-building activities, and team challenges. Every birthday celebration is 2 hours. Choose your preferred date below. We’ll confirm availability before sending your secure $150 deposit link.</p>
     </header>
     <div class="party-pricing" aria-label="Birthday party price and duration">
       <div class="party-pricing-major"><span>2-HOUR BIRTHDAY PARTY</span><strong>$350</strong><small>For up to 15 children</small></div>
-      <div class="party-pricing-details"><strong>Each additional child: $10</strong><p>All party activity options use the same birthday party price. Your total updates automatically based on your estimated number of children.</p><p>Requested dates and party size must be confirmed by Burning Tree before a deposit is due.</p></div>
+      <div class="party-pricing-details"><strong>Each additional child: $10</strong><p>All party activity options use the same birthday party price. Your total updates automatically based on your estimated number of children.</p><p>A $150 deposit, credited toward your party total, is due only after Burning Tree confirms your date.</p></div>
     </div>
     <div class="party-steps" aria-label="How party reservations work">
       <div><span>1</span><strong>Choose your party</strong><small>Tell us your group size and preferred activities.</small></div>
       <div><span>2</span><strong>Request a date</strong><small>We confirm the two-hour time, total and deposit.</small></div>
-      <div><span>3</span><strong>Pay your deposit</strong><small>Secure Stripe checkout only after our confirmation.</small></div>
+      <div><span>3</span><strong>Pay $150 deposit</strong><small>Secure Stripe checkout only after our confirmation.</small></div>
     </div>
     <div class="party-payment-result" id="birthday-payment-result" hidden aria-live="polite"></div>
     <div class="party-booking-flow" id="birthday-booking-flow">
       <div class="party-form-intro">
         <h3>Explore Your Party Options</h3>
-        <p>Choose your preferred activities. All options are $350 for a two-hour birthday party with up to 15 children, plus $10 per additional child. We’ll confirm the time, group capacity and deposit.</p>
+        <p>Choose your preferred activities. All options are $350 for a two-hour birthday party with up to 15 children, plus $10 per additional child. We’ll confirm the time and group capacity. Your $150 deposit is applied to the party total.</p>
       </div>
       <div class="party-package-grid" role="group" aria-label="Party activity options">
         <label class="party-package"><input type="radio" name="party-option" value="Martial Arts Games" checked form="birthday-request-form" /><strong>Martial Arts Games</strong><span>Beginner-friendly movement, guided martial arts games and fun.</span><b>Same $350 party pricing</b></label>
@@ -72,6 +72,7 @@
                 <span>Estimated party total (2 hours)</span>
                 <strong id="birthday-estimated-total">$350</strong>
                 <small id="birthday-price-breakdown">Includes up to 15 children. $10 for each additional child.</small>
+                <div class="party-deposit-preview"><span>Deposit after approval: <b>$150</b></span><span>Remaining balance: <b id="birthday-remaining-balance">$200</b></span></div>
               </div>
               <label>Anything we should know? (optional)
                 <textarea id="birthday-notes" rows="3" maxlength="700" placeholder="Party goals, special requests, or questions"></textarea>
@@ -93,7 +94,7 @@
       <button type="button" class="party-primary" id="birthday-pay">Pay Deposit Securely</button>
       <p class="party-status" id="birthday-deposit-status" aria-live="polite"></p>
     </div>
-    <p class="party-bottom-help">Questions about your celebration? Text <a href="sms:+14102180894">410-218-0894</a> or call <a href="tel:+12023684395">(202) 368-4395</a>. <strong>No deposit will be charged before we confirm your date and price.</strong></p>
+    <p class="party-bottom-help">Questions about your celebration? Text <a href="sms:+14102180894">410-218-0894</a> or call <a href="tel:+12023684395">(202) 368-4395</a>. <strong>The $150 deposit is only charged after we confirm your requested date.</strong></p>
   </div>
 </section>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
@@ -159,6 +160,7 @@
     const valid=Number.isInteger(guests)&&guests>=1&&guests<=75;
     const extra=valid?Math.max(0,guests-15):0;
     qs("birthday-estimated-total").textContent=valid?"$"+String(350+extra*10):"—";
+    qs("birthday-remaining-balance").textContent=valid?"$"+String(200+extra*10):"—";
     qs("birthday-price-breakdown").textContent=valid
       ?(extra>0?"$350 for 15 children + "+extra+" additional "+(extra===1?"child":"children")+" × $10.":"Includes up to 15 children. $10 for each additional child.")
       :"Enter the number of children (1–75) to estimate the price.";
@@ -204,7 +206,7 @@
         if(d.status==="deposit_paid"){paymentResult.hidden=false;paymentResult.textContent="Your deposit has already been paid. Please do not pay again.";flow.hidden=true;return;}
         flow.hidden=true;deposit.hidden=false;
         const price=cents=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(cents/100);
-        qs("birthday-approved-summary").textContent="Confirmed for "+d.date+" at "+d.time+" Eastern. Total party price: "+price(d.totalCents)+". Deposit due now: "+price(d.depositCents)+". The remaining balance will be handled with the studio.";
+        qs("birthday-approved-summary").textContent="Confirmed for "+d.date+" at "+d.time+" Eastern. Total party price: "+price(d.totalCents)+". Deposit due now: "+price(d.depositCents)+". Balance remaining after deposit: "+price(d.totalCents-d.depositCents)+". Arrange payment of the balance with the studio.";
         qs("birthday-pay").textContent="Pay "+price(d.depositCents)+" Deposit Securely";
         qs("birthday-pay").addEventListener("click",async()=>{
           const button=qs("birthday-pay");button.disabled=true;qs("birthday-deposit-status").textContent="Opening secure Stripe checkout…";
@@ -238,6 +240,8 @@
 .party-price-preview span{color:#fff;font-weight:750}
 .party-price-preview strong{color:#fff;font-size:2rem;line-height:1.2}
 .party-price-preview small{color:#f3e5e5;line-height:1.5}
+.party-deposit-preview{display:flex;flex-wrap:wrap;justify-content:space-between;gap:9px;border-top:1px solid #c88c90;margin-top:10px;padding-top:12px}
+.party-deposit-preview span{font-size:.91rem;color:#fff}
 .party-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:25px auto 36px}
 .party-steps>div{background:#242124;border:1px solid #784449;padding:19px;border-radius:12px;display:grid;grid-template-columns:34px 1fr;gap:3px 10px;align-items:center}
 .party-steps span{grid-row:span 2;background:#b81c26;color:#fff;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-weight:900}
