@@ -203,18 +203,19 @@ export async function POST({request,locals}){
  if(data?.action==="request"){
    const row={id:crypto.randomUUID(),contact_name:str(data.name),email:str(data.email,254).toLowerCase(),phone:str(data.phone,30),
      birthday_name:str(data.childName),age_group:str(data.ageGroup,40),guests:Number(data.guests),
-     package_interest:str(data.package,50),preferred_date:str(data.date,10),preferred_time:str(data.time,10),notes:str(data.notes,700)};
+     package_interest:str(data.package,50),extra_hours:Number(data.extraHours??0),preferred_date:str(data.date,10),preferred_time:str(data.time,10),notes:str(data.notes,700)};
    if(row.contact_name.length<2||row.contact_name.length>120||row.birthday_name.length<2||row.birthday_name.length>120||
       !emailRe.test(row.email)||!/^[-+()\d .]{7,30}$/.test(row.phone)||!["4–6","7–9","10–12","13+"].includes(row.age_group)||
-      !Number.isInteger(row.guests)||row.guests<1||row.guests>75||!choices.includes(row.package_interest)||
+      !Number.isInteger(row.guests)||row.guests<1||row.guests>75||
+      !Number.isInteger(row.extra_hours)||row.extra_hours<0||row.extra_hours>MAX_EXTRA_HOURS||!choices.includes(row.package_interest)||
       !validDate(row.preferred_date)||!times.includes(row.preferred_time)||
       (new Date(row.preferred_date+"T12:00:00Z").getUTCDay()===0 && !["14:30","16:00"].includes(row.preferred_time))||row.notes.length>700||
       [row.contact_name,row.birthday_name,row.notes].some(s=>/[<>]/.test(s)))
-     return json({error:"Please check the child, contact, party size, Saturday/Sunday date, and time."},400);
+     return json({error:"Please check the contact details, guest count, additional hours, Saturday/Sunday date and time."},400);
    try{if(!await verifyCaptcha(env,request,data.turnstileToken))return json({error:"Security check expired. Please try again."},403);}catch{return json({error:"Security check is unavailable. Please try again."},503);}
    try{
-     await env.LIVE_TRIAL_DB.prepare("INSERT INTO birthday_party_requests (id,contact_name,email,phone,birthday_name,age_group,guests,package_interest,preferred_date,preferred_time,notes) VALUES (?,?,?,?,?,?,?,?,?,?,?)")
-      .bind(row.id,row.contact_name,row.email,row.phone,row.birthday_name,row.age_group,row.guests,row.package_interest,row.preferred_date,row.preferred_time,row.notes).run();
+     await env.LIVE_TRIAL_DB.prepare("INSERT INTO birthday_party_requests (id,contact_name,email,phone,birthday_name,age_group,guests,extra_hours,package_interest,preferred_date,preferred_time,notes) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)")
+      .bind(row.id,row.contact_name,row.email,row.phone,row.birthday_name,row.age_group,row.guests,row.extra_hours,row.package_interest,row.preferred_date,row.preferred_time,row.notes).run();
    }catch{return json({error:"The request could not be saved. Please text 410-218-0894."},503);}
    const crmSaved=await saveLead(env,row);
    const review=new URL("/api/birthday-party",request.url);
@@ -224,16 +225,16 @@ export async function POST({request,locals}){
    await send(env,notifyTo,"New birthday party request — "+row.preferred_date,
       "<h2>New Burning Tree Birthday Party Inquiry</h2><p>Contact: "+esc(row.contact_name)+
       "<br>Email: "+esc(row.email)+"<br>Phone: "+esc(row.phone)+"<br>Birthday child: "+esc(row.birthday_name)+
-      "<br>Age group: "+esc(row.age_group)+"<br>Guest count: "+row.guests+"<br>Duration: 2 hours<br>Party total: $"+(partyPriceCents(row.guests)/100).toFixed(2)+"<br>Deposit after approval: $150<br>Balance after deposit: $"+((partyPriceCents(row.guests,row.extra_hours)-PARTY_DEPOSIT_CENTS)/100).toFixed(2)+"<br>Party interest: "+esc(row.package_interest)+
+      "<br>Age group: "+esc(row.age_group)+"<br>Guest count: "+row.guests+"<br>Duration: "+(2+row.extra_hours)+" hours<br>Additional hours: "+row.extra_hours+" × $100<br>Party total: $"+(partyPriceCents(row.guests,row.extra_hours)/100).toFixed(2)+"<br>Deposit after approval: $150<br>Balance after deposit: $"+((partyPriceCents(row.guests,row.extra_hours)-PARTY_DEPOSIT_CENTS)/100).toFixed(2)+"<br>Party interest: "+esc(row.package_interest)+
       "<br>Requested date: "+esc(row.preferred_date)+" at "+esc(row.preferred_time)+" Eastern"+
       "<br>Notes: "+esc(row.notes)+"<br>Airtable CRM: "+(crmSaved?"Saved":"Needs reconciliation")+"</p>"+
       "<p><a href='"+esc(review.href)+"'>Review date, confirm calculated total and fixed $150 deposit, and approve</a></p>"+
       "<p>Do not send this private approval link to the customer.</p>");
    await send(env,row.email,"We received your Burning Tree birthday party request",
      "<h2>Thanks for thinking of Burning Tree!</h2><p>We received your request for "+esc(row.preferred_date)+
-     " at "+esc(row.preferred_time)+" Eastern for a 2-hour birthday party. Estimated price for "+row.guests+" children: $"+(partyPriceCents(row.guests)/100).toFixed(2)+". This is a request, not a confirmed reservation. After we approve the date, you can pay the $150 deposit toward the total through our secure checkout.</p>"+
+     " at "+esc(row.preferred_time)+" Eastern for a "+(2+row.extra_hours)+"-hour birthday party ("+row.extra_hours+" extra hours at $100 each). Estimated price for "+row.guests+" children: $"+(partyPriceCents(row.guests,row.extra_hours)/100).toFixed(2)+". This is a request, not a confirmed reservation. After we approve the date, you can pay the $150 deposit toward the total through our secure checkout.</p>"+
      "<p>Questions? Text 410-218-0894.</p>");
-   return json({ok:true,reference:row.id,totalCents:partyPriceCents(row.guests),durationMinutes:PARTY_DURATION_MINUTES,message:"Your two-hour birthday party date request was received. After date confirmation, a $150 deposit will be due toward the total. No payment has been taken."});
+   return json({ok:true,reference:row.id,totalCents:partyPriceCents(row.guests,row.extra_hours),durationMinutes:partyDurationMinutes(row.extra_hours),message:"Your birthday party date and duration request was received. After date confirmation, a $150 deposit will be due toward the total. No payment has been taken."});
  }
  if(data?.action==="checkout"){
    const ref=str(data.ref,40),grant=str(data.pay,100);
