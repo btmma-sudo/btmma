@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS birthday_party_requests (
   birthday_name TEXT NOT NULL,
   age_group TEXT NOT NULL,
   guests INTEGER NOT NULL CHECK(guests BETWEEN 1 AND 75),
+  extra_hours INTEGER NOT NULL DEFAULT 0 CHECK(extra_hours BETWEEN 0 AND 4),
   package_interest TEXT NOT NULL,
   preferred_date TEXT NOT NULL,
   preferred_time TEXT NOT NULL,
@@ -26,8 +27,9 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_birthday_party_confirmed_slot
 ON birthday_party_requests(preferred_date,preferred_time)
 WHERE status IN ('approved','checkout_open','deposit_paid');
 
--- Atomic two-hour availability protection (four 30-minute blocks per approved party).
--- Pricing rules are server-owned: $350 for up to 15 kids; $10 for each additional child.
+-- Atomic full-duration availability protection (30-minute blocks per approved party).
+-- Pricing: $350 for 2 hours and up to 15 kids; $10/extra child, $100/extra hour.
+-- Existing live tables are updated by the idempotent API schema check to add extra_hours DEFAULT 0.
 CREATE TABLE IF NOT EXISTS birthday_party_confirmed_blocks (
   local_date TEXT NOT NULL,
   local_time TEXT NOT NULL,
