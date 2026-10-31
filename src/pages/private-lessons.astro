@@ -28,6 +28,18 @@ const seo = {
  keywords={["private martial arts lessons Owings Mills","one on one karate coaching","private self defense classes near me","martial arts competition coaching Baltimore County","private Muay Thai training","private Wing Chun lessons"]}>
  <script type="application/ld+json" set:html={JSON.stringify(seo)} />
  <div class="private">
+  <section class="private-steps" aria-labelledby="private-steps-heading">
+   <div class="private-wrap">
+    <p class="private-steps-eyebrow">PRIVATE COACHING · EASY ONLINE SIGNUP</p>
+    <h2 id="private-steps-heading">GET STARTED IN <span>3 SIMPLE STEPS</span></h2>
+    <ol class="private-steps-list">
+     <li><a href="#booking"><span class="private-step-number" aria-hidden="true">1</span><span class="private-step-content"><strong>REGISTER</strong><span>Choose your package and complete your registration information.</span></span></a></li>
+     <li><a href="#booking"><span class="private-step-number" aria-hidden="true">2</span><span class="private-step-content"><strong>MAKE YOUR PAYMENT</strong><span>Select your payment method and complete payment.</span></span></a></li>
+     <li><a href="#appointment-calendar"><span class="private-step-number" aria-hidden="true">3</span><span class="private-step-content"><strong>CHOOSE YOUR DATE &amp; TIME</strong><span>Once payment is verified, select an available 60-minute appointment.</span></span></a></li>
+    </ol>
+    <p class="private-steps-note">Appointments depend on times released by Coach David. If none are available yet, text <a href="sms:+14102180894">410-218-0894</a> to arrange your lesson.</p>
+   </div>
+  </section>
   <section class="private-hero">
    <div class="private-wrap private-hero-grid">
     <div>
@@ -226,6 +238,21 @@ const seo = {
  <style>
  .private{color:#151515;overflow:hidden;--red:#df161d}.private *{box-sizing:border-box}.private [hidden]{display:none!important}
  .private-wrap{max-width:1240px;margin:auto;padding-left:clamp(18px,4vw,42px);padding-right:clamp(18px,4vw,42px)}
+ .private-steps{background:#fff;border-top:4px solid #df161d;border-bottom:1px solid #ddd;padding:30px 0 32px}
+ .private-steps-eyebrow{font-size:.72rem;font-weight:900;letter-spacing:.13em;color:#ae131a;text-align:center;margin:0 0 6px}
+ .private-steps h2{text-align:center;font-size:clamp(1.55rem,3vw,2.25rem);line-height:1.2;font-weight:1000;letter-spacing:-.035em;color:#101010;margin:0 0 22px}
+ .private-steps h2 span{color:#c1121b}
+ .private-steps-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;list-style:none;margin:0;padding:0}
+ .private-steps-list li{min-width:0}
+ .private-steps-list a{height:100%;min-height:124px;display:flex;align-items:center;gap:14px;text-decoration:none!important;color:#161616!important;background:#fafafa;border:2px solid #e5e5e5;border-radius:12px;padding:19px 16px;transition:border-color .15s,background .15s}
+ .private-steps-list a:hover,.private-steps-list a:focus-visible{border-color:#c1121b;background:#fff4f4;outline-offset:3px}
+ .private-step-number{flex:0 0 46px;width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#c1121b;color:#fff;font-size:1.45rem;font-weight:1000}
+ .private-step-content{display:flex;flex-direction:column;gap:6px;min-width:0}
+ .private-step-content strong{font-size:clamp(.92rem,1.35vw,1.16rem);line-height:1.2;font-weight:1000;color:#111}
+ .private-step-content>span{font-size:.84rem;line-height:1.45;color:#444}
+ .private-steps-note{font-size:.82rem;line-height:1.55;color:#474747;text-align:center;margin:18px 0 0}
+ .private-steps-note a{color:#ad1017!important;font-weight:800;text-decoration:underline}
+ @media(max-width:880px){.private-steps-list{grid-template-columns:1fr;gap:10px}.private-steps-list a{min-height:83px;padding:13px 15px}.private-steps{padding:25px 0}.private-step-content strong{font-size:1.08rem}}
  .private-eyebrow{font-weight:900;font-size:.8rem;letter-spacing:.11em;color:var(--red)}
  .private-hero{background:radial-gradient(circle at 80% 70%,#991217,transparent 48%),#111;color:#fff}
  .private-hero-grid{min-height:570px;display:grid;grid-template-columns:1.1fr .9fr;gap:20px;align-items:center;padding-top:35px;padding-bottom:35px}
