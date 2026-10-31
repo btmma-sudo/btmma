@@ -12,12 +12,12 @@ const LOCATIONS=["At our organization","Burning Tree studio","Discuss options"];
 const PAYMENTS=["Request invoice","Card / Apple Pay","Cash App","Zelle","Discuss with Coach David"];
 const respond=(obj,status=200)=>new Response(JSON.stringify(obj),{status,headers:{"content-type":"application/json; charset=utf-8","cache-control":"no-store","x-content-type-options":"nosniff"}});
 const clean=(v,n=120)=>typeof v==="string"?v.trim().slice(0,n+1):"";
-const safeText=v=>!/[[<>\\r\\n]/.test(v);
+const safeText=v=>!/[<>\r\n]/.test(v);
 const escape=v=>String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
 async function notify(env,fields,id){
   if(!env.RESEND_API_KEY)return;
   const recipient=String(env.CORPORATE_WORKSHOP_NOTIFICATION_EMAIL||env.PRIVATE_LESSON_NOTIFICATION_EMAIL||"david@burningtreemma.com").trim();
-  if(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(recipient))return;
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient))return;
   const line=Object.entries(fields).map(([k,v])=>"<p><strong>"+escape(k)+":</strong> "+escape(v)+"</p>").join("");
   try{await fetch("https://api.resend.com/emails",{method:"POST",headers:{Authorization:"Bearer "+env.RESEND_API_KEY,"Content-Type":"application/json"},body:JSON.stringify({from:"Burning Tree MMA <noreply@burningtreemma.com>",to:[recipient],subject:"New Corporate Workshop Request: "+fields["Organization"],html:"<h2>New Corporate Workshop Inquiry</h2>"+line+"<p>Airtable reference: "+escape(id)+"</p><p>Please contact the organizer to confirm availability and payment before booking.</p>"})});}catch{}
 }
@@ -36,10 +36,10 @@ export async function POST({request,locals}){
   const type=clean(data?.organizationType,60),location=clean(data?.location,50),payment=clean(data?.paymentPreference,60),token=clean(data?.turnstileToken,2500);
   if(!pack||organization.length<2||organization.length>120||contact.length<2||contact.length>120||
      !safeText(organization)||!safeText(contact)||!safeText(time)||!safeText(type)||!safeText(location)||
-     !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)||email.length>254||
-     !/^[+()\\-. \\d]{7,30}$/.test(phone)||!Number.isInteger(participants)||participants<1||participants>pack.limit||
+     !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||email.length>254||
+     !/^[+()\-. \d]{7,30}$/.test(phone)||!Number.isInteger(participants)||participants<1||participants>pack.limit||
      !TYPES.includes(type)||!LOCATIONS.includes(location)||!PAYMENTS.includes(payment)||
-     (date&&!/^\\d{4}-\\d{2}-\\d{2}$/.test(date))||(date&&!Number.isFinite(Date.parse(date+"T12:00:00Z")))||
+     (date&&!/^\d{4}-\d{2}-\d{2}$/.test(date))||(date&&!Number.isFinite(Date.parse(date+"T12:00:00Z")))||
      notes.length>700||/[<>]/.test(notes)||token.length<5||token.length>2500)
     return respond({error:"Check the package, organization, contact, group size, and security check."},400);
   try{
