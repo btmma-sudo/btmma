@@ -37,7 +37,7 @@ export async function POST({request,locals}) {
       const {date,startTime,endTime}=body;
       if(!validDate(date)||!validTime(startTime)||!validTime(endTime)||
          !allowedPublishWindow(date,startTime,endTime)||!futureDateTime(date,startTime))
-        return adminJson({ok:false,error:"Choose a 30-minute-aligned opening within the approved daily hours, at least 24 hours ahead. Saturday ends at 5 PM; Sunday is 9 AM–2 PM or 4–6 PM."},400);
+        return adminJson({ok:false,error:"Choose a window of at least 60 minutes, aligned to half-hour boundaries, within approved daily hours and at least 24 hours ahead. Saturday ends at 5 PM; Sunday is 9 AM–2 PM or 4–6 PM."},400);
       const start=minutes(startTime), end=minutes(endTime);
       const statements=[];
       for(let m=start;m<end;m+=30) {
@@ -48,7 +48,7 @@ export async function POST({request,locals}) {
         ).bind(crypto.randomUUID(),date,clock(m),staff.account.id));
       }
       await db.batch(statements);
-      return adminJson({ok:true,message:"Published "+statements.length+" half-hour openings. Students can choose 30 or 60 minutes when consecutive blocks are free."});
+      return adminJson({ok:true,message:"Published "+statements.length+" internal half-hour blocks. Students can book only 60-minute lessons when two consecutive blocks are free."});
     }
     if(body?.action==="close"){
       const id=body.slotId;
