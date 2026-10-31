@@ -446,6 +446,20 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       } catch { /* Allow reset without storage. */ }
       window.location.assign("/29-trial/");
     });
+    document.getElementById("zelle-copy-number")?.addEventListener("click", async () => {
+      const status = document.getElementById("zelle-copy-status");
+      try {
+        await navigator.clipboard.writeText("4102180894");
+        if (status) status.textContent = "Copied 410-218-0894. Enter it as a mobile number in your bank's Zelle app.";
+      } catch {
+        if (status) status.textContent = "Copy this Zelle recipient mobile number: 410-218-0894.";
+      }
+    });
+    document.getElementById("zelle-new-student")?.addEventListener("click", () => {
+      try { window.sessionStorage.removeItem("btmma_zelle_trial_return_v1"); }
+      catch { /* Continue to a fresh registration if storage is disabled. */ }
+      window.location.assign("/29-trial/");
+    });
     // Verify Stripe's session server-side. The return URL alone is not a receipt.
     const checkoutReturn = new URLSearchParams(window.location.search);
     const checkoutState = checkoutReturn.get("checkout");
@@ -526,6 +540,30 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       const freshUrl = new URL(window.location.href);
       freshUrl.searchParams.delete("cashapp_return");
       window.history.replaceState(window.history.state, "", freshUrl.pathname + freshUrl.search + freshUrl.hash);
+    }
+    // Zelle receipt instructions are restored only in the same browser tab
+    // after a successful manual-payment selection. A URL alone is not proof.
+    const zelleReturnToken = checkoutReturn.get("zelle_return");
+    let zellePending = false;
+    try {
+      zellePending = !!zelleReturnToken && /^[a-f0-9]{32}$/.test(zelleReturnToken) &&
+        window.sessionStorage.getItem("btmma_zelle_trial_return_v1") === zelleReturnToken;
+    } catch { /* Default to fresh registration if browser storage is unavailable. */ }
+    if (zellePending) {
+      if (zelleInstructions) zelleInstructions.hidden = false;
+      if (checkoutButton) checkoutButton.hidden = true;
+      if (applePayButton) applePayButton.hidden = true;
+      if (cashAppButton) cashAppButton.hidden = true;
+      if (zelleButton) zelleButton.hidden = true;
+      if (applePayHelp) applePayHelp.hidden = true;
+      submit.disabled = true;
+      notice.textContent = "Your $29 Zelle registration is pending manual payment verification. Text your receipt and student's name to (410) 218-0894. Do not pay twice.";
+      return;
+    }
+    if (zelleReturnToken) {
+      const cleanUrl = new URL(window.location.href);
+      cleanUrl.searchParams.delete("zelle_return");
+      window.history.replaceState(window.history.state, "", cleanUrl.pathname + cleanUrl.search + cleanUrl.hash);
     }
     // Fail closed until the server confirms whether checkout is test or live.
     (async () => {
@@ -880,6 +918,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   .trial-page #applepay-button,
   .trial-page #checkout-button,
   .trial-page #cashapp-button,
+  .trial-page #zelle-button,
   .trial-page #checkout-fallback {
     background-color: #781010;
     color: #fff;
@@ -896,6 +935,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   .trial-page #applepay-button:not(:disabled):hover,
   .trial-page #checkout-button:not(:disabled):hover,
   .trial-page #cashapp-button:not(:disabled):hover,
+  .trial-page #zelle-button:not(:disabled):hover,
   .trial-page #checkout-fallback:hover {
     background-color: #951818;
     color: #fff;
@@ -903,13 +943,15 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   .trial-page #applepay-button:focus-visible,
   .trial-page #checkout-button:focus-visible,
   .trial-page #cashapp-button:focus-visible,
+  .trial-page #zelle-button:focus-visible,
   .trial-page #checkout-fallback:focus-visible {
     outline: 3px solid #fff;
     outline-offset: 3px;
   }
   .trial-page #applepay-button:disabled,
   .trial-page #checkout-button:disabled,
-  .trial-page #cashapp-button:disabled {
+  .trial-page #cashapp-button:disabled,
+  .trial-page #zelle-button:disabled {
     opacity: 1;
     background-color: #542020;
     border-color: #a87878;
