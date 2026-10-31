@@ -1,0 +1,297 @@
+---
+/**
+ * Donation-only component. Nothing here edits seminar admission,
+ * participant e-signature, or the $29 new-student checkout.
+ */
+---
+<section class="donate-section" id="donate" aria-labelledby="donate-heading">
+  <div class="donate-wrap">
+    <div class="donate-intro">
+      <p class="donate-eyebrow">CAN'T MAKE THE SEMINARS? YOU CAN STILL HELP.</p>
+      <h2 id="donate-heading">Support Burning Tree. <span>Make a Donation.</span></h2>
+      <p>Help us keep building a strong martial arts community. Whether you can attend a seminar or not, every contribution helps support Burning Tree Mixed Martial Arts.</p>
+      <p class="donate-notice"><strong>Donations are separate from tickets.</strong> Giving does not register you for either seminar, reserve a seat, or include seminar admission. No participation waiver is needed to donate.</p>
+    </div>
+
+    <form id="donate-form" class="donate-form">
+      <fieldset class="donate-amounts">
+        <legend>Choose a donation amount</legend>
+        <div class="donate-amount-grid">
+          <label><input type="radio" name="donationPreset" value="25" checked /><span>$25</span></label>
+          <label><input type="radio" name="donationPreset" value="50" /><span>$50</span></label>
+          <label><input type="radio" name="donationPreset" value="100" /><span>$100</span></label>
+          <label><input type="radio" name="donationPreset" value="250" /><span>$250</span></label>
+          <label><input type="radio" name="donationPreset" value="custom" /><span>Other amount</span></label>
+        </div>
+      </fieldset>
+      <label class="donate-field" id="donate-custom-wrap" hidden>
+        Your donation amount in US dollars (minimum $5, maximum $5,000)
+        <input id="donate-custom" type="number" min="5" max="5000" step="0.01" inputmode="decimal" placeholder="Enter amount, e.g., 35.00" />
+      </label>
+      <label class="donate-field" for="donate-purpose">What would you like to support?</label>
+      <select id="donate-purpose">
+        <option value="general">Burning Tree school and seminar support</option>
+        <option value="united">United by Purpose fundraising</option>
+        <option value="nerve">Striking a Nerve seminar</option>
+      </select>
+      <div class="donate-fields-row">
+        <label class="donate-field" for="donate-name">Your name (optional)
+          <input id="donate-name" type="text" maxlength="100" autocomplete="name" placeholder="Your full name" />
+        </label>
+        <label class="donate-field" for="donate-email">Email for Stripe checkout (optional)
+          <input id="donate-email" type="email" maxlength="254" autocomplete="email" placeholder="you@example.com" />
+        </label>
+      </div>
+      <p class="donate-total">Your donation: <strong id="donate-total">$25.00</strong></p>
+      <p class="donate-small">Choose how you want to give:</p>
+      <div class="donate-actions">
+        <button type="button" id="donate-applepay">APPLE PAY / APPLE CASH</button>
+        <button type="button" id="donate-card">CREDIT / DEBIT CARD</button>
+        <button type="button" id="donate-cashapp">CASH APP</button>
+        <button type="button" id="donate-zelle">ZELLE</button>
+      </div>
+      <p class="donate-small">Apple Pay (including eligible Apple Cash cards) and cards open secure Stripe Checkout. Apple Pay appears only on supported devices. Cash App and Zelle are direct, manually verified payments.</p>
+      <div class="donate-turnstile" aria-label="Security check for secure card or Apple Pay payments">
+        <p class="donate-small">For Apple Pay or card payments, complete this security check:</p>
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAAD6Ievu-t0Ll1euh" data-size="normal"></div>
+      </div>
+      <p id="donate-message" role="status" aria-live="polite" class="donate-message"></p>
+      <div id="donate-manual" class="donate-manual" hidden>
+        <h3 id="donate-manual-heading"></h3>
+        <p id="donate-manual-detail"></p>
+        <p><strong>Payment memo, if supported:</strong> <span id="donate-manual-memo"></span></p>
+        <div id="donate-cashapp-link-wrap" hidden>
+          <a class="donate-action-link" href="https://cash.app/$BTMMA" target="_blank" rel="noopener noreferrer">OPEN CASH APP — $BTMMA</a>
+          <p class="donate-small">This link does not prefill your donation. Enter the total shown above manually and verify that the Cash App recipient is <strong>$BTMMA</strong> before sending.</p>
+        </div>
+        <div id="donate-zelle-detail" hidden>
+          <p>Open Zelle in your bank or credit union app and send to Coach David's enrolled mobile number, <strong>410-218-0894</strong> (a phone number, not the studio's street address).</p>
+          <button type="button" id="donate-copy-zelle">COPY ZELLE MOBILE NUMBER</button>
+          <p id="donate-copy-zelle-message" class="donate-small" role="status"></p>
+          <p class="donate-small"><strong>Check the recipient name displayed by your bank before sending.</strong> If it does not match the intended recipient, don't send the payment until you confirm with Coach David.</p>
+        </div>
+        <p><strong>After sending:</strong> Text your donation confirmation, amount and purpose to <a href="sms:+14102180894">(410) 218-0894</a>.</p>
+        <textarea id="donate-text-details" rows="5" readonly aria-label="Donation details to text to Coach David"></textarea>
+        <button type="button" id="donate-copy-details">COPY DONATION DETAILS</button>
+        <p id="donate-copy-status" role="status" class="donate-small"></p>
+        <p class="donate-warning"><strong>Pending verification:</strong> The website cannot automatically confirm Cash App or Zelle transfers. Coach David will verify the payment manually. If you've already sent it, do not send another payment by a different method.</p>
+        <button type="button" id="donate-change-method">CHOOSE ANOTHER METHOD</button>
+      </div>
+      <p class="donate-disclaimer">Support contributions are not represented as tax-deductible. A donation alone does not provide a seminar ticket or other enrollment. No payment is made until you complete the chosen payment service.</p>
+    </form>
+    <div id="donate-result" class="donate-result" hidden aria-live="polite" role="status">
+      <h3 id="donate-result-title">Checking your donation...</h3>
+      <p id="donate-result-detail">Verifying the payment directly with Stripe.</p>
+      <a href="/seminars/#donate">BACK TO DONATIONS</a>
+    </div>
+  </div>
+</section>
+<script is:inline>
+  (() => {
+    const byId = id => document.getElementById(id);
+    const form = byId("donate-form");
+    if (!form) return;
+    const options = ["donate-applepay", "donate-card", "donate-cashapp", "donate-zelle"].map(byId);
+    const selected = () => form.querySelector("input[name='donationPreset']:checked")?.value || "25";
+    const money = cents => new Intl.NumberFormat("en-US", {style:"currency", currency:"USD"}).format(cents / 100);
+    const purposeLabel = {
+      general: "Burning Tree school and seminars",
+      united: "United by Purpose",
+      nerve: "Striking a Nerve"
+    };
+    const amountCents = () => {
+      const option = selected();
+      const number = Number(option === "custom" ? byId("donate-custom").value : option);
+      const cents = Math.round(number * 100);
+      if (!Number.isFinite(number) || !Number.isSafeInteger(cents) ||
+          !/^(?:\d+)(?:\.\d{1,2})?$/.test(String(option === "custom" ? byId("donate-custom").value : option).trim()) ||
+          cents < 500 || cents > 500000) return null;
+      return cents;
+    };
+    function validateAmount() {
+      const cents = amountCents();
+      if (!cents) {
+        byId("donate-message").textContent = "Enter a valid donation between $5 and $5,000, using no more than two decimal places.";
+        if (selected() === "custom") byId("donate-custom").focus();
+        return null;
+      }
+      if (!form.reportValidity()) return null;
+      return cents;
+    }
+    function updateAmounts() {
+      byId("donate-custom-wrap").hidden = selected() !== "custom";
+      byId("donate-custom").required = selected() === "custom";
+      const cents = amountCents();
+      byId("donate-total").textContent = cents ? money(cents) : "Choose a valid amount";
+      byId("donate-manual").hidden = true;
+      byId("donate-message").textContent = "";
+    }
+    form.querySelectorAll("input[name='donationPreset']").forEach(x=>x.addEventListener("change",updateAmounts));
+    ["donate-custom","donate-purpose","donate-name","donate-email"].forEach(id=>
+      byId(id).addEventListener("input",updateAmounts));
+    form.addEventListener("submit", e=>e.preventDefault());
+    updateAmounts();
+
+    const query = new URLSearchParams(window.location.search);
+    if (query.get("donation") === "cancelled") {
+      byId("donate-message").textContent = "Donation checkout was cancelled. You have not been charged by this checkout.";
+    }
+    if (query.get("donation") === "success") {
+      const panel = byId("donate-result");
+      const id = query.get("donation_session_id") || "";
+      panel.hidden = false;
+      form.hidden = true;
+      const update = (heading, detail) => {
+        byId("donate-result-title").textContent = heading;
+        byId("donate-result-detail").textContent = detail;
+      };
+      if (!/^cs_live_[A-Za-z0-9_]{10,180}$/.test(id)) {
+        update("Donation verification needed", "We could not verify this checkout reference. Check your receipt and contact Coach David before donating again.");
+      } else {
+        fetch("/api/seminar-donation-status?session_id=" + encodeURIComponent(id), {cache:"no-store"})
+          .then(async res => {
+            const body = await res.json().catch(()=>({}));
+            if (!res.ok) throw new Error(body.error || "Unable to verify donation.");
+            return body;
+          })
+          .then(body => {
+            if (body.confirmed) {
+              update("Thank you for supporting Burning Tree!",
+                "Stripe confirms your donation of " + money(body.amountCents) + ". Your contribution does not include a seminar registration or ticket. One Tree. One Family.");
+            } else {
+              update("Donation verification pending", "Stripe has not confirmed this payment yet. Check your receipt before submitting another donation.");
+            }
+          })
+          .catch(() => update("Donation verification temporarily unavailable",
+            "Please check your Stripe receipt or contact Coach David at (410) 218-0894 before trying to donate again."));
+      }
+    }
+
+    async function startStripe() {
+      const cents = validateAmount();
+      if (cents === null) return;
+      const token = form.querySelector("[name='cf-turnstile-response']")?.value || "";
+      if (!token) {
+        byId("donate-message").textContent = "Please complete the security check before opening Stripe Checkout.";
+        return;
+      }
+      options.forEach(x=>x.disabled = true);
+      byId("donate-message").textContent = "Connecting to secure donation checkout. Nothing has been charged yet.";
+      const controller = new AbortController();
+      const timeout = setTimeout(()=>controller.abort(),20000);
+      try {
+        const response = await fetch("/api/seminar-donation-checkout", {
+          method:"POST",cache:"no-store",
+          headers:{"content-type":"application/json"},
+          signal:controller.signal,
+          body:JSON.stringify({
+            amountCents:cents, purpose:byId("donate-purpose").value,
+            donorName:byId("donate-name").value.trim(),donorEmail:byId("donate-email").value.trim(),
+            turnstileToken:token
+          })
+        });
+        const data = await response.json().catch(()=>({}));
+        if (!response.ok || !/^https:\/\/checkout\.stripe\.com\//.test(data.url || ""))
+          throw new Error(data.error || "Unable to open Stripe Checkout.");
+        window.location.assign(data.url);
+      } catch(err) {
+        byId("donate-message").textContent = err?.name === "AbortError"
+          ? "The checkout request timed out. Please try again or contact Coach David."
+          : err?.message || "Donation checkout is unavailable.";
+        options.forEach(x=>x.disabled = false);
+        window.turnstile?.reset?.();
+      } finally { clearTimeout(timeout); }
+    }
+    byId("donate-applepay").addEventListener("click",startStripe);
+    byId("donate-card").addEventListener("click",startStripe);
+
+    function showManual(method) {
+      const cents = validateAmount();
+      if (cents === null) return;
+      const purpose = purposeLabel[byId("donate-purpose").value];
+      const cash = method === "cashapp";
+      const memo = "BTMMA Donate " + (byId("donate-purpose").value === "general" ? "School" : byId("donate-purpose").value);
+      const heading = cash ? "Cash App Donation" : "Zelle Donation";
+      byId("donate-manual-heading").textContent = heading + " — " + money(cents);
+      byId("donate-manual-detail").textContent = "Send " + money(cents) +
+        (cash ? " to Cash App $BTMMA." : " through Zelle to Coach David's mobile 410-218-0894.");
+      byId("donate-manual-memo").textContent = memo;
+      byId("donate-cashapp-link-wrap").hidden = !cash;
+      byId("donate-zelle-detail").hidden = cash;
+      byId("donate-text-details").value =
+        "Burning Tree donation — " + heading + "\n" +
+        "Amount: " + money(cents) + "\n" +
+        "Support: " + purpose + "\n" +
+        "Payment recipient: " + (cash ? "Cash App $BTMMA" : "Zelle mobile 410-218-0894") + "\n" +
+        "Donor name: " + (byId("donate-name").value.trim() || "Not provided") + "\n" +
+        "Donor email: " + (byId("donate-email").value.trim() || "Not provided") + "\n" +
+        "Payment note: " + memo + "\n" +
+        "Receipt confirmation: [attach screenshot or payment confirmation]";
+      byId("donate-manual").hidden = false;
+      byId("donate-message").textContent = "Direct " + (cash ? "Cash App" : "Zelle") +
+        " selected. The website cannot confirm manual transfers. Send your receipt to Coach David for verification.";
+      byId("donate-manual").scrollIntoView({behavior:"smooth",block:"nearest"});
+    }
+    byId("donate-cashapp").addEventListener("click",()=>showManual("cashapp"));
+    byId("donate-zelle").addEventListener("click",()=>showManual("zelle"));
+
+    async function copyValue(value, id) {
+      try {
+        await navigator.clipboard.writeText(value);
+        byId(id).textContent = "Copied. Text your details and receipt to (410) 218-0894.";
+      } catch {
+        byId(id).textContent = "Select and copy the details shown above, then text your receipt to (410) 218-0894.";
+      }
+    }
+    byId("donate-copy-zelle").addEventListener("click",()=>copyValue("4102180894","donate-copy-zelle-message"));
+    byId("donate-copy-details").addEventListener("click",()=>copyValue(byId("donate-text-details").value,"donate-copy-status"));
+    byId("donate-change-method").addEventListener("click",()=>{
+      byId("donate-manual").hidden = true;
+      byId("donate-message").textContent = "If you already sent a donation, do not pay again. Contact Coach David first.";
+    });
+  })();
+</script>
+<style>
+  .donate-section { padding: 2rem 1rem 3rem; background: #191313; color: #fff; border-top: 4px solid #b91c1c; border-bottom: 4px solid #b91c1c; }
+  .donate-section *, .donate-section *::before, .donate-section *::after { box-sizing: border-box; }
+  .donate-wrap { max-width: 1000px; margin: 0 auto; }
+  .donate-intro { max-width: 770px; margin: 0 auto 1.5rem; text-align: center; }
+  .donate-eyebrow { color: #ffb9b9; font-weight: 800; font-size: .86rem; letter-spacing: .055em; }
+  .donate-intro h2 { font: 900 clamp(1.9rem,4vw,3rem)/1.2 'Black Ops One','Open Sans',Arial,sans-serif; color: #fff; }
+  .donate-intro h2 span { color: #ff9b9b; }
+  .donate-intro p { color: #f7f0f0; line-height: 1.65; }
+  .donate-notice { background: #332020; color: #fff !important; padding: 1rem; border-left: 4px solid #ff9999; text-align: left; }
+  .donate-form, .donate-result { background: #fff; color: #171717; border: 2px solid #c74b4b; border-radius: 14px; padding: clamp(1rem, 3vw, 2rem); box-shadow: 0 8px 25px #0003; }
+  .donate-section [hidden] { display: none !important; }
+  .donate-amounts { border: none; padding: 0; margin: 0 0 1rem; }
+  .donate-amounts legend, .donate-field { display: block; color: #171717; font-weight: 800; margin: 0 0 .6rem; }
+  .donate-amount-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .5rem; }
+  .donate-amount-grid label { position: relative; cursor: pointer; }
+  .donate-amount-grid input { opacity: 0; position: absolute; width: 1px; height: 1px; }
+  .donate-amount-grid span { display: flex; justify-content: center; align-items: center; padding: .75rem .4rem; min-height: 50px; border: 2px solid #8b1515; color: #681111; background: #fff9f9; text-align: center; border-radius: 8px; font-weight: 800; }
+  .donate-amount-grid input:checked + span { background: #791414; color: #fff; }
+  .donate-amount-grid input:focus-visible + span { outline: 3px solid #151515; outline-offset: 3px; }
+  .donate-field { margin: .85rem 0; }
+  .donate-field input, .donate-form select, .donate-manual textarea { display: block; width: 100%; min-height: 47px; padding: .65rem .75rem; margin-top: .4rem; border: 2px solid #767676; border-radius: 7px; background: #fff; color: #171717; font: 400 1rem 'Open Sans',Arial,sans-serif; }
+  .donate-fields-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .donate-total { padding: .85rem; margin: 1.2rem 0; display: flex; justify-content: space-between; gap: .5rem; background: #f6eded; color: #1d1d1d; border-left: 5px solid #b91c1c; font-weight: 800; }
+  .donate-total strong { font-size: 1.45rem; }
+  .donate-actions { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; margin: .8rem 0; }
+  .donate-actions button, .donate-manual button, .donate-action-link { min-height: 52px; padding: .75rem .6rem; border-radius: 8px; border: 2px solid #d08686; background: #801616; color: #fff; font: 800 1rem/1.4 'Open Sans',Arial,sans-serif; text-align: center; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
+  .donate-actions button:hover, .donate-manual button:hover, .donate-action-link:hover { background: #9e1c1c; color: #fff; }
+  .donate-actions button:disabled { opacity: .55; cursor: wait; }
+  .donate-small, .donate-disclaimer { color: #353535; font-size: .9rem; line-height: 1.6; margin: .85rem 0; }
+  .donate-disclaimer { border-top: 1px solid #ccc; padding-top: .75rem; }
+  .donate-turnstile { padding: .5rem 0; overflow: visible; }
+  .donate-message { color: #7e1212; font-weight: 800; min-height: 1.5em; }
+  .donate-manual { margin: 1rem 0; border: 2px solid #a02222; border-radius: 10px; padding: 1.1rem; background: #fbf6f6; }
+  .donate-manual h3, .donate-result h3 { color: #201515; font-size: 1.35rem; }
+  .donate-manual p { color: #202020; line-height: 1.65; }
+  .donate-manual a:not(.donate-action-link) { color: #7e1212; text-decoration: underline; }
+  .donate-manual textarea { min-height: 130px; font-size: .85rem; }
+  .donate-manual button { display: flex; width: 100%; margin: .65rem 0; }
+  .donate-warning { border-left: 4px solid #a61616; background: #f6e7e7; color: #491111 !important; padding: .8rem; }
+  .donate-result { max-width: 760px; margin: 0 auto; text-align: center; }
+  .donate-result a { color: #8a1414; }
+  @media (max-width:600px) { .donate-amount-grid { grid-template-columns: repeat(3, minmax(0,1fr)); } .donate-fields-row, .donate-actions { grid-template-columns: 1fr; } }
+</style>
