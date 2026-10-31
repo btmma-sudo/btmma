@@ -102,7 +102,7 @@ export async function GET({request,locals}){
  if(!envReady(env))return json({error:"Birthday party reservations are being configured."},503);
  try { await ensurePartySchema(env.LIVE_TRIAL_DB); } catch { return json({error:"Birthday party database is not ready."},503); }
  const u=new URL(request.url),action=u.searchParams.get("action"),ref=u.searchParams.get("ref")||"",auth=u.searchParams.get("auth")||"";
- if(action==="readiness")return json({ready:true});
+ if(action==="readiness")return json({ready:!!(env.RESEND_API_KEY&&env.TURNSTILE_SECRET_KEY&&env.AIRTABLE_API_TOKEN&&env.AIRTABLE_BASE_ID),notificationsConfigured:!!env.RESEND_API_KEY,crmConfigured:!!(env.AIRTABLE_API_TOKEN&&env.AIRTABLE_BASE_ID)});
  if(action==="review"){
    if(!/^[a-f0-9-]{36}$/i.test(ref)||!await verified(env,"staff|"+ref,auth))return html("<h1>Invalid or expired approval link.</h1>",403);
    const row=await env.LIVE_TRIAL_DB.prepare("SELECT * FROM birthday_party_requests WHERE id=?").bind(ref).first();
@@ -165,6 +165,7 @@ export async function POST({request,locals}){
  }
  if(contentType!=="application/json")return json({error:"Invalid form submission."},415);
  let data;try{data=await request.json();}catch{return json({error:"Invalid form submission."},400);}
+ if(data?.action==="request"&&!env.RESEND_API_KEY)return json({error:"Reservations need email and CRM notifications. Please use the contact form below or text 410-218-0894."},503);
  if(data?.action==="request"){
    const row={id:crypto.randomUUID(),contact_name:str(data.name),email:str(data.email,254).toLowerCase(),phone:str(data.phone,30),
      birthday_name:str(data.childName),age_group:str(data.ageGroup,40),guests:Number(data.guests),
