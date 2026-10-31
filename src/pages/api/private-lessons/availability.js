@@ -15,6 +15,6 @@ export async function GET({locals}) {
          ) ORDER BY s.local_date,s.local_time LIMIT 1000`
     ).all();
     const slots=(rows.results||[]).filter(s=>futureDateTime(s.date,s.time)&&allowedHalfHour(s.date,s.time));
-    return json({ok:true,slots,timezone:"America/New_York",durations:[30,60]});
+    return json({ok:true,slots,timezone:"America/New_York",durations:[60]});
   } catch {return json({ok:false,slots:[],error:"The calendar is being prepared."},503);}
 }
