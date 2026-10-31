@@ -41,7 +41,7 @@ const eventStructuredData = {
       <div class="shell">
         <p class="seminar-eyebrow">BURNING TREE MIXED MARTIAL ARTS · OWINGS MILLS, MD</p>
         <h1 id="seminar-heading">Two Seminars. <span>One Community.</span></h1>
-        <p>Join us this November for a community fundraising seminar and a special two-day martial arts education event. Choose your seminar, register online, and pay securely through Stripe.</p>
+        <p>Join us this November for a community fundraising seminar and a special two-day martial arts education event. Choose your seminar, register online, and pay through secure Stripe checkout or direct Cash App.</p>
         <a class="seminar-cta" href="#events">EXPLORE BOTH SEMINARS</a>
         <p class="seminar-motto">One Tree. One Family.</p>
       </div>
@@ -93,7 +93,7 @@ const eventStructuredData = {
       <div class="seminar-intro">
         <p class="seminar-eyebrow">SAVE YOUR PLACE</p>
         <h2 id="registration-heading">Register &amp; Pay Online</h2>
-        <p>Choose your seminar and admission option, enter the attendee names and a contact email, and continue to secure payment. You can register up to six attendees together.</p>
+        <p>Choose your seminar and admission option, enter attendee names and contact details, then select Apple Pay/Apple Cash, a credit/debit card, or direct Cash App. You can register up to six attendees together.</p>
         <p class="seminar-note">For multiple attendees, enter one full name per line. The total updates automatically. Your registration is confirmed only after successful payment.</p>
       </div>
       <form id="seminar-form" class="seminar-form">
@@ -131,14 +131,37 @@ const eventStructuredData = {
           <span id="seminar-total-label">General Admission × 1</span>
           <strong id="seminar-total-amount">$50.00</strong>
         </div>
-        <p class="seminar-note">Payment is processed by Stripe. We do not collect or store card numbers on this website. By registering, you agree to our <a href="/terms">Terms</a> and <a href="/privacy">Privacy Policy</a>.</p>
-        <div class="seminar-security">
-          <p class="seminar-note">Security check</p>
-          <div class="cf-turnstile" data-sitekey="0x4AAAAAAD6Ievu-t0Ll1euh" data-size="normal"></div>
-        </div>
+        <p class="seminar-note">Review your details to see the same payment choices as our $29 special. Apple Pay (including eligible Apple Cash cards) and credit/debit cards use secure Stripe checkout. Direct Cash App payments are manually verified.</p>
+        <p class="seminar-note">We do not collect or store card numbers on this website. By registering, you agree to our <a href="/terms">Terms</a> and <a href="/privacy">Privacy Policy</a>.</p>
         <p id="seminar-form-message" class="seminar-message" role="status" aria-live="polite"></p>
-        <button id="seminar-submit" class="seminar-cta seminar-checkout" type="submit">CONTINUE TO SECURE PAYMENT</button>
-        <p class="seminar-note">You will review the final amount on Stripe before paying. Seminar questions? Call or text <a href="tel:+14102180894">(410) 218-0894</a>.</p>
+        <button id="seminar-submit" class="seminar-cta seminar-checkout" type="submit">REVIEW REGISTRATION &amp; CHOOSE PAYMENT</button>
+        <div id="seminar-payment-options" class="seminar-payment-options" hidden>
+          <h3>Choose Your Payment Method</h3>
+          <p id="seminar-reviewed-total" class="seminar-reviewed-total" aria-live="polite"></p>
+          <button id="seminar-applepay" class="seminar-cta seminar-pay-choice" type="button">APPLE PAY / APPLE CASH</button>
+          <button id="seminar-card" class="seminar-cta seminar-pay-choice" type="button">PAY WITH CREDIT / DEBIT CARD</button>
+          <button id="seminar-cashapp" class="seminar-cta seminar-pay-choice" type="button">PAY DIRECTLY WITH CASH APP</button>
+          <p class="seminar-note">Apple Pay and card payments open the same secure Stripe checkout. Apple Pay appears only on supported devices. To use an eligible Apple Cash balance, select the Apple Cash card in Apple Pay. A credit or debit card remains available as a fallback.</p>
+          <div class="seminar-security">
+            <p class="seminar-note"><strong>Security check for card / Apple Pay</strong></p>
+            <div class="cf-turnstile" data-sitekey="0x4AAAAAAD6Ievu-t0Ll1euh" data-size="normal"></div>
+          </div>
+        </div>
+        <div id="seminar-cashapp-instructions" class="seminar-cashapp-instructions" hidden aria-live="polite">
+          <h3>Direct Cash App Payment</h3>
+          <p>Send exactly <strong id="seminar-cashapp-amount"></strong> to <strong>$BTMMA</strong> using Cash App.</p>
+          <a class="seminar-cta seminar-cashapp-link" href="https://cash.app/$BTMMA" target="_blank" rel="noopener noreferrer">OPEN CASH APP — $BTMMA</a>
+          <p class="seminar-note"><strong>Check before paying:</strong> The Cash App profile should be $BTMMA. Enter the exact amount shown above; this link does not prefill your ticket total. If the recipient or total is different, do not send the payment.</p>
+          <p><strong>Payment note:</strong> <span id="seminar-cashapp-note"></span></p>
+          <p><strong>After paying:</strong> Text your payment confirmation and the attendee details to <a href="sms:+14102180894">(410) 218-0894</a>.</p>
+          <label for="seminar-cashapp-details" class="seminar-copy-label">Your registration details (copy into your text)</label>
+          <textarea id="seminar-cashapp-details" rows="5" readonly aria-label="Registration details to text to Burning Tree"></textarea>
+          <button type="button" id="seminar-copy-details" class="seminar-cta seminar-pay-choice">COPY REGISTRATION DETAILS</button>
+          <p id="seminar-copy-message" class="seminar-note" role="status"></p>
+          <p class="seminar-cashapp-warning"><strong>Registration pending:</strong> Cash App does not automatically confirm an attendee on this website. Your place is confirmed by Burning Tree after we verify your payment and attendee details. Do not pay a second time through Stripe.</p>
+          <button type="button" id="seminar-back-to-payments" class="seminar-cta seminar-pay-choice">CHANGE PAYMENT METHOD</button>
+        </div>
+        <p class="seminar-note">Seminar questions? Call or text <a href="tel:+14102180894">(410) 218-0894</a>.</p>
       </form>
       <div id="registration-result" class="seminar-confirmation" hidden tabindex="-1" aria-live="polite">
         <h3 id="registration-result-heading">Checking your payment...</h3>
