@@ -1,0 +1,237 @@
+---
+/* Standalone party request + confirmed-deposit experience.
+   Prices are entered by staff after confirming the requested date. */
+---
+<section class="party-booking-section" id="birthday-reservations" aria-labelledby="birthday-reservations-heading">
+  <div class="shell">
+    <header class="party-heading">
+      <p class="party-kicker">BURNING TREE MMA · OWINGS MILLS, MD</p>
+      <h2 id="birthday-reservations-heading">Plan a Birthday Party They’ll Remember</h2>
+      <p>Celebrate with real martial arts games, confidence-building activities, and team challenges. Choose your preferred date below. We’ll confirm the time, package price, and deposit before asking you to pay.</p>
+    </header>
+    <div class="party-steps" aria-label="How party reservations work">
+      <div><span>1</span><strong>Choose your party</strong><small>Tell us your group size and preferred activities.</small></div>
+      <div><span>2</span><strong>Request a date</strong><small>We check the studio calendar and confirm pricing.</small></div>
+      <div><span>3</span><strong>Pay your deposit</strong><small>Secure Stripe checkout only after our confirmation.</small></div>
+    </div>
+    <div class="party-payment-result" id="birthday-payment-result" hidden aria-live="polite"></div>
+    <div class="party-booking-flow" id="birthday-booking-flow">
+      <div class="party-form-intro">
+        <h3>Explore Your Party Options</h3>
+        <p>Choose the kind of celebration you’d like. These are planning options, not fixed-price packages. We’ll confirm the activities, group capacity, total cost, and required deposit with you before booking.</p>
+      </div>
+      <div class="party-package-grid" role="group" aria-label="Party activity options">
+        <label class="party-package"><input type="radio" name="party-option" value="Martial Arts Games" checked form="birthday-request-form" /><strong>Martial Arts Games</strong><span>Beginner-friendly movement, guided martial arts games and fun.</span><b>Pricing confirmed with your quote</b></label>
+        <label class="party-package"><input type="radio" name="party-option" value="Team Challenges" form="birthday-request-form" /><strong>Team Challenges</strong><span>Group activities emphasizing confidence, teamwork and coordination.</span><b>Pricing confirmed with your quote</b></label>
+        <label class="party-package"><input type="radio" name="party-option" value="Custom Celebration" form="birthday-request-form" /><strong>Custom Celebration</strong><span>Tell us about the party you have in mind; we'll discuss the details.</span><b>Custom quote after review</b></label>
+      </div>
+      <div class="party-request-card">
+        <form id="birthday-request-form">
+          <div class="party-form-intro"><h3>Request Your Party Date</h3><p>Highlighted weekend days are open for <em>requests</em>, not guaranteed openings. A reservation is not held until the studio approves it.</p></div>
+          <div class="party-booking-columns">
+            <div class="party-calendar" aria-label="Pick a preferred birthday party date">
+              <div class="party-calendar-nav">
+                <button type="button" id="birthday-prev" aria-label="Previous month">‹</button>
+                <h4 id="birthday-month" aria-live="polite"></h4>
+                <button type="button" id="birthday-next" aria-label="Next month">›</button>
+              </div>
+              <div class="party-calendar-days" aria-hidden="true"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div>
+              <div class="party-calendar-grid" id="birthday-calendar-grid"></div>
+              <p class="party-help">Saturday and Sunday requests only. All times Eastern. Final availability is confirmed by the studio.</p>
+              <input type="hidden" id="birthday-selected-date" required />
+            </div>
+            <div class="party-form-fields">
+              <label>Preferred time
+                <select id="birthday-time" required><option value="">Choose a time</option></select>
+              </label>
+              <label>Parent / guardian name
+                <input id="birthday-name" autocomplete="name" maxlength="120" required placeholder="Full name" />
+              </label>
+              <label>Contact email
+                <input id="birthday-email" type="email" autocomplete="email" maxlength="254" required placeholder="name@example.com" />
+              </label>
+              <label>Phone number
+                <input id="birthday-phone" type="tel" autocomplete="tel" maxlength="30" required placeholder="410-218-0894" />
+              </label>
+              <label>Birthday child's first name
+                <input id="birthday-child" maxlength="120" required placeholder="First name" />
+              </label>
+              <div class="party-fields-pair">
+                <label>Age group
+                  <select id="birthday-age" required><option value="">Select age</option><option>4–6</option><option>7–9</option><option>10–12</option><option>13+</option></select>
+                </label>
+                <label>Estimated guests
+                  <input id="birthday-guests" type="number" min="1" max="75" required placeholder="Number of children" />
+                </label>
+              </div>
+              <label>Anything we should know? (optional)
+                <textarea id="birthday-notes" rows="3" maxlength="700" placeholder="Party goals, special requests, or questions"></textarea>
+              </label>
+              <div class="cf-turnstile" data-sitekey="0x4AAAAAAD6Ievu-t0Ll1euh"></div>
+              <p class="party-legal">By submitting, you agree to our <a href="/privacy">Privacy Policy</a> and <a href="/terms">Terms of Service</a>. There is no payment at this step.</p>
+              <p id="birthday-request-status" class="party-status" role="status" aria-live="polite"></p>
+              <button class="party-primary" id="birthday-submit" type="submit">Request Date &amp; Package Quote</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="party-confirmed-deposit" id="birthday-confirmed-deposit" hidden>
+      <p class="party-kicker">YOUR DATE HAS BEEN APPROVED</p>
+      <h3>Complete Your Birthday Party Deposit</h3>
+      <p id="birthday-approved-summary"></p>
+      <p>Your secure checkout uses the same Stripe system as our $29 New Student Special. On supported devices, Stripe may offer Apple Pay; eligible cards can be used on all devices.</p>
+      <button type="button" class="party-primary" id="birthday-pay">Pay Deposit Securely</button>
+      <p class="party-status" id="birthday-deposit-status" aria-live="polite"></p>
+    </div>
+    <p class="party-bottom-help">Questions about your celebration? Text <a href="sms:+14102180894">410-218-0894</a> or call <a href="tel:+12023684395">(202) 368-4395</a>. <strong>No deposit will be charged before we confirm your date and price.</strong></p>
+  </div>
+</section>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script is:inline>
+(() => {
+  const form=document.getElementById("birthday-request-form");
+  if(!form || form.dataset.ready==="true")return;
+  form.dataset.ready="true";
+  const qs=id=>document.getElementById(id);
+  const monthLabel=qs("birthday-month"),grid=qs("birthday-calendar-grid"),selected=qs("birthday-selected-date"),time=qs("birthday-time");
+  const today=new Date();today.setHours(0,0,0,0);
+  const monthBase=new Date(today.getFullYear(),today.getMonth(),1);
+  let offset=0;
+  const fmt=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-");
+  function updateTimes(){
+    const d=selected.value?new Date(selected.value+"T12:00:00"):null;
+    const choices=d?.getDay()===0?[["14:30","2:30 PM"],["16:00","4:00 PM"]]:
+      [["12:00","12:00 PM"],["13:30","1:30 PM"],["14:30","2:30 PM"],["16:00","4:00 PM"]];
+    time.innerHTML='<option value="">Choose preferred time</option>';
+    for(const [value,label] of choices){const opt=document.createElement("option");opt.value=value;opt.textContent=label;time.appendChild(opt);}
+  }
+  function renderCalendar(){
+    const first=new Date(monthBase.getFullYear(),monthBase.getMonth()+offset,1);
+    monthLabel.textContent=first.toLocaleDateString("en-US",{month:"long",year:"numeric"});
+    qs("birthday-prev").disabled=offset===0;
+    qs("birthday-next").disabled=offset>=5;
+    grid.replaceChildren();
+    for(let i=0;i<first.getDay();i++){const blank=document.createElement("span");blank.className="party-empty";grid.appendChild(blank);}
+    const count=new Date(first.getFullYear(),first.getMonth()+1,0).getDate();
+    for(let day=1;day<=count;day++){
+      const date=new Date(first.getFullYear(),first.getMonth(),day);
+      const isWeekend=[0,6].includes(date.getDay());
+      const canRequest=isWeekend && +date>+today+86400000 && +date<+today+185*86400000;
+      const button=document.createElement("button");button.type="button";button.textContent=String(day);
+      button.className="party-date"+(canRequest?" is-requestable":"");
+      button.disabled=!canRequest;
+      button.setAttribute("aria-label",date.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"})+(canRequest?", date request available":", not requestable"));
+      if(selected.value===fmt(date)){button.classList.add("is-selected");button.setAttribute("aria-pressed","true");}
+      if(canRequest)button.addEventListener("click",()=>{selected.value=fmt(date);updateTimes();renderCalendar();});
+      grid.appendChild(button);
+    }
+  }
+  qs("birthday-prev").addEventListener("click",()=>{offset=Math.max(0,offset-1);renderCalendar();});
+  qs("birthday-next").addEventListener("click",()=>{offset=Math.min(5,offset+1);renderCalendar();});
+  renderCalendar();updateTimes();
+  const status=qs("birthday-request-status");
+  form.addEventListener("submit",async event=>{
+    event.preventDefault();status.textContent="";
+    if(!selected.value){status.textContent="Please select a highlighted Saturday or Sunday first.";return;}
+    const token=form.querySelector('[name="cf-turnstile-response"]')?.value;
+    if(!token){status.textContent="Please finish the security check before submitting.";return;}
+    const button=qs("birthday-submit");button.disabled=true;button.textContent="Sending your request…";
+    try{
+      const r=await fetch("/api/birthday-party",{method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({action:"request",name:qs("birthday-name").value,email:qs("birthday-email").value,
+          phone:qs("birthday-phone").value,childName:qs("birthday-child").value,ageGroup:qs("birthday-age").value,
+          guests:Number(qs("birthday-guests").value),package:form.querySelector('input[name="party-option"]:checked')?.value,
+          date:selected.value,time:time.value,notes:qs("birthday-notes").value,turnstileToken:token})});
+      const data=await r.json();
+      if(!r.ok)throw Error(data.error||"We could not save your request.");
+      status.textContent=data.message||"Request received. No payment was taken.";
+      status.classList.add("party-success");
+      form.reset();selected.value="";renderCalendar();updateTimes();
+      if(window.turnstile?.reset)window.turnstile.reset();
+    }catch(e){status.classList.remove("party-success");status.textContent=e.message||"Something went wrong.";}
+    finally{button.disabled=false;button.textContent="Request Date & Package Quote";}
+  });
+  const query=new URLSearchParams(location.search);
+  const paymentResult=qs("birthday-payment-result"),flow=qs("birthday-booking-flow"),deposit=qs("birthday-confirmed-deposit");
+  if(query.get("checkout")==="success"&&query.has("session_id")){
+    paymentResult.hidden=false;paymentResult.textContent="Checking your secure deposit payment…";
+    fetch("/api/birthday-party?action=status&session_id="+encodeURIComponent(query.get("session_id")))
+      .then(async r=>{const d=await r.json();if(!r.ok)throw Error(d.error||"Payment verification unavailable.");return d;})
+      .then(d=>{if(d.confirmed){paymentResult.textContent="Your birthday party deposit is paid and your confirmed date is "+d.date+" at "+d.time+" Eastern. We look forward to celebrating with you!";flow.hidden=true;}
+        else paymentResult.textContent="Your payment has not been confirmed yet. Please do not pay again; contact the studio for help.";})
+      .catch(e=>paymentResult.textContent=e.message+" Please contact the studio before trying to pay again.");
+  }else if(query.has("ref")&&query.has("pay")){
+    const ref=query.get("ref"),pay=query.get("pay");
+    fetch("/api/birthday-party?action=booking&ref="+encodeURIComponent(ref)+"&auth="+encodeURIComponent(pay))
+      .then(async r=>{const d=await r.json();if(!r.ok)throw Error(d.error||"Deposit offer unavailable.");return d;})
+      .then(d=>{
+        if(d.status==="deposit_paid"){paymentResult.hidden=false;paymentResult.textContent="Your deposit has already been paid. Please do not pay again.";flow.hidden=true;return;}
+        flow.hidden=true;deposit.hidden=false;
+        const price=cents=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(cents/100);
+        qs("birthday-approved-summary").textContent="Confirmed for "+d.date+" at "+d.time+" Eastern. Total party price: "+price(d.totalCents)+". Deposit due now: "+price(d.depositCents)+". The remaining balance will be handled with the studio.";
+        qs("birthday-pay").textContent="Pay "+price(d.depositCents)+" Deposit Securely";
+        qs("birthday-pay").addEventListener("click",async()=>{
+          const button=qs("birthday-pay");button.disabled=true;qs("birthday-deposit-status").textContent="Opening secure Stripe checkout…";
+          try{
+            const r=await fetch("/api/birthday-party",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"checkout",ref,pay})});
+            const d=await r.json();if(!r.ok||!d.url)throw Error(d.error||"Secure checkout was unavailable.");
+            if(!/^https:\/\/checkout\.stripe\.com\//.test(d.url))throw Error("Invalid checkout destination.");
+            window.location.assign(d.url);
+          }catch(e){qs("birthday-deposit-status").textContent=e.message;button.disabled=false;}
+        });
+      })
+      .catch(e=>{paymentResult.hidden=false;paymentResult.textContent=e.message;});
+  }
+})();
+</script>
+<style>
+.party-booking-section{background:linear-gradient(145deg,#151515,#260c10 72%,#151515);padding:clamp(2rem,5vw,4rem) 0;color:#fff}
+.party-booking-section .shell{max-width:1120px;margin:auto;padding:0 20px}
+.party-heading{text-align:center;max-width:860px;margin:0 auto 28px}
+.party-kicker{color:#ffb1b1;font-size:.8rem;font-weight:800;letter-spacing:.12em}
+.party-heading h2{color:#fff;font-size:clamp(2rem,4.8vw,3.25rem);line-height:1.14;margin:9px 0 18px}
+.party-heading p:not(.party-kicker){color:#ededed;line-height:1.65}
+.party-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:25px auto 36px}
+.party-steps>div{background:#242124;border:1px solid #784449;padding:19px;border-radius:12px;display:grid;grid-template-columns:34px 1fr;gap:3px 10px;align-items:center}
+.party-steps span{grid-row:span 2;background:#b81c26;color:#fff;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-weight:900}
+.party-steps strong{color:#fff;font-size:1rem}
+.party-steps small{color:#e2dada;line-height:1.4}
+.party-form-intro h3,.party-confirmed-deposit h3{font-size:clamp(1.5rem,3.3vw,2rem);color:#fff;margin:0 0 9px}
+.party-form-intro p{color:#e8e8e8;line-height:1.65;margin:0 0 20px}
+.party-package-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:30px}
+.party-package{display:flex;flex-direction:column;gap:12px;padding:22px 18px;border:2px solid #694246;border-radius:12px;background:#201b1e;cursor:pointer;min-height:190px}
+.party-package:has(input:checked){border-color:#fa6467;background:#3a1c21}
+.party-package input{accent-color:#fa4b53;height:20px;width:20px}
+.party-package strong{font-size:1.18rem;color:#fff}
+.party-package span{color:#eee;line-height:1.55;flex:1}
+.party-package b{color:#ffd0d0;font-size:.92rem}
+.party-request-card{border:1px solid #ad5359;background:#201b1e;border-radius:14px;padding:clamp(18px,4vw,32px)}
+.party-booking-columns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.06fr);gap:clamp(20px,4vw,42px)}
+.party-calendar{min-width:0}
+.party-calendar-nav{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px}
+.party-calendar-nav h4{font-size:1.2rem;color:#fff;margin:0}
+.party-calendar-nav button{background:#a41923;border:0;color:#fff;border-radius:8px;padding:8px 14px;font-size:1.45rem;cursor:pointer}
+.party-calendar-nav button:disabled{opacity:.35;cursor:default}
+.party-calendar-days,.party-calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;text-align:center}
+.party-calendar-days{color:#f3caca;font-weight:700;font-size:.77rem;margin-bottom:8px}
+.party-date{border:1px solid #353035;background:#2e2b2e;color:#a7a2a4;border-radius:6px;aspect-ratio:1;min-width:0;padding:0;font-size:clamp(.7rem,2.5vw,1rem)}
+.party-date.is-requestable{background:#553438;color:#fff;cursor:pointer;border-color:#ac5a63;font-weight:700}
+.party-date.is-requestable:hover,.party-date.is-selected{background:#c41e2b;border-color:#fff;color:#fff}
+.party-date:focus-visible,.party-primary:focus-visible{outline:3px solid white;outline-offset:3px}
+.party-help,.party-legal{color:#e7dbdb;font-size:.86rem;line-height:1.6}
+.party-form-fields{display:grid;gap:13px}
+.party-form-fields label{display:grid;gap:6px;color:#fff;font-weight:700;font-size:.95rem}
+.party-form-fields input,.party-form-fields select,.party-form-fields textarea{width:100%;box-sizing:border-box;border-radius:6px;border:1px solid #b7a6a8;padding:12px;background:#fff;color:#1b1b1b;font:inherit;min-height:45px}
+.party-fields-pair{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.party-primary{display:inline-block;background:#c41e2b;color:white;border:2px solid #ff6b6b;padding:14px 18px;border-radius:8px;font-size:1rem;font-weight:850;cursor:pointer;text-align:center}
+.party-primary:disabled{opacity:.6;cursor:wait}
+.party-status{min-height:1.2em;font-size:.94rem;color:#ffd1d1;line-height:1.6}
+.party-status.party-success{color:#d5ffe2}
+.party-payment-result,.party-confirmed-deposit{max-width:760px;margin:18px auto 28px;background:#322022;border:1px solid #e2777b;border-radius:12px;padding:24px;line-height:1.7}
+.party-confirmed-deposit h3{margin:8px 0}
+.party-bottom-help{text-align:center;color:#eee;line-height:1.6;margin:24px 0 0}
+.party-booking-section a{color:#ffbbbb;text-decoration:underline}
+@media(max-width:740px){.party-steps,.party-package-grid,.party-booking-columns{grid-template-columns:1fr}.party-package{min-height:0}.party-steps{gap:8px}.party-steps>div{padding:13px}.party-request-card{padding:18px}.party-date{font-size:1rem}.party-fields-pair{grid-template-columns:1fr 1fr}}
+@media(max-width:385px){.party-fields-pair{grid-template-columns:1fr}.party-calendar-grid{gap:2px}}
+</style>
