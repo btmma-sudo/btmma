@@ -27,7 +27,7 @@ Astro.response.headers.set("Content-Security-Policy",
       h1{font-size:clamp(2rem,5vw,2.8rem);line-height:1.15;margin:20px 0 8px}h2{font-size:1.38rem;margin:0 0 10px}
       .eyebrow{color:#f78a81;letter-spacing:.12em;font-weight:800;font-size:.76rem}
       .muted{color:#c6ced1}.box{background:#1d2226;border:1px solid #444d52;border-radius:16px;padding:22px;margin:20px 0}
-      .grid{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:end}
+      .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) auto;gap:12px;align-items:end}.grid [hidden]{display:none!important}
       label{display:grid;gap:5px;color:#f8fafb;font-weight:750;font-size:.86rem}
       input,select{min-width:0;width:100%;padding:12px;background:#111618;color:#fff;border:1px solid #798087;border-radius:8px;font:inherit}
       button{border:0;border-radius:9px;padding:11px 14px;background:#c52d28;color:#fff;font:inherit;font-weight:800;cursor:pointer}
@@ -56,14 +56,17 @@ Astro.response.headers.set("Content-Security-Policy",
         <p class="muted">You control exactly which appointments appear on the public calendar. Students can book only the times you add. This calendar does not yet read your personal Google/Outlook appointments; check for conflicts before publishing.</p>
         <section class="box" aria-labelledby="new-title">
           <h2 id="new-title">Release Available Appointment Times</h2>
-          <p class="muted"><strong>Weekly starting hours (Eastern):</strong> Monday–Thursday at 8:00 PM, Friday at 7:00 PM, and Saturday after 11:30 AM (first slot at noon). No Sundays. You choose each day's ending time; no late hours are published automatically.</p>
+          <p class="muted"><strong>Approved hours (Eastern):</strong> Monday–Thursday from 8 PM; Friday from 7 PM; Saturday noon–5 PM; and Sunday 9 AM–2 PM or 4–6 PM. You still decide exactly which times within these hours to publish. Sunday’s afternoon break stays blocked.</p>
           <form class="grid" id="add-slot">
             <label>Date<input id="slot-date" name="date" type="date" required /></label>
+            <label id="slot-session-label" hidden>Sunday session
+              <select id="slot-session"><option value="morning">9 AM–2 PM</option><option value="evening">4–6 PM</option></select>
+            </label>
             <label>Available from (Eastern)<input id="slot-time" name="startTime" type="time" step="1800" required /></label>
             <label>Available until (Eastern)<input id="slot-end" name="endTime" type="time" step="1800" required /></label>
             <button type="submit" id="add-submit">PUBLISH TIMES</button>
           </form>
-          <p class="hint">Example: Tuesday, 8:00–10:00 PM creates four half-hour openings. Students can choose 30 minutes or 1 hour, provided two consecutive openings are available. Only publish days you are free. Slots must be at least 24 hours ahead and within 90 days.</p>
+          <p class="hint">Example: Tuesday, 8–10 PM creates four half-hour openings. On Sunday, select the 9 AM–2 PM or 4–6 PM session separately. Students can choose 30 minutes or 1 hour when consecutive openings exist. Only publish days you are personally free, at least 24 hours ahead and within 90 days.</p>
           <p id="add-status" class="status" role="status" aria-live="polite"></p>
         </section>
         <section class="box" aria-labelledby="bookings-title">
@@ -86,19 +89,35 @@ Astro.response.headers.set("Content-Security-Policy",
           const now=new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
           const nowDate=Object.fromEntries(now.filter(p=>p.type!=='literal').map(p=>[p.type,p.value]));
           $('slot-date').min=nowDate.year+'-'+nowDate.month+'-'+nowDate.day;
+          const fmtTime=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+          const minuteVal=t=>Number(t.slice(0,2))*60+Number(t.slice(3,5));
+          function currentWindow(){
+            const day=$('slot-date').value;
+            if(!day)return null;
+            const dow=new Date(day+'T12:00:00Z').getUTCDay();
+            if(dow>=1&&dow<=4)return {start:1200,end:1430};
+            if(dow===5)return {start:1140,end:1430};
+            if(dow===6)return {start:720,end:1020};
+            return $('slot-session').value==='evening'?{start:960,end:1080}:{start:540,end:840};
+          }
           function updateStartTime(){
             const day=$('slot-date').value;
             if(!day)return;
             const dow=new Date(day+'T12:00:00Z').getUTCDay();
-            const earliest=(dow>=1&&dow<=4)?'20:00':dow===5?'19:00':dow===6?'12:00':'';
-            const start=$('slot-time'),end=$('slot-end');
-            start.min=earliest||'00:00';start.value=earliest;
-            end.min=earliest||'00:00';end.value='';
-            $('add-status').textContent=earliest?'Choose an ending time for this day.':'Private lessons are not available on Sundays.';
+            $('slot-session-label').hidden=dow!==0;
+            const w=currentWindow(),start=$('slot-time'),end=$('slot-end');
+            start.min=fmtTime(w.start);start.max=fmtTime(w.end-30);start.value=fmtTime(w.start);
+            end.min=fmtTime(w.start+30);end.max=fmtTime(w.end);end.value='';
+            $('add-status').textContent='Choose your ending time for this available window.';
           }
           $('slot-date').addEventListener('change',updateStartTime);
+          $('slot-session').addEventListener('change',updateStartTime);
           $('slot-time').addEventListener('change',()=>{
-            $('slot-end').min=$('slot-time').value||'00:00';
+            const w=currentWindow();
+            if(!w)return;
+            const end=$('slot-end'),earliest=minuteVal($('slot-time').value||'00:00')+30;
+            end.min=fmtTime(Math.min(w.end,earliest));
+            if(end.value&&minuteVal(end.value)<earliest)end.value='';
           });
           const info=(parent,value)=>parent.append(el('p',value));
           async function api(method,body) {
