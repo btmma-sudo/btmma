@@ -66,7 +66,7 @@ Astro.response.headers.set("Content-Security-Policy",
             <label>Available until (Eastern)<input id="slot-end" name="endTime" type="time" step="1800" required /></label>
             <button type="submit" id="add-submit">PUBLISH TIMES</button>
           </form>
-          <p class="hint">Example: Tuesday, 8–10 PM creates four half-hour openings. On Sunday, select the 9 AM–2 PM or 4–6 PM session separately. Students can choose 30 minutes or 1 hour when consecutive openings exist. Only publish days you are personally free, at least 24 hours ahead and within 90 days.</p>
+          <p class="hint">Example: Tuesday, 8–10 PM creates four internal half-hour blocks, allowing two consecutive 60-minute lessons. On Sunday, select the 9 AM–2 PM or 4–6 PM session separately. Students can book only 60-minute appointments when two consecutive blocks are available. Only publish days you are personally free, at least 24 hours ahead and within 90 days.</p>
           <p id="add-status" class="status" role="status" aria-live="polite"></p>
         </section>
         <section class="box" aria-labelledby="bookings-title">
@@ -76,7 +76,7 @@ Astro.response.headers.set("Content-Security-Policy",
         </section>
         <section class="box" aria-labelledby="slots-title">
           <h2 id="slots-title">Published Appointment Slots</h2>
-          <p class="muted">Openings are displayed in 30-minute blocks. You can close an unbooked block at any time. A booked one-hour lesson reserves two adjacent blocks.</p>
+          <p class="muted">Availability is managed in internal 30-minute blocks, but students can only book 60-minute appointments. You can close an unbooked block at any time; each booked lesson reserves two adjacent blocks.</p>
           <div class="records" id="private-slots"><p class="muted">Loading schedule…</p></div>
         </section>
         <p class="hint">For booking assistance: Coach David, <a href="tel:+14102180894" class="navlink">(410) 218-0894</a> · <a href="/student-portal/" class="navlink">Return to Student Portal</a></p>
