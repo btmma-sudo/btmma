@@ -60,9 +60,19 @@ const fields = config?.fields ?? "standard";
 
     <input name="source" type="hidden" value="" data-source-field />
     <div class="cf-turnstile" data-sitekey="0x4AAAAAAD6Ievu-t0Ll1euh"></div>
+    {fields !== "emailOnly" && (
+      <label class="lead-sms-optin">
+        <input type="checkbox" name="smsConsent" value="yes" />
+        <span>Yes, I agree to receive automated text messages from Burning Tree Mixed Martial Arts about my inquiry and classes at the number provided. Message frequency varies; message and data rates may apply. Reply STOP to unsubscribe or HELP for help. Consent is optional and is not required to purchase or enroll.</span>
+      </label>
+    )}
     <p class="fine-print">
       By submitting, you accept our <a href="/privacy">Privacy Policy</a> and <a href="/terms">Terms of Service</a>.
     </p>
+    <style>
+      .lead-sms-optin { display: flex; align-items: flex-start; gap: .6rem; color: #f1eded; font-size: .82rem; line-height: 1.5; margin: .8rem 0; cursor: pointer; }
+      .lead-sms-optin input[type="checkbox"] { flex: 0 0 1.15rem; width: 1.15rem; height: 1.15rem; margin: .14rem 0 0; accent-color: #e53935; }
+    </style>
     <p class="form-status" data-form-status aria-live="polite"></p>
     <button class="button" type="submit">{submitLabel}</button>
   </form>
