@@ -1,0 +1,82 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { SEMINAR_WAIVERS } from "../data/seminar-waivers.js";
+
+type Props = { event: "united" | "nerve" };
+const { event } = Astro.props;
+const waiver = SEMINAR_WAIVERS[event];
+const path = event === "united" ? "/waivers/united-by-purpose/" : "/waivers/striking-a-nerve/";
+const paragraphs = waiver.body.split("\n\n");
+---
+<BaseLayout
+  title={waiver.heading + " | Burning Tree Mixed Martial Arts"}
+  description={"Print the " + waiver.heading + " for in-person signing at Burning Tree Mixed Martial Arts."}
+  path={path}
+>
+  <section class="paper-waiver shell" aria-labelledby="waiver-title">
+    <div class="waiver-head">
+      <img src="/images/logo.png" width="60" height="81" alt="Burning Tree MMA" />
+      <div>
+        <p class="brand-name">BURNING TREE MIXED MARTIAL ARTS</p>
+        <p class="brand-sub">ONE TREE. ONE FAMILY. · KEEPERS OF THE FLAME</p>
+      </div>
+    </div>
+    <h1 id="waiver-title">{waiver.heading}</h1>
+    <p class="waiver-event"><strong>Event:</strong> {waiver.event}</p>
+    <p class="waiver-address">10210 South Dolfield Road, Suite C, Owings Mills, MD 21117 · (410) 218-0894</p>
+    <p class="instructions">One form per attendee. Adults sign for themselves. For attendees under 18, a parent or legal guardian must sign. Please read the full acknowledgment before signing.</p>
+    <div class="waiver-paragraphs">
+      {paragraphs.map((p) => <p>{p}</p>)}
+    </div>
+    <div class="signature-panel">
+      <h2>Participant &amp; Signature</h2>
+      <div class="sign-line"><span>Attendee full name</span><div></div></div>
+      <div class="sign-check">Participant is: &nbsp; ☐ Adult (18+) &nbsp; ☐ Minor (under 18)</div>
+      <div class="sign-line"><span>Parent / guardian full name (if minor)</span><div></div></div>
+      <div class="sign-line"><span>Signer signature</span><div></div></div>
+      <div class="sign-line"><span>Signing date &amp; time</span><div></div></div>
+      <div class="sign-check">☐ I have read the full event acknowledgment, understand the inherent activity risks, and voluntarily agree to the safety conditions.</div>
+      <p class="signature-note">For in-person signing, an electronic-signature consent checkbox is not required. If completed electronically through the registration page, separate consent to electronic records and signatures is obtained before payment.</p>
+    </div>
+    <p class="waiver-footer">Waiver version: {waiver.version}. This is a risk acknowledgment and participation consent, not a release of claims for negligence or other wrongful acts that cannot lawfully be waived.</p>
+    <div class="waiver-actions">
+      <button type="button" onclick="window.print()">PRINT THIS WAIVER</button>
+      <a href="/seminars/">Back to seminar registration</a>
+    </div>
+  </section>
+</BaseLayout>
+<style>
+  .paper-waiver { max-width: 900px; padding: 2rem 1rem 3rem; background: #fff; color: #151515; }
+  .paper-waiver * { box-sizing: border-box; }
+  .waiver-head { display: flex; align-items: center; gap: 1rem; border-bottom: 4px solid #a71515; padding-bottom: .8rem; }
+  .waiver-head img { object-fit: contain; }
+  .brand-name { font-size: 1.1rem; font-weight: 900; margin: 0 0 .25rem; color: #741010; }
+  .brand-sub { font-size: .76rem; font-weight: 800; color: #333; margin: 0; }
+  .paper-waiver h1 { color: #171717; font-size: clamp(1.7rem,4vw,2.3rem); line-height: 1.15; margin: 1rem 0 .7rem; }
+  .waiver-event { font-size: 1rem; }
+  .waiver-address { font-size: .87rem; font-weight: 700; }
+  .instructions { background: #faf1f1; padding: .9rem; border-left: 4px solid #b91c1c; font-size: .9rem; }
+  .waiver-paragraphs p { font-size: .89rem; line-height: 1.62; margin: .85rem 0; color: #111; orphans: 2; widows: 2; }
+  .signature-panel { border: 2px solid #4f4f4f; padding: 1rem; margin-top: 1.5rem; break-inside: avoid; }
+  .signature-panel h2 { color: #111; font-size: 1.2rem; margin: .1rem 0 1rem; }
+  .sign-line { margin: 1rem 0; display: flex; gap: 1rem; align-items: end; font-size: .86rem; }
+  .sign-line span { min-width: 210px; }
+  .sign-line > div { flex: 1; border-bottom: 1px solid #444; height: 24px; }
+  .sign-check { font-size: .9rem; line-height: 1.6; margin: .9rem 0; }
+  .signature-note, .waiver-footer { font-size: .75rem; color: #414141; line-height: 1.55; }
+  .waiver-actions { margin: 1rem 0; display: flex; align-items: center; flex-wrap: wrap; gap: 1rem; }
+  .waiver-actions button { border: 0; color: #fff; font-weight: 800; padding: 1rem; border-radius: 6px; background: #9b1515; cursor: pointer; }
+  .waiver-actions a { color: #8b1515; }
+  @media (max-width: 560px) {.sign-line { display: block; }.sign-line > div { display:block; }.sign-line span { min-width:0; }}
+  @media print {
+    @page { size: letter; margin: .55in .6in; }
+    :global(.site-header), :global(.site-footer) { display: none !important; }
+    :global(main) { background: #fff !important; padding: 0 !important; }
+    .paper-waiver { max-width: none; padding: 0; margin: 0; }
+    .waiver-actions { display:none !important; }
+    .paper-waiver h1 { font-size: 18pt; }
+    .waiver-paragraphs p { font-size: 9.5pt; line-height: 1.45; margin: .55rem 0; }
+    .signature-panel { margin-top: .8rem; }
+    .waiver-head img { width: 40px; height: 54px; }
+  }
+</style>
