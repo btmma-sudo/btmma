@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { SEMINAR_WAIVERS } from "../data/seminar-waivers.js";
 const eventStructuredData = {
   "@context": "https://schema.org",
   "@graph": [
@@ -36,6 +37,7 @@ const eventStructuredData = {
   image="/images/burning-tree-kenpo-team.webp"
 >
   <script type="application/ld+json" set:html={JSON.stringify(eventStructuredData)} />
+  <script type="application/json" id="seminar-waiver-data" set:html={JSON.stringify(SEMINAR_WAIVERS).replace(/</g, "\\u003c")} />
   <div class="seminar-page">
     <section class="seminar-hero" aria-labelledby="seminar-heading">
       <div class="shell">
@@ -127,6 +129,20 @@ const eventStructuredData = {
           <textarea id="seminar-attendees" rows="4" maxlength="500" placeholder="Your name&#10;Second attendee's name" required></textarea>
           <p class="seminar-note">Enter 1–6 names. Include yourself if you will be attending. Each name counts as one paid seat.</p>
         </div>
+        <section id="seminar-waiver-section" class="seminar-waiver-section" hidden aria-labelledby="seminar-waiver-heading">
+          <h3 id="seminar-waiver-heading">Read &amp; Electronically Sign the Seminar Waiver</h3>
+          <p class="seminar-note">A separate signature is required for every attendee. Each adult must sign for themselves; a parent or legal guardian must sign for each minor. Signing is separate from purchasing a ticket.</p>
+          <details open class="seminar-waiver-copy"><summary>Read the full event-specific risk acknowledgment</summary>
+            <h4 id="seminar-waiver-title"></h4>
+            <pre id="seminar-waiver-fulltext"></pre>
+          </details>
+          <p class="seminar-note">You can save or print the text above for your records. To sign electronically, each signer must separately accept the risk acknowledgment and agree to electronic records and signatures.</p>
+          <div id="seminar-waiver-signers"></div>
+          <div class="seminar-security">
+            <p class="seminar-note"><strong>Security check before saving signed waivers</strong></p>
+            <div class="cf-turnstile" data-sitekey="0x4AAAAAAD6Ievu-t0Ll1euh" data-size="normal"></div>
+          </div>
+        </section>
         <div class="seminar-total" aria-live="polite">
           <span id="seminar-total-label">General Admission × 1</span>
           <strong id="seminar-total-amount">$50.00</strong>
@@ -134,7 +150,7 @@ const eventStructuredData = {
         <p class="seminar-note">Review your details to see the same payment choices as our $29 special. Apple Pay (including eligible Apple Cash cards) and credit/debit cards use secure Stripe checkout. Direct Cash App payments are manually verified.</p>
         <p class="seminar-note">We do not collect or store card numbers on this website. By registering, you agree to our <a href="/terms">Terms</a> and <a href="/privacy">Privacy Policy</a>.</p>
         <p id="seminar-form-message" class="seminar-message" role="status" aria-live="polite"></p>
-        <button id="seminar-submit" class="seminar-cta seminar-checkout" type="submit">REVIEW REGISTRATION &amp; CHOOSE PAYMENT</button>
+        <button id="seminar-submit" class="seminar-cta seminar-checkout" type="submit">REVIEW REGISTRATION &amp; SIGN WAIVERS</button>
         <div id="seminar-payment-options" class="seminar-payment-options" hidden>
           <h3>Choose Your Payment Method</h3>
           <p id="seminar-reviewed-total" class="seminar-reviewed-total" aria-live="polite"></p>
@@ -142,10 +158,7 @@ const eventStructuredData = {
           <button id="seminar-card" class="seminar-cta seminar-pay-choice" type="button">PAY WITH CREDIT / DEBIT CARD</button>
           <button id="seminar-cashapp" class="seminar-cta seminar-pay-choice" type="button">PAY DIRECTLY WITH CASH APP</button>
           <p class="seminar-note">Apple Pay and card payments open the same secure Stripe checkout. Apple Pay appears only on supported devices. To use an eligible Apple Cash balance, select the Apple Cash card in Apple Pay. A credit or debit card remains available as a fallback.</p>
-          <div class="seminar-security">
-            <p class="seminar-note"><strong>Security check for card / Apple Pay</strong></p>
-            <div class="cf-turnstile" data-sitekey="0x4AAAAAAD6Ievu-t0Ll1euh" data-size="normal"></div>
-          </div>
+          <p class="seminar-note">Signed acknowledgments are saved separately in Burning Tree's seminar waiver records before payment is offered.</p>
         </div>
         <div id="seminar-cashapp-instructions" class="seminar-cashapp-instructions" hidden aria-live="polite">
           <h3>Direct Cash App Payment</h3>
