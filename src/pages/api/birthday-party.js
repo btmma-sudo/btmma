@@ -7,13 +7,17 @@ const KEY = "STRIPE_LIVE_WEBHOOK_SECRET";
 const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const choices = ["Martial Arts Games", "Team Challenges", "Custom Celebration"];
 const times = ["12:00","13:30","14:30","16:00"];
-// Source of truth: two-hour party, $350 up to 15 children, $10 per extra child.
+// Party pricing: first 2 hours + up to 15 children $350, $10 per extra child,
+// $100 for each additional hour. $150 deposit is only charged after confirmation.
 const PARTY_DURATION_MINUTES = 120;
-const PARTY_DEPOSIT_CENTS = 15000; // Charged only after studio date approval.
-const partyPriceCents = guests =>
-  Number.isInteger(guests) && guests >= 1 && guests <= 75
-    ? 35000 + Math.max(0, guests - 15) * 1000
+const MAX_EXTRA_HOURS = 4; // Longer events can be discussed directly with staff.
+const PARTY_DEPOSIT_CENTS = 15000;
+const partyPriceCents = (guests,extraHours=0) =>
+  Number.isInteger(guests) && guests >= 1 && guests <= 75 &&
+  Number.isInteger(extraHours) && extraHours >= 0 && extraHours <= MAX_EXTRA_HOURS
+    ? 35000 + Math.max(0,guests-15)*1000 + extraHours*10000
     : null;
+const partyDurationMinutes = extraHours => PARTY_DURATION_MINUTES + extraHours*60;
 const json = (v,s=200)=>new Response(JSON.stringify(v),{status:s,headers:{"content-type":"application/json; charset=utf-8","cache-control":"no-store","x-content-type-options":"nosniff"}});
 const html = (v,s=200)=>new Response(v,{status:s,headers:{"content-type":"text/html; charset=utf-8","cache-control":"no-store","x-content-type-options":"nosniff","referrer-policy":"no-referrer","content-security-policy":"default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; base-uri 'none'"}});
 const esc = s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
@@ -32,7 +36,7 @@ async function verified(env,msg,provided){
 function envReady(env){return !!(env.LIVE_TRIAL_DB && typeof env[KEY]==="string" && env[KEY].length>24);}
 
 const PARTY_SCHEMA = [
-  "CREATE TABLE IF NOT EXISTS birthday_party_requests (id TEXT PRIMARY KEY, contact_name TEXT NOT NULL, email TEXT NOT NULL, phone TEXT NOT NULL, birthday_name TEXT NOT NULL, age_group TEXT NOT NULL, guests INTEGER NOT NULL CHECK(guests BETWEEN 1 AND 75), package_interest TEXT NOT NULL, preferred_date TEXT NOT NULL, preferred_time TEXT NOT NULL, notes TEXT NOT NULL DEFAULT '', status TEXT NOT NULL DEFAULT 'requested' CHECK(status IN ('requested','approved','checkout_open','deposit_paid','cancelled')), total_cents INTEGER, deposit_cents INTEGER, stripe_session_id TEXT UNIQUE, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, approved_at TEXT, paid_at TEXT)",
+  "CREATE TABLE IF NOT EXISTS birthday_party_requests (id TEXT PRIMARY KEY, contact_name TEXT NOT NULL, email TEXT NOT NULL, phone TEXT NOT NULL, birthday_name TEXT NOT NULL, age_group TEXT NOT NULL, guests INTEGER NOT NULL CHECK(guests BETWEEN 1 AND 75), extra_hours INTEGER NOT NULL DEFAULT 0 CHECK(extra_hours BETWEEN 0 AND 4), package_interest TEXT NOT NULL, preferred_date TEXT NOT NULL, preferred_time TEXT NOT NULL, notes TEXT NOT NULL DEFAULT '', status TEXT NOT NULL DEFAULT 'requested' CHECK(status IN ('requested','approved','checkout_open','deposit_paid','cancelled')), total_cents INTEGER, deposit_cents INTEGER, stripe_session_id TEXT UNIQUE, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, approved_at TEXT, paid_at TEXT)",
   "CREATE INDEX IF NOT EXISTS idx_birthday_party_requests_date ON birthday_party_requests(preferred_date,preferred_time,status)",
   "CREATE UNIQUE INDEX IF NOT EXISTS idx_birthday_party_confirmed_slot ON birthday_party_requests(preferred_date,preferred_time) WHERE status IN ('approved','checkout_open','deposit_paid')",
   "CREATE TABLE IF NOT EXISTS birthday_party_confirmed_blocks (local_date TEXT NOT NULL,local_time TEXT NOT NULL,request_id TEXT NOT NULL REFERENCES birthday_party_requests(id),PRIMARY KEY(local_date,local_time))"
@@ -43,15 +47,23 @@ async function ensurePartySchema(db) {
   await db.prepare(PARTY_SCHEMA[1]).run();
   await db.prepare(PARTY_SCHEMA[2]).run();
   await db.prepare(PARTY_SCHEMA[3]).run();
+  // Backfill existing live requests with zero extra hours, independently of trial data.
+  const info=await db.prepare("PRAGMA table_info(birthday_party_requests)").all();
+  if(!info.results?.some(col=>col.name==="extra_hours")){
+    try {
+      await db.prepare("ALTER TABLE birthday_party_requests ADD COLUMN extra_hours INTEGER NOT NULL DEFAULT 0 CHECK(extra_hours BETWEEN 0 AND 4)").run();
+    }catch(error){
+      if(!/duplicate column/i.test(String(error)))throw error;
+    }
+  }
 }
 
-// Occupy the full two hours in 30-minute increments so overlapping
-// confirmed parties cannot be approved even when start times differ.
-function approvedBlocks(time){
+// Block all 30-minute intervals in the complete approved duration.
+function approvedBlocks(time,extraHours=0){
   const [hours,mins]=time.split(":").map(Number);
   const start=hours*60+mins;
-  return [0,30,60,90].map(add=>{
-    const t=start+add;
+  return Array.from({length:partyDurationMinutes(extraHours)/30},(_,i)=>{
+    const t=start+i*30;
     return String(Math.floor(t/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0");
   });
 }
@@ -80,7 +92,7 @@ async function saveLead(env,row){
       "Lead Source":"Birthday Party Website","Stage":"Birthday Party Inquiry","Program Of Interest":"Birthday Parties",
       "Additional Notes":"Party ref: "+row.id+"\nChild: "+row.birthday_name+"\nGuests: "+row.guests+
         "\nFormat: "+row.package_interest+"\nDate requested: "+row.preferred_date+" at "+row.preferred_time+
-        "\nAge: "+row.age_group+"\nDuration: 2 hours\nTotal: $"+(partyPriceCents(row.guests)/100).toFixed(2)+"\nNotes: "+row.notes};
+        "\nAge: "+row.age_group+"\nDuration: "+(2+row.extra_hours)+" hours ("+row.extra_hours+" extra at $100 each)\nTotal: $"+(partyPriceCents(row.guests,row.extra_hours)/100).toFixed(2)+"\nNotes: "+row.notes};
     const r=await fetch("https://api.airtable.com/v0/"+encodeURIComponent(env.AIRTABLE_BASE_ID)+"/"+TABLE,{method:"POST",
       headers:{"Authorization":"Bearer "+env.AIRTABLE_API_TOKEN,"Content-Type":"application/json"},
       body:JSON.stringify({records:[{fields}],typecast:true})});
