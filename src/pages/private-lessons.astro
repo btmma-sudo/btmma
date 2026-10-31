@@ -14,25 +14,34 @@ import {site} from "../data/site";
         <p class="eyebrow">ONE-ON-ONE PRIVATE COACHING · OWINGS MILLS, MD</p>
         <h1 id="private-heading">Private Lessons. <span>Personal Progress.</span></h1>
         <p>Ready to focus on your goals? Book one-on-one time with Coach David. Whether you want extra technique work, help preparing for your next rank, or more confidence on the mats, we can tailor the lesson to you.</p>
-        <p class="private-subline">Select a time Coach David has opened below. All times are Eastern Time. Booking a lesson does not charge a payment.</p>
+        <p class="private-subline"><strong>Appointment days:</strong> Monday–Thursday from 8 PM, Friday from 7 PM, and Saturday from noon (after 11:30 AM). No Sunday appointments. Select a time Coach David has released below; all times are Eastern. Booking does not charge a payment.</p>
       </div>
       <div class="private-logo-wrap"><img src="/images/logo.png" width="200" height="272" alt="Burning Tree Mixed Martial Arts logo" loading="eager"/></div>
     </section>
     <section class="shell private-layout" aria-label="Book your private lesson">
-      <div class="private-panel">
-        <div class="step-title"><span class="step-number">1</span><div><h2>Choose Your Date</h2><p>Only available private lesson days can be selected.</p></div></div>
+      <div>
+        <div class="private-panel">
+          <div class="step-title"><span class="step-number">1</span><div><h2>Choose Your Lesson Length</h2><p>Choose separately for every private lesson.</p></div></div>
+          <div class="private-duration-options" role="group" aria-label="Lesson duration">
+            <button type="button" class="duration-button active" data-lesson-minutes="30" aria-pressed="true"><strong>30 Minutes</strong><span>Focused coaching session</span></button>
+            <button type="button" class="duration-button" data-lesson-minutes="60" aria-pressed="false"><strong>1 Hour</strong><span>Extended one-on-one training</span></button>
+          </div>
+        </div>
+        <div class="private-panel">
+          <div class="step-title"><span class="step-number">2</span><div><h2>Choose Your Date</h2><p>Available dates depend on your lesson length.</p></div></div>
         <div class="month-nav"><button type="button" id="private-prev" aria-label="Previous month">‹</button><h3 id="private-month" aria-live="polite"></h3><button type="button" id="private-next" aria-label="Next month">›</button></div>
         <div class="weekdays" aria-hidden="true"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div>
         <div class="days" id="private-days" aria-label="Available dates"></div>
         <p class="private-status" id="private-calendar-status" role="status" aria-live="polite">Checking available appointments…</p>
+        </div>
       </div>
       <div>
         <div class="private-panel">
-          <div class="step-title"><span class="step-number">2</span><div><h2>Choose Your Time</h2><p id="private-date-label">Select a date to see openings.</p></div></div>
+          <div class="step-title"><span class="step-number">3</span><div><h2>Choose Your Time</h2><p id="private-date-label">Select a date to see openings.</p></div></div>
           <div id="private-times" class="private-times" role="group" aria-label="Available appointment times"><p class="private-muted">Your available time slots will appear here.</p></div>
         </div>
         <div class="private-panel" id="private-booking-form-wrap" hidden>
-          <div class="step-title"><span class="step-number">3</span><div><h2>Your Lesson Details</h2><p id="private-summary"></p></div></div>
+          <div class="step-title"><span class="step-number">4</span><div><h2>Your Lesson Details</h2><p id="private-summary"></p></div></div>
           <form id="private-form">
             <div class="private-field"><label for="private-student">Student name</label><input id="private-student" name="studentName" autocomplete="name" maxlength="120" required /></div>
             <div class="private-field"><label for="private-contact">Parent / booking contact name</label><input id="private-contact" name="contactName" autocomplete="name" maxlength="120" required /></div>
@@ -78,12 +87,19 @@ import {site} from "../data/site";
     const nowInET = new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',month:'numeric',year:'numeric'}).formatToParts(new Date());
     const year = Number(nowInET.find(p=>p.type==='year').value);
     const month = Number(nowInET.find(p=>p.type==='month').value) - 1;
-    let cursor = new Date(Date.UTC(year,month,1)), selected = null, selectedDate = null, available = [], loaded = false;
+    let cursor = new Date(Date.UTC(year,month,1)), selected = null, selectedDate = null, selectedDuration = 30, available = [], loaded = false;
     const pad=n=>String(n).padStart(2,'0');
     const displayTime = t => {const h=Number(t.slice(0,2));return (h%12||12)+':'+t.slice(3)+' '+(h>=12?'PM':'AM');};
     const formatDate = d => new Date(d+'T12:00:00Z').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric',timeZone:'UTC'});
     const currentMonthIndex = year*12+month;
-    const allowedDate = d => available.some(s=>s.date===d);
+    const mins=t=>Number(t.slice(0,2))*60+Number(t.slice(3,5));
+    function startsForDate(date) {
+      const blocks=available.filter(s=>s.date===date);
+      if(selectedDuration===30)return blocks;
+      const free=new Set(blocks.map(s=>mins(s.time)));
+      return blocks.filter(s=>mins(s.time)+60<=1440 && free.has(mins(s.time)+30));
+    }
+    const allowedDate = d => startsForDate(d).length>0;
     function renderCalendar() {
       const yr=cursor.getUTCFullYear(), mo=cursor.getUTCMonth(), count=new Date(Date.UTC(yr,mo+1,0)).getUTCDate();
       const index=yr*12+mo;
@@ -103,7 +119,7 @@ import {site} from "../data/site";
         if(!button.disabled)button.addEventListener('click',()=>pickDate(date));
         days.append(button);
       }
-      if(loaded&&!available.some(s=>s.date.startsWith(yr+'-'+pad(mo+1)+'-')))
+      if(loaded&&!available.some(s=>s.date.startsWith(yr+'-'+pad(mo+1)+'-') && allowedDate(s.date)))
         calendarStatus.textContent='No private lessons are available this month. Check another month or text Coach David.';
       else if(loaded)calendarStatus.textContent='Select one of the highlighted dates to continue.';
     }
@@ -111,10 +127,10 @@ import {site} from "../data/site";
       selectedDate=date;selected=null;formWrap.hidden=true;
       $('private-date-label').textContent=formatDate(date);
       times.replaceChildren();
-      const list=available.filter(s=>s.date===date);
+      const list=startsForDate(date);
       for(const slot of list){
         const button=document.createElement('button');button.type='button';button.className='time-button';
-        button.textContent=displayTime(slot.time)+' · '+slot.duration+' min';
+        button.textContent=displayTime(slot.time)+' · '+(selectedDuration===60?'1 hour':'30 min');
         button.addEventListener('click',()=>pickSlot(slot));
         times.append(button);
       }
@@ -123,9 +139,9 @@ import {site} from "../data/site";
     function pickSlot(slot) {
       selected=slot;
       times.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
-      const idx=available.filter(s=>s.date===slot.date).findIndex(s=>s.id===slot.id);
+      const idx=startsForDate(slot.date).findIndex(s=>s.id===slot.id);
       if(times.children[idx])times.children[idx].classList.add('active');
-      $('private-summary').textContent=formatDate(slot.date)+' · '+displayTime(slot.time)+' ET · '+slot.duration+' minutes';
+      $('private-summary').textContent=formatDate(slot.date)+' · '+displayTime(slot.time)+' ET · '+(selectedDuration===60?'1 hour':'30 minutes');
       $('private-form-status').textContent='';
       formWrap.hidden=false;
       formWrap.scrollIntoView({behavior:'smooth',block:'nearest'});
@@ -137,11 +153,23 @@ import {site} from "../data/site";
         const data=await response.json();
         if(!response.ok||!data.ok)throw new Error(data.error||'The calendar is unavailable.');
         available=data.slots;loaded=true;
-        if(selectedDate&&!allowedDate(selectedDate)){selectedDate=null;selected=null;formWrap.hidden=true;times.replaceChildren();}
+        if(selectedDate&&!allowedDate(selectedDate)){selectedDate=null;selected=null;formWrap.hidden=true;times.replaceChildren();$('private-date-label').textContent='Select a date to see openings.';}
+        else if(selectedDate)pickDate(selectedDate);
         renderCalendar();
         if(!available.length)calendarStatus.textContent='No private lesson times have been released yet. Please call or text Coach David at (410) 218-0894.';
       }catch(e){available=[];loaded=true;renderCalendar();calendarStatus.textContent=e.message+' Call or text (410) 218-0894 for help.';}
     }
+    document.querySelectorAll('[data-lesson-minutes]').forEach(button=>button.addEventListener('click',()=>{
+      selectedDuration=Number(button.getAttribute('data-lesson-minutes'));
+      document.querySelectorAll('[data-lesson-minutes]').forEach(b=>{
+        const on=Number(b.getAttribute('data-lesson-minutes'))===selectedDuration;
+        b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on));
+      });
+      selected=null;formWrap.hidden=true;
+      if(selectedDate&&allowedDate(selectedDate))pickDate(selectedDate);
+      else {selectedDate=null;times.replaceChildren();$('private-date-label').textContent='Select a date to see openings.';}
+      renderCalendar();
+    }));
     $('private-prev').addEventListener('click',()=>{cursor=new Date(Date.UTC(cursor.getUTCFullYear(),cursor.getUTCMonth()-1,1));renderCalendar();});
     $('private-next').addEventListener('click',()=>{cursor=new Date(Date.UTC(cursor.getUTCFullYear(),cursor.getUTCMonth()+1,1));renderCalendar();});
     form.addEventListener('submit',async e=>{
@@ -155,7 +183,7 @@ import {site} from "../data/site";
       try{
         const data=Object.fromEntries(f.entries());delete data['cf-turnstile-response'];
         const response=await fetch('/api/private-lessons/book',{method:'POST',headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({...data,slotId:selected.id,turnstileToken:token})});
+          body:JSON.stringify({...data,slotId:selected.id,duration:selectedDuration,turnstileToken:token})});
         const result=await response.json();
         if(!response.ok||!result.ok)throw new Error(result.error||'Please try again.');
         $('private-confirmed-details').textContent=formatDate(result.date)+' at '+displayTime(result.time)+' ET · '+result.duration+' minutes. Booking reference: '+result.bookingId;
@@ -193,6 +221,11 @@ import {site} from "../data/site";
     .weekdays span{font-size:.77rem;font-weight:800;color:#716b68;padding:5px 0}.date-button{width:100%;aspect-ratio:1;min-width:0;border:1px solid transparent;border-radius:10px;background:#ffebe7;color:#a8241e;font-size:.92rem;font-weight:800;cursor:pointer}
     .date-button:hover,.date-button.active{background:#bd2b24;color:#fff}.date-button:disabled{background:#f7f5f3;color:#aaa5a2;cursor:not-allowed}
     .private-status,.private-muted{font-size:.88rem;color:#635b57;line-height:1.5}
+    .private-duration-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .duration-button{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:4px;text-align:left;background:#fff;border:2px solid #dfc3bd;border-radius:12px;color:#28201d;padding:15px 12px;cursor:pointer;min-height:83px}
+    .duration-button strong{font-size:1.1rem;color:#8d211d}.duration-button span{font-size:.78rem;color:#5f5651}
+    .duration-button:hover,.duration-button.active{background:#fff1ed;border-color:#bd2821}
+    .duration-button:focus-visible{outline:3px solid #bf312b;outline-offset:2px}
     .private-times{display:flex;flex-wrap:wrap;gap:9px}.time-button{border:1px solid #c23930;color:#ab241e;background:#fff7f5;border-radius:9px;padding:11px 12px;font-weight:750;cursor:pointer;font-size:.86rem}
     .time-button:hover,.time-button.active{background:#ba2923;color:#fff}
     #private-form{display:grid;gap:14px}.private-field{display:grid;gap:6px}
