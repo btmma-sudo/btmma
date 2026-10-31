@@ -49,7 +49,7 @@ const eventStructuredData = {
 
     <section class="shell seminar-events" id="events" aria-label="Upcoming martial arts seminars">
       <article class="seminar-card" id="united-by-purpose">
-        <img src="/images/burning-tree-milestones-group-certificates.webp" alt="Burning Tree martial arts students and instructors celebrating together" width="850" height="540" loading="eager" decoding="async" />
+        <img class="seminar-flyer" src="/images/seminar-united-by-purpose-2026.webp" alt="United by Purpose seminar flyer — Sunday November 15, 2026, 2–4 PM; Masters Mike Lambert and Lee Epperson; $50, $75, and $100 participation levels" width="1179" height="1334" loading="eager" decoding="async" onerror="this.onerror=null;this.src='/images/burning-tree-milestones-group-certificates.webp';" />
         <div class="seminar-card-content">
           <p class="seminar-eyebrow">SUNDAY · NOVEMBER 15, 2026 · 2–4 PM</p>
           <h2>United by <span>Purpose</span></h2>
@@ -69,7 +69,7 @@ const eventStructuredData = {
       </article>
 
       <article class="seminar-card" id="striking-a-nerve">
-        <img src="/images/burning-tree-adult-striking-drill.webp" alt="Adult martial artists practicing controlled techniques at Burning Tree MMA" width="850" height="540" loading="lazy" decoding="async" />
+        <img class="seminar-flyer" src="/images/seminar-striking-a-nerve-2026.webp" alt="Striking a Nerve anatomy and physiology seminar flyer — November 21 and 22, 2026, noon–2 PM; Dr. Frederick Weiss; $100 for one day or $190 for both" width="707" height="1536" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='/images/burning-tree-adult-striking-drill.webp';" />
         <div class="seminar-card-content">
           <p class="seminar-eyebrow">NOVEMBER 21 &amp; 22, 2026 · 12–2 PM EACH DAY</p>
           <h2>Striking <span>a Nerve</span></h2>
@@ -462,6 +462,7 @@ const eventStructuredData = {
   .seminar-events { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; gap: 1.7rem; padding-top: 3rem; padding-bottom: 2rem; }
   .seminar-card { background: #1c1c1c; border: 1px solid #65302c; border-radius: .65rem; overflow: hidden; display: flex; flex-direction: column; }
   .seminar-card > img { width: 100%; height: 255px; object-fit: contain; background: #0c0c0c; display: block; }
+  .seminar-card > img.seminar-flyer { width: 100%; height: auto; max-height: none; object-fit: contain; object-position: center top; background: #fff; }
   .seminar-card-content { padding: 1.5rem 1.5rem 1.8rem; display: flex; flex-direction: column; flex: 1; }
   .seminar-card h2 { margin: .3rem 0 .5rem; font: 900 clamp(1.6rem, 2.7vw, 2.4rem)/1.18 'Black Ops One', 'Open Sans', sans-serif; color: #fff; }
   .seminar-card p, .seminar-card li { color: #ececec; line-height: 1.65; }
@@ -500,7 +501,8 @@ const eventStructuredData = {
   .seminar-location a { color: #ffb9b9; }
   @media (max-width: 860px) {
     .seminar-events, .seminar-registration { grid-template-columns: 1fr; }
-    .seminar-card > img { height: 220px; }
+    .seminar-card > img:not(.seminar-flyer) { height: 220px; }
+    .seminar-card > img.seminar-flyer { height: auto; max-height: none; }
     .seminar-hero { padding: 3rem 0; }
   }
   @media (max-width: 520px) {
