@@ -80,7 +80,7 @@ const seo = {
       <h3>Student &amp; Contact Information</h3>
       <label for="private-package">Select a package</label>
       <select name="package" id="private-package" required>
-       {packs.map(p => <option value={p.id}>{p.name} — {p.sessions} private 60-minute lessons — $ {p.price}</option>)}
+       {packs.map(p => <option value={p.id}>{p.name} — {p.sessions} private 60-minute lessons — ${p.price}</option>)}
       </select>
       <label for="private-student">Student's full name</label><input name="studentName" id="private-student" type="text" maxlength="120" autocomplete="name" required />
       <label for="private-contact">Parent/guardian or contact name</label><input name="contactName" id="private-contact" type="text" maxlength="120" autocomplete="name" required />
