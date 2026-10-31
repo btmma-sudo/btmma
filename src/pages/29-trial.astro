@@ -23,13 +23,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       <p><strong>One Tree. One Family.</strong></p>
     </section>
     <nav class="trial-steps" aria-label="Three steps to get started"><ol>
-      <li id="trial-step-1" class="current" aria-current="step"><strong>1</strong><span>Student Registration</span></li>
-      <li id="trial-step-2"><strong>2</strong><span>Pay $29</span></li>
-      <li id="trial-step-3"><strong>3</strong><span>Enrollment Questionnaire</span></li>
-    </ol><p>Three steps: enter student details, complete payment, then tell us about your goals so we can prepare for your first classes.</p></nav>
+      <li id="trial-step-1" class="current" aria-current="step"><strong>1</strong><span>Student Questionnaire</span></li>
+      <li id="trial-step-2"><strong>2</strong><span>$29 Payment</span></li>
+      <li id="trial-step-3"><strong>3</strong><span>Goals Questionnaire</span></li>
+    </ol><p><strong>Complete all 3 steps:</strong> (1) answer the short student information form, (2) pay $29, and (3) complete the goals questionnaire that appears after your payment is verified. Your details from Step 1 are saved automatically—no need to enter them again.</p></nav>
     <section class="registration" id="registration">
-      <h2>Step 1: Student Registration</h2>
-      <p>First enter the student’s essential details and choose a martial art. Next choose how to pay $29. After payment is verified, Step 3 collects goals and training preferences. Siblings may share parent contact details but register separately.</p>
+      <h2>Step 1: Student Information Questionnaire</h2>
+      <p>Complete this short first questionnaire with the student’s name, birth date, contact information and chosen martial art. After paying $29 in Step 2, a different questionnaire will open in Step 3 to learn about goals and training preferences. You will not have to reenter Step 1 answers. Siblings may share parent contact details but register separately.</p>
       <p class="first-class-help">First time on the mats? <a href="/your-first-class">See what to wear, where to park, and what happens after you register.</a></p>
       <form id="student-registration" class="form">
         <div id="step-one-fields">
@@ -133,7 +133,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         <p id="registration-next-step" class="fine-print">We’ll check the student’s registration, then show available payment methods. You will not be charged by clicking this button.</p>
         <button class="verify-registration-button" type="submit">COMPLETE STEP 1 &amp; CHOOSE PAYMENT</button>
         <div id="payment-stage" hidden>
-          <h3>Step 2: Pay $29</h3>
+          <h3>Step 2: Complete Your $29 Payment</h3>
           <p>Card and Apple Pay use secure Stripe checkout. Cash App and Zelle require Coach David to verify the transfer before Step 3 opens.</p>
         <button id="applepay-button" type="button" hidden disabled>APPLE PAY / APPLE CASH — $29</button>
         <button id="checkout-button" type="button" hidden disabled>PAY $29 WITH CREDIT / DEBIT CARD</button>
@@ -181,7 +181,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       </div>
     </section>
     <section class="registration" id="post-payment" hidden aria-labelledby="post-payment-title">
-      <h2 id="post-payment-title">Step 3: Enrollment Questionnaire</h2>
+      <h2 id="post-payment-title">Step 3: Enrollment Goals Questionnaire</h2>
       <p>Payment verified! Please complete this last step to help us prepare for your classes—no need to reenter anything from Step 1.</p>
       <form id="post-payment-questionnaire" class="form">
         <section class="questionnaire-online" aria-labelledby="questionnaire-title">
@@ -205,7 +205,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 <label class="question-option"><input type="checkbox" name="q2" value="Fitness" /><span>Fitness</span></label>
 <label class="question-option"><input type="checkbox" name="q2" value="Personal growth" /><span>Personal growth</span></label>
 <label class="question-option"><input type="checkbox" name="q2" value="Other" /><span>Other</span></label></div></div>
-<div class="question-line"><label for="q3" class="question-label">3. What is your top goal for the next 6–12 months?</label><textarea id="q3" name="q3" rows="2" maxlength="600" placeholder="What would you like to achieve?"></textarea></div>
+<div class="question-line"><label for="q3" class="question-label">3. What is your top goal for the next 6–12 months?</label><textarea id="q3" name="q3" rows="2" maxlength="600" placeholder="What would you like to achieve?" required aria-required="true"></textarea></div>
 <div class="question-line"><label for="q4" class="question-label">4. If we helped you or your child accomplish ONE thing, what would make the biggest difference?</label><textarea id="q4" name="q4" rows="2" maxlength="600" placeholder="Tell us what matters most to you."></textarea></div>
 <div class="question-line"><p class="question-label">5. Have you or your child trained before?</p><div class="question-options"><label class="question-option"><input type="radio" name="q5" value="Yes" /><span>Yes</span></label>
 <label class="question-option"><input type="radio" name="q5" value="No" /><span>No</span></label></div><label class="question-subfield" for="q5Details">If yes, what style and for how long?<input id="q5Details" name="q5Details" type="text" maxlength="120" /></label></div>
@@ -729,11 +729,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             recordVerifiedPurchase(sessionId);
           }
           if (result.status === "confirmed") {
-            if (heading) heading.textContent = "Registration confirmed!";
-            if (message) message.textContent = "Your $29 payment and registration are verified. Welcome to Burning Tree! We'll contact you to arrange your two beginner classes and free uniform.";
+            if (heading) heading.textContent = "Payment verified — one last step!";
+            if (message) message.textContent = "Your $29 payment is verified. Please complete Step 3 below so we can prepare for your two beginner classes and free uniform. Your student information is already saved.";
           } else if (result.status === "processing") {
             if (heading) heading.textContent = "Payment received!";
-            if (message) message.textContent = "Stripe confirmed your $29 payment. We're finalizing registration and will follow up about classes. Don't pay again.";
+            if (message) message.textContent = "Stripe verified your $29 payment. Please complete Step 3 below while your registration finishes processing. Do not pay again.";
           } else {
             if (heading) heading.textContent = "Payment confirmation pending";
             if (message) message.textContent = "Payment has not yet been confirmed. If you have a Stripe receipt, contact the studio before trying again.";
@@ -912,7 +912,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           if (applePayHelp) applePayHelp.hidden = false;
           if (cashAppButton) { cashAppButton.hidden = false; cashAppButton.disabled = false; }
           if (zelleButton) { zelleButton.hidden = false; zelleButton.disabled = false; }
-          notice.textContent = "Registration approved! Choose Apple Pay / Apple Cash, credit or debit card, direct Cash App, or Zelle. Wallets appear on eligible devices; Cash App and Zelle require manual payment verification.";
+          notice.textContent = "Step 1 is complete. Choose a payment method for Step 2. After payment is verified, Step 3 will open automatically. Apple Pay and cards use Stripe; Cash App and Zelle require manual payment verification.";
         }
       } catch (error) {
         notice.textContent = error?.name === "AbortError"
