@@ -103,6 +103,70 @@ Astro.response.headers.set("Content-Security-Policy", "default-src 'none'; scrip
     .portal-identity img{display:block;width:min(100%,215px);height:auto;max-height:292px;object-fit:contain;object-position:center}
     .portal-identity figcaption{color:#ededee;font-size:11px;font-style:italic;letter-spacing:.08em;text-align:center}
     @media(max-width:720px){.hero{grid-template-columns:1fr;gap:22px;padding-top:34px}.portal-identity{order:-1;justify-self:center;width:min(100%,260px);padding:12px 10px}.portal-identity img{width:min(100%,175px);max-height:238px}.brand .brand-title{font-size:11px}.brand .brand-subtitle{font-size:10px}.top .brand img{width:41px;height:57px}}
+
+    /* Screenshot-matched design: screenshot preview and signed-in area share
+       simple near-black surfaces, bright white type and red accents. */
+    html{background:#111315}
+    body{background:#111315;color:#f5f6f7}
+    .shell{max-width:1040px;padding-inline:clamp(18px,4vw,32px)}
+    .top{background:#080a0c;border-bottom:1px solid #40464b}
+    .top-inner{min-height:74px;padding-block:9px}
+    .top .brand{color:#f8f8f9;gap:12px;font-size:.9rem}
+    .top .brand span,.top .brand .brand-title{color:#fff;font-weight:800}
+    .top .brand .brand-subtitle{color:#f5b3ae;font-weight:750}
+    .top .brand img{display:block;background:#fff;border:2px solid #f6f6f6;border-radius:6px;object-fit:contain;width:49px;height:65px}
+    .top .back{color:#f7f7f7;background:#262a2e;border:1px solid #555e63;text-decoration:none}
+    .top .back:hover{background:#34393f}
+    .content{padding-bottom:48px}
+    .hero{display:block;padding:34px 0 12px}
+    .hero .eyebrow{font-size:.81rem;color:#f17c75;font-weight:850;letter-spacing:.2em;margin:0 0 17px}
+    .hero h1{font-size:clamp(1.9rem,5.8vw,2.9rem);font-weight:850;letter-spacing:-.035em;line-height:1.11;color:#f9f9fa;margin:0 0 19px}
+    .hero h1 .red{color:#f3645d}
+    .hero p{font-size:clamp(.95rem,2.8vw,1.09rem);color:#bfc5c9;line-height:1.65;max-width:690px;margin:0 0 22px}
+    .hero .portal-motto{display:block;color:#fff;font-size:1rem;font-weight:800;margin:0 0 10px}
+    .portal-tabs{display:flex;align-items:stretch;gap:10px;flex-wrap:wrap;margin:10px 0 20px}
+    .portal-tab{display:inline-flex;align-items:center;justify-content:center;min-height:48px;text-align:center;padding:11px 17px;border:1px solid #5a6165;background:#272c30;border-radius:10px;color:#fff;font-size:.92rem;font-weight:800;text-decoration:none;line-height:1.35}
+    .portal-tab.selected{background:#c52b28;color:#fff;border-color:#c52b28}
+    .portal-tab:not(.selected):hover,.portal-tab:not(.selected):focus-visible{background:#42484c}
+    .portal-tab:focus-visible{outline:2px solid #fff;outline-offset:3px}
+    .panel{background:#1c2226;border-color:#414a50;box-shadow:none}
+    .panel h2,h2,h3,strong{color:#f6f7f8}
+    .muted{color:#bfc6ca}
+    #login-title{font-size:1.65rem}
+    .fields label{color:#f7f7f7}
+    .fields input{border:1px solid #6c7378}
+    .member-welcome,.member-students,.member-tuition{margin-top:19px}
+    .member-welcome h2{font-size:clamp(1.45rem,4.2vw,1.9rem);line-height:1.28}
+    .member-students h2,.member-lessons h2,.member-tuition h2{font-size:clamp(1.55rem,4.4vw,2rem);line-height:1.16;letter-spacing:-.025em;font-weight:800;margin:0 0 18px}
+    .member-profiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+    .member-student-card{padding:17px 18px;border:1px solid #424b50;border-radius:12px;background:#1b2024}
+    .member-student-card strong{font-size:1.08rem}
+    .member-student-card p{margin:3px 0}
+    .member-lessons{margin:30px 0 26px}
+    .member-lesson-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .member-lesson-card{min-width:0;display:flex;flex-direction:column;margin:0;padding:16px 13px;border-radius:15px}
+    .member-lesson-card .pill{align-self:start;margin-bottom:12px}
+    .member-lesson-card h3{font-size:clamp(1rem,3.3vw,1.28rem);line-height:1.35;margin:0 0 6px}
+    .member-lesson-card .muted{font-size:.89rem;margin:0 0 12px}
+    .member-lesson-card .player{margin:0 0 14px}
+    .member-tuition .price-table{width:100%;font-size:.93rem}
+    .member-tuition .price-table th,.member-tuition .price-table td{color:#e3e4e6;border-color:#495058}
+    .member-tuition .notice{color:#ffd8d4}
+    .foot{color:#c1c5c8}
+    @media(min-width:850px){.member-lesson-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    @media(max-width:520px){
+      .top .brand img{width:38px;height:53px}
+      .top .brand .brand-title{font-size:.8rem}
+      .top .brand .brand-subtitle{font-size:.73rem}
+      .top .back{font-size:.75rem;padding:8px}
+      .hero{padding:30px 0 12px}
+      .portal-tab{padding:10px 14px;font-size:.85rem}
+      .member-lesson-grid{gap:10px}
+      .member-lesson-card{padding:13px 10px}
+      .member-lesson-card .pill{font-size:.65rem}
+      .member-welcome,.member-students,.member-tuition{padding:20px 16px}
+    }
+    @media(max-width:330px){.portal-tab{font-size:.79rem}.member-lesson-card{padding:11px 8px}}
   </style>
 </head>
 <body>
@@ -113,28 +177,22 @@ Astro.response.headers.set("Content-Security-Policy", "default-src 'none'; scrip
   <main class="shell content">
     <section class="hero" aria-labelledby="student-portal-welcome">
       <div class="hero-intro">
-        <p class="eyebrow">EXCLUSIVE BURNING TREE FAMILY ACCESS</p>
-        <h1 id="student-portal-welcome">Welcome to Your <span class="red">Training Home.</span></h1>
-        <p>Continue learning beyond the mats. Access private instructional videos, see your family's training information, and manage tuition securely.</p>
-        <strong>One Tree. One Family.</strong>
+        <p class="eyebrow">KEEPERS OF THE FLAME</p>
+        <h1 id="student-portal-welcome">Welcome to Your<br/><span class="red">Training Home.</span></h1>
+        <p>Continue learning beyond the mats. Access private instructional videos, view your family's training information, and manage tuition securely.</p>
+        <strong class="portal-motto">One Tree. One Family.</strong>
       </div>
-      <figure class="portal-identity" aria-label="Burning Tree Mixed Martial Arts — Keepers of the Flame">
-        <img src="/images/logo.png" alt="Burning Tree Mixed Martial Arts flaming-tree logo" width="707" height="960" loading="eager" decoding="async" />
-        <figcaption>“KEEPERS OF THE FLAME”</figcaption>
-      </figure>
     </section>
+    {!account && (
+      <nav class="portal-tabs" aria-label="Portal access and preview">
+        <a href="/student-portal/" class={!showPreview ? "portal-tab selected" : "portal-tab"} aria-current={!showPreview ? "page" : undefined}>Student Login</a>
+        <a href="/student-portal/?preview=1" class={showPreview ? "portal-tab selected" : "portal-tab"} aria-current={showPreview ? "page" : undefined}>See Dashboard Preview</a>
+      </nav>
+    )}
     {!account && showPreview ? (
       <StudentPortalPreview />
     ) : !account ? (
       <>
-      <section class="panel portal-preview-callout" aria-labelledby="preview-invite-title">
-        <div>
-          <p class="eyebrow">NO LOGIN REQUIRED</p>
-          <h2 id="preview-invite-title">Want to see what is inside?</h2>
-          <p class="muted">Explore a sample student dashboard, video lesson library, and tuition area before student accounts are ready. This view contains no actual family information.</p>
-        </div>
-        <a class="btn" href="/student-portal/?preview=1">VIEW INSIDE THE PORTAL</a>
-      </section>
       <section class="panel" aria-labelledby="login-title">
         <h2 id="login-title">Family Login</h2>
         <p class="muted">Only currently authorized Burning Tree families may sign in. Parents or guardians should manage accounts for minor students.</p>
@@ -152,33 +210,33 @@ Astro.response.headers.set("Content-Security-Policy", "default-src 'none'; scrip
       </>
     ) : (
       <>
-        <section class="panel">
+        <section class="panel member-welcome">
           <div style="display:flex;gap:15px;align-items:center;justify-content:space-between;flex-wrap:wrap">
-            <div><p class="eyebrow">SIGNED IN</p><h2>Welcome back, {account.display_name}!</h2><p class="muted">Your family's private student dashboard.</p></div>
+            <div><p class="eyebrow">SIGNED IN</p><h2>Welcome back, {account.display_name}!</h2><p class="muted">Your private training dashboard.</p></div>
             <form action="/api/student-portal/logout" method="post"><button class="btn secondary" type="submit">Sign out</button></form>
           </div>
         </section>
-        <section class="panel" aria-labelledby="people-title">
+        <section class="panel member-students" aria-labelledby="people-title">
           <h2 id="people-title">My Students</h2>
-          {students.length ? <div class="grid">
-            {students.map((student: any)=><article class="panel">
+          {students.length ? <div class="member-profiles">
+            {students.map((student: any)=><article class="member-student-card">
               <strong>{student.display_name}</strong><p class="muted">{student.program} · {student.belt_rank}</p>
             </article>)}
           </div> : <p class="muted">Your student profiles will appear once your enrollment is connected.</p>}
         </section>
-        <section aria-labelledby="lessons-title">
+        <section class="member-lessons" aria-labelledby="lessons-title">
           <h2 id="lessons-title">My Video Lessons</h2>
           {stripeNotice && <p class="notice">{stripeNotice}</p>}
-          {lessons.length ? <div class="grid">
-            {lessons.map((lesson: any)=><article class="panel lesson">
+          {lessons.length ? <div class="member-lesson-grid">
+            {lessons.map((lesson: any)=><article class="panel member-lesson-card">
               <span class="pill">{lesson.program}</span><h3>{lesson.title}</h3><p class="muted">{lesson.description}</p>
               {lesson.playableUrl ? <div class="player"><iframe title={lesson.title} src={lesson.playableUrl} allow="accelerometer; gyroscope; encrypted-media; picture-in-picture" allowfullscreen loading="lazy" referrerpolicy="no-referrer"></iframe></div> :
                 <p class="muted">This private video is not available yet. Check back after the instructor publishes it.</p>}
             </article>)}
           </div> : <div class="panel"><p class="muted">Your instructor has not assigned any private lessons yet. Your Kenpo, Muay Thai, Wing Chun, and Leadership video lessons will appear here as they are approved.</p></div>}
         </section>
-        <section class="panel" aria-labelledby="tuition-title">
-          <h2 id="tuition-title">Monthly Tuition &amp; Payment History</h2>
+        <section class="panel member-tuition" aria-labelledby="tuition-title">
+          <h2 id="tuition-title">Monthly Tuition &amp; Payments</h2>
           <p class="muted">Your exact tuition and due dates come from your family's approved billing account. The portal does not change your membership rate or automatically add fees.</p>
           {billingReady ? <>
             {invoices.length ? <div style="overflow-x:auto"><table class="price-table"><thead><tr><th>Invoice</th><th>Due date</th><th>Balance</th><th>Status</th></tr></thead><tbody>
