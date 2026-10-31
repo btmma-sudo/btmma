@@ -75,19 +75,36 @@ Astro.response.headers.set("Content-Security-Policy", "default-src 'none'; scrip
   <meta name="description" content="Private Burning Tree student lessons and family tuition access." />
   <style is:global>
     *{box-sizing:border-box}body{margin:0;background:#111416;color:#f6f7f8;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.55}a{color:#fff}button,input{font:inherit}.shell{max-width:1100px;margin:auto;padding:0 22px}.top{border-bottom:1px solid #383e41;background:#07090b}.top-inner{display:flex;align-items:center;justify-content:space-between;gap:18px;min-height:85px}.brand{display:flex;align-items:center;gap:14px;text-decoration:none;font-weight:800;letter-spacing:.02em}.brand img{width:50px;height:65px;object-fit:contain}.back{font-size:.9rem;text-decoration:none;padding:10px 12px;border:1px solid #555;border-radius:8px}.back:hover,.back:focus{border-color:#fc4a40}.hero{padding:54px 0 30px}.eyebrow{letter-spacing:.18em;color:#fb6b5e;font-size:.78rem;font-weight:800}.hero h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.12;margin:8px 0 16px}.hero p{color:#d6d8da;max-width:690px}.red{color:#f85a50}.content{padding-bottom:72px}.panel{border:1px solid #3b4348;background:#1c2023;border-radius:18px;padding:25px;margin:18px 0;box-shadow:0 10px 30px #0002}.panel h2{font-size:1.35rem;margin:0 0 10px}.muted{color:#bfc5c8}.notice{border-left:4px solid #e7574f;background:#2c2423;padding:12px 16px;border-radius:4px}.fields{display:grid;gap:15px;max-width:480px}.fields label{font-weight:700;display:grid;gap:5px}.fields input{width:100%;background:#fff;color:#141414;padding:13px 15px;border:2px solid transparent;border-radius:8px}.fields input:focus{outline:2px solid #fb6257}.btn{display:inline-block;background:#c52724;color:#fff;border:0;border-radius:9px;text-decoration:none;padding:13px 20px;font-weight:800;cursor:pointer}.btn:hover,.btn:focus{background:#a91a18}.secondary{background:#363b3d}.secondary:hover{background:#555}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:18px}.grid .panel{margin:0}.pill{display:inline-block;font-size:.74rem;letter-spacing:.04em;text-transform:uppercase;padding:3px 9px;border:1px solid #b54843;border-radius:50px;color:#ffaaa5}.lesson{padding:20px}.lesson h3{margin:8px 0}.player{position:relative;padding-top:56.25%;border-radius:12px;overflow:hidden;background:#090b0d;margin:12px 0}.player iframe{border:0;position:absolute;inset:0;width:100%;height:100%}.price-table{width:100%;border-collapse:collapse}.price-table th,.price-table td{text-align:left;padding:12px 8px;border-bottom:1px solid #444}.price-table th{font-size:.82rem;color:#ccc}.foot{color:#b9bdc0;border-top:1px solid #383e41;padding:28px 0;text-align:center;font-size:.9rem}@media(max-width:520px){.top-inner{min-height:72px}.brand img{height:52px;width:38px}.brand span{font-size:.85rem}.back{font-size:.8rem}.panel{padding:19px}.price-table{font-size:.85rem}} 
+    /* Portal-only logo treatment: the existing Burning Tree mark plus the
+       Keepers of the Flame motto, without altering any public-site branding. */
+    .brand .brand-title{display:block;font-size:12px;letter-spacing:.09em;line-height:1.25}
+    .brand .brand-subtitle{display:block;color:#ffb6af;font-size:11px;letter-spacing:.12em;line-height:1.5}
+    .top .brand img{width:54px;height:74px;object-fit:contain}
+    .hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(210px,290px);align-items:center;gap:26px}
+    .hero-intro{min-width:0}
+    .portal-identity{margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;background:#080a0c;border:1px solid #373a3c;border-radius:16px;padding:18px 10px 20px}
+    .portal-identity img{display:block;width:min(100%,215px);height:auto;max-height:292px;object-fit:contain;object-position:center}
+    .portal-identity figcaption{color:#ededee;font-size:11px;font-style:italic;letter-spacing:.08em;text-align:center}
+    @media(max-width:720px){.hero{grid-template-columns:1fr;gap:22px;padding-top:34px}.portal-identity{order:-1;justify-self:center;width:min(100%,260px);padding:12px 10px}.portal-identity img{width:min(100%,175px);max-height:238px}.brand .brand-title{font-size:11px}.brand .brand-subtitle{font-size:10px}.top .brand img{width:41px;height:57px}}
   </style>
 </head>
 <body>
   <header class="top"><div class="shell top-inner">
-    <a class="brand" href="/"><img src="/images/logo.png" alt="" width="50" height="65" /><span>BURNING TREE<br/>STUDENT PORTAL</span></a>
+    <a class="brand" href="/"><img src="/images/logo.png" alt="Burning Tree Mixed Martial Arts flaming-tree logo" width="54" height="74" /><span><span class="brand-title">BURNING TREE</span><span class="brand-subtitle">STUDENT PORTAL</span></span></a>
     <a class="back" href="/">Main Website</a>
   </div></header>
   <main class="shell content">
-    <section class="hero">
-      <p class="eyebrow">KEEPERS OF THE FLAME</p>
-      <h1>Welcome to Your <span class="red">Training Home.</span></h1>
-      <p>Continue learning beyond the mats. Access private instructional videos, see your family's training information, and manage tuition securely.</p>
-      <strong>One Tree. One Family.</strong>
+    <section class="hero" aria-labelledby="student-portal-welcome">
+      <div class="hero-intro">
+        <p class="eyebrow">EXCLUSIVE BURNING TREE FAMILY ACCESS</p>
+        <h1 id="student-portal-welcome">Welcome to Your <span class="red">Training Home.</span></h1>
+        <p>Continue learning beyond the mats. Access private instructional videos, see your family's training information, and manage tuition securely.</p>
+        <strong>One Tree. One Family.</strong>
+      </div>
+      <figure class="portal-identity" aria-label="Burning Tree Mixed Martial Arts — Keepers of the Flame">
+        <img src="/images/logo.png" alt="Burning Tree Mixed Martial Arts flaming-tree logo" width="707" height="960" loading="eager" decoding="async" />
+        <figcaption>“KEEPERS OF THE FLAME”</figcaption>
+      </figure>
     </section>
     {!env ? (
       <section class="panel"><h2>Private student access is being prepared</h2><p class="muted">This section is not accepting logins yet. For tuition assistance, please call <a href="tel:+12023684395">(202) 368-4395</a>.</p></section>
