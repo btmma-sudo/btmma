@@ -16,9 +16,9 @@ All changes are independent of the $29 trial, seminar payments, and current stud
 
 1. Apply the new SQL migration to **LIVE_TRIAL_DB** only. In this repository, the Cloudflare database is named burningtree-live-payments:
    
-   \`\`\`bash
+   ```bash
    npx wrangler d1 execute burningtree-live-payments --remote --file=db/migrations/0004_private_lesson_booking.sql
-   \`\`\`
+   ```
    
    Back up/inspect production database first. Do not run the 0001–0003 migration files again by mistake.
 2. Sign into the existing Student Portal using the authorized instructor account, with active portal_staff can_publish=1. Its account grants access to /instructor-private-lessons/. No student may manage the calendar.
