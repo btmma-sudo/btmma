@@ -1,0 +1,328 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site } from "../data/site";
+---
+
+<BaseLayout
+  title="Book a Private Martial Arts Lesson in Owings Mills | Burning Tree MMA"
+  description="Reserve one-on-one American Kenpo, Muay Thai, Wing Chun or self-defense coaching with Coach David at Burning Tree Mixed Martial Arts in Owings Mills, Maryland."
+  path="/private-lessons/"
+  keywords={["private martial arts lessons Owings Mills", "private karate coaching Baltimore County", "one-on-one Muay Thai lessons", "private Kenpo Karate lessons", "private self-defense instruction"]}>
+  <section class="shell pl-hero" aria-labelledby="pl-title">
+    <div class="pl-hero-copy">
+      <p class="eyebrow">ONE TREE. ONE FAMILY. · PRIVATE COACHING</p>
+      <h1 id="pl-title">Your Training. <span>Your Time.</span></h1>
+      <p>Book focused, one-on-one martial arts coaching with Coach David at Burning Tree Mixed Martial Arts. Select an open appointment, tell us what you'd like to work on, and reserve your spot.</p>
+      <div class="pl-hero-tags"><span>American Kenpo</span><span>Muay Thai</span><span>Wing Chun</span><span>Self-Defense</span></div>
+      <p class="pl-detail">In person in Owings Mills, MD · Times shown in Eastern Time · No payment collected to reserve an appointment</p>
+    </div>
+    <div class="pl-logo-frame">
+      <img src="/images/logo.png" alt="Burning Tree Mixed Martial Arts flaming tree logo" width="220" height="280" loading="eager"/>
+      <p>KEEPERS OF THE FLAME</p>
+    </div>
+  </section>
+
+  <section class="shell pl-section" aria-labelledby="pl-book-title">
+    <div class="pl-section-head">
+      <p class="eyebrow">CHOOSE YOUR APPOINTMENT</p>
+      <h2 id="pl-book-title">Book Your Private Lesson</h2>
+      <p>Only times Coach David has opened are available to select. Please book at least 24 hours in advance.</p>
+    </div>
+    <div class="pl-layout">
+      <div class="pl-panel">
+        <div class="pl-calendar-top">
+          <button type="button" id="pl-prev" class="pl-arrow" aria-label="Previous month">‹</button>
+          <h3 id="pl-month" aria-live="polite">Calendar</h3>
+          <button type="button" id="pl-next" class="pl-arrow" aria-label="Next month">›</button>
+        </div>
+        <div class="pl-weekdays" aria-hidden="true">
+          <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+        </div>
+        <div class="pl-days" id="pl-days" aria-label="Available lesson dates"></div>
+        <p class="pl-message" id="pl-calendar-status" role="status" aria-live="polite">Loading available appointments…</p>
+        <div class="pl-legend"><span class="pl-legend-dot"></span> Available dates are highlighted in red.</div>
+        <div class="pl-times-wrap" id="pl-times-wrap" hidden>
+          <h3 id="pl-selected-date">Available Times</h3>
+          <div class="pl-times" id="pl-times"></div>
+        </div>
+      </div>
+      <div class="pl-panel pl-booking-panel" id="pl-form-panel">
+        <h3>Your Appointment Details</h3>
+        <p class="pl-appointment-summary" id="pl-summary">Choose an available date and time from the calendar to begin.</p>
+        <form id="pl-form" autocomplete="on">
+          <label>Martial art / coaching focus
+            <select name="program" required>
+              <option value="" selected disabled>Choose a program</option>
+              <option>American Kenpo Karate</option>
+              <option>Muay Thai</option>
+              <option>Wing Chun</option>
+              <option>Women's Self-Defense / Sanuces</option>
+              <option>Leadership</option>
+              <option>General Private Coaching</option>
+            </select>
+          </label>
+          <label>Student's name
+            <input name="studentName" type="text" maxlength="100" autocomplete="name" placeholder="Name of student attending" required/>
+          </label>
+          <label>Parent / guardian or booking contact
+            <input name="contactName" type="text" maxlength="100" autocomplete="name" placeholder="Name of person booking" required/>
+          </label>
+          <div class="pl-two">
+            <label>Email address
+              <input name="email" type="email" maxlength="254" autocomplete="email" placeholder="you@example.com" required/>
+            </label>
+            <label>Phone number
+              <input name="phone" type="tel" maxlength="30" autocomplete="tel" placeholder="(410) 555-0123" required/>
+            </label>
+          </div>
+          <label>What would you like to work on? <span class="pl-optional">(optional)</span>
+            <textarea name="notes" maxlength="500" rows="3" placeholder="For example: private Kenpo techniques, confidence, or preparation for testing."></textarea>
+          </label>
+          <div class="pl-security">
+            <div class="cf-turnstile" data-sitekey="0x4AAAAAAD6Ievu-t0Ll1euh" data-theme="dark"></div>
+          </div>
+          <button type="submit" class="pl-submit" id="pl-submit" disabled>RESERVE MY PRIVATE LESSON</button>
+          <p id="pl-feedback" class="pl-feedback" role="status" aria-live="polite"></p>
+          <p class="pl-small">No charge today. Package or lesson payment arrangements can be discussed directly with Coach David. By reserving, you agree to be contacted about this appointment.</p>
+        </form>
+        <div id="pl-success" hidden>
+          <div class="pl-check" aria-hidden="true">✓</div>
+          <h3>Your Private Lesson Is Reserved!</h3>
+          <p id="pl-success-detail"></p>
+          <p id="pl-success-email"></p>
+          <a class="pl-submit pl-back" href="/private-lessons/">Book Another Appointment</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="shell pl-contact">
+    <h2>Need a Different Time?</h2>
+    <p>If you don't see a suitable appointment, reach out to Coach David directly. We'll do our best to find something that fits your schedule.</p>
+    <p><a href={"sms:" + site.textPhoneHref}>Text {site.textPhone}</a> <span>or</span> <a href={"tel:" + site.textPhoneHref}>Call Coach David</a></p>
+    <p class="pl-admin-link">Instructor access: <a href="/instructor-private-lessons/">Manage appointment availability</a></p>
+  </section>
+</BaseLayout>
+
+<script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script is:inline>
+(() => {
+  const monthTitle = document.getElementById("pl-month");
+  const days = document.getElementById("pl-days");
+  const status = document.getElementById("pl-calendar-status");
+  const timesWrap = document.getElementById("pl-times-wrap");
+  const times = document.getElementById("pl-times");
+  const dateTitle = document.getElementById("pl-selected-date");
+  const summary = document.getElementById("pl-summary");
+  const form = document.getElementById("pl-form");
+  const submit = document.getElementById("pl-submit");
+  const feedback = document.getElementById("pl-feedback");
+  const prev = document.getElementById("pl-prev");
+  const next = document.getElementById("pl-next");
+  const pad = n => String(n).padStart(2, "0");
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit"
+  }).formatToParts(new Date());
+  const now = Object.fromEntries(parts.map(p => [p.type, p.value]));
+  const baseYear = Number(now.year), baseMonth = Number(now.month);
+  const firstMonth = baseYear * 12 + baseMonth - 1;
+  let monthIndex = firstMonth;
+  let available = [];
+  let chosen = null;
+  let enabled = false;
+  const asMonth = idx => {
+    const year = Math.floor(idx / 12);
+    const m = idx % 12 + 1;
+    return { year, month: m, key: year + "-" + pad(m) };
+  };
+  const longDate = date => new Intl.DateTimeFormat("en-US", {
+    weekday: "long", month: "long", day: "numeric", year: "numeric", timeZone: "UTC"
+  }).format(new Date(date + "T12:00:00Z"));
+  const labelTime = time => {
+    const h = Number(time.slice(0, 2));
+    return (h % 12 || 12) + ":" + time.slice(3) + (h < 12 ? " AM" : " PM");
+  };
+  function clearSelection() {
+    chosen = null;
+    submit.disabled = true;
+    summary.textContent = "Choose an available date and time from the calendar to begin.";
+    timesWrap.hidden = true;
+    feedback.textContent = "";
+  }
+  function render() {
+    const { year, month } = asMonth(monthIndex);
+    monthTitle.textContent = new Intl.DateTimeFormat("en-US", {
+      month: "long", year: "numeric", timeZone: "UTC"
+    }).format(new Date(Date.UTC(year, month - 1, 1)));
+    prev.disabled = monthIndex === firstMonth;
+    next.disabled = monthIndex >= firstMonth + 3;
+    days.replaceChildren();
+    const first = new Date(Date.UTC(year, month - 1, 1)).getUTCDay();
+    const count = new Date(Date.UTC(year, month, 0)).getUTCDate();
+    for (let i = 0; i < first; i++) {
+      const blank = document.createElement("div");
+      blank.className = "pl-day pl-blank"; blank.setAttribute("aria-hidden","true");
+      days.appendChild(blank);
+    }
+    for (let d = 1; d <= count; d++) {
+      const date = year + "-" + pad(month) + "-" + pad(d);
+      const hasSlots = available.some(s => s.date === date);
+      const btn = document.createElement("button");
+      btn.type = "button"; btn.textContent = d;
+      btn.className = "pl-day" + (hasSlots ? " pl-day-open" : "");
+      btn.disabled = !hasSlots;
+      btn.setAttribute("aria-label", hasSlots ? "Choose " + longDate(date) : "Unavailable: " + longDate(date));
+      btn.setAttribute("aria-pressed", String(chosen?.date === date));
+      if (hasSlots) btn.addEventListener("click", () => pickDate(date));
+      days.appendChild(btn);
+    }
+  }
+  function pickDate(date) {
+    const slots = available.filter(s => s.date === date);
+    chosen = null;
+    submit.disabled = true;
+    summary.textContent = "Select an appointment time for " + longDate(date) + ".";
+    dateTitle.textContent = longDate(date) + " — Available times";
+    times.replaceChildren();
+    slots.forEach(slot => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "pl-time";
+      btn.textContent = labelTime(slot.time) + " · " + slot.duration + " min";
+      btn.addEventListener("click", () => {
+        chosen = slot;
+        times.querySelectorAll("button").forEach(b => b.classList.remove("pl-time-active"));
+        btn.classList.add("pl-time-active");
+        summary.textContent = longDate(slot.date) + " at " + labelTime(slot.time) +
+          " Eastern · " + slot.duration + " minutes";
+        submit.disabled = false;
+        feedback.textContent = "";
+        document.getElementById("pl-form-panel").scrollIntoView({ behavior: "smooth", block: "nearest" });
+      });
+      times.appendChild(btn);
+    });
+    timesWrap.hidden = false;
+    render();
+  }
+  async function load() {
+    clearSelection();
+    available = [];
+    render();
+    status.textContent = "Checking available appointments…";
+    try {
+      const response = await fetch("/api/private-lessons/book?month=" + asMonth(monthIndex).key, { cache: "no-store" });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Unable to load available times.");
+      enabled = data.enabled === true;
+      available = data.slots || [];
+      status.textContent = !enabled ? "Online private-lesson booking will open soon. Please text Coach David for scheduling." :
+        available.length ? "Select a highlighted date, then choose your time." :
+        "There are no open appointments this month. Check another month or text Coach David.";
+    } catch (error) {
+      status.textContent = error.message || "Calendar is temporarily unavailable. Please call or text Coach David.";
+    }
+    render();
+  }
+  prev.addEventListener("click", () => { if (monthIndex > firstMonth) { monthIndex--; load(); } });
+  next.addEventListener("click", () => { if (monthIndex < firstMonth + 3) { monthIndex++; load(); } });
+  form.addEventListener("submit", async event => {
+    event.preventDefault();
+    if (!chosen || !enabled || !form.reportValidity()) return;
+    const values = Object.fromEntries(new FormData(form));
+    const token = String(values["cf-turnstile-response"] || "");
+    if (!token) { feedback.textContent = "Please complete the security check."; return; }
+    submit.disabled = true; submit.textContent = "RESERVING…";
+    feedback.textContent = "Reserving your appointment…";
+    try {
+      const response = await fetch("/api/private-lessons/book", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          slotId: chosen.id, program: values.program, studentName: values.studentName,
+          contactName: values.contactName, email: values.email, phone: values.phone,
+          notes: values.notes, turnstileToken: token
+        })
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Could not reserve this appointment.");
+      form.hidden = true;
+      const success = document.getElementById("pl-success");
+      success.hidden = false;
+      document.getElementById("pl-success-detail").textContent = data.appointment +
+        ". We look forward to seeing you at Burning Tree MMA!";
+      document.getElementById("pl-success-email").textContent = data.emailSent ?
+        "A booking email has been sent to " + values.email + "." :
+        "Your appointment is saved. Please keep these details; email confirmation is not available right now.";
+      status.textContent = "Appointment reserved. Thank you!";
+      await load();
+    } catch (error) {
+      feedback.textContent = error.message || "Something went wrong. Please try again.";
+      window.turnstile?.reset?.();
+      submit.disabled = !chosen;
+      await load();
+    } finally {
+      submit.textContent = "RESERVE MY PRIVATE LESSON";
+    }
+  });
+  load();
+})();
+</script>
+
+<style>
+  .pl-hero{padding:50px 0 45px;display:grid;grid-template-columns:minmax(0,1fr) minmax(190px,265px);gap:30px;align-items:center}
+  .pl-hero h1{font-size:clamp(2.2rem,5.7vw,4rem);line-height:1.1;margin:10px 0 18px;max-width:800px}
+  .pl-hero h1 span{color:#ff796f}
+  .pl-hero-copy>p:not(.eyebrow){max-width:740px}
+  .pl-hero-tags{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0}
+  .pl-hero-tags span{display:inline-block;border:1px solid #b76058;background:#401c1b;color:#fff5f4;border-radius:30px;padding:6px 12px;font-size:.85rem;font-weight:700}
+  .pl-hero .pl-detail{font-size:.87rem;color:#e0e0e0}
+  .pl-logo-frame{border:1px solid #51413e;border-radius:18px;padding:20px;text-align:center;background:#121212}
+  .pl-logo-frame img{max-height:260px;width:100%;height:auto;object-fit:contain}
+  .pl-logo-frame p{font-size:.76rem;letter-spacing:.12em;font-weight:800;color:#ffb2a9}
+  .pl-section{padding:25px 0 70px}
+  .pl-section-head{max-width:700px;margin-bottom:25px}
+  .pl-section-head h2{margin:4px 0 8px}
+  .pl-layout{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:22px;align-items:start}
+  .pl-panel{background:#181b1d;color:#f7f7f7;border:1px solid #53565a;border-radius:16px;padding:24px;min-width:0}
+  .pl-panel h3{color:#fff;font-size:1.23rem;margin:0 0 18px}
+  .pl-calendar-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:17px}
+  .pl-calendar-top h3{margin:0;font-size:1.15rem;text-align:center}
+  .pl-arrow{cursor:pointer;background:#33383b;color:white;border:1px solid #86898c;border-radius:8px;font-size:1.5rem;min-width:41px;min-height:42px}
+  .pl-arrow:disabled{opacity:.3;cursor:not-allowed}
+  .pl-weekdays,.pl-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+  .pl-weekdays{margin-bottom:7px;text-align:center;font-size:.75rem;color:#d0d0d0}
+  .pl-day{min-height:45px;border-radius:8px;border:1px solid transparent;background:#262a2d;color:#858b8f;font-weight:700;font-size:.9rem}
+  .pl-day:disabled{cursor:default}
+  .pl-day-open{border-color:#d65650;background:#84231f;color:white;cursor:pointer}
+  .pl-day-open:hover,.pl-day-open:focus-visible,.pl-day-open[aria-pressed="true"]{background:#df3932;color:white;outline:2px solid #fff;outline-offset:1px}
+  .pl-blank{border:0;background:transparent}
+  .pl-message{font-size:.89rem;margin:17px 0;color:#e6e6e6;min-height:34px}
+  .pl-legend{font-size:.8rem;color:#c8cdd0;display:flex;align-items:center;gap:9px}
+  .pl-legend-dot{display:inline-block;width:13px;height:13px;border-radius:3px;background:#df3932}
+  .pl-times-wrap{border-top:1px solid #41484d;margin-top:23px;padding-top:23px}
+  .pl-times{display:flex;flex-wrap:wrap;gap:10px}
+  .pl-time{border:1px solid #d1b0ac;background:#24282a;color:white;padding:11px 12px;border-radius:9px;font-weight:700;cursor:pointer}
+  .pl-time:hover,.pl-time:focus-visible,.pl-time-active{background:#b82d28;border-color:#ffaea7;color:white}
+  .pl-booking-panel .pl-appointment-summary{background:#312120;border-left:4px solid #f46960;border-radius:5px;padding:14px;margin:-6px 0 19px;font-weight:700;color:#fff}
+  #pl-form{display:grid;gap:16px}
+  #pl-form label{display:grid;gap:7px;color:#fafafa;font-size:.88rem;font-weight:750}
+  #pl-form input,#pl-form select,#pl-form textarea{width:100%;box-sizing:border-box;background:#fff;color:#161616;border:2px solid #d5d9dc;border-radius:9px;padding:13px;font:inherit;font-size:1rem}
+  #pl-form input:focus,#pl-form select:focus,#pl-form textarea:focus{outline:2px solid #fc554d;outline-offset:2px}
+  #pl-form textarea{resize:vertical}
+  .pl-two{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+  .pl-optional{font-weight:400;color:#c8cdd0}
+  .pl-submit{background:#c52e27;border:0;border-radius:9px;padding:15px 18px;color:white;font-weight:850;letter-spacing:.03em;cursor:pointer;text-align:center}
+  .pl-submit:hover:not(:disabled),.pl-submit:focus-visible:not(:disabled){background:#a6211b}
+  .pl-submit:disabled{opacity:.5;cursor:not-allowed}
+  .pl-feedback{min-height:20px;color:#ffb6b1;margin:0;font-size:.87rem}
+  .pl-small{font-size:.82rem;color:#d1d5d8;margin:0}
+  .pl-security{min-height:70px}
+  .pl-check{width:55px;height:55px;background:#265d40;border-radius:50%;display:grid;place-items:center;color:white;font-size:2rem;font-weight:700;margin-bottom:18px}
+  .pl-back{display:inline-block;text-decoration:none;margin-top:8px}
+  .pl-contact{border-top:1px solid #504543;padding:30px 0 55px}
+  .pl-contact>p{max-width:720px}
+  .pl-contact a{color:#ffbbb4;text-decoration:underline;text-underline-offset:4px;font-weight:750}
+  .pl-contact>p span{margin:0 10px;color:#ddd}
+  .pl-admin-link{font-size:.84rem;color:#ccc;margin-top:25px}
+  @media(max-width:840px){.pl-layout{grid-template-columns:1fr}.pl-hero{grid-template-columns:1fr}.pl-logo-frame{display:none}}
+  @media(max-width:540px){.pl-hero{padding:32px 0 25px}.pl-section{padding-top:14px}.pl-panel{padding:17px}.pl-two{grid-template-columns:1fr}.pl-day{min-height:39px}.pl-weekdays,.pl-days{gap:3px}}
+</style>
