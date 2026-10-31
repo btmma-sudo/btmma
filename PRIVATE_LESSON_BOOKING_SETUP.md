@@ -30,12 +30,12 @@ Verify that exactly one correct record was updated; other staff accounts must re
 
 ## Open bookings only after testing
 1. Sign in to Student Portal as Coach David, then open the Private Lesson Manager.
-2. Add a small number of non-conflicting dates/times. The instructor manages open slots manually; the public page does **not** sync to Google or Outlook calendars yet.
-3. Confirm the correct Eastern Time and duration, including DST transitions.
+2. Publish a small number of non-conflicting **time windows**. The instructor chooses a date and the window's ending time; each window publishes 30-minute blocks. Students choose **30 minutes** (one block) or **1 hour** (two consecutive blocks). The public page does **not** sync to Google or Outlook calendars yet.
+3. Validate the requested start limits, in **Eastern Time**: Monday–Thursday **8:00 PM or later**; Friday **7:00 PM or later**; Saturday **after 11:30 AM** (first 30-minute opening starts **12:00 PM**); Sundays closed. No fixed ending time is assumed; Coach David sets it each day. Check DST transitions and 30/60-minute selection.
 4. Check Cloudflare Turnstile is functioning on the public page.
 5. Verify the live `RESEND_API_KEY` and verified sending identity `noreply@burningtreemma.com`. If using a different owner inbox, configure `PRIVATE_LESSON_NOTIFICATION_EMAIL` to an address Coach David can receive.
 6. Enable the Cloudflare Worker environment variable `PRIVATE_LESSON_BOOKING_ENABLED=true` only after steps 1-5.
-7. Book a test slot. Check the saved D1 booking, owner and student emails, and that an identical second booking fails.
+7. Book a test 30-minute lesson and a test 60-minute lesson on separate published windows. Verify D1 contains the correct duration, that a 60-minute booking claims two blocks, that a 30-minute booking makes overlapping 60-minute starts unavailable, that duplicate or overlapping booking attempts fail, and that owner/student emails are sent when configured.
 8. Test closing an unbooked slot, cancelling a booked slot, and rebooking after cancellation. The instructor **must personally notify the client** of any cancellation; automatic cancellation messages are not included.
 9. Confirm the $29 trial and seminar checkout continue to work.
 10. Merge/deploy when ready. Remove test appointments and test availability as appropriate.
@@ -45,5 +45,6 @@ Verify that exactly one correct record was updated; other staff accounts must re
 - Confirmations only email automatically when Resend is configured and accepts the send. Booking succeeds and is saved even when email delivery is unavailable.
 - Private lesson booking information is stored only in the private D1 tables and exposed through the authenticated management API.
 - There is a minimum 24-hour booking lead time and maximum 90-day advance window.
-- The public calendar lists only coach-published slots; there are no invented/default teaching hours.
+- The public calendar lists only coach-published half-hour openings. Day-specific **earliest starts are enforced**, but the instructor chooses the end of each window. No hours are automatically published and Sundays are always unavailable.
+- Available appointment lengths: **30 minutes** or **60 minutes** only. One-hour bookings require two adjacent blocks, preventing overlapping lessons.
 - Student Portal permissions and all existing $29 promotion, seminar, and payment tables remain untouched.
