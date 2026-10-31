@@ -6,12 +6,12 @@ const eventStructuredData = {
     {
       "@type": "Event",
       name: "United by Purpose — Martial Arts Fundraising Seminar",
-      startDate: "2026-11-15T15:00:00-05:00",
-      endDate: "2026-11-15T17:00:00-05:00",
+      startDate: "2026-11-15T14:00:00-05:00",
+      endDate: "2026-11-15T16:00:00-05:00",
       eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
       eventStatus: "https://schema.org/EventScheduled",
       location: { "@type": "Place", name: "Burning Tree Mixed Martial Arts", address: { "@type": "PostalAddress", streetAddress: "10210 South Dolfield Road, Suite C", addressLocality: "Owings Mills", addressRegion: "MD", postalCode: "21117", addressCountry: "US" } },
-      description: "A community fundraising seminar featuring hands-on martial arts training and three support levels. Everyone trains together.",
+      description: "Martial arts fundraising seminar with Master Mike Lambert and Master Lee Epperson, featuring hands-on training, three support levels, and a community mission. All ages and martial arts backgrounds welcome.",
       offers: { "@type": "AggregateOffer", lowPrice: "50", highPrice: "100", priceCurrency: "USD", url: "https://burningtreemma.com/seminars/?event=united#registration" }
     },
     {
@@ -30,7 +30,7 @@ const eventStructuredData = {
 ---
 <BaseLayout
   title="November 2026 Martial Arts Seminars & Registration | Burning Tree MMA"
-  description="Register and pay securely for United by Purpose (November 15) and Striking a Nerve (November 21–22) at Burning Tree Mixed Martial Arts, Owings Mills, MD."
+  description="Register for United by Purpose, November 15 from 2–4 PM with Masters Mike Lambert and Lee Epperson, and Striking a Nerve, November 21–22, in Owings Mills."
   path="/seminars/"
   keywords={["martial arts seminar Owings Mills", "Kenpo seminar Maryland", "martial arts workshop Baltimore County", "martial arts anatomy seminar", "martial arts fundraiser Maryland"]}
   image="/images/burning-tree-kenpo-team.webp"
@@ -51,18 +51,20 @@ const eventStructuredData = {
       <article class="seminar-card" id="united-by-purpose">
         <img src="/images/burning-tree-milestones-group-certificates.webp" alt="Burning Tree martial arts students and instructors celebrating together" width="850" height="540" loading="eager" decoding="async" />
         <div class="seminar-card-content">
-          <p class="seminar-eyebrow">SUNDAY · NOVEMBER 15, 2026 · 3–5 PM</p>
+          <p class="seminar-eyebrow">SUNDAY · NOVEMBER 15, 2026 · 2–4 PM</p>
           <h2>United by <span>Purpose</span></h2>
           <p class="seminar-tagline">Same training. Same experience. A bigger impact.</p>
-          <p>Join the Burning Tree family for two hours of hands-on martial arts training as we come together to support our school's future and our community.</p>
+          <p>Join the Burning Tree family for two hours of hands-on martial arts training with <strong>Master Mike Lambert and Master Lee Epperson</strong> as we come together to support our school's future and our community.</p>
+          <p><strong>All are welcome!</strong> Open to all skill levels and martial arts backgrounds — youth, teens, and adults.</p>
           <p><strong>Everyone trains together.</strong> All three ticket levels receive the same seminar instruction; choose how much you would like to support the school.</p>
           <div class="seminar-prices" aria-label="United by Purpose admission pricing">
             <div><strong>$50</strong><span>General Admission</span></div>
             <div><strong>$75</strong><span>Community Supporter</span></div>
             <div><strong>$100</strong><span>Flame Sponsor</span></div>
           </div>
-          <p class="seminar-note">All include hands-on instruction and a certificate. Supporter and sponsor tiers include their corresponding special Flame Certificate.</p>
+          <p class="seminar-note">All include hands-on instruction and a certificate of participation. Community Supporters receive a special Flame Certificate; Flame Sponsors receive a Sponsor Burning Flame Certificate.</p>
           <button class="seminar-cta select-seminar" data-event="united" type="button">REGISTER FOR UNITED BY PURPOSE</button>
+          <p class="seminar-note">Can't attend but want to support the school? Text Coach David at <a href="sms:+14102180894">410-218-0894</a> to ask about donating. A donation by itself is not an event registration.</p>
         </div>
       </article>
 
@@ -136,7 +138,7 @@ const eventStructuredData = {
         </div>
         <p id="seminar-form-message" class="seminar-message" role="status" aria-live="polite"></p>
         <button id="seminar-submit" class="seminar-cta seminar-checkout" type="submit">CONTINUE TO SECURE PAYMENT</button>
-        <p class="seminar-note">You will review the final amount on Stripe before paying. Questions? Call <a href="tel:+12023684395">(202) 368-4395</a> or text <a href="sms:+14102180894">(410) 218-0894</a>.</p>
+        <p class="seminar-note">You will review the final amount on Stripe before paying. Seminar questions? Call or text <a href="tel:+14102180894">(410) 218-0894</a>.</p>
       </form>
       <div id="registration-result" class="seminar-confirmation" hidden tabindex="-1" aria-live="polite">
         <h3 id="registration-result-heading">Checking your payment...</h3>
@@ -151,7 +153,7 @@ const eventStructuredData = {
         <h2>Both Seminars at Burning Tree</h2>
         <p><strong>10210 South Dolfield Road, Suite C</strong></p>
         <p>Owings Mills, MD 21117</p>
-        <p>Questions or accessibility needs? Call <a href="tel:+12023684395">(202) 368-4395</a>.</p>
+        <p>Questions or accessibility needs? Call or text <a href="tel:+14102180894">(410) 218-0894</a>.</p>
       </div>
       <div>
         <p class="seminar-eyebrow">SHARE WITH A TRAINING PARTNER</p>
