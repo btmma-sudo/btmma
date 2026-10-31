@@ -29,7 +29,7 @@ export async function POST({ request, locals }) {
   const env = locals?.runtime?.env ?? {};
   if (env.LIVE_CHECKOUT_ENABLED !== "true" ||
       !/^(sk|rk)_live_/.test(String(env.STRIPE_LIVE_SECRET_KEY || "")) ||
-      !env.TURNSTILE_SECRET_KEY) {
+      !env.AIRTABLE_API_TOKEN || !env.AIRTABLE_BASE_ID) {
     return response({ error: "Seminar registration is being configured. Please call (202) 368-4395." }, 503);
   }
   if (request.headers.get("origin") &&
@@ -58,21 +58,33 @@ export async function POST({ request, locals }) {
       attendees.some(name => name.length < 2 || name.length > 75 || /[<>\r\n]/.test(name))) {
     return response({ error: "Enter a valid contact name, email, phone, and one attendee name per seat (up to 6)." }, 400);
   }
-  const token = typeof input.turnstileToken === "string" ? input.turnstileToken : "";
-  if (token.length < 5 || token.length > 2500) return response({ error: "Please complete the security check." }, 400);
-
+  // Every attendee must have a separately saved electronic signature
+  // before a seminar checkout session can be created.
+  const waiverGroupId = typeof input.waiverGroupId === "string" ? input.waiverGroupId : "";
+  if (!/^[a-f0-9-]{36}$/i.test(waiverGroupId))
+    return response({ error: "Sign each attendee's seminar waiver before choosing payment." }, 403);
+  let signedRecords;
   try {
-    const form = new FormData();
-    form.set("secret", env.TURNSTILE_SECRET_KEY);
-    form.set("response", token);
-    const ip = request.headers.get("cf-connecting-ip");
-    if (ip) form.set("remoteip", ip);
-    const check = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", { method: "POST", body: form });
-    const result = check.ok ? await check.json() : null;
-    if (!result?.success) return response({ error: "Security check failed or expired. Please try again." }, 403);
-  } catch {
-    return response({ error: "Security check is unavailable. Please try again." }, 503);
+    const where = "{Group ID}='" + waiverGroupId + "'";
+    const url = "https://api.airtable.com/v0/" + encodeURIComponent(env.AIRTABLE_BASE_ID) +
+      "/tblEOTe4nc6B2DY2d?filterByFormula=" + encodeURIComponent(where) + "&pageSize=10";
+    const saved = await fetch(url, { headers: { Authorization: "Bearer " + env.AIRTABLE_API_TOKEN } });
+    if (!saved.ok) return response({ error: "Signed waiver records could not be checked. Please contact the studio." }, 503);
+    const data = await saved.json();
+    signedRecords = data?.records;
+  } catch { return response({ error: "Waiver verification is temporarily unavailable." }, 503); }
+  if (!Array.isArray(signedRecords) || signedRecords.length !== attendees.length ||
+      signedRecords.some(r => r.fields?.Seminar !== input.event || r.fields?.Ticket !== input.ticket ||
+        String(r.fields?.["Contact Email"] || "").toLowerCase() !== email.toLowerCase() ||
+        r.fields?.["Electronic Consent"] !== true || r.fields?.["Acknowledged Risks"] !== true ||
+        typeof r.fields?.["Electronic Signature"] !== "string" || !r.fields?.["Waiver Full Text"] ||
+        !r.fields?.["Waiver Version"])) {
+    return response({ error: "The payment details do not match the signed waivers. Please review and sign again." }, 409);
   }
+  const signedNames = signedRecords.map(r => String(r.fields.Attendee).trim().toLowerCase()).sort();
+  const expectedNames = attendees.map(n => n.toLowerCase()).sort();
+  if (JSON.stringify(signedNames) !== JSON.stringify(expectedNames))
+    return response({ error: "The attendee names no longer match the signed waivers. Please review and sign again." }, 409);
 
   const origin = new URL(request.url).origin;
   const quantity = attendees.length;
@@ -92,6 +104,8 @@ export async function POST({ request, locals }) {
     "metadata[attendee_names]": attendees.join(" | "),
     "metadata[contact_name]": contactName,
     "metadata[contact_phone]": phone,
+    "metadata[waiver_group_id]": waiverGroupId,
+    "metadata[waiver_version]": signedRecords[0].fields["Waiver Version"],
     "payment_intent_data[metadata][btmma_source]": "btmma_seminar_live_v1",
     "payment_intent_data[metadata][event]": input.event,
     "payment_intent_data[metadata][ticket]": input.ticket,
