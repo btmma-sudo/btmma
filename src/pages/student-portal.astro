@@ -1,5 +1,6 @@
 ---
 import {getPortalEnv, getPortalAccount, secureHeaders} from "../lib/student-portal-auth.js";
+import { sqlProgram, sqlRank } from "../lib/instructor-video-manager.js";
 import StudentPortalPreview from "../components/StudentPortalPreview.astro";
 export const prerender = false;
 const env = getPortalEnv(Astro.locals);
@@ -19,14 +20,25 @@ const showPreview = Astro.url.searchParams.get("preview") === "1";
 let students = [], lessons = [], invoices = [], stripeNotice = "";
 let billingReady = false;
 let paymentEnabled = false;
+let instructorAccess = false;
 if (account) {
+  try {
+    const staff = await env.LIVE_TRIAL_DB.prepare(
+      "SELECT account_id FROM portal_staff WHERE account_id=? AND active=1 AND (can_upload=1 OR can_publish=1)"
+    ).bind(account.id).first();
+    instructorAccess=!!staff;
+  } catch { instructorAccess=false; }
   try {
     const people = await env.LIVE_TRIAL_DB.prepare(
       "SELECT display_name, program, belt_rank FROM portal_students WHERE account_id=? AND active=1 ORDER BY display_name LIMIT 12"
     ).bind(account.id).all();
     students = people.results || [];
     const available = await env.LIVE_TRIAL_DB.prepare(
-      "SELECT l.id, l.title, l.description, l.program, l.stream_uid FROM portal_lessons l JOIN portal_lesson_access a ON a.lesson_id=l.id WHERE a.account_id=? AND l.published=1 ORDER BY l.sort_order, l.title LIMIT 12"
+      `SELECT DISTINCT l.id, l.title, l.description, l.program, l.stream_uid
+        FROM portal_lessons l JOIN portal_lesson_access a ON a.lesson_id=l.id
+        JOIN portal_students s ON s.account_id=a.account_id AND s.active=1
+        WHERE a.account_id=? AND l.published=1 AND ${sqlProgram} AND ${sqlRank}
+        ORDER BY l.sort_order,l.title LIMIT 12`
     ).bind(account.id).all();
     lessons = (available.results || []).map((row: any)=>({...row, playableUrl:""}));
     if (env.STUDENT_PORTAL_STREAM_ACCOUNT_ID && env.STUDENT_PORTAL_STREAM_API_TOKEN) {
@@ -214,7 +226,9 @@ Astro.response.headers.set("Content-Security-Policy", "default-src 'none'; scrip
       <>
         <section class="panel member-welcome">
           <div style="display:flex;gap:15px;align-items:center;justify-content:space-between;flex-wrap:wrap">
-            <div><p class="eyebrow">SIGNED IN</p><h2>Welcome back, {account.display_name}!</h2><p class="muted">Your private training dashboard.</p></div>
+            <div><p class="eyebrow">SIGNED IN</p><h2>Welcome back, {account.display_name}!</h2><p class="muted">Your private training dashboard.</p>
+              {instructorAccess && <p><a class="btn" href="/instructor-videos/">OPEN INSTRUCTOR VIDEO MANAGER</a></p>}
+            </div>
             <form action="/api/student-portal/logout" method="post"><button class="btn secondary" type="submit">Sign out</button></form>
           </div>
         </section>
