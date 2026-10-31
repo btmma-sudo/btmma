@@ -1,0 +1,358 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+const eventStructuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Event",
+      name: "United by Purpose — Martial Arts Fundraising Seminar",
+      startDate: "2026-11-15T15:00:00-05:00",
+      endDate: "2026-11-15T17:00:00-05:00",
+      eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+      eventStatus: "https://schema.org/EventScheduled",
+      location: { "@type": "Place", name: "Burning Tree Mixed Martial Arts", address: { "@type": "PostalAddress", streetAddress: "10210 South Dolfield Road, Suite C", addressLocality: "Owings Mills", addressRegion: "MD", postalCode: "21117", addressCountry: "US" } },
+      description: "A community fundraising seminar featuring hands-on martial arts training and three support levels. Everyone trains together.",
+      offers: { "@type": "AggregateOffer", lowPrice: "50", highPrice: "100", priceCurrency: "USD", url: "https://burningtreemma.com/seminars/?event=united#registration" }
+    },
+    {
+      "@type": "Event",
+      name: "Striking a Nerve — Anatomy & Physiology of Martial Arts",
+      startDate: "2026-11-21T12:00:00-05:00",
+      endDate: "2026-11-22T14:00:00-05:00",
+      eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+      eventStatus: "https://schema.org/EventScheduled",
+      location: { "@type": "Place", name: "Burning Tree Mixed Martial Arts", address: { "@type": "PostalAddress", streetAddress: "10210 South Dolfield Road, Suite C", addressLocality: "Owings Mills", addressRegion: "MD", postalCode: "21117", addressCountry: "US" } },
+      description: "Two-day anatomy and physiology seminar with Dr. Frederick Weiss, MD, DPT. Day 1 focuses on Kenpo; Day 2 covers martial arts more broadly.",
+      offers: { "@type": "AggregateOffer", lowPrice: "100", highPrice: "190", priceCurrency: "USD", url: "https://burningtreemma.com/seminars/?event=nerve#registration" }
+    }
+  ]
+};
+---
+<BaseLayout
+  title="November 2026 Martial Arts Seminars & Registration | Burning Tree MMA"
+  description="Register and pay securely for United by Purpose (November 15) and Striking a Nerve (November 21–22) at Burning Tree Mixed Martial Arts, Owings Mills, MD."
+  path="/seminars/"
+  keywords={["martial arts seminar Owings Mills", "Kenpo seminar Maryland", "martial arts workshop Baltimore County", "martial arts anatomy seminar", "martial arts fundraiser Maryland"]}
+  image="/images/burning-tree-kenpo-team.webp"
+>
+  <script type="application/ld+json" set:html={JSON.stringify(eventStructuredData)} />
+  <div class="seminar-page">
+    <section class="seminar-hero" aria-labelledby="seminar-heading">
+      <div class="shell">
+        <p class="seminar-eyebrow">BURNING TREE MIXED MARTIAL ARTS · OWINGS MILLS, MD</p>
+        <h1 id="seminar-heading">Two Seminars. <span>One Community.</span></h1>
+        <p>Join us this November for a community fundraising seminar and a special two-day martial arts education event. Choose your seminar, register online, and pay securely through Stripe.</p>
+        <a class="seminar-cta" href="#events">EXPLORE BOTH SEMINARS</a>
+        <p class="seminar-motto">One Tree. One Family.</p>
+      </div>
+    </section>
+
+    <section class="shell seminar-events" id="events" aria-label="Upcoming martial arts seminars">
+      <article class="seminar-card" id="united-by-purpose">
+        <img src="/images/burning-tree-milestones-group-certificates.webp" alt="Burning Tree martial arts students and instructors celebrating together" width="850" height="540" loading="eager" decoding="async" />
+        <div class="seminar-card-content">
+          <p class="seminar-eyebrow">SUNDAY · NOVEMBER 15, 2026 · 3–5 PM</p>
+          <h2>United by <span>Purpose</span></h2>
+          <p class="seminar-tagline">Same training. Same experience. A bigger impact.</p>
+          <p>Join the Burning Tree family for two hours of hands-on martial arts training as we come together to support our school's future and our community.</p>
+          <p><strong>Everyone trains together.</strong> All three ticket levels receive the same seminar instruction; choose how much you would like to support the school.</p>
+          <div class="seminar-prices" aria-label="United by Purpose admission pricing">
+            <div><strong>$50</strong><span>General Admission</span></div>
+            <div><strong>$75</strong><span>Community Supporter</span></div>
+            <div><strong>$100</strong><span>Flame Sponsor</span></div>
+          </div>
+          <p class="seminar-note">All include hands-on instruction and a certificate. Supporter and sponsor tiers include their corresponding special Flame Certificate.</p>
+          <button class="seminar-cta select-seminar" data-event="united" type="button">REGISTER FOR UNITED BY PURPOSE</button>
+        </div>
+      </article>
+
+      <article class="seminar-card" id="striking-a-nerve">
+        <img src="/images/burning-tree-adult-striking-drill.webp" alt="Adult martial artists practicing controlled techniques at Burning Tree MMA" width="850" height="540" loading="lazy" decoding="async" />
+        <div class="seminar-card-content">
+          <p class="seminar-eyebrow">NOVEMBER 21 &amp; 22, 2026 · 12–2 PM EACH DAY</p>
+          <h2>Striking <span>a Nerve</span></h2>
+          <p class="seminar-tagline">The anatomy and physiology behind martial arts.</p>
+          <p>Explore how muscles, joints, nerves, movement, structure, and timing relate to martial arts performance in a special seminar with <strong>Dr. Frederick Weiss, MD, DPT</strong>, Assistant Professor of Radiology.</p>
+          <ul class="seminar-topics">
+            <li><strong>Day 1 — Saturday, Nov 21:</strong> The true anatomy and physiology of Kenpo.</li>
+            <li><strong>Day 2 — Sunday, Nov 22:</strong> Anatomy and physiology across martial arts styles.</li>
+          </ul>
+          <p>Open to martial artists of all styles and ranks, including students, coaches, and instructors.</p>
+          <div class="seminar-prices two">
+            <div><strong>$100</strong><span>One Day</span></div>
+            <div><strong>$190</strong><span>Both Days</span></div>
+          </div>
+          <button class="seminar-cta select-seminar" data-event="nerve" type="button">REGISTER FOR STRIKING A NERVE</button>
+        </div>
+      </article>
+    </section>
+
+    <section class="shell seminar-registration" id="registration" aria-labelledby="registration-heading">
+      <div class="seminar-intro">
+        <p class="seminar-eyebrow">SAVE YOUR PLACE</p>
+        <h2 id="registration-heading">Register &amp; Pay Online</h2>
+        <p>Choose your seminar and admission option, enter the attendee names and a contact email, and continue to secure payment. You can register up to six attendees together.</p>
+        <p class="seminar-note">For multiple attendees, enter one full name per line. The total updates automatically. Your registration is confirmed only after successful payment.</p>
+      </div>
+      <form id="seminar-form" class="seminar-form">
+        <div class="seminar-field">
+          <label for="seminar-event">Choose seminar</label>
+          <select id="seminar-event" required>
+            <option value="united">United by Purpose — Nov 15</option>
+            <option value="nerve">Striking a Nerve — Nov 21–22</option>
+          </select>
+        </div>
+        <div class="seminar-field">
+          <label for="seminar-ticket">Admission option</label>
+          <select id="seminar-ticket" required></select>
+        </div>
+        <div class="seminar-fields-row">
+          <div class="seminar-field">
+            <label for="seminar-contact-name">Contact full name</label>
+            <input id="seminar-contact-name" type="text" autocomplete="name" maxlength="120" required />
+          </div>
+          <div class="seminar-field">
+            <label for="seminar-contact-email">Contact email</label>
+            <input id="seminar-contact-email" type="email" autocomplete="email" maxlength="254" required />
+          </div>
+        </div>
+        <div class="seminar-field">
+          <label for="seminar-contact-phone">Contact phone</label>
+          <input id="seminar-contact-phone" type="tel" autocomplete="tel" maxlength="30" required />
+        </div>
+        <div class="seminar-field">
+          <label for="seminar-attendees">Full name of each attendee (one per line)</label>
+          <textarea id="seminar-attendees" rows="4" maxlength="500" placeholder="Your name&#10;Second attendee's name" required></textarea>
+          <p class="seminar-note">Enter 1–6 names. Include yourself if you will be attending. Each name counts as one paid seat.</p>
+        </div>
+        <div class="seminar-total" aria-live="polite">
+          <span id="seminar-total-label">General Admission × 1</span>
+          <strong id="seminar-total-amount">$50.00</strong>
+        </div>
+        <p class="seminar-note">Payment is processed by Stripe. We do not collect or store card numbers on this website. By registering, you agree to our <a href="/terms">Terms</a> and <a href="/privacy">Privacy Policy</a>.</p>
+        <div class="seminar-security">
+          <p class="seminar-note">Security check</p>
+          <div class="cf-turnstile" data-sitekey="0x4AAAAAAD6Ievu-t0Ll1euh" data-size="normal"></div>
+        </div>
+        <p id="seminar-form-message" class="seminar-message" role="status" aria-live="polite"></p>
+        <button id="seminar-submit" class="seminar-cta seminar-checkout" type="submit">CONTINUE TO SECURE PAYMENT</button>
+        <p class="seminar-note">You will review the final amount on Stripe before paying. Questions? Call <a href="tel:+12023684395">(202) 368-4395</a> or text <a href="sms:+14102180894">(410) 218-0894</a>.</p>
+      </form>
+      <div id="registration-result" class="seminar-confirmation" hidden tabindex="-1" aria-live="polite">
+        <h3 id="registration-result-heading">Checking your payment...</h3>
+        <p id="registration-result-detail">We're verifying your payment directly with Stripe.</p>
+        <p id="registration-result-note"></p>
+        <a href="/seminars/" class="seminar-cta">BACK TO SEMINARS</a>
+      </div>
+    </section>
+
+    <section class="shell seminar-location" aria-label="Location and questions">
+      <div>
+        <h2>Both Seminars at Burning Tree</h2>
+        <p><strong>10210 South Dolfield Road, Suite C</strong></p>
+        <p>Owings Mills, MD 21117</p>
+        <p>Questions or accessibility needs? Call <a href="tel:+12023684395">(202) 368-4395</a>.</p>
+      </div>
+      <div>
+        <p class="seminar-eyebrow">SHARE WITH A TRAINING PARTNER</p>
+        <p>Bring your family, invite another instructor, or share the registration link with someone interested in martial arts.</p>
+        <p><strong>One Tree. One Family.</strong></p>
+      </div>
+    </section>
+  </div>
+  <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <script is:inline>
+    (() => {
+      const priceLists = {
+        united: [
+          { id: "general", label: "General Admission — $50 per person", name: "General Admission", cents: 5000 },
+          { id: "supporter", label: "Community Supporter — $75 per person", name: "Community Supporter", cents: 7500 },
+          { id: "sponsor", label: "Flame Sponsor — $100 per person", name: "Flame Sponsor", cents: 10000 }
+        ],
+        nerve: [
+          { id: "day1", label: "Saturday Nov 21 only — $100 per person", name: "Day 1", cents: 10000 },
+          { id: "day2", label: "Sunday Nov 22 only — $100 per person", name: "Day 2", cents: 10000 },
+          { id: "both", label: "Both days — $190 per person", name: "Both Days", cents: 19000 }
+        ]
+      };
+      const $ = id => document.getElementById(id);
+      const form = $("seminar-form");
+      const eventSelect = $("seminar-event");
+      const ticketSelect = $("seminar-ticket");
+      const attendeesInput = $("seminar-attendees");
+      const message = $("seminar-form-message");
+      const button = $("seminar-submit");
+      const names = () => attendeesInput.value.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+      const dollars = cents => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(cents / 100);
+      function setEvent(value) {
+        eventSelect.value = value === "nerve" ? "nerve" : "united";
+        ticketSelect.replaceChildren();
+        priceLists[eventSelect.value].forEach(item => {
+          const option = document.createElement("option");
+          option.value = item.id;
+          option.textContent = item.label;
+          ticketSelect.appendChild(option);
+        });
+        updateTotal();
+      }
+      function updateTotal() {
+        const tier = priceLists[eventSelect.value].find(item => item.id === ticketSelect.value);
+        const count = names().length || 1;
+        $("seminar-total-label").textContent = tier.name + " × " + count + (count > 6 ? " (maximum 6)" : "");
+        $("seminar-total-amount").textContent = dollars(tier.cents * count);
+      }
+      eventSelect.addEventListener("change", () => setEvent(eventSelect.value));
+      ticketSelect.addEventListener("change", updateTotal);
+      attendeesInput.addEventListener("input", updateTotal);
+      document.querySelectorAll(".select-seminar").forEach(selectButton => {
+        selectButton.addEventListener("click", () => {
+          setEvent(selectButton.dataset.event);
+          message.textContent = "";
+          $("registration").scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      });
+      const selected = new URLSearchParams(location.search).get("event");
+      setEvent(selected === "nerve" ? "nerve" : "united");
+      if (new URLSearchParams(location.search).get("checkout") === "cancelled") {
+        message.textContent = "Checkout was cancelled. No registration has been confirmed. You can try again.";
+      }
+      const params = new URLSearchParams(location.search);
+      if (params.get("checkout") === "success") {
+        const result = $("registration-result");
+        result.hidden = false;
+        form.hidden = true;
+        const id = params.get("session_id") || "";
+        const show = (heading, detail, note) => {
+          $("registration-result-heading").textContent = heading;
+          $("registration-result-detail").textContent = detail;
+          $("registration-result-note").textContent = note || "";
+        };
+        if (!/^cs_live_[A-Za-z0-9_]{10,180}$/.test(id)) {
+          show("We could not verify your payment", "Please call the studio with your Stripe receipt or checkout reference.", "Do not submit another payment until you have checked your existing charge.");
+        } else {
+          fetch("/api/seminar-checkout-status?session_id=" + encodeURIComponent(id), { cache: "no-store" })
+            .then(async r => {
+              const data = await r.json();
+              if (!r.ok) throw new Error(data.error || "Unable to verify this payment.");
+              return data;
+            })
+            .then(data => {
+              if (data.confirmed) {
+                const seminar = data.event === "united" ? "United by Purpose" : "Striking a Nerve";
+                show("You're registered!", "Stripe confirms payment of " + dollars(data.amount) + " for " + data.quantity + " attendee" + (data.quantity === 1 ? "" : "s") + " at " + seminar + ".", "Keep your Stripe receipt. Questions? Call (202) 368-4395. One Tree. One Family.");
+                try { window.gtag?.("event", "purchase", { transaction_id: id, currency: "USD", value: data.amount / 100, items: [{ item_id: "btmma_seminar_" + data.event + "_" + data.ticket, item_name: seminar, quantity: data.quantity, price: data.amount / 100 / data.quantity }] }); } catch {}
+              } else {
+                show("Payment has not been confirmed", "Your checkout is not marked paid by Stripe yet.", "Do not pay again until checking your receipt or contacting the studio.");
+              }
+            })
+            .catch(error => show("Verification is temporarily unavailable", error.message, "Please check your Stripe payment receipt or contact the studio before paying again."));
+        }
+      }
+      form.addEventListener("submit", async event => {
+        event.preventDefault();
+        const attendees = names();
+        if (attendees.length < 1 || attendees.length > 6 || attendees.some(name => name.length < 2 || name.length > 75)) {
+          message.textContent = "Enter 1 to 6 attendee names, one per line.";
+          attendeesInput.focus();
+          return;
+        }
+        const token = document.querySelector("#seminar-form [name='cf-turnstile-response']")?.value || "";
+        if (!token) {
+          message.textContent = "Please complete the security check before continuing.";
+          return;
+        }
+        button.disabled = true;
+        button.textContent = "OPENING SECURE CHECKOUT...";
+        message.textContent = "Preparing your secure Stripe checkout. No payment has been charged yet.";
+        try {
+          const r = await fetch("/api/seminar-checkout", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+              event: eventSelect.value,
+              ticket: ticketSelect.value,
+              contactName: $("seminar-contact-name").value,
+              email: $("seminar-contact-email").value,
+              phone: $("seminar-contact-phone").value,
+              attendees: attendees.join("\n"),
+              turnstileToken: token
+            })
+          });
+          const data = await r.json();
+          if (!r.ok || !/^https:\/\/checkout\.stripe\.com\//.test(data.url || "")) throw new Error(data.error || "Could not open checkout.");
+          window.location.assign(data.url);
+        } catch (err) {
+          message.textContent = err.message || "Checkout is unavailable. Please try again.";
+          button.disabled = false;
+          button.textContent = "CONTINUE TO SECURE PAYMENT";
+          window.turnstile?.reset?.();
+        }
+      });
+    })();
+  </script>
+</BaseLayout>
+
+<style>
+  .seminar-page { --seminar-red: #b91c1c; --seminar-ink: #101010; color: #f7f7f7; }
+  .seminar-page *, .seminar-page *::before, .seminar-page *::after { box-sizing: border-box; }
+  .seminar-hero { padding: 4.5rem 0 3.6rem; background: linear-gradient(110deg, #111 10%, #351010 100%); border-bottom: 4px solid var(--seminar-red); }
+  .seminar-hero .shell { max-width: 960px; text-align: center; }
+  .seminar-eyebrow { color: #ffb7b7; font-size: .85rem; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; }
+  .seminar-hero h1 { font-family: 'Black Ops One', 'Open Sans', sans-serif; line-height: 1.13; font-size: clamp(2.3rem, 5vw, 4.4rem); margin: .8rem 0; color: #fff; }
+  .seminar-hero h1 span, .seminar-card h2 span { color: #ff6767; }
+  .seminar-hero p:not(.seminar-eyebrow):not(.seminar-motto) { max-width: 700px; line-height: 1.7; margin: 1.25rem auto; color: #f1f1f1; font-size: 1.08rem; }
+  .seminar-motto { color: #fff; font-weight: 700; margin-top: 1.2rem; }
+  .seminar-cta { display: inline-block; appearance: none; border: 2px solid #8e1010; background: #b91c1c; color: #fff; font: 800 .95rem/1.4 'Open Sans', sans-serif; padding: .92rem 1.3rem; text-decoration: none; border-radius: .35rem; cursor: pointer; text-align: center; transition: background .18s ease; }
+  .seminar-cta:hover, .seminar-cta:focus-visible { background: #861010; color: #fff; }
+  .seminar-cta:disabled { opacity: .7; cursor: wait; }
+  .seminar-events { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; gap: 1.7rem; padding-top: 3rem; padding-bottom: 2rem; }
+  .seminar-card { background: #1c1c1c; border: 1px solid #65302c; border-radius: .65rem; overflow: hidden; display: flex; flex-direction: column; }
+  .seminar-card > img { width: 100%; height: 255px; object-fit: contain; background: #0c0c0c; display: block; }
+  .seminar-card-content { padding: 1.5rem 1.5rem 1.8rem; display: flex; flex-direction: column; flex: 1; }
+  .seminar-card h2 { margin: .3rem 0 .5rem; font: 900 clamp(1.6rem, 2.7vw, 2.4rem)/1.18 'Black Ops One', 'Open Sans', sans-serif; color: #fff; }
+  .seminar-card p, .seminar-card li { color: #ececec; line-height: 1.65; }
+  .seminar-card .seminar-tagline { color: #fff; font-weight: 800; font-size: 1.1rem; }
+  .seminar-card .seminar-eyebrow { color: #ffc6c6; line-height: 1.5; }
+  .seminar-card .seminar-note { color: #d9d9d9; font-size: .88rem; }
+  .seminar-card .seminar-cta { margin-top: auto; width: 100%; }
+  .seminar-prices { display: flex; flex-wrap: wrap; margin: 1rem 0 1.6rem; gap: .5rem; }
+  .seminar-prices > div { flex: 1 1 105px; background: #2c2c2c; border-top: 3px solid #dc3333; padding: .8rem .5rem; text-align: center; border-radius: .25rem; }
+  .seminar-prices strong { display: block; font-size: 1.65rem; line-height: 1.25; color: #fff; }
+  .seminar-prices span { display: block; color: #eaeaea; font-size: .79rem; font-weight: 700; }
+  .seminar-topics { padding-left: 1.2rem; margin: .1rem 0 1rem; }
+  .seminar-registration { display: grid; grid-template-columns: .75fr 1.25fr; align-items: start; gap: 2rem; padding-top: 3rem; padding-bottom: 4rem; scroll-margin-top: 2rem; }
+  .seminar-intro h2 { color: #fff; font: 900 clamp(1.75rem, 3vw, 2.7rem)/1.2 'Black Ops One', 'Open Sans', sans-serif; }
+  .seminar-intro p { color: #ededed; line-height: 1.65; }
+  .seminar-form, .seminar-confirmation { padding: clamp(1.15rem, 3vw, 2rem); background: #fff; color: #161616; border-radius: .6rem; border-top: 5px solid #b91c1c; box-shadow: 0 6px 28px #0005; }
+  .seminar-field { display: flex; flex-direction: column; gap: .4rem; margin-bottom: 1.1rem; }
+  .seminar-field label { color: #1b1b1b; font-weight: 800; }
+  .seminar-field input, .seminar-field select, .seminar-field textarea { background: #fff; border: 2px solid #666; border-radius: .32rem; padding: .75rem; font: 400 1rem 'Open Sans', sans-serif; color: #111; width: 100%; }
+  .seminar-field input:focus, .seminar-field select:focus, .seminar-field textarea:focus { outline: 3px solid #e58d8d; outline-offset: 1px; }
+  .seminar-fields-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+  .seminar-form .seminar-note, .seminar-confirmation p { color: #373737; font-size: .88rem; line-height: 1.6; margin: .35rem 0 1.25rem; }
+  .seminar-form a, .seminar-confirmation a:not(.seminar-cta) { color: #8d1111; text-decoration: underline; }
+  .seminar-total { display: flex; justify-content: space-between; align-items: center; gap: 1rem; background: #f2f2f2; padding: 1.1rem; border-left: 5px solid #a91b1b; margin: 1.2rem 0; color: #171717; }
+  .seminar-total strong { font-size: 1.5rem; white-space: nowrap; }
+  .seminar-security { margin: 1.3rem 0; }
+  .seminar-message { color: #991b1b; font-weight: 700; min-height: 1.2rem; }
+  .seminar-checkout { display: block; width: 100%; font-size: 1.02rem; }
+  .seminar-confirmation[hidden], .seminar-form[hidden] { display: none; }
+  .seminar-confirmation h3 { color: #181818; font-size: 1.65rem; }
+  .seminar-confirmation .seminar-cta { color: #fff; text-decoration: none; }
+  .seminar-location { border-top: 1px solid #5a2626; padding-top: 2rem; padding-bottom: 3rem; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+  .seminar-location h2 { color: #fff; }
+  .seminar-location p { color: #efefef; line-height: 1.5; }
+  .seminar-location a { color: #ffb9b9; }
+  @media (max-width: 860px) {
+    .seminar-events, .seminar-registration { grid-template-columns: 1fr; }
+    .seminar-card > img { height: 220px; }
+    .seminar-hero { padding: 3rem 0; }
+  }
+  @media (max-width: 520px) {
+    .seminar-card-content { padding: 1.2rem; }
+    .seminar-fields-row, .seminar-location { grid-template-columns: 1fr; gap: .5rem; }
+    .seminar-prices > div { flex-basis: 95px; }
+    .seminar-total { flex-wrap: wrap; }
+    .seminar-cta { width: 100%; }
+  }
+</style>
