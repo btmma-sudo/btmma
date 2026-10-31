@@ -9,6 +9,7 @@ const choices = ["Martial Arts Games", "Team Challenges", "Custom Celebration"];
 const times = ["12:00","13:30","14:30","16:00"];
 // Source of truth: two-hour party, $350 up to 15 children, $10 per extra child.
 const PARTY_DURATION_MINUTES = 120;
+const PARTY_DEPOSIT_CENTS = 15000; // Charged only after studio date approval.
 const partyPriceCents = guests =>
   Number.isInteger(guests) && guests >= 1 && guests <= 75
     ? 35000 + Math.max(0, guests - 15) * 1000
@@ -93,11 +94,6 @@ async function verifyCaptcha(env,request,token){
   const r=await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify",{method:"POST",body:form});
   return r.ok&&(await r.json()).success===true;
 }
-function dollars(value){
-  if(typeof value!=="string"||!/^\d{1,5}(\.\d{1,2})?$/.test(value))return null;
-  const [a,b=""]=value.split(".");const cents=Number(a)*100+Number(b.padEnd(2,"0"));
-  return Number.isSafeInteger(cents)?cents:null;
-}
 function staffPage(row,auth,error=""){
  const title="Burning Tree — Review birthday party";
  return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+title+'</title>'+
@@ -107,10 +103,10 @@ function staffPage(row,auth,error=""){
  '<br><b>Activities:</b> '+esc(row.package_interest)+'<br><b>Duration:</b> 2 hours<br><b>Calculated total:</b> $'+(partyPriceCents(row.guests)/100).toFixed(2)+'<br><b>Requested:</b> '+esc(row.preferred_date)+' at '+esc(row.preferred_time)+' Eastern'+
  '<br><b>Notes:</b> '+esc(row.notes||"None")+'<br><b>Current status:</b> '+esc(row.status)+'</p>'+
  (error?'<aside>'+esc(error)+'</aside>':"")+
- (row.status==="requested" ? '<h2>Confirm this date and deposit</h2><p>Only confirm after checking the studio calendar and group capacity. The 2-hour party price is calculated automatically ($350 for up to 15 children, then $10 for each extra child). Enter the deposit to collect after approval.</p>'+
+ (row.status==="requested" ? '<h2>Confirm this date and deposit</h2><p>Only confirm after checking the studio calendar and group capacity. The two-hour party price is calculated automatically ($350 for up to 15 children, then $10 per extra child). The deposit is fixed at $150 and counts toward the total.</p>'+
  '<form method="post" action="/api/birthday-party"><input type="hidden" name="action" value="approve"><input type="hidden" name="ref" value="'+esc(row.id)+'"><input type="hidden" name="auth" value="'+esc(auth)+'">'+
  '<p><b>Fixed party total:</b> $ '+(partyPriceCents(row.guests)/100).toFixed(2)+'</p>'+
- '<label>Deposit to collect now (USD)<input name="deposit" type="text" inputmode="decimal" placeholder="e.g. 50.00" required></label>'+
+ '<p><b>Deposit after date confirmation:</b> $150.00<br><b>Balance remaining after deposit:</b> $'+((partyPriceCents(row.guests)-PARTY_DEPOSIT_CENTS)/100).toFixed(2)+'</p>'+
  '<button type="submit">Confirm Date & Send Secure Deposit Link</button></form>' :
  '<p>The request is no longer awaiting approval. Contact the family directly for changes.</p>')+
  '<p><a href="https://burningtreemma.com/birthday-parties/" style="color:#ffcaca">View birthday party page</a></p></body></html>';
@@ -163,11 +159,11 @@ export async function POST({request,locals}){
    if(data.get("action")!=="approve")return html("<h1>Unsupported action.</h1>",400);
    const ref=str(data.get("ref"),40),auth=str(data.get("auth"),100);
    if(!/^[a-f0-9-]{36}$/i.test(ref)||!await verified(env,"staff|"+ref,auth))return html("<h1>Invalid approval link.</h1>",403);
-   const deposit=dollars(str(data.get("deposit"),20));
+   const deposit=PARTY_DEPOSIT_CENTS;
    const row=await env.LIVE_TRIAL_DB.prepare("SELECT * FROM birthday_party_requests WHERE id=?").bind(ref).first();
    if(!row)return html("<h1>Request not found.</h1>",404);
    const total=partyPriceCents(row.guests);
-   if(!total||!deposit||deposit>total)return html(staffPage(row,auth,"Please enter a positive deposit amount, not more than the calculated party total."),400);
+   if(!total||deposit>total)return html(staffPage(row,auth,"Could not calculate a valid party total."),400);
    if(!validDate(row.preferred_date))return html(staffPage(row,auth,"This date is now outside the booking window."),409);
    try{
      // The D1 batch is atomic: overlapping two-hour blocks cannot be claimed
@@ -186,7 +182,7 @@ export async function POST({request,locals}){
    const sent=await send(env,row.email,"Your Burning Tree birthday party date is confirmed",
      "<h2>Your birthday party date has been approved!</h2><p>Hello "+esc(row.contact_name)+",</p><p>We have confirmed <b>"+esc(row.preferred_date)+
      " at "+esc(row.preferred_time)+" Eastern</b> for your <b>2-hour birthday celebration</b> with "+row.guests+" children.</p><p>Confirmed total: <b>$"+(total/100).toFixed(2)+
-     "</b>. Deposit due now: <b>$"+(deposit/100).toFixed(2)+"</b>.</p><p><a href='"+esc(url.href)+
+     "</b>. Deposit toward your total: <b>$"+(deposit/100).toFixed(2)+"</b>. Remaining balance after deposit: <b>$"+((total-deposit)/100).toFixed(2)+"</b>.</p><p><a href='"+esc(url.href)+
      "'>Pay your deposit securely with Burning Tree MMA</a></p><p>Your reservation is not deposit-paid until secure checkout is completed. Questions? Text 410-218-0894.</p>");
    return html("<!doctype html><html><meta name='viewport' content='width=device-width,initial-scale=1'><body style='font:16px system-ui;background:#181818;color:white;padding:30px'><h1>Date confirmed</h1><p>"+(sent?"A secure deposit link was emailed to the family.":"The date was saved, but the email could not be delivered. Please copy and send this secure link manually:")+"</p><p><a style='color:#ffb5b5;word-break:break-all' href='"+esc(url.href)+"'>"+esc(url.href)+"</a></p><p>Deposit: $"+(deposit/100).toFixed(2)+". Do not share the approval link.</p></body></html>");
  }
@@ -217,16 +213,16 @@ export async function POST({request,locals}){
    await send(env,notifyTo,"New birthday party request — "+row.preferred_date,
       "<h2>New Burning Tree Birthday Party Inquiry</h2><p>Contact: "+esc(row.contact_name)+
       "<br>Email: "+esc(row.email)+"<br>Phone: "+esc(row.phone)+"<br>Birthday child: "+esc(row.birthday_name)+
-      "<br>Age group: "+esc(row.age_group)+"<br>Guest count: "+row.guests+"<br>Duration: 2 hours<br>Party total: $"+(partyPriceCents(row.guests)/100).toFixed(2)+"<br>Party interest: "+esc(row.package_interest)+
+      "<br>Age group: "+esc(row.age_group)+"<br>Guest count: "+row.guests+"<br>Duration: 2 hours<br>Party total: $"+(partyPriceCents(row.guests)/100).toFixed(2)+"<br>Deposit after approval: $150<br>Balance after deposit: $"+((partyPriceCents(row.guests)-PARTY_DEPOSIT_CENTS)/100).toFixed(2)+"<br>Party interest: "+esc(row.package_interest)+
       "<br>Requested date: "+esc(row.preferred_date)+" at "+esc(row.preferred_time)+" Eastern"+
       "<br>Notes: "+esc(row.notes)+"<br>Airtable CRM: "+(crmSaved?"Saved":"Needs reconciliation")+"</p>"+
-      "<p><a href='"+esc(review.href)+"'>Review date, confirm calculated total, set deposit, and approve</a></p>"+
+      "<p><a href='"+esc(review.href)+"'>Review date, confirm calculated total and fixed $150 deposit, and approve</a></p>"+
       "<p>Do not send this private approval link to the customer.</p>");
    await send(env,row.email,"We received your Burning Tree birthday party request",
      "<h2>Thanks for thinking of Burning Tree!</h2><p>We received your request for "+esc(row.preferred_date)+
-     " at "+esc(row.preferred_time)+" Eastern for a 2-hour birthday party. Estimated price for "+row.guests+" children: $"+(partyPriceCents(row.guests)/100).toFixed(2)+". This is a request, not a confirmed reservation. We will check availability and confirm the deposit before providing a secure payment link.</p>"+
+     " at "+esc(row.preferred_time)+" Eastern for a 2-hour birthday party. Estimated price for "+row.guests+" children: $"+(partyPriceCents(row.guests)/100).toFixed(2)+". This is a request, not a confirmed reservation. After we approve the date, you can pay the $150 deposit toward the total through our secure checkout.</p>"+
      "<p>Questions? Text 410-218-0894.</p>");
-   return json({ok:true,reference:row.id,totalCents:partyPriceCents(row.guests),durationMinutes:PARTY_DURATION_MINUTES,message:"Your two-hour birthday party date request was received. We will confirm availability and the deposit before any payment is requested. No payment has been taken."});
+   return json({ok:true,reference:row.id,totalCents:partyPriceCents(row.guests),durationMinutes:PARTY_DURATION_MINUTES,message:"Your two-hour birthday party date request was received. After date confirmation, a $150 deposit will be due toward the total. No payment has been taken."});
  }
  if(data?.action==="checkout"){
    const ref=str(data.ref,40),grant=str(data.pay,100);
