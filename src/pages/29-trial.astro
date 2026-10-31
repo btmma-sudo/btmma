@@ -308,6 +308,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     const cashAppInstructions = document.getElementById("cashapp-instructions");
     const zelleButton = document.getElementById("zelle-button");
     const zelleInstructions = document.getElementById("zelle-instructions");
+    const paymentStage = document.getElementById("payment-stage");
+    const stepOneFields = document.getElementById("step-one-fields");
+    const step3Panel = document.getElementById("post-payment");
+    const postForm = document.getElementById("post-payment-questionnaire");
+    const postStatus = document.getElementById("post-payment-status");
+    const postSubmit = document.getElementById("post-payment-submit");
+    const donePanel = document.getElementById("post-payment-done");
+    const stepThreeJump = document.getElementById("step-three-jump");
     const pilotFields = document.getElementById("pilotFields");
     const pilotCode = document.getElementById("pilotCode");
 
@@ -384,6 +392,102 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     let grant = null;
     let liveMode = null; // null until the server confirms the current checkout mode.
     let pilotOnly = false;
+
+    // Signed access identifies the student, not payment. The API independently
+    // verifies Stripe or staff-confirmed Cash App/Zelle before unlocking Step 3.
+    const accessKey = "btmma_trial_questionnaire_access_v1";
+    let questionnaireAccess = null;
+    try { questionnaireAccess = window.localStorage.getItem(accessKey); }
+    catch { /* Stripe checkout returns also carry a verifiable session ID. */ }
+    let verifiedSessionId = null;
+    const setStep = (num, finished = false) => {
+      for (let i = 1; i <= 3; i++) {
+        const step = document.getElementById("trial-step-" + i);
+        if (!step) continue;
+        step.classList.toggle("current", i === num && !finished);
+        step.classList.toggle("completed", i < num || finished);
+        if (i === num && !finished) step.setAttribute("aria-current", "step");
+        else step.removeAttribute("aria-current");
+      }
+    };
+    const showStepThree = (completed = false) => {
+      if (step3Panel) step3Panel.hidden = false;
+      if (postForm) postForm.hidden = completed;
+      if (donePanel) donePanel.hidden = !completed;
+      if (stepThreeJump) stepThreeJump.hidden = completed;
+      setStep(3, completed);
+      if (form) form.hidden = true;
+      if (step3Panel && !completed) step3Panel.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (completed) {
+        try { window.localStorage.removeItem(accessKey); }
+        catch { /* Confirmation doesn't require browser storage. */ }
+      }
+    };
+    const checkStepThree = async ({ sessionId = null, quiet = false } = {}) => {
+      if (!questionnaireAccess && !sessionId) {
+        if (!quiet && notice) notice.textContent = "Please complete Step 1, or contact Coach David for help with your registration.";
+        return false;
+      }
+      try {
+        const response = await fetch("/api/trial-questionnaire", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          cache: "no-store",
+          body: JSON.stringify({ action: "status", accessToken: questionnaireAccess, sessionId })
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(result.error || "Payment verification is temporarily unavailable.");
+        if (result.paid === true) {
+          verifiedSessionId = sessionId || verifiedSessionId;
+          showStepThree(result.completed === true);
+          return true;
+        }
+        if (!quiet && notice) notice.textContent = "Your registration is saved, but the $29 payment is still awaiting verification. Please do not pay twice.";
+        return false;
+      } catch (error) {
+        if (!quiet && notice) notice.textContent = error?.message || "Payment verification could not be checked.";
+        return false;
+      }
+    };
+    postForm?.addEventListener("submit", async event => {
+      event.preventDefault();
+      const values = new FormData(postForm);
+      const answers = {};
+      for (const key of new Set(values.keys())) {
+        answers[key] = values.getAll(key).map(value => String(value).trim()).filter(Boolean).join(", ");
+      }
+      if (!answers.q3?.trim()) {
+        if (postStatus) postStatus.textContent = "Please answer question 3 about the student's main goal.";
+        document.getElementById("q3")?.focus();
+        return;
+      }
+      if (postSubmit) postSubmit.disabled = true;
+      if (postStatus) postStatus.textContent = "Sending your answers securely...";
+      try {
+        const response = await fetch("/api/trial-questionnaire", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          cache: "no-store",
+          body: JSON.stringify({
+            action: "submit",
+            accessToken: questionnaireAccess,
+            sessionId: verifiedSessionId,
+            answers
+          })
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || result.success !== true)
+          throw new Error(result.error || "We could not save your questionnaire.");
+        showStepThree(true);
+      } catch (error) {
+        if (postStatus) postStatus.textContent = error?.message || "Please try again, or contact Coach David.";
+      } finally {
+        if (postSubmit) postSubmit.disabled = false;
+      }
+    });
+    document.querySelectorAll(".check-step-three").forEach(button => {
+      button.addEventListener("click", () => { void checkStepThree(); });
+    });
     const openCheckout = async () => {
       if (!grant || !checkoutButton || liveMode === null) {
         if (notice) notice.textContent = "Please verify the student registration before choosing a payment method.";
@@ -557,6 +661,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     if (!form || !notice || !submit) return;
     submit.disabled = true;
     document.getElementById("cashapp-new-student")?.addEventListener("click", () => {
+      try { window.localStorage.removeItem(accessKey); } catch { /* Optional browser storage. */ }
       try {
         window.sessionStorage.removeItem("btmma_cashapp_trial_pending");
         window.sessionStorage.removeItem("btmma_cashapp_trial_return_v2");
@@ -573,6 +678,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       }
     });
     document.getElementById("zelle-new-student")?.addEventListener("click", () => {
+      try { window.localStorage.removeItem(accessKey); } catch { /* Optional browser storage. */ }
       try { window.sessionStorage.removeItem("btmma_zelle_trial_return_v1"); }
       catch { /* Continue to a fresh registration if storage is disabled. */ }
       window.location.assign("/29-trial/");
@@ -627,6 +733,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             if (heading) heading.textContent = "Payment confirmation pending";
             if (message) message.textContent = "Payment has not yet been confirmed. If you have a Stripe receipt, contact the studio before trying again.";
           }
+          // Step 3 is unlocked by a second independent server-side check.
+          if (result.status === "confirmed" || result.status === "processing") {
+            await checkStepThree({ sessionId });
+          }
         } catch {
           if (heading) heading.textContent = "Payment verification pending";
           if (message) message.textContent = "We couldn't check payment status right now. Contact the studio with your Stripe receipt before trying another payment.";
@@ -650,6 +760,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       if (cashAppButton) cashAppButton.hidden = true;
       submit.disabled = true;
       notice.textContent = "Your Cash App payment is pending verification. Please text your receipt to (410) 218-0894. Do not pay twice.";
+      void checkStepThree({ quiet: true });
       return;
     }
     // Ignore stale or shared return links without this tab's matching token.
@@ -675,6 +786,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       if (applePayHelp) applePayHelp.hidden = true;
       submit.disabled = true;
       notice.textContent = "Your $29 Zelle registration is pending manual payment verification. Text your receipt and student's name to (410) 218-0894. Do not pay twice.";
+      void checkStepThree({ quiet: true });
       return;
     }
     if (zelleReturnToken) {
@@ -682,6 +794,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       cleanUrl.searchParams.delete("zelle_return");
       window.history.replaceState(window.history.state, "", cleanUrl.pathname + cleanUrl.search + cleanUrl.hash);
     }
+    // Check older direct-transfer signups on this device without requiring
+    // a duplicate registration or another payment.
+    if (questionnaireAccess) { void checkStepThree({ quiet: true }); }
     // Fail closed until the server confirms whether checkout is test or live.
     (async () => {
       try {
@@ -746,20 +861,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       }
       const payload = Object.fromEntries(values.entries());
       delete payload["cf-turnstile-response"];
-      // Collect all selections for every questionnaire question. FormData.getAll
-      // preserves multiple checked boxes; Object.fromEntries alone would not.
-      const questionnaire = {};
-      for (let number = 1; number <= 19; number++) {
-        const key = "q" + number;
-        const answers = values.getAll(key).filter(value => typeof value === "string").map(value => value.trim()).filter(Boolean);
-        questionnaire[key] = answers.join(", ");
-        delete payload[key];
-      }
-      for (const key of ["q5Details", "q11Count", "q19Referrer", "q19Other", "preferredFirstClass", "contactPermission"]) {
-        questionnaire[key] = String(values.get(key) || "").trim();
-        delete payload[key];
-      }
-      payload.questionnaire = questionnaire;
       // Attach optional first-touch metadata. Never put student information in analytics.
       try {
         const firstTouch = JSON.parse(window.localStorage.getItem("btmma_first_touch_v1") || "null");
@@ -789,6 +890,16 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         notice.textContent = result.message || result.error || "Please contact the studio to verify eligibility.";
         if (liveMode && result.success && result.eligible && result.registrationSaved && result.checkoutGrant && checkoutButton) {
           grant = result.checkoutGrant;
+          if (typeof result.questionnaireAccess === "string" && /^qt1\.rec[A-Za-z0-9]{14}\.\d{13}\.[a-f0-9]{64}$/.test(result.questionnaireAccess)) {
+            questionnaireAccess = result.questionnaireAccess;
+            try { window.localStorage.setItem(accessKey, questionnaireAccess); }
+            catch { /* Stripe buyers can return with their verified Checkout session. */ }
+          }
+          setStep(2);
+          if (stepOneFields) stepOneFields.hidden = true;
+          if (paymentStage) paymentStage.hidden = false;
+          submit.hidden = true;
+          paymentStage?.scrollIntoView({ behavior: "smooth", block: "start" });
           trackTrial("trial_registration_approved");
           checkoutButton.hidden = false;
           checkoutButton.disabled = false;
