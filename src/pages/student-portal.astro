@@ -4,7 +4,8 @@ export const prerender = false;
 const env = getPortalEnv(Astro.locals);
 const account = await getPortalAccount(Astro.request,env);
 const errors = {invalid:"Your login could not be verified. Check your details and try again.",security:"Please complete the security check and try again."};
-const err = errors[Astro.url.searchParams.get("error")] || "";
+const code = Astro.url.searchParams.get("error");
+const err = code === "invalid" ? errors.invalid : code === "security" ? errors.security : "";
 let students = [], lessons = [], invoices = [], stripeNotice = "";
 let billingReady = false;
 let paymentEnabled = false;
@@ -102,7 +103,7 @@ Astro.response.headers.set("Content-Security-Policy", "default-src 'none'; scrip
           <button type="submit" class="btn">SECURE SIGN IN</button>
         </form>
         <p class="muted">Need an account or a password reset? Contact the studio at <a href="tel:+12023684395">(202) 368-4395</a>. Accounts are created by staff; public registration is disabled.</p>
-        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+        <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
       </section>
     ) : (
       <>
