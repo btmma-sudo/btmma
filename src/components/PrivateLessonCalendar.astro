@@ -1,0 +1,235 @@
+---
+import {site} from "../data/site";
+---
+  <div class="lesson-calendar-booking">
+    <section class="shell lesson-calendar-intro" aria-labelledby="lesson-calendar-heading">
+      <div class="lesson-calendar-intro-copy">
+        <p class="eyebrow">ONE-ON-ONE PRIVATE COACHING · OWINGS MILLS, MD</p>
+        <h2 id="lesson-calendar-heading">Your Lesson. <span>Your Schedule.</span></h2>
+        <p>Ready to focus on your goals? Book one-on-one time with Coach David. Whether you want extra technique work, help preparing for your next rank, or more confidence on the mats, we can tailor the lesson to you.</p>
+        <p class="lesson-calendar-subline"><strong>Appointment hours:</strong> Monday–Thursday from 8 PM, Friday from 7 PM, Saturday noon–5 PM, and Sunday 9 AM–2 PM or 4–6 PM. All times are Eastern. Choose a 30-minute or one-hour lesson and select a time Coach David has made available; no payment is charged when reserving.</p>
+      </div>
+      <div class="lesson-calendar-logo-wrap"><img src="/images/logo.png" width="200" height="272" alt="Burning Tree Mixed Martial Arts logo" loading="eager"/></div>
+    </section>
+    <section class="shell lesson-calendar-layout" aria-label="Book your private lesson">
+      <div>
+        <div class="lesson-calendar-panel">
+          <div class="step-title"><span class="step-number">1</span><div><h2>Choose Your Lesson Length</h2><p>Choose separately for every private lesson.</p></div></div>
+          <div class="lesson-calendar-duration-options" role="group" aria-label="Lesson duration">
+            <button type="button" class="duration-button active" data-lesson-minutes="30" aria-pressed="true"><strong>30 Minutes</strong><span>Focused coaching session</span></button>
+            <button type="button" class="duration-button" data-lesson-minutes="60" aria-pressed="false"><strong>1 Hour</strong><span>Extended one-on-one training</span></button>
+          </div>
+        </div>
+        <div class="lesson-calendar-panel">
+          <div class="step-title"><span class="step-number">2</span><div><h2>Choose Your Date</h2><p>Available dates depend on your lesson length.</p></div></div>
+        <div class="month-nav"><button type="button" id="lesson-calendar-prev" aria-label="Previous month">‹</button><h3 id="lesson-calendar-month" aria-live="polite"></h3><button type="button" id="lesson-calendar-next" aria-label="Next month">›</button></div>
+        <div class="weekdays" aria-hidden="true"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div>
+        <div class="days" id="lesson-calendar-days" aria-label="Available dates"></div>
+        <p class="lesson-calendar-status" id="lesson-calendar-calendar-status" role="status" aria-live="polite">Checking available appointments…</p>
+        </div>
+      </div>
+      <div>
+        <div class="lesson-calendar-panel">
+          <div class="step-title"><span class="step-number">3</span><div><h2>Choose Your Time</h2><p id="lesson-calendar-date-label">Select a date to see openings.</p></div></div>
+          <div id="lesson-calendar-times" class="lesson-calendar-times" role="group" aria-label="Available appointment times"><p class="lesson-calendar-muted">Your available time slots will appear here.</p></div>
+        </div>
+        <div class="lesson-calendar-panel" id="lesson-calendar-booking-form-wrap" hidden>
+          <div class="step-title"><span class="step-number">4</span><div><h2>Your Lesson Details</h2><p id="lesson-calendar-summary"></p></div></div>
+          <form id="lesson-calendar-form">
+            <div class="lesson-calendar-field"><label for="lesson-calendar-student">Student name</label><input id="lesson-calendar-student" name="studentName" autocomplete="name" maxlength="120" required /></div>
+            <div class="lesson-calendar-field"><label for="lesson-calendar-contact">Parent / booking contact name</label><input id="lesson-calendar-contact" name="contactName" autocomplete="name" maxlength="120" required /></div>
+            <div class="lesson-calendar-field"><label for="lesson-calendar-email">Email address</label><input id="lesson-calendar-email" name="email" type="email" autocomplete="email" maxlength="254" required /></div>
+            <div class="lesson-calendar-field"><label for="lesson-calendar-phone">Phone number</label><input id="lesson-calendar-phone" name="phone" type="tel" autocomplete="tel" maxlength="30" required /></div>
+            <div class="lesson-calendar-field"><label for="lesson-calendar-program">What would you like to work on?</label>
+              <select id="lesson-calendar-program" name="program" required>
+                <option value="">Choose a program</option>
+                <option>American Kenpo Karate</option><option>Muay Thai</option><option>Wing Chun</option>
+                <option>Self-Defense</option><option>Leadership</option><option>Not sure yet</option>
+              </select>
+            </div>
+            <div class="lesson-calendar-field"><label for="lesson-calendar-goals">Goals or notes (optional)</label><textarea id="lesson-calendar-goals" name="goals" rows="3" maxlength="500" placeholder="What would you like to focus on?"></textarea></div>
+            <div class="lesson-calendar-check"><p>Security verification</p><div class="cf-turnstile" data-sitekey="0x4AAAAAAD6Ievu-t0Ll1euh" data-theme="light"></div></div>
+            <button type="submit" id="lesson-calendar-submit" class="lesson-calendar-cta">CONFIRM MY PRIVATE LESSON</button>
+            <p id="lesson-calendar-form-status" role="status" aria-live="polite"></p>
+            <p class="lesson-calendar-fine">Your information is used to coordinate your private lesson. No card or payment information is collected here.</p>
+          </form>
+        </div>
+        <div class="lesson-calendar-panel lesson-calendar-confirmed" id="lesson-calendar-done" hidden role="status" aria-live="polite">
+          <p class="lesson-calendar-confirmed-icon" aria-hidden="true">✓</p>
+          <h2>Your Private Lesson Is Booked!</h2>
+          <p id="lesson-calendar-confirmed-details"></p>
+          <p id="lesson-calendar-confirmed-email"></p>
+          <button type="button" id="lesson-calendar-again" class="lesson-calendar-cta">BOOK ANOTHER LESSON</button>
+        </div>
+      </div>
+    </section>
+    <section class="shell lesson-calendar-bottom">
+      <h2>Questions About Private Coaching?</h2>
+      <p>Not sure which lesson is right for you, or looking for a multi-lesson coaching package? Contact Coach David directly. Private coaching is separate from the $29 new student special.</p>
+      <a href={`tel:${site.textPhoneHref}`} class="lesson-calendar-contact-button">CALL COACH DAVID · {site.textPhone}</a>
+      <p><strong>One Tree. One Family.</strong></p>
+    </section>
+  </div>
+  <script is:inline>
+  (() => {
+    const $ = id => document.getElementById(id);
+    const days = $('lesson-calendar-days'), times = $('lesson-calendar-times'), calendarStatus = $('lesson-calendar-calendar-status');
+    const monthLabel = $('lesson-calendar-month'), formWrap = $('lesson-calendar-booking-form-wrap'), form = $('lesson-calendar-form');
+    const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const nowInET = new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',month:'numeric',year:'numeric'}).formatToParts(new Date());
+    const year = Number(nowInET.find(p=>p.type==='year').value);
+    const month = Number(nowInET.find(p=>p.type==='month').value) - 1;
+    let cursor = new Date(Date.UTC(year,month,1)), selected = null, selectedDate = null, selectedDuration = 30, available = [], loaded = false;
+    const pad=n=>String(n).padStart(2,'0');
+    const displayTime = t => {const h=Number(t.slice(0,2));return (h%12||12)+':'+t.slice(3)+' '+(h>=12?'PM':'AM');};
+    const formatDate = d => new Date(d+'T12:00:00Z').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric',timeZone:'UTC'});
+    const currentMonthIndex = year*12+month;
+    const mins=t=>Number(t.slice(0,2))*60+Number(t.slice(3,5));
+    function startsForDate(date) {
+      const blocks=available.filter(s=>s.date===date);
+      if(selectedDuration===30)return blocks;
+      const free=new Set(blocks.map(s=>mins(s.time)));
+      return blocks.filter(s=>mins(s.time)+60<=1440 && free.has(mins(s.time)+30));
+    }
+    const allowedDate = d => startsForDate(d).length>0;
+    function renderCalendar() {
+      const yr=cursor.getUTCFullYear(), mo=cursor.getUTCMonth(), count=new Date(Date.UTC(yr,mo+1,0)).getUTCDate();
+      const index=yr*12+mo;
+      monthLabel.textContent=monthNames[mo]+' '+yr;
+      $('lesson-calendar-prev').disabled=index<=currentMonthIndex;
+      $('lesson-calendar-next').disabled=index>=currentMonthIndex+3;
+      days.replaceChildren();
+      for(let i=0;i<new Date(Date.UTC(yr,mo,1)).getUTCDay();i++){
+        const blank=document.createElement('span');blank.className='empty-day';days.append(blank);
+      }
+      for(let i=1;i<=count;i++){
+        const date=yr+'-'+pad(mo+1)+'-'+pad(i),button=document.createElement('button');
+        button.type='button';button.textContent=i;button.className='date-button';
+        button.disabled=!allowedDate(date);
+        if(date===selectedDate) button.classList.add('active');
+        button.setAttribute('aria-label',formatDate(date)+(button.disabled?' unavailable':' available'));
+        if(!button.disabled)button.addEventListener('click',()=>pickDate(date));
+        days.append(button);
+      }
+      if(loaded&&!available.some(s=>s.date.startsWith(yr+'-'+pad(mo+1)+'-') && allowedDate(s.date)))
+        calendarStatus.textContent='No private lessons are available this month. Check another month or text Coach David.';
+      else if(loaded)calendarStatus.textContent='Select one of the highlighted dates to continue.';
+    }
+    function pickDate(date) {
+      selectedDate=date;selected=null;formWrap.hidden=true;
+      $('lesson-calendar-date-label').textContent=formatDate(date);
+      times.replaceChildren();
+      const list=startsForDate(date);
+      for(const slot of list){
+        const button=document.createElement('button');button.type='button';button.className='time-button';
+        button.textContent=displayTime(slot.time)+' · '+(selectedDuration===60?'1 hour':'30 min');
+        button.addEventListener('click',()=>pickSlot(slot));
+        times.append(button);
+      }
+      renderCalendar();
+    }
+    function pickSlot(slot) {
+      selected=slot;
+      times.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+      const idx=startsForDate(slot.date).findIndex(s=>s.id===slot.id);
+      if(times.children[idx])times.children[idx].classList.add('active');
+      $('lesson-calendar-summary').textContent=formatDate(slot.date)+' · '+displayTime(slot.time)+' ET · '+(selectedDuration===60?'1 hour':'30 minutes');
+      $('lesson-calendar-form-status').textContent='';
+      formWrap.hidden=false;
+      formWrap.scrollIntoView({behavior:'smooth',block:'nearest'});
+    }
+    async function refresh() {
+      loaded=false;calendarStatus.textContent='Checking available appointments…';
+      try{
+        const response=await fetch('/api/private-lessons/availability',{cache:'no-store'});
+        const data=await response.json();
+        if(!response.ok||!data.ok)throw new Error(data.error||'The calendar is unavailable.');
+        available=data.slots;loaded=true;
+        if(selectedDate&&!allowedDate(selectedDate)){selectedDate=null;selected=null;formWrap.hidden=true;times.replaceChildren();$('lesson-calendar-date-label').textContent='Select a date to see openings.';}
+        else if(selectedDate)pickDate(selectedDate);
+        renderCalendar();
+        if(!available.length)calendarStatus.textContent='No appointments are currently open for online booking. Please call or text Coach David at (410) 218-0894.';
+      }catch(e){available=[];loaded=true;renderCalendar();calendarStatus.textContent=e.message+' Call or text (410) 218-0894 for help.';}
+    }
+    document.querySelectorAll('[data-lesson-minutes]').forEach(button=>button.addEventListener('click',()=>{
+      selectedDuration=Number(button.getAttribute('data-lesson-minutes'));
+      document.querySelectorAll('[data-lesson-minutes]').forEach(b=>{
+        const on=Number(b.getAttribute('data-lesson-minutes'))===selectedDuration;
+        b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on));
+      });
+      selected=null;formWrap.hidden=true;
+      if(selectedDate&&allowedDate(selectedDate))pickDate(selectedDate);
+      else {selectedDate=null;times.replaceChildren();$('lesson-calendar-date-label').textContent='Select a date to see openings.';}
+      renderCalendar();
+    }));
+    $('lesson-calendar-prev').addEventListener('click',()=>{cursor=new Date(Date.UTC(cursor.getUTCFullYear(),cursor.getUTCMonth()-1,1));renderCalendar();});
+    $('lesson-calendar-next').addEventListener('click',()=>{cursor=new Date(Date.UTC(cursor.getUTCFullYear(),cursor.getUTCMonth()+1,1));renderCalendar();});
+    form.addEventListener('submit',async e=>{
+      e.preventDefault();
+      if(!selected)return;
+      const f=new FormData(form);
+      const token=String(f.get('cf-turnstile-response')||'');
+      const status=$('lesson-calendar-form-status'),submit=$('lesson-calendar-submit');
+      if(!token){status.textContent='Complete the security check before booking.';return;}
+      submit.disabled=true;status.textContent='Saving your private lesson…';
+      try{
+        const data=Object.fromEntries(f.entries());delete data['cf-turnstile-response'];
+        const response=await fetch('/api/private-lessons/book',{method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({...data,slotId:selected.id,duration:selectedDuration,turnstileToken:token})});
+        const result=await response.json();
+        if(!response.ok||!result.ok)throw new Error(result.error||'Please try again.');
+        $('lesson-calendar-confirmed-details').textContent=formatDate(result.date)+' at '+displayTime(result.time)+' ET · '+result.duration+' minutes. Booking reference: '+result.bookingId;
+        $('lesson-calendar-confirmed-email').textContent=result.emailSent?'A confirmation email was sent.':'Your booking is saved. Please keep this confirmation information; an email may not be available.';
+        formWrap.hidden=true;$('lesson-calendar-done').hidden=false;
+        $('lesson-calendar-done').scrollIntoView({behavior:'smooth',block:'nearest'});
+        selectedDate=null;selected=null;
+      }catch(error){status.textContent=error.message;window.turnstile?.reset?.();await refresh();}
+      finally{submit.disabled=false;}
+    });
+    $('lesson-calendar-again').addEventListener('click',()=>{
+      $('lesson-calendar-done').hidden=true;form.reset();times.replaceChildren();selected=null;selectedDate=null;window.turnstile?.reset?.();refresh();
+    });
+    renderCalendar();refresh();
+  })();
+  </script>
+  <style>
+    .lesson-calendar-booking{background:#f7f5f2;color:#1c1c1c;padding-bottom:4rem}
+    .lesson-calendar-booking *{box-sizing:border-box}
+    .lesson-calendar-intro{display:flex;align-items:center;justify-content:space-between;gap:3rem;padding-block:3.2rem}
+    .lesson-calendar-intro-copy{max-width:710px}.lesson-calendar-intro .eyebrow{color:#ab211c;font-weight:800;letter-spacing:.13em}
+    .lesson-calendar-intro h1{font-size:clamp(2.1rem,5vw,4rem);line-height:1.1;margin:.7rem 0 1.1rem;color:#151515}
+    .lesson-calendar-intro h1 span{color:#c02d26}.lesson-calendar-intro p{font-size:1.05rem;line-height:1.7;color:#363636}
+    .lesson-calendar-intro .lesson-calendar-subline{color:#565656;font-size:.91rem}.lesson-calendar-logo-wrap{flex:none;background:#fff;border:1px solid #e4dcd4;border-radius:20px;padding:20px}
+    .lesson-calendar-logo-wrap img{width:160px;height:auto;display:block}
+    .lesson-calendar-layout{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);gap:1.3rem;align-items:start}
+    .lesson-calendar-panel{background:#fff;border:1px solid #e6dfda;border-radius:16px;padding:clamp(1rem,3vw,1.65rem);margin-bottom:1.3rem;box-shadow:0 8px 30px #31211a0a}
+    .lesson-calendar-panel[hidden]{display:none}.step-title{display:flex;gap:13px;align-items:start;margin-bottom:1.5rem}
+    .step-number{display:grid;place-items:center;flex:none;width:36px;height:36px;color:#fff;background:#b8231f;border-radius:50%;font-weight:800}
+    .step-title h2{font-size:1.25rem;color:#171717;margin:0 0 4px}.step-title p{margin:0;color:#67615e;font-size:.87rem}
+    .month-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}
+    .month-nav h3{font-size:1.17rem;margin:0;color:#191919}.month-nav button{border:1px solid #e5dbd3;background:#f7f3ef;border-radius:9px;color:#1a1a1a;font-size:1.6rem;cursor:pointer;width:40px;height:40px}
+    .month-nav button:disabled{opacity:.35;cursor:not-allowed}
+    .weekdays,.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;text-align:center}
+    .weekdays span{font-size:.77rem;font-weight:800;color:#716b68;padding:5px 0}.date-button{width:100%;aspect-ratio:1;min-width:0;border:1px solid transparent;border-radius:10px;background:#ffebe7;color:#a8241e;font-size:.92rem;font-weight:800;cursor:pointer}
+    .date-button:hover,.date-button.active{background:#bd2b24;color:#fff}.date-button:disabled{background:#f7f5f3;color:#aaa5a2;cursor:not-allowed}
+    .lesson-calendar-status,.lesson-calendar-muted{font-size:.88rem;color:#635b57;line-height:1.5}
+    .lesson-calendar-duration-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .duration-button{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:4px;text-align:left;background:#fff;border:2px solid #dfc3bd;border-radius:12px;color:#28201d;padding:15px 12px;cursor:pointer;min-height:83px}
+    .duration-button strong{font-size:1.1rem;color:#8d211d}.duration-button span{font-size:.78rem;color:#5f5651}
+    .duration-button:hover,.duration-button.active{background:#fff1ed;border-color:#bd2821}
+    .duration-button:focus-visible{outline:3px solid #bf312b;outline-offset:2px}
+    .lesson-calendar-times{display:flex;flex-wrap:wrap;gap:9px}.time-button{border:1px solid #c23930;color:#ab241e;background:#fff7f5;border-radius:9px;padding:11px 12px;font-weight:750;cursor:pointer;font-size:.86rem}
+    .time-button:hover,.time-button.active{background:#ba2923;color:#fff}
+    #lesson-calendar-form{display:grid;gap:14px}.lesson-calendar-field{display:grid;gap:6px}
+    .lesson-calendar-field label{font-size:.9rem;font-weight:800;color:#302826}.lesson-calendar-field input,.lesson-calendar-field select,.lesson-calendar-field textarea{width:100%;background:#fff;border:1px solid #bbb3ae;border-radius:9px;padding:12px 13px;font:inherit;font-size:1rem;color:#1b1b1b}
+    .lesson-calendar-field :is(input,select,textarea):focus{outline:2px solid #c4322b;outline-offset:2px}
+    .lesson-calendar-cta,.lesson-calendar-contact-button{display:inline-block;background:#b82420;color:#fff!important;border:0;border-radius:10px;padding:14px 18px;font:inherit;font-weight:850;text-align:center;text-decoration:none;cursor:pointer}
+    .lesson-calendar-cta:disabled{opacity:.6;cursor:wait}.lesson-calendar-cta:hover,.lesson-calendar-contact-button:hover{background:#94231f}
+    .lesson-calendar-check p{font-weight:800;margin:6px 0 10px}.lesson-calendar-fine{font-size:.79rem;color:#605d5a;line-height:1.55}
+    #lesson-calendar-form-status{color:#a6201d;font-weight:750}
+    .lesson-calendar-confirmed{text-align:center}.lesson-calendar-confirmed-icon{font-size:3.4rem;color:#1b8f51;line-height:1}.lesson-calendar-confirmed h2{color:#141414}
+    .lesson-calendar-bottom{max-width:860px;text-align:center;padding-top:2.4rem}.lesson-calendar-bottom h2{color:#1d1d1d;margin-bottom:.6rem}
+    .lesson-calendar-bottom p{color:#484443;line-height:1.65}.lesson-calendar-bottom .lesson-calendar-contact-button{margin:1rem 0}
+    @media(max-width:820px){.lesson-calendar-layout{grid-template-columns:1fr}.lesson-calendar-intro{padding-block:2rem}.lesson-calendar-logo-wrap{display:none}}
+    @media(max-width:480px){.days,.weekdays{gap:3px}.date-button{border-radius:6px;font-size:.79rem}.lesson-calendar-panel{border-radius:12px}.time-button{flex:1 1 40%}}
+  </style>
