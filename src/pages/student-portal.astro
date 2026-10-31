@@ -21,6 +21,7 @@ let students = [], lessons = [], invoices = [], stripeNotice = "";
 let billingReady = false;
 let paymentEnabled = false;
 let instructorAccess = false;
+let privateBookingAccess = false;
 if (account) {
   try {
     const staff = await env.LIVE_TRIAL_DB.prepare(
@@ -28,6 +29,12 @@ if (account) {
     ).bind(account.id).first();
     instructorAccess=!!staff;
   } catch { instructorAccess=false; }
+  try {
+    const bookingStaff = await env.LIVE_TRIAL_DB.prepare(
+      "SELECT 1 AS found FROM portal_staff WHERE account_id=? AND active=1 AND can_manage_private_lessons=1"
+    ).bind(account.id).first();
+    privateBookingAccess=!!bookingStaff;
+  } catch { privateBookingAccess=false; }
   try {
     const people = await env.LIVE_TRIAL_DB.prepare(
       "SELECT display_name, program, belt_rank FROM portal_students WHERE account_id=? AND active=1 ORDER BY display_name LIMIT 12"
@@ -228,6 +235,7 @@ Astro.response.headers.set("Content-Security-Policy", "default-src 'none'; scrip
           <div style="display:flex;gap:15px;align-items:center;justify-content:space-between;flex-wrap:wrap">
             <div><p class="eyebrow">SIGNED IN</p><h2>Welcome back, {account.display_name}!</h2><p class="muted">Your private training dashboard.</p>
               {instructorAccess && <p><a class="btn" href="/instructor-videos/">OPEN INSTRUCTOR VIDEO MANAGER</a></p>}
+              {privateBookingAccess && <p><a class="btn" href="/private-lesson-manager/">MANAGE PRIVATE LESSON CALENDAR</a></p>}
             </div>
             <form action="/api/student-portal/logout" method="post"><button class="btn secondary" type="submit">Sign out</button></form>
           </div>
