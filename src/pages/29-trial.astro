@@ -22,11 +22,17 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       <a class="cta register-student-cta" href="#registration">REGISTER YOUR STUDENT</a>
       <p><strong>One Tree. One Family.</strong></p>
     </section>
+    <nav class="trial-steps" aria-label="Three steps to get started"><ol>
+      <li id="trial-step-1" class="current" aria-current="step"><strong>1</strong><span>Student Registration</span></li>
+      <li id="trial-step-2"><strong>2</strong><span>Pay $29</span></li>
+      <li id="trial-step-3"><strong>3</strong><span>Enrollment Questionnaire</span></li>
+    </ol><p>Three steps: enter student details, complete payment, then tell us about your goals so we can prepare for your first classes.</p></nav>
     <section class="registration" id="registration">
-      <h2>Student Registration</h2>
-      <p>Choose a program, enter the student’s details, and then choose Apple Pay (including eligible Apple Cash cards), secure card checkout, or direct Cash App. Register one student at a time; siblings can share their parent contact details.</p>
+      <h2>Step 1: Student Registration</h2>
+      <p>First enter the student’s essential details and choose a martial art. Next choose how to pay $29. After payment is verified, Step 3 collects goals and training preferences. Siblings may share parent contact details but register separately.</p>
       <p class="first-class-help">First time on the mats? <a href="/your-first-class">See what to wear, where to park, and what happens after you register.</a></p>
       <form id="student-registration" class="form">
+        <div id="step-one-fields">
         <label for="studentType">Who are you registering for?</label>
         <select id="studentType" name="studentType" required>
           <option value="">Select student type</option>
@@ -112,10 +118,76 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <option>Wing Chun</option>
         </select>
 
+        </div>
+        <p class="fine-print">By submitting, you agree to our <a href="/privacy">Privacy Policy</a> and <a href="/terms">Terms of Service</a>.</p>
+        <div id="pilotFields" hidden>
+          <label for="pilotCode">Private launch test code</label>
+          <input id="pilotCode" name="pilotCode" type="password" autocomplete="off" maxlength="128" />
+          <p class="fine-print">Only for Burning Tree’s authorized live-payment verification. A real $29 charge will apply.</p>
+        </div>
+        <div class="form-security">
+          <p class="security-caption">Security check</p>
+          <div class="cf-turnstile" data-sitekey="0x4AAAAAAD6Ievu-t0Ll1euh" data-size="compact"></div>
+        </div>
+        <p id="setup-note" class="notice" role="status" aria-live="polite">We’ll check eligibility before showing payment options. Cards and Apple Pay use Stripe; direct Cash App payments require manual verification.</p>
+        <p id="registration-next-step" class="fine-print">We’ll check the student’s registration, then show available payment methods. You will not be charged by clicking this button.</p>
+        <button class="verify-registration-button" type="submit">COMPLETE STEP 1 &amp; CHOOSE PAYMENT</button>
+        <div id="payment-stage" hidden>
+          <h3>Step 2: Pay $29</h3>
+          <p>Card and Apple Pay use secure Stripe checkout. Cash App and Zelle require Coach David to verify the transfer before Step 3 opens.</p>
+        <button id="applepay-button" type="button" hidden disabled>APPLE PAY / APPLE CASH — $29</button>
+        <button id="checkout-button" type="button" hidden disabled>PAY $29 WITH CREDIT / DEBIT CARD</button>
+        <a id="checkout-fallback" class="cta" hidden rel="noopener noreferrer">OPEN SECURE $29 CARD CHECKOUT</a>
+        <button id="cashapp-button" type="button" hidden disabled>PAY $29 DIRECTLY WITH CASH APP</button>
+        <button id="zelle-button" type="button" hidden disabled>PAY $29 DIRECTLY WITH ZELLE</button>
+        <p id="applepay-help" class="payment-help" hidden>Apple Pay opens secure Stripe checkout and appears on supported devices. To use your Apple Cash balance, choose your Apple Cash card in Apple Pay. If Apple Pay is unavailable, you can still use a card. These payments are processed by Stripe, not sent directly to a personal Apple Cash account.</p>
+        <div id="cashapp-instructions" class="cashapp-instructions" hidden aria-live="polite">
+          <h3>Direct Cash App Payment</h3>
+          <p>Send exactly <strong>$29</strong> to <strong>$BTMMA</strong> through Cash App.</p>
+          <a class="cta" href="https://cash.app/pay/link/tvqncp9q" rel="noopener noreferrer">OPEN CASH APP — $29 TO $BTMMA</a>
+          <p class="fine-print">Before you tap Send, confirm Cash App shows the correct recipient ($BTMMA) and total ($29). If either is different, do not pay; contact the studio.</p>
+          <p>Add “BTMMA New Student Special” in the payment note. Once paid, text the student's name and your payment confirmation to <a href="sms:+14102180894">(410) 218-0894</a>.</p>
+          <p><strong>Your registration is pending.</strong> We will confirm it only after verifying the $29 payment in our Cash App account. Do not pay again through Stripe.</p>
+          <p>Need to change payment methods? Call <a href="tel:+12023684395">(202) 368-4395</a>.</p>
+                    <p class="manual-step3-help">After Coach David verifies your payment, return to this page on the same device to complete Step 3.</p>
+          <button type="button" class="check-step-three">CHECK PAYMENT &amp; CONTINUE TO STEP 3</button>
+<button type="button" id="cashapp-new-student">REGISTER ANOTHER STUDENT</button>
+        </div>
+        <div id="zelle-instructions" class="cashapp-instructions" hidden aria-live="polite">
+          <h3>Direct Zelle Payment — $29</h3>
+          <p><strong>Send exactly $29</strong> through Zelle to <strong>410-218-0894</strong>, Coach David's Zelle-enrolled mobile number. This is a <strong>phone number, not a mailing or studio address</strong>.</p>
+          <button id="zelle-copy-number" type="button">COPY ZELLE PHONE NUMBER</button>
+          <p id="zelle-copy-status" class="fine-print" role="status"></p>
+          <p>Open the Zelle option in your bank or credit union's app, enter the mobile number <strong>410-218-0894</strong> and the exact amount <strong>$29.00</strong>.</p>
+          <p><strong>Check the recipient name your bank displays before sending.</strong> If the name does not match the person you intend to pay or you're uncertain, do not send the money; contact Coach David first.</p>
+          <p>Include <strong>BTMMA $29 New Student Special</strong> in the payment note, if your bank supports payment notes.</p>
+          <p>After sending, <strong>text the student's name and your Zelle payment confirmation</strong> to <a href="sms:+14102180894">(410) 218-0894</a>.</p>
+          <p><strong>Your registration is pending.</strong> Burning Tree will confirm it only after verifying the $29 transfer was received through Zelle. Choosing this option does not automatically confirm payment. <strong>Do not pay a second time</strong> by card, Apple Pay or Cash App.</p>
+          <p>Need help or want to change payment methods? Call or text <a href="tel:+14102180894">(410) 218-0894</a> before sending another payment.</p>
+                    <p class="manual-step3-help">After Coach David verifies your payment, return to this page on the same device to complete Step 3.</p>
+          <button type="button" class="check-step-three">CHECK PAYMENT &amp; CONTINUE TO STEP 3</button>
+<button type="button" id="zelle-new-student">REGISTER ANOTHER STUDENT</button>
+        </div>
+        </div>
+      </form>
+    </section>
+    <section class="registration" id="checkout-result" aria-live="polite" hidden>
+      <div class="offer">
+        <h2 id="checkout-result-title">Verifying your payment...</h2>
+        <p id="checkout-result-message" role="status">Checking your secure Stripe transaction.</p>
+        <p>Please do not make another payment while confirmation is pending.</p>
+        <a class="cta" id="step-three-jump" href="#post-payment" hidden>CONTINUE TO STEP 3</a>
+        <a class="cta" href="tel:+12023684395">QUESTIONS? CALL (202) 368-4395</a>
+      </div>
+    </section>
+    <section class="registration" id="post-payment" hidden aria-labelledby="post-payment-title">
+      <h2 id="post-payment-title">Step 3: Enrollment Questionnaire</h2>
+      <p>Payment verified! Please complete this last step to help us prepare for your classes—no need to reenter anything from Step 1.</p>
+      <form id="post-payment-questionnaire" class="form">
         <section class="questionnaire-online" aria-labelledby="questionnaire-title">
-          <p class="questionnaire-eyebrow">NEW STUDENT QUESTIONNAIRE</p>
-          <h3 id="questionnaire-title">Help Us Get to Know You</h3>
-          <p>Answer these questions right here—no printing or paperwork. Your responses go privately to the Burning Tree team with this student's registration. The $29 price and payment options do not change.</p>
+          <p class="questionnaire-eyebrow">STEP 3 OF 3 — AFTER VERIFIED PAYMENT</p>
+          <h3 id="questionnaire-title">Tell Us About Your Goals</h3>
+          <p>Your payment is verified. We already have your name, contact information, date of birth and chosen martial art from Step 1.</p>
           <p class="questionnaire-note">Choose all answers that apply. If you're unsure about a question, you can leave it blank and discuss it with Coach David later.</p>
 <details class="question-group" open><summary>1 / Your goals & motivation<span class="question-hint">Tap to expand or collapse</span></summary><div class="question-content"><div class="question-line"><p class="question-label">1. What interests you about martial arts?</p><div class="question-options"><label class="question-option"><input type="checkbox" name="q1" value="Self-defense" /><span>Self-defense</span></label>
 <label class="question-option"><input type="checkbox" name="q1" value="Confidence" /><span>Confidence</span></label>
@@ -163,15 +235,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 <label class="question-option"><input type="checkbox" name="q11" value="No" /><span>No</span></label>
 <label class="question-option"><input type="checkbox" name="q11" value="Maybe later" /><span>Maybe later</span></label></div><label class="question-subfield" for="q11Count">How many additional family members?<input id="q11Count" name="q11Count" type="text" maxlength="120" /></label></div>
 <div class="question-line"><label for="q12" class="question-label">12. Anything you would like instructors to know before the first class?</label><textarea id="q12" name="q12" rows="2" maxlength="500" placeholder="Training preferences or questions (optional). Please discuss medical or safety accommodations privately with us."></textarea></div></div></details>
-<details class="question-group" open><summary>3 / Programs & schedule<span class="question-hint">Tap to expand or collapse</span></summary><div class="question-content"><div class="question-line"><p class="question-label">13. Which programs interest you?</p><div class="question-options"><label class="question-option"><input type="checkbox" name="q13" value="American Kenpo Karate" /><span>American Kenpo Karate</span></label>
-<label class="question-option"><input type="checkbox" name="q13" value="Muay Thai" /><span>Muay Thai</span></label>
-<label class="question-option"><input type="checkbox" name="q13" value="Wing Chun" /><span>Wing Chun</span></label>
-<label class="question-option"><input type="checkbox" name="q13" value="Sanuces Ryu Jujutsu" /><span>Sanuces Ryu Jujutsu</span></label>
-<label class="question-option"><input type="checkbox" name="q13" value="Women's Self-Defense" /><span>Women's Self-Defense</span></label>
-<label class="question-option"><input type="checkbox" name="q13" value="Fitness &amp; Wellness" /><span>Fitness &amp; Wellness</span></label>
-<label class="question-option"><input type="checkbox" name="q13" value="Leadership (invitation only)" /><span>Leadership (invitation only)</span></label>
-<label class="question-option"><input type="checkbox" name="q13" value="Not sure" /><span>Not sure</span></label></div></div>
-<div class="question-line"><p class="question-label">14. How often would you like to train?</p><div class="question-options"><label class="question-option"><input type="radio" name="q14" value="Once weekly" /><span>Once weekly</span></label>
+<details class="question-group" open><summary>3 / Programs & schedule<span class="question-hint">Tap to expand or collapse</span></summary><div class="question-content"><div class="question-line"><p class="question-label">14. How often would you like to train?</p><div class="question-options"><label class="question-option"><input type="radio" name="q14" value="Once weekly" /><span>Once weekly</span></label>
 <label class="question-option"><input type="radio" name="q14" value="Twice weekly" /><span>Twice weekly</span></label>
 <label class="question-option"><input type="radio" name="q14" value="3+ times weekly" /><span>3+ times weekly</span></label>
 <label class="question-option"><input type="radio" name="q14" value="Unlimited" /><span>Unlimited</span></label></div></div>
@@ -204,59 +268,16 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 <label class="question-option"><input type="radio" name="q19" value="Other" /><span>Other</span></label></div><label class="question-subfield" for="q19Referrer">Referred by (optional)<input id="q19Referrer" name="q19Referrer" type="text" maxlength="120" /></label><label class="question-subfield" for="q19Other">Other source (optional)<input id="q19Other" name="q19Other" type="text" maxlength="120" /></label></div>
 <div class="question-line"><label class="question-label" for="preferredFirstClass">Preferred first class date or time (optional)</label><input id="preferredFirstClass" type="text" name="preferredFirstClass" maxlength="160" placeholder="Example: Next Tuesday after 5 PM" /></div>
 <label class="questionnaire-permission"><input type="checkbox" name="contactPermission" value="yes" /><span>You may contact me about this registration, trial scheduling, and follow-up. Promotional text marketing requires separate consent.</span></label></div></details>
-          <p class="questionnaire-bottom">When you select <strong>Verify Registration &amp; Choose Payment</strong>, we securely save your responses to your student record before you choose how to pay.</p>
+          <p class="questionnaire-bottom">Your answers will be saved to the existing student registration. This is not a membership contract.</p>
         </section>
 
-        <p class="fine-print">By submitting, you agree to our <a href="/privacy">Privacy Policy</a> and <a href="/terms">Terms of Service</a>.</p>
-        <div id="pilotFields" hidden>
-          <label for="pilotCode">Private launch test code</label>
-          <input id="pilotCode" name="pilotCode" type="password" autocomplete="off" maxlength="128" />
-          <p class="fine-print">Only for Burning Tree’s authorized live-payment verification. A real $29 charge will apply.</p>
-        </div>
-        <div class="form-security">
-          <p class="security-caption">Security check</p>
-          <div class="cf-turnstile" data-sitekey="0x4AAAAAAD6Ievu-t0Ll1euh" data-size="compact"></div>
-        </div>
-        <p id="setup-note" class="notice" role="status" aria-live="polite">We’ll check eligibility before showing payment options. Cards and Apple Pay use Stripe; direct Cash App payments require manual verification.</p>
-        <p id="registration-next-step" class="fine-print">We’ll check the student’s registration, then show available payment methods. You will not be charged by clicking this button.</p>
-        <button class="verify-registration-button" type="submit">VERIFY REGISTRATION &amp; CHOOSE PAYMENT</button>
-        <button id="applepay-button" type="button" hidden disabled>APPLE PAY / APPLE CASH — $29</button>
-        <button id="checkout-button" type="button" hidden disabled>PAY $29 WITH CREDIT / DEBIT CARD</button>
-        <a id="checkout-fallback" class="cta" hidden rel="noopener noreferrer">OPEN SECURE $29 CARD CHECKOUT</a>
-        <button id="cashapp-button" type="button" hidden disabled>PAY $29 DIRECTLY WITH CASH APP</button>
-        <button id="zelle-button" type="button" hidden disabled>PAY $29 DIRECTLY WITH ZELLE</button>
-        <p id="applepay-help" class="payment-help" hidden>Apple Pay opens secure Stripe checkout and appears on supported devices. To use your Apple Cash balance, choose your Apple Cash card in Apple Pay. If Apple Pay is unavailable, you can still use a card. These payments are processed by Stripe, not sent directly to a personal Apple Cash account.</p>
-        <div id="cashapp-instructions" class="cashapp-instructions" hidden aria-live="polite">
-          <h3>Direct Cash App Payment</h3>
-          <p>Send exactly <strong>$29</strong> to <strong>$BTMMA</strong> through Cash App.</p>
-          <a class="cta" href="https://cash.app/pay/link/tvqncp9q" rel="noopener noreferrer">OPEN CASH APP — $29 TO $BTMMA</a>
-          <p class="fine-print">Before you tap Send, confirm Cash App shows the correct recipient ($BTMMA) and total ($29). If either is different, do not pay; contact the studio.</p>
-          <p>Add “BTMMA New Student Special” in the payment note. Once paid, text the student's name and your payment confirmation to <a href="sms:+14102180894">(410) 218-0894</a>.</p>
-          <p><strong>Your registration is pending.</strong> We will confirm it only after verifying the $29 payment in our Cash App account. Do not pay again through Stripe.</p>
-          <p>Need to change payment methods? Call <a href="tel:+12023684395">(202) 368-4395</a>.</p>
-          <button type="button" id="cashapp-new-student">REGISTER ANOTHER STUDENT</button>
-        </div>
-        <div id="zelle-instructions" class="cashapp-instructions" hidden aria-live="polite">
-          <h3>Direct Zelle Payment — $29</h3>
-          <p><strong>Send exactly $29</strong> through Zelle to <strong>410-218-0894</strong>, Coach David's Zelle-enrolled mobile number. This is a <strong>phone number, not a mailing or studio address</strong>.</p>
-          <button id="zelle-copy-number" type="button">COPY ZELLE PHONE NUMBER</button>
-          <p id="zelle-copy-status" class="fine-print" role="status"></p>
-          <p>Open the Zelle option in your bank or credit union's app, enter the mobile number <strong>410-218-0894</strong> and the exact amount <strong>$29.00</strong>.</p>
-          <p><strong>Check the recipient name your bank displays before sending.</strong> If the name does not match the person you intend to pay or you're uncertain, do not send the money; contact Coach David first.</p>
-          <p>Include <strong>BTMMA $29 New Student Special</strong> in the payment note, if your bank supports payment notes.</p>
-          <p>After sending, <strong>text the student's name and your Zelle payment confirmation</strong> to <a href="sms:+14102180894">(410) 218-0894</a>.</p>
-          <p><strong>Your registration is pending.</strong> Burning Tree will confirm it only after verifying the $29 transfer was received through Zelle. Choosing this option does not automatically confirm payment. <strong>Do not pay a second time</strong> by card, Apple Pay or Cash App.</p>
-          <p>Need help or want to change payment methods? Call or text <a href="tel:+14102180894">(410) 218-0894</a> before sending another payment.</p>
-          <button type="button" id="zelle-new-student">REGISTER ANOTHER STUDENT</button>
-        </div>
+
+        <p id="post-payment-status" class="notice" role="status" aria-live="polite">Tell us about your main goal, then send your answers securely.</p>
+        <button id="post-payment-submit" type="submit">FINISH REGISTRATION — SEND QUESTIONNAIRE</button>
       </form>
-    </section>
-    <section class="registration" id="checkout-result" aria-live="polite" hidden>
-      <div class="offer">
-        <h2 id="checkout-result-title">Verifying your payment...</h2>
-        <p id="checkout-result-message" role="status">Checking your secure Stripe transaction.</p>
-        <p>Please do not make another payment while confirmation is pending.</p>
-        <a class="cta" href="tel:+12023684395">QUESTIONS? CALL (202) 368-4395</a>
+      <div id="post-payment-done" hidden>
+        <h3>All set! Welcome to the Burning Tree family.</h3>
+        <p>We've received your enrollment questionnaire. We'll contact you about your first classes.</p>
       </div>
     </section>
     <section class="contact">
@@ -796,6 +817,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 })();
 </script>
 <style>
+  .trial-page .trial-steps { max-width: 840px; margin: 4px auto 28px; padding: 0 14px; text-align: center; }
+  .trial-page .trial-steps ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .trial-page .trial-steps li { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px 7px; background: #171717; border: 1px solid #666; color: #fff; border-radius: 12px; font-size: clamp(.72rem, 2.3vw, .96rem); }
+  .trial-page .trial-steps li strong { width: 32px; height: 32px; display: grid; place-items: center; background: #444; border-radius: 50%; font-size: 1.05rem; }
+  .trial-page .trial-steps li.current { border: 2px solid #e54643; }
+  .trial-page .trial-steps li.current strong, .trial-page .trial-steps li.completed strong { background: #cb312e; }
+  .trial-page .trial-steps p { font-size: .94rem; line-height: 1.6; margin: 14px auto 0; max-width: 660px; }
+  .trial-page #payment-stage { background: #171717; border: 2px solid #cb312e; border-radius: 14px; padding: 20px 12px; margin: 16px 0; }
+  .trial-page #payment-stage h3, .trial-page #post-payment-done h3 { color: #fff; }
+  .trial-page #post-payment { max-width: 820px; margin: 20px auto; }
+  .trial-page #post-payment-done { padding: 24px; background: #171717; border: 2px solid #cb312e; border-radius: 14px; }
+  .trial-page .manual-step3-help { color: #fff; font-weight: 600; }
   .trial-page .questionnaire-online { text-align: left; margin: 24px auto; padding: clamp(16px, 3.5vw, 28px); max-width: 720px; background: #171717; color: #fff; border: 1px solid #d73b39; border-radius: 16px; }
   .trial-page .questionnaire-eyebrow { color: #ffb5b5; font-size: .78rem; font-weight: 900; letter-spacing: .1em; margin: 0 0 6px; }
   .trial-page .questionnaire-online h3 { font-size: clamp(1.35rem, 4vw, 1.9rem); margin: 0 0 12px; color: #fff; }
