@@ -54,10 +54,12 @@ export async function getPortalAccount(request, env) {
   if (typeof data?.id !== "string" || !/^[a-f0-9-]{36}$/.test(data.id) ||
       !Number.isInteger(data.exp) || data.exp <= Date.now()/1000 ||
       !Number.isInteger(data.v)) return null;
-  const account = await env.LIVE_TRIAL_DB.prepare(
-    "SELECT id, display_name, email, session_version, stripe_customer_id FROM portal_accounts WHERE id=? AND active=1"
-  ).bind(data.id).first();
-  return account && account.session_version === data.v ? account : null;
+  try {
+    const account = await env.LIVE_TRIAL_DB.prepare(
+      "SELECT id, display_name, email, session_version, stripe_customer_id FROM portal_accounts WHERE id=? AND active=1"
+    ).bind(data.id).first();
+    return account && account.session_version === data.v ? account : null;
+  } catch { return null; }
 }
 export function secureHeaders(headers = {}) {
   return {
