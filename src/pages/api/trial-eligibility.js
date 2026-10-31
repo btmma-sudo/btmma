@@ -5,6 +5,77 @@ const json = (body, status = 200) => new Response(JSON.stringify(body), {
   status, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" }
 });
 const normalize = (value) => String(value || "").trim().replace(/\s+/g, " ").toLocaleLowerCase("en-US");
+
+const QUESTIONNAIRE_FIELD_ID = "fldvaLLNiB7iSpeoP";
+const QUESTION_TEXT = [
+  "What interests you about martial arts?",
+  "What motivated you to look into martial arts right now?",
+  "What is your top goal for the next 6–12 months?",
+  "If we helped you or your child accomplish ONE thing, what would make the biggest difference?",
+  "Have you or your child trained before?",
+  "Are there any specific areas you would like help with?",
+  "What has prevented you from starting martial arts before?",
+  "How important is earning a black belt?",
+  "What is most important to you in choosing a martial arts school?",
+  "What would make you feel confident Burning Tree is the right fit?",
+  "Are other family members interested in training?",
+  "Anything you would like instructors to know before the first class?",
+  "Which programs interest you?",
+  "How often would you like to train?",
+  "Which days are convenient?",
+  "Which membership options would you like to discuss AFTER the $29 trial?",
+  "If your first class goes well, when might you begin?",
+  "Would you like to review membership options?",
+  "How did you hear about us?"
+];
+const QUESTION_EXTRAS = {
+  q5Details: "Prior style and training duration",
+  q11Count: "Number of additional family members",
+  q19Referrer: "Referred by",
+  q19Other: "Other referral source",
+  preferredFirstClass: "Preferred first class date or time",
+  contactPermission: "Trial follow-up contact permission"
+};
+function cleanQuestionAnswer(value, maxLength = 700) {
+  if (typeof value !== "string") return "";
+  return value.replace(/[\u0000-\u0009\u000B-\u001F\u007F]/g, " ")
+    .replace(/\s{3,}/g, " ").trim().slice(0, maxLength);
+}
+function questionnaireToText(raw) {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return "";
+  const answers = QUESTION_TEXT.map((question, index) => {
+    const value = cleanQuestionAnswer(raw["q" + (index + 1)]);
+    return { question, value, number: index + 1 };
+  });
+  const extras = Object.entries(QUESTION_EXTRAS)
+    .map(([key, title]) => ({ title, value: cleanQuestionAnswer(raw[key], 300) }))
+    .filter(item => item.value);
+  if (!answers.some(answer => answer.value) && !extras.length) return "";
+  return [
+    "BURNING TREE MIXED MARTIAL ARTS — $29 ONLINE ENROLLMENT QUESTIONNAIRE",
+    "Received: " + new Date().toISOString(),
+    "This is an inquiry and trial registration, not a membership agreement.",
+    "",
+    ...answers.map(item => item.number + ". " + item.question + "\n" + (item.value || "(not answered)") + "\n"),
+    ...extras.map(item => item.title + ": " + item.value)
+  ].join("\n").slice(0, 20000);
+}
+async function updatePendingQuestionnaire(env, recordId, textValue) {
+  if (!textValue) return true;
+  const response = await fetch(
+    "https://api.airtable.com/v0/" + encodeURIComponent(env.AIRTABLE_BASE_ID) +
+    "/tblZCXEuRKXiPZlc7/" + encodeURIComponent(recordId), {
+      method: "PATCH",
+      headers: {
+        Authorization: "Bearer " + env.AIRTABLE_API_TOKEN,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ fields: { [QUESTIONNAIRE_FIELD_ID]: textValue }, typecast: false })
+    }
+  );
+  return response.ok;
+}
+
 const sameDob = (fields, dob) => fields["Student Date of Birth"] === dob;
 async function reserveStudent(db, recordId, studentKey = recordId) {
   if (!/^rec[A-Za-z0-9]+$/.test(recordId)) throw new Error("Invalid record ID");
@@ -36,6 +107,7 @@ export async function POST({ request, locals }) {
   let data;
   try { data = await request.json(); } catch { return json({ success: false, error: "Invalid registration." }, 400); }
   const { studentType, studentName, studentDob, guardianName, email, phone, programInterest, turnstileToken, attribution } = data || {};
+  const questionnaireText = questionnaireToText(data?.questionnaire);
   // Parse a calendar date strictly; reject impossible and future dates.
   const dobValid = typeof studentDob === "string" && /^\d{4}-\d{2}-\d{2}$/.test(studentDob);
   const dobDate = dobValid ? new Date(studentDob + "T00:00:00Z") : null;
@@ -300,6 +372,12 @@ export async function POST({ request, locals }) {
             normalize(fields["Email"]) === contactEmail &&
             sameDob(fields, studentDob) &&
             !fields[trialUsedFieldName] && fields["Payment Status"] !== "Paid") {
+          // Pending registrations may be resubmitted after a previous checkout cancellation.
+          // Update their questionnaire rather than create a second lead or alter payment status.
+          if (questionnaireText && !(await updatePendingQuestionnaire(env, record.id, questionnaireText))) {
+            console.error("Existing $29 questionnaire update failed", { status: "airtable_write" });
+            return json({ success: false, error: "We could not save your questionnaire yet. Please try again or contact the studio." }, 503);
+          }
           if (!await reserveStudent(env.TRIAL_DB, record.id, reservationStudentKey || record.id)) return json({ success: true, eligible: false, message: "Please contact the studio to verify this registration." });
           return json({
             checkoutGrant: await checkoutGrant(env.STRIPE_WEBHOOK_SECRET, record.id),
@@ -317,6 +395,8 @@ export async function POST({ request, locals }) {
       "Student Date of Birth": studentDob,
       "Email": email.trim()
     };
+    // Store the electronic questionnaire on the same Airtable lead record as checkout.
+    if (questionnaireText) fields[QUESTIONNAIRE_FIELD_ID] = questionnaireText;
     // For LIVE registrations, preserve the phone and program details needed
     // for the studio to schedule the correct student's first class. Use
     // canonical Airtable field IDs, so display-label changes fail safely.
