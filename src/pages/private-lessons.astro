@@ -2,16 +2,16 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 const packs = [
   { id:"basic", name:"Basic", eyebrow:"LEVEL UP", tagline:"BUILD SKILLS. GAIN CONFIDENCE.", price:249, sessions:4,
-    photo:"/images/kids-martial-arts-karate-guard.png", alt:"Young karate student demonstrating a technique",
+    photo:"/images/private-coaching/private-basic-card.webp", alt:"Young karate student demonstrating a technique",
     features:["Skills assessment","Personal improvement plan","Technique and form development","Footwork and striking practice","Completion certificate"] },
   { id:"advanced", name:"Advanced", eyebrow:"COMPETITION EDGE", tagline:"PREPARE. PERFORM. STAND OUT.", price:399, sessions:6,
-    photo:"/images/kids-martial-arts-smiling-student.png", alt:"Smiling young martial arts student",
+    photo:"/images/private-coaching/private-advanced-card.webp", alt:"Smiling young martial arts student",
     features:["Tournament preparation","Forms and technique performance","Timing, strategy and presentation","Video feedback","Written coaching plan"] },
   { id:"elite", name:"Elite", eyebrow:"PERSONAL PROTECTION", tagline:"REAL SKILLS. REAL CONFIDENCE.", price:499, sessions:8,
-    photo:"/images/burning-tree-womens-self-defense-cropped.webp", alt:"Private self-defense instruction",
+    photo:"/images/private-coaching/private-elite-card.webp", alt:"Private self-defense instruction",
     features:["Situational awareness","De-escalation techniques","Escapes and defensive skills","Distance management","Personal practice guide"] },
   { id:"mastery", name:"Mastery", eyebrow:"MASTERY ELITE COACHING", tagline:"DEEPER TRAINING. HIGHER LEVELS.", price:799, sessions:10,
-    photo:"/images/about-dana.png", alt:"Burning Tree advanced martial arts instructor",
+    photo:"/images/private-coaching/private-mastery-card.webp", alt:"Burning Tree advanced martial arts instructor",
     features:["Advanced technical development","Personal goal setting","Progress assessments","Priority scheduling","Recorded feedback with consent","Final evaluation and certificate"] }
 ];
 const seo = {
@@ -38,7 +38,7 @@ const seo = {
      <p class="private-motto">ONE TREE. ONE FAMILY.</p>
     </div>
     <div class="private-hero-photo">
-     <img src="/images/kids-martial-arts-karate-guard.png" width="800" height="800" alt="Confident Burning Tree karate student preparing to train" />
+     <img src="/images/private-coaching/private-basic-card.webp" width="720" height="540" alt="Confident boy from the original Burning Tree Level Up private lessons flyer" />
      <div class="private-photo-note">LEVEL UP! <small>4–10 PRIVATE LESSONS</small></div>
     </div>
    </div>
@@ -59,12 +59,17 @@ const seo = {
        <p class="private-price">$<strong>{p.price}</strong></p>
        <p class="private-duration"><strong>{p.sessions} PRIVATE SESSIONS</strong><br />60 MINUTES EACH</p>
        <ul>{p.features.map(f => <li>{f}</li>)}</ul>
+       <details class="private-flyer-detail">
+        <summary>VIEW FULL {p.name.toUpperCase()} FLYER</summary>
+        <img src={"/images/private-coaching/private-" + p.id + "-flyer.webp"} alt={p.name + " private lesson package flyer showing full benefits and original price"} width="1050" loading="lazy" decoding="async" />
+       </details>
        <button class="private-btn private-select" data-package={p.id} type="button">CHOOSE {p.name.toUpperCase()}</button>
       </div>
      </article>
     ))}
    </div>
    <p class="private-note">Private coaching packages are separate from our regular monthly tuition and the $29 New Student Special. Session times are arranged individually after verified payment.</p>
+   <div class="private-full-overview" aria-label="The original private lesson packages flyer"><h3>ALL FOUR PACKAGES AT A GLANCE</h3><img src="/images/private-coaching/private-overview-flyer.webp" alt="Original Burning Tree New Private Lesson Packages flyer showing Basic $249, Advanced $399, Elite $499, and Mastery $799" width="900" height="1097" loading="lazy" decoding="async" /></div>
   </section>
 
   <section class="private-benefit-strip"><div class="private-wrap private-benefit-grid">
@@ -264,6 +269,12 @@ const seo = {
  .private-manual{border:2px solid #b60000;border-radius:12px;background:#fff5f5;padding:20px;margin-top:25px;line-height:1.65}.private-manual .private-btn{margin:5px 0 12px}
  .private-result{background:#f7f7f7;border-top:5px solid var(--red);margin-bottom:40px}
  .private-faq{padding-bottom:75px}.private-faq h2{font-size:2.1rem}.private-faq details{border:1px solid #ddd;border-radius:9px;background:#fafafa;padding:17px 20px;margin-bottom:12px}.private-faq summary{font-weight:900;cursor:pointer}.private-faq details p{line-height:1.6}
+ .private-flyer-detail{margin:0 0 14px;padding:10px;border:1px solid #ddd;border-radius:8px;background:#fff}
+ .private-flyer-detail summary{font-size:.82rem;font-weight:900;cursor:pointer;line-height:1.4}
+ .private-flyer-detail img{display:block;width:100%;height:auto;object-fit:contain;margin-top:12px}
+ .private-full-overview{margin:45px auto 0;max-width:800px;text-align:center;padding:18px;background:#fff;border:1px solid #e4e4e4;border-radius:12px}
+ .private-full-overview h3{font-size:clamp(1.2rem,2.5vw,1.8rem);margin:7px 0 22px}
+ .private-full-overview img{display:block;width:100%;max-width:650px;height:auto;object-fit:contain;margin:auto}
  @media(max-width:1120px){.private-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.private-card-photo{height:225px}}
  @media(max-width:740px){.private-hero-grid,.private-benefit-grid,.private-booking-grid{grid-template-columns:1fr}.private-hero-grid{padding-top:45px}.private-hero-photo{min-height:270px;max-height:430px}.private-hero-photo img{max-height:430px}.private-section{padding-top:52px;padding-bottom:52px}.private-summary{position:static}}
  @media(max-width:530px){.private-cards,.private-two,.private-pay-grid{grid-template-columns:1fr}.private-hero h1{font-size:2.7rem}.private-card-photo{height:245px}.private-buttons{display:grid}}
