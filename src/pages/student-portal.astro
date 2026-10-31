@@ -18,11 +18,11 @@ if (account) {
     const available = await env.LIVE_TRIAL_DB.prepare(
       "SELECT l.id, l.title, l.description, l.program, l.stream_uid FROM portal_lessons l JOIN portal_lesson_access a ON a.lesson_id=l.id WHERE a.account_id=? AND l.published=1 ORDER BY l.sort_order, l.title LIMIT 12"
     ).bind(account.id).all();
-    lessons = (available.results || []).map(row=>({...row, playableUrl:""}));
+    lessons = (available.results || []).map((row: any)=>({...row, playableUrl:""}));
     if (env.STUDENT_PORTAL_STREAM_ACCOUNT_ID && env.STUDENT_PORTAL_STREAM_API_TOKEN) {
       const accountId = String(env.STUDENT_PORTAL_STREAM_ACCOUNT_ID);
       if (/^[a-f0-9]{32}$/.test(accountId)) {
-        lessons = await Promise.all(lessons.map(async lesson => {
+        lessons = await Promise.all(lessons.map(async (lesson: any) => {
           if (!/^[a-f0-9]{32}$/.test(lesson.stream_uid)) return lesson;
           try {
             const r = await fetch("https://api.cloudflare.com/client/v4/accounts/" + accountId + "/stream/" + lesson.stream_uid + "/token", {
@@ -51,8 +51,8 @@ if (account) {
       });
       if (response.ok) {
         const result = await response.json();
-        invoices = (result.data || []).filter(i=>i.livemode===true &&
-          i.customer===account.stripe_customer_id).map(i=>({
+        invoices = (result.data || []).filter((i: any)=>i.livemode===true &&
+          i.customer===account.stripe_customer_id).map((i: any)=>({
           number: String(i.number || "Invoice").slice(0,60),
           due: Number.isInteger(i.due_date) ? new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",year:"numeric",month:"short",day:"numeric"}).format(new Date(i.due_date*1000)) : "See invoice",
           balance: new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(Math.max(0,Number(i.amount_remaining || 0))/100),
@@ -116,7 +116,7 @@ Astro.response.headers.set("Content-Security-Policy", "default-src 'none'; scrip
         <section class="panel" aria-labelledby="people-title">
           <h2 id="people-title">My Students</h2>
           {students.length ? <div class="grid">
-            {students.map(student=><article class="panel">
+            {students.map((student: any)=><article class="panel">
               <strong>{student.display_name}</strong><p class="muted">{student.program} · {student.belt_rank}</p>
             </article>)}
           </div> : <p class="muted">Your student profiles will appear once your enrollment is connected.</p>}
@@ -125,7 +125,7 @@ Astro.response.headers.set("Content-Security-Policy", "default-src 'none'; scrip
           <h2 id="lessons-title">My Video Lessons</h2>
           {stripeNotice && <p class="notice">{stripeNotice}</p>}
           {lessons.length ? <div class="grid">
-            {lessons.map(lesson=><article class="panel lesson">
+            {lessons.map((lesson: any)=><article class="panel lesson">
               <span class="pill">{lesson.program}</span><h3>{lesson.title}</h3><p class="muted">{lesson.description}</p>
               {lesson.playableUrl ? <div class="player"><iframe title={lesson.title} src={lesson.playableUrl} allow="accelerometer; gyroscope; encrypted-media; picture-in-picture" allowfullscreen loading="lazy" referrerpolicy="no-referrer"></iframe></div> :
                 <p class="muted">This private video is not available yet. Check back after the instructor publishes it.</p>}
@@ -137,7 +137,7 @@ Astro.response.headers.set("Content-Security-Policy", "default-src 'none'; scrip
           <p class="muted">Your exact tuition and due dates come from your family's approved billing account. The portal does not change your membership rate or automatically add fees.</p>
           {billingReady ? <>
             {invoices.length ? <div style="overflow-x:auto"><table class="price-table"><thead><tr><th>Invoice</th><th>Due date</th><th>Balance</th><th>Status</th></tr></thead><tbody>
-              {invoices.map(i=><tr><td>{i.number}</td><td>{i.due}</td><td>{i.balance}</td><td>{i.status}</td></tr>)}
+              {invoices.map((i: any)=><tr><td>{i.number}</td><td>{i.due}</td><td>{i.balance}</td><td>{i.status}</td></tr>)}
             </tbody></table></div> : <p class="muted">{stripeNotice || "No invoices to display yet."}</p>}
             <form method="post" action="/api/student-portal/billing"><button class="btn" type="submit">OPEN SECURE TUITION BILLING</button></form>
           </> : <p class="notice">Online tuition payment is not connected to your household yet. Please contact the studio for your exact balance and approved payment options.</p>}
