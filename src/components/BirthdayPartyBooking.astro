@@ -130,6 +130,20 @@
   qs("birthday-prev").addEventListener("click",()=>{offset=Math.max(0,offset-1);renderCalendar();});
   qs("birthday-next").addEventListener("click",()=>{offset=Math.min(5,offset+1);renderCalendar();});
   renderCalendar();updateTimes();
+  // Keep the previous working inquiry form available whenever the new
+  // reservation function is not yet published or its database cannot initialize.
+  fetch("/api/birthday-party?action=readiness",{cache:"no-store"})
+    .then(async r=>{if(!r.ok)throw Error("unavailable");const d=await r.json();if(!d.ready)throw Error("unavailable");})
+    .catch(()=>{
+      qs("birthday-booking-flow").hidden=true;
+      const backup=qs("birthday-fallback");
+      if(backup)backup.hidden=false;
+      const paymentResult=qs("birthday-payment-result");
+      if(!new URLSearchParams(location.search).has("ref")&&!new URLSearchParams(location.search).has("session_id")){
+        paymentResult.hidden=false;
+        paymentResult.textContent="Online reservation requests are temporarily unavailable. Please use the contact form below or text 410-218-0894. No payment has been taken.";
+      }
+    });
   const status=qs("birthday-request-status");
   form.addEventListener("submit",async event=>{
     event.preventDefault();status.textContent="";
