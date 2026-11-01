@@ -1,7 +1,6 @@
 ---
 import type { ProgramPage } from "../data/site";
 import ClassSchedule from "./ClassSchedule.astro";
-import LeadForm from "./LeadForm.astro";
 
 type Props = {
   program: ProgramPage;
@@ -14,11 +13,16 @@ const showSchedule = program.showSchedule !== false;
 
 ---
 
-<div class="variant-tabs-bar shell">
+<div class="variant-tabs-bar shell" role="tablist" aria-label={program.hero.title + " class age groups"}>
   {variants.map((v, i) => (
     <button
       class:list={["variant-tab-btn", i === 0 && "is-active"]}
       data-variant-tab={String(i)}
+      id={program.slug + "-tab-" + i}
+      role="tab"
+      aria-controls={program.slug + "-panel-" + i}
+      aria-selected={i === 0}
+      tabindex={i === 0 ? 0 : -1}
       type="button"
     >
       {v.label}
@@ -30,13 +34,14 @@ const showSchedule = program.showSchedule !== false;
   <div
     class:list={["variant-panel", i !== 0 && "variant-panel--hidden"]}
     data-variant-panel={String(i)}
+    id={program.slug + "-panel-" + i}
+    role="tabpanel"
+    aria-labelledby={program.slug + "-tab-" + i}
+    hidden={i !== 0}
   >
-    <section class="shell section-divider">
-      <div class="program-split">
-        <div class="program-split-left">
-          <LeadForm formId={`lead-form-${i}`} config={{ ...program.leadForm, defaultProgram: v.programInterest ?? program.leadForm.defaultProgram }} />
-        </div>
-        <article class="detail-card detail-card-feature program-split-right">
+    <section class="shell section-divider variant-overview">
+      <div class="variant-overview-grid">
+        <article class="detail-card detail-card-feature variant-overview-copy">
           <p class="eyebrow">{v.audience}</p>
           <h2>{v.curriculum.title}</h2>
           <div class="program-copy">
@@ -53,6 +58,14 @@ const showSchedule = program.showSchedule !== false;
             )}
           </div>
         </article>
+        <aside class="variant-benefits" aria-label={v.benefits.title}>
+          <h3>{v.benefits.title}</h3>
+          <ul>
+            {v.benefits.items.map((item) => <li>{item}</li>)}
+          </ul>
+          <a class="button variant-benefits-cta" href="/29-trial">Claim the $29 New Student Special</a>
+          <p class="variant-offer-note">2 beginner classes + a free uniform for new students.</p>
+        </aside>
       </div>
     </section>
 
@@ -136,21 +149,35 @@ const showSchedule = program.showSchedule !== false;
 )}
 
 <script>
-  const tabs = document.querySelectorAll<HTMLElement>("[data-variant-tab]");
-  const panels = document.querySelectorAll<HTMLElement>("[data-variant-panel]");
+  const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-variant-tab]"));
+  const panels = Array.from(document.querySelectorAll<HTMLElement>("[data-variant-panel]"));
 
-  tabs.forEach((tab) => {
-    tab.addEventListener("click", () => {
-      const target = tab.dataset.variantTab;
-      tabs.forEach((t) => t.classList.remove("is-active"));
-      tab.classList.add("is-active");
-      panels.forEach((panel) => {
-        if (panel.dataset.variantPanel === target) {
-          panel.classList.remove("variant-panel--hidden");
-        } else {
-          panel.classList.add("variant-panel--hidden");
-        }
-      });
+  const activateTab = (target: string) => {
+    tabs.forEach((tab) => {
+      const active = tab.dataset.variantTab === target;
+      tab.classList.toggle("is-active", active);
+      tab.setAttribute("aria-selected", String(active));
+      tab.tabIndex = active ? 0 : -1;
+    });
+    panels.forEach((panel) => {
+      const active = panel.dataset.variantPanel === target;
+      panel.hidden = !active;
+      panel.classList.toggle("variant-panel--hidden", !active);
+    });
+  };
+
+  tabs.forEach((tab, index) => {
+    tab.addEventListener("click", () => activateTab(tab.dataset.variantTab || "0"));
+    tab.addEventListener("keydown", (event) => {
+      let next = index;
+      if (event.key === "ArrowRight") next = (index + 1) % tabs.length;
+      else if (event.key === "ArrowLeft") next = (index - 1 + tabs.length) % tabs.length;
+      else if (event.key === "Home") next = 0;
+      else if (event.key === "End") next = tabs.length - 1;
+      else return;
+      event.preventDefault();
+      tabs[next].focus();
+      activateTab(tabs[next].dataset.variantTab || "0");
     });
   });
 </script>
@@ -168,5 +195,54 @@ const showSchedule = program.showSchedule !== false;
   @media (max-width: 700px) {
     .variant-photo-grid { grid-template-columns: 1fr; }
     .variant-photo-tile img { height: auto; max-height: 360px; object-fit: contain; }
+  }
+
+  .variant-tabs-bar {
+    padding-top: 1.1rem;
+    padding-bottom: .75rem;
+  }
+  .variant-tab-btn { padding: .55rem 1.4rem; }
+  .variant-overview { padding-top: 1.25rem; padding-bottom: 1.35rem; }
+  .variant-overview-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
+    gap: 1.15rem;
+    align-items: start;
+  }
+  .variant-overview-copy { min-width: 0; }
+  .variant-overview-copy h2 { font-size: clamp(1.35rem, 2.5vw, 2rem); }
+  .variant-overview-copy .program-copy p { margin: 0; }
+  .variant-benefits {
+    border: 1px solid rgba(255, 255, 255, .15);
+    border-top: 2px solid var(--accent);
+    background: #1f1f1f;
+    padding: 1.15rem;
+    min-width: 0;
+  }
+  .variant-benefits h3 {
+    font-size: clamp(1.2rem, 2vw, 1.55rem);
+    color: #fff;
+    -webkit-text-stroke: 0;
+    margin-bottom: .75rem;
+  }
+  .variant-benefits ul {
+    margin: 0 0 1.1rem;
+    padding-left: 1.2rem;
+    display: grid;
+    gap: .4rem;
+    color: #f5f5f5;
+  }
+  .variant-benefits li { line-height: 1.5; font-size: .95rem; }
+  .variant-benefits-cta { width: 100%; text-align: center; }
+  .variant-offer-note {
+    color: #efefef;
+    font-size: .86rem;
+    line-height: 1.5;
+    margin: .65rem 0 0;
+  }
+  @media (max-width: 760px) {
+    .variant-overview-grid { grid-template-columns: 1fr; }
+    .variant-tabs-bar { padding-top: .9rem; }
+    .variant-tab-btn { flex: 1; padding: .6rem .8rem; }
   }
 </style>
