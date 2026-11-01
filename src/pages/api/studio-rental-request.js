@@ -3,8 +3,8 @@
 export const prerender = false;
 const CRM_TABLE = "tblZCXEuRKXiPZlc7";
 const EVENT_TYPES = ["Martial arts training","Fitness or wellness class","Seminar or workshop","Community meeting","Private group event","Other"];
-const DURATIONS = ["1 hour","2 hours","3 hours","4 hours","6 hours","8 hours","Custom / discuss"];
-const RENTAL_TOTALS = Object.freeze({"1 hour":350,"2 hours":450,"3 hours":550,"4 hours":650,"6 hours":850,"8 hours":1050});
+const DURATIONS = ["1 hour","2 hours","3 hours","4 hours","5 hours","6 hours","7 hours","8 hours","Custom / discuss"];
+const RENTAL_TOTALS = Object.freeze({"1 hour":350,"2 hours":450,"3 hours":550,"4 hours":650,"5 hours":750,"6 hours":850,"7 hours":950,"8 hours":1050});
 const rentalPriceLabel=info=>info.rentalTotal===null?"$350 first hour + $100 per additional hour (custom duration; total to confirm)":"$"+info.rentalTotal+" total for "+info.duration;
 const TIME_OPTIONS = ["Morning","Afternoon","Evening","Flexible"];
 const json=(value,status=200)=>new Response(JSON.stringify(value),{status,headers:{"content-type":"application/json; charset=utf-8","cache-control":"no-store","x-content-type-options":"nosniff"}});
