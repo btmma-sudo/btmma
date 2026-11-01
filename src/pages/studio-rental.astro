@@ -129,7 +129,7 @@ const structured={
             <select name="duration" id="studio-duration" required>
               <option value="">Choose rental length</option>
               <option value="1 hour">1 hour — $350</option><option value="2 hours">2 hours — $450</option><option value="3 hours">3 hours — $550</option><option value="4 hours">4 hours — $650</option>
-              <option value="6 hours">6 hours — $850</option><option value="8 hours">8 hours — $1,050</option><option value="Custom / discuss">Custom duration — discuss the total</option>
+              <option value="5 hours">5 hours — $750</option><option value="6 hours">6 hours — $850</option><option value="7 hours">7 hours — $950</option><option value="8 hours">8 hours — $1,050</option><option value="Custom / discuss">Custom duration — discuss the total</option>
             </select>
           </label>
           <div class="studio-estimate" id="studio-estimate" role="status" aria-live="polite">Select your rental length to see the total.</div>
@@ -169,7 +169,7 @@ const structured={
       if(!form||!status||!button)return;
       const duration=form.querySelector("#studio-duration");
       const estimate=document.getElementById("studio-estimate");
-      const totals={"1 hour":350,"2 hours":450,"3 hours":550,"4 hours":650,"6 hours":850,"8 hours":1050};
+      const totals={"1 hour":350,"2 hours":450,"3 hours":550,"4 hours":650,"5 hours":750,"6 hours":850,"7 hours":950,"8 hours":1050};
       const updateEstimate=()=>{
         const selected=duration?.value||"";
         if(!estimate)return;
