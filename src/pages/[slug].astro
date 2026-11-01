@@ -21,7 +21,11 @@ const { program } = Astro.props;
 const isChimpmanGi  = program.slug === "chimpman-gi";
 const isWellness    = program.slug === "health-and-wellness";
 const isBirthday    = program.slug === "birthday-parties";
-const isWingChun   = program.slug === "wing-chun";
+const variantDescriptions: Record<string, string> = {
+  "kenpo-karate": "Build confidence, discipline, and practical self-defense skills through American Kenpo Karate for kids, teens, and adults.",
+  "muay-thai": "Learn powerful striking fundamentals, footwork, and pad work in welcoming Muay Thai classes for kids, teens, and adults.",
+  "wing-chun": "Discover centerline control, timing, and precise close-range techniques through real Wing Chun partner training on Wednesdays."
+};
 const hasVariants   = !!program.variants?.length;
 const showLeadForm  = program.showLeadForm !== false && !isBirthday;
 const centerContent = !isWellness && !isBirthday;
@@ -42,30 +46,29 @@ const curriculumBlocks = !hasVariants ? program.curriculum.copy.split("\n\n") : 
   ) : (
     <>
       {hasVariants ? (
-        isWingChun ? (
-          <section class="wing-chun-feature" aria-labelledby="wing-chun-feature-heading">
-            <div class="shell wing-chun-feature-grid">
-              <div class="wing-chun-feature-copy">
-                <p class="wing-chun-kicker">WEDNESDAY WING CHUN CLASSES • OWINGS MILLS, MD</p>
-                <h1 id="wing-chun-feature-heading">Wing Chun Martial Arts</h1>
-                <p>Discover centerline control, timing, and precise close-range techniques through real partner training at Burning Tree Mixed Martial Arts.</p>
-                <a class="button" href="/29-trial">Try 2 Beginner Classes for $29</a>
-                <p class="wing-chun-feature-small">Includes a free uniform for new students.</p>
-              </div>
-              <figure class="wing-chun-feature-photo">
-                <img src="/images/wing-chun-main-training.webp" alt="Wing Chun instructor and adult training partner practicing a simultaneous blocking and striking technique at Burning Tree MMA in Owings Mills" width="1152" height="864" loading="eager" decoding="async" fetchpriority="high" />
-                <figcaption>Real Wing Chun partner training inside Burning Tree.</figcaption>
-              </figure>
+        <section class="program-variant-hero" aria-labelledby="program-variant-heading">
+          <div class="shell program-variant-hero-grid">
+            <div class="program-variant-hero-copy">
+              <p class="program-variant-kicker">
+                {program.slug === "wing-chun" ? "WEDNESDAY WING CHUN • OWINGS MILLS, MD" : "KIDS, TEENS & ADULTS • OWINGS MILLS, MD"}
+              </p>
+              <h1 id="program-variant-heading">{program.hero.title}</h1>
+              <p>{variantDescriptions[program.slug]}</p>
+              <a class="button program-variant-cta" href="/29-trial">Start With 2 Classes for $29</a>
+              <p class="program-variant-offer">Includes a free uniform for new students.</p>
             </div>
-          </section>
-        ) : (
-          <div class="variant-page-header">
-            <div class="shell">
-              <h1>{program.hero.title}</h1>
-              <a class="button" href="/29-trial">Start With 2 Classes for $29</a>
-            </div>
+            <figure class="program-variant-hero-photo">
+              <img
+                src={program.hero.image}
+                alt={program.hero.imageAlt ?? program.hero.title}
+                width="1200"
+                height="900"
+                loading="eager"
+                decoding="async"
+                fetchpriority="high" />
+            </figure>
           </div>
-        )
+        </section>
       ) : (
         <PageHero hero={program.hero} showMobileCta={showLeadForm} ctaLabel={program.mobileCta} centerMobile={isWellness} centerContent={centerContent} />
       )}
@@ -148,61 +151,65 @@ const curriculumBlocks = !hasVariants ? program.curriculum.copy.split("\n\n") : 
 </BaseLayout>
 
 <style>
-  .wing-chun-feature {
-    background: linear-gradient(135deg, #171717, #290a10);
+  .program-variant-hero {
+    padding: clamp(1.25rem, 2.5vw, 2rem) 0;
+    background: linear-gradient(135deg, #1b1b1b, #280e13);
     border-bottom: 3px solid #be1820;
-    padding: clamp(2rem, 4vw, 3.5rem) 0;
   }
-  .wing-chun-feature-grid {
+  .program-variant-hero-grid {
     display: grid;
-    grid-template-columns: minmax(0, .88fr) minmax(0, 1.12fr);
-    gap: clamp(1.3rem, 4vw, 3rem);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(1.25rem, 3vw, 2.5rem);
     align-items: center;
   }
-  .wing-chun-feature-copy { min-width: 0; }
-  .wing-chun-kicker {
-    color: #ff9696;
+  .program-variant-hero-copy { min-width: 0; }
+  .program-variant-kicker {
+    margin: 0 0 .7rem;
+    color: #ffabab;
     font-size: .78rem;
     font-weight: 800;
-    letter-spacing: .08em;
-    line-height: 1.5;
-    margin: 0 0 .85rem;
+    letter-spacing: .06em;
+    line-height: 1.45;
   }
-  .wing-chun-feature h1 {
+  .program-variant-hero h1 {
     color: #fff;
-    font-size: clamp(2.4rem, 5vw, 4.2rem);
-    line-height: 1.08;
+    -webkit-text-stroke: 0;
+    font-size: clamp(2rem, 4.5vw, 3.5rem);
+    line-height: 1.1;
+    margin: 0 0 .75rem;
+  }
+  .program-variant-hero-copy > p:not(.program-variant-kicker) {
+    color: #f5f5f5;
+    line-height: 1.6;
     margin: 0 0 1rem;
+    max-width: 34rem;
   }
-  .wing-chun-feature-copy > p:not(.wing-chun-kicker) {
-    color: #f0f0f0;
-    line-height: 1.65;
-    max-width: 550px;
-    margin-bottom: 1.2rem;
+  .program-variant-hero-copy .program-variant-offer {
+    font-size: .88rem;
+    margin: .65rem 0 0;
   }
-  .wing-chun-feature-copy .button { display: inline-flex; text-align: center; }
-  .wing-chun-feature-copy .wing-chun-feature-small { font-size: .87rem; margin: .8rem 0 0; }
-  .wing-chun-feature-photo { min-width: 0; margin: 0; background: #121212; }
-  .wing-chun-feature-photo img {
+  .program-variant-hero-photo {
+    min-width: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .program-variant-hero-photo img {
     display: block;
-    width: 100%;
+    width: auto;
     height: auto;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
-    object-position: center center;
-    border: 3px solid #e0d0d0;
-    border-radius: 5px;
-  }
-  .wing-chun-feature-photo figcaption {
-    color: #dfd2d2;
-    font-size: .83rem;
-    padding: .65rem .15rem 0;
-    text-align: center;
+    max-width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+    border: 2px solid rgba(255, 255, 255, .65);
+    border-radius: 4px;
   }
   @media (max-width: 760px) {
-    .wing-chun-feature-grid { grid-template-columns: 1fr; }
-    .wing-chun-feature h1 { font-size: clamp(2.2rem, 10vw, 3.35rem); }
-    .wing-chun-feature-copy .button { width: 100%; justify-content: center; }
-    .wing-chun-feature-photo img { object-fit: contain; }
+    .program-variant-hero-grid { grid-template-columns: 1fr; }
+    .program-variant-hero { padding: 1.25rem 0; }
+    .program-variant-hero h1 { font-size: clamp(2rem, 9vw, 3rem); }
+    .program-variant-cta { width: 100%; text-align: center; }
+    .program-variant-hero-photo img { max-height: 240px; }
   }
 </style>
