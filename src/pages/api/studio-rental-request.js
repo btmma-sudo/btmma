@@ -4,6 +4,8 @@ export const prerender = false;
 const CRM_TABLE = "tblZCXEuRKXiPZlc7";
 const EVENT_TYPES = ["Martial arts training","Fitness or wellness class","Seminar or workshop","Community meeting","Private group event","Other"];
 const DURATIONS = ["1 hour","2 hours","3 hours","4 hours","6 hours","8 hours","Custom / discuss"];
+const RENTAL_TOTALS = Object.freeze({"1 hour":350,"2 hours":450,"3 hours":550,"4 hours":650,"6 hours":850,"8 hours":1050});
+const rentalPriceLabel=info=>info.rentalTotal===null?"$350 first hour + $100 per additional hour (custom duration; total to confirm)":"$"+info.rentalTotal+" total for "+info.duration;
 const TIME_OPTIONS = ["Morning","Afternoon","Evening","Flexible"];
 const json=(value,status=200)=>new Response(JSON.stringify(value),{status,headers:{"content-type":"application/json; charset=utf-8","cache-control":"no-store","x-content-type-options":"nosniff"}});
 const clean=(v,max=120)=>typeof v==="string"?v.trim().slice(0,max+1):"";
@@ -35,6 +37,7 @@ async function saveCrmLead(env,info,reference){
     "Requested date: "+(info.date||"Flexible"),
     "Time preference: "+info.time,
     "Rental duration: "+info.duration,
+    "Rental price: "+rentalPriceLabel(info),
     "Organization: "+(info.organization||"Not specified"),
     "Details: "+(info.notes||"None")
   ].join("\n");
@@ -60,7 +63,7 @@ async function notifyStaff(env,info,reference,crmSynced){
   if(!env.RESEND_API_KEY)return false;
   const recipient=String(env.STUDIO_RENTAL_NOTIFICATION_EMAIL||env.CORPORATE_WORKSHOP_NOTIFICATION_EMAIL||"hybridkenpokarare@gmail.com").trim();
   if(!emailPattern.test(recipient))return false;
-  const details={Reference:reference,"Contact name":info.name,"Organization":info.organization||"Not supplied",Email:info.email,Phone:info.phone,"Event type":info.purpose,"Group size":info.guests,"Preferred date":info.date||"Flexible","Preferred time":info.time,"Duration":info.duration,Notes:info.notes||"None","Airtable CRM":crmSynced?"Synced":"Review required"};
+  const details={Reference:reference,"Contact name":info.name,"Organization":info.organization||"Not supplied",Email:info.email,Phone:info.phone,"Event type":info.purpose,"Group size":info.guests,"Preferred date":info.date||"Flexible","Preferred time":info.time,"Duration":info.duration,"Rental price":rentalPriceLabel(info),Notes:info.notes||"None","Airtable CRM":crmSynced?"Synced":"Review required"};
   const body="<h2>New Studio Rental Inquiry</h2>"+Object.entries(details).map(([k,v])=>"<p><strong>"+esc(k)+":</strong> "+esc(v)+"</p>").join("")+"<p>This is an inquiry only. Confirm pricing, availability, capacity, and rental terms before accepting or charging a deposit.</p>";
   const r=await fetch("https://api.resend.com/emails",{method:"POST",headers:{"Authorization":"Bearer "+env.RESEND_API_KEY,"Content-Type":"application/json"},
     body:JSON.stringify({from:"Burning Tree MMA <noreply@burningtreemma.com>",to:[recipient],subject:"New Studio Rental Request — "+reference,html:body})});
@@ -92,6 +95,7 @@ export async function POST({request,locals}){
      token.length<5||token.length>2500){
     return json({error:"Please check your contact information, group size, rental details, and security check."},400);
   }
+  info.rentalTotal=Object.hasOwn(RENTAL_TOTALS,info.duration)?RENTAL_TOTALS[info.duration]:null;
   try{
     if(!(await verifyTurnstile(env,request,token)))return json({error:"Security verification expired. Please complete it again."},403);
   }catch{return json({error:"Security verification could not be completed. Try again."},503);}
@@ -111,5 +115,5 @@ export async function POST({request,locals}){
     const emailed=await notifyStaff(env,info,reference,crmSynced);
     if(!emailed)console.warn("Studio rental notification email was not sent; inquiry retained in database.");
   }catch(e){console.error("Studio rental notification failed",String(e).slice(0,100));}
-  return json({ok:true,reference,message:"Your studio rental inquiry was received. We'll contact you to review pricing and availability. No booking or payment has been made."});
+  return json({ok:true,reference,rentalPrice:rentalPriceLabel(info),message:"Your studio rental inquiry was received. We'll contact you to confirm availability and finalize the listed rental rate. No booking or payment has been made."});
 }
