@@ -21,13 +21,15 @@ const { program } = Astro.props;
 const isChimpmanGi  = program.slug === "chimpman-gi";
 const isWellness    = program.slug === "health-and-wellness";
 const isBirthday    = program.slug === "birthday-parties";
+const isWomensDefense = program.slug === "womens-defense";
 const variantDescriptions: Record<string, string> = {
   "kenpo-karate": "Build confidence, discipline, and practical self-defense skills through American Kenpo Karate for kids, teens, and adults.",
   "muay-thai": "Learn powerful striking fundamentals, footwork, and pad work in welcoming Muay Thai classes for kids, teens, and adults.",
-  "wing-chun": "Discover centerline control, timing, and precise close-range techniques through real Wing Chun partner training on Wednesdays."
+  "wing-chun": "Discover centerline control, timing, and precise close-range techniques through real Wing Chun partner training on Wednesdays.",
+  "womens-defense": "Build real-world self-defense skills, awareness, and confidence through practical Women’s Self-Defense and Sanuces training on Sundays."
 };
 const hasVariants   = !!program.variants?.length;
-const showLeadForm  = program.showLeadForm !== false && !isBirthday;
+const showLeadForm  = program.showLeadForm !== false && !isBirthday && !isWomensDefense;
 const centerContent = !isWellness && !isBirthday;
 const useSplitLayout = !isChimpmanGi && !isWellness && !isBirthday && !hasVariants && showLeadForm;
 
@@ -45,12 +47,12 @@ const curriculumBlocks = !hasVariants ? program.curriculum.copy.split("\n\n") : 
     <ChimpmanGiPage program={program} />
   ) : (
     <>
-      {hasVariants ? (
+      {(hasVariants || isWomensDefense) ? (
         <section class="program-variant-hero" aria-labelledby="program-variant-heading">
           <div class="shell program-variant-hero-grid">
             <div class="program-variant-hero-copy">
               <p class="program-variant-kicker">
-                {program.slug === "wing-chun" ? "WEDNESDAY WING CHUN • OWINGS MILLS, MD" : "KIDS, TEENS & ADULTS • OWINGS MILLS, MD"}
+                {isWomensDefense ? "WOMEN’S SELF-DEFENSE & SANUCES • SUNDAYS • OWINGS MILLS, MD" : program.slug === "wing-chun" ? "WEDNESDAY WING CHUN • OWINGS MILLS, MD" : "KIDS, TEENS & ADULTS • OWINGS MILLS, MD"}
               </p>
               <h1 id="program-variant-heading">{program.hero.title}</h1>
               <p>{variantDescriptions[program.slug]}</p>
@@ -111,10 +113,42 @@ const curriculumBlocks = !hasVariants ? program.curriculum.copy.split("\n\n") : 
         </div>
       ) : null}
 
+      {isWomensDefense && (
+        <section class="shell section-divider womens-overview">
+          <div class="womens-overview-grid">
+            <article class="detail-card detail-card-feature womens-overview-copy">
+              <p class="eyebrow">{program.audience} • Sunday classes</p>
+              <h2>{program.curriculum.title}</h2>
+              <div class="program-copy">
+                {curriculumBlocks.map((block) =>
+                  block.startsWith("- ") ? (
+                    <ul class="program-copy-list">
+                      {block.split("\n").map((item) => (
+                        <li>{item.replace(/^- /, "")}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>{block}</p>
+                  )
+                )}
+              </div>
+            </article>
+            <aside class="womens-overview-benefits">
+              <h3>{program.benefits.title}</h3>
+              <ul>
+                {program.benefits.items.map((item) => <li>{item}</li>)}
+              </ul>
+              <a class="button womens-overview-cta" href="/29-trial">Claim the $29 New Student Special</a>
+              <p class="womens-overview-note">2 beginner classes and a free uniform for new students.</p>
+            </aside>
+          </div>
+        </section>
+      )}
+
       {hasVariants ? (
         <ProgramDetailVariant program={program} />
       ) : (
-        <ProgramDetail program={program} showCurriculum={!useSplitLayout} />
+        <ProgramDetail program={program} showCurriculum={!useSplitLayout && !isWomensDefense} />
       )}
       <ProgramLocalSEO program={program} />
       {["kenpo-karate", "muay-thai", "wing-chun"].includes(program.slug) && (
@@ -205,8 +239,42 @@ const curriculumBlocks = !hasVariants ? program.curriculum.copy.split("\n\n") : 
     border: 2px solid rgba(255, 255, 255, .65);
     border-radius: 4px;
   }
+  .womens-overview { padding-top: 1.25rem; padding-bottom: 1.35rem; }
+  .womens-overview-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
+    gap: 1.15rem;
+    align-items: start;
+  }
+  .womens-overview-copy { min-width: 0; }
+  .womens-overview-copy h2 { font-size: clamp(1.35rem, 2.5vw, 2rem); }
+  .womens-overview-copy .program-copy p { margin: 0; }
+  .womens-overview-benefits {
+    min-width: 0;
+    border: 1px solid rgba(255, 255, 255, .15);
+    border-top: 2px solid var(--accent);
+    background: #1f1f1f;
+    padding: 1.15rem;
+  }
+  .womens-overview-benefits h3 {
+    font-size: clamp(1.2rem, 2vw, 1.55rem);
+    color: #fff;
+    -webkit-text-stroke: 0;
+    margin-bottom: .75rem;
+  }
+  .womens-overview-benefits ul {
+    margin: 0 0 1.1rem;
+    padding-left: 1.2rem;
+    display: grid;
+    gap: .5rem;
+    color: #f5f5f5;
+  }
+  .womens-overview-benefits li { line-height: 1.5; font-size: .95rem; }
+  .womens-overview-cta { width: 100%; text-align: center; }
+  .womens-overview-note { color: #efefef; font-size: .86rem; line-height: 1.5; margin: .65rem 0 0; }
   @media (max-width: 760px) {
     .program-variant-hero-grid { grid-template-columns: 1fr; }
+    .womens-overview-grid { grid-template-columns: 1fr; }
     .program-variant-hero { padding: 1.25rem 0; }
     .program-variant-hero h1 { font-size: clamp(2rem, 9vw, 3rem); }
     .program-variant-cta { width: 100%; text-align: center; }
