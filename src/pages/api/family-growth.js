@@ -118,7 +118,7 @@ export async function POST({request,locals}) {
     fields={
       "Student / Former Student":student,
       "Relationship":"Unverified",
-      "Risk / Opportunity":"Reactivation",
+      "Risk / Opportunity":"Unverified",
       "Reactivation Offer":"None",
       "Outreach Result":"Not Reviewed",
       "Program Interest":program,
