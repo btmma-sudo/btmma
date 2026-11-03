@@ -16,5 +16,10 @@ export async function GET({locals}) {
     ).all();
     const slots=(rows.results||[]).filter(s=>futureDateTime(s.date,s.time)&&allowedHalfHour(s.date,s.time));
     return json({ok:true,slots,timezone:"America/New_York",durations:[60]});
-  } catch {return json({ok:false,slots:[],error:"The calendar is being prepared."},503);}
+  } catch (error) {
+    // Public responses stay generic; the underlying D1 failure is available
+    // only in Cloudflare Worker invocation logs for an operator to diagnose.
+    console.error("Private lesson availability query failed", error);
+    return json({ok:false,slots:[],error:"The calendar is being prepared."},503);
+  }
 }
