@@ -1,0 +1,246 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import LeadForm from "../components/LeadForm.astro";
+import { site } from "../data/site";
+
+const milestones = [
+  { time: "WEEK 1", title: "Your starting point", copy: "Meet your instructor, discuss training goals, and receive a personalized progress roadmap." },
+  { time: "90 DAYS", title: "See real progress", copy: "Get instructor feedback on skills, focus, attendance, and the next goals to work toward." },
+  { time: "6 MONTHS", title: "Celebrate your commitment", copy: "Recognize your first six months and decide whether the optional 18-month continuation is right for your family." },
+  { time: "12 MONTHS", title: "Keep growing", copy: "Review progress, set new goals, and celebrate a year of consistent training." },
+  { time: "24 MONTHS", title: "A lasting achievement", copy: "Celebrate two years of dedication with a Founders Legacy recognition." }
+];
+const benefits = [
+  { title: "Six months of group training", copy: "Attend eligible scheduled classes in your agreed program, with beginner-friendly coaching." },
+  { title: "Two private coaching check-ins", copy: "Two instructor check-ins during the initial six months, scheduled by appointment." },
+  { title: "Your 24-month progress roadmap", copy: "A personalized guide to training goals and milestones, updated as your student grows." },
+  { title: "Progress assessments", copy: "Instructor feedback approximately every 90 days and family conversations at major milestones." },
+  { title: "Recognition that matters", copy: "Six-month completion recognition and continued milestones for students who choose to stay." },
+  { title: "Community and leadership", copy: "Bring-a-friend guest opportunities, special event invitations, and leadership consideration when eligible." }
+];
+const questions = [
+  { q: "Do we have to commit to two years today?", a: "No. The Founders Experience begins with a six-month agreement. The 18-month continuation is optional and requires its own signed agreement before any continuation tuition is charged." },
+  { q: "Can my child try Burning Tree first?", a: "Yes. New students can start with our separate $29 offer: two beginner classes and a free uniform. Ask us about the Founders program after experiencing the school." },
+  { q: "Can we use every martial arts class?", a: "Your membership includes eligible group classes for your enrolled program and age group. Class schedules, capacity and instructor guidance determine availability." },
+  { q: "Are belt tests or merchandise included?", a: "Testing, special seminars and merchandise are separate unless expressly listed in your signed agreement. Belt advancement depends on demonstrated skill and testing, not time enrolled." },
+  { q: "What happens after six months?", a: "Your initial agreement ends unless you separately accept the 18-month continuation at $169 per month. We will not start the continuation or charge you without your acceptance." },
+  { q: "How do payments work?", a: "The proposed six-month price is $600 total, presented as six $100 monthly installments. Payment arrangements, any eligible payment-processing fees and cancellation terms will be disclosed before signing. This page does not collect payment." }
+];
+const inquiryConfig = {
+  title: "Ask About the Founders Experience",
+  intro: "Tell us who would be training and which program interests you. We will explain current openings, the complete written terms and how to get started. Submitting this form does not enroll you or charge you.",
+  submitLabel: "Request Founders Details"
+};
+---
+<BaseLayout
+  title="Founders Legacy Experience | Burning Tree Mixed Martial Arts"
+  description="Explore Burning Tree MMA's Founders Legacy Experience: six months of group training for $600 total, personal progress support, and an optional 18-month continuation at $169 a month."
+  path="/founders-legacy/"
+  image="/images/kids-martial-arts-focus.png"
+  keywords={["Burning Tree Founders Legacy Experience", "martial arts membership Owings Mills", "kids martial arts classes Owings Mills", "six month martial arts training", "family karate membership"]}>
+  <div class="legacy">
+    <section class="legacy-hero" aria-labelledby="legacy-title">
+      <div class="legacy-wrap legacy-hero-grid">
+        <div class="legacy-hero-copy">
+          <p class="legacy-kicker">BURNING TREE MIXED MARTIAL ARTS · OWINGS MILLS, MD</p>
+          <h1 id="legacy-title">THE FOUNDERS <span>LEGACY EXPERIENCE</span></h1>
+          <p class="legacy-deck">A stronger beginning. A clear path forward. A community that knows your name.</p>
+          <p>Give your child more than another after-school activity. Build skills, practice focus and confidence, and celebrate real progress with instructors who are invested in the journey.</p>
+          <div class="legacy-actions">
+            <a class="legacy-button" href="#ask-founders">ASK ABOUT FOUNDERS</a>
+            <a class="legacy-button legacy-button-outline" href="/29-trial/">TRY 2 CLASSES FOR $29</a>
+          </div>
+          <p class="legacy-caption">One Tree. One Family. · No enrollment or payment is completed on this page.</p>
+        </div>
+        <div class="legacy-hero-image">
+          <img src="/images/kids-martial-arts-focus.png" width="760" height="550" alt="Young Burning Tree martial arts student practicing focus during training" loading="eager" decoding="async" />
+          <div class="legacy-image-tag">REAL STUDENTS. REAL GROWTH.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="legacy-price-band" id="founders-pricing" aria-labelledby="legacy-pricing-title">
+      <div class="legacy-wrap legacy-price-grid">
+        <div class="legacy-price-card">
+          <p class="legacy-kicker">YOUR FIRST SIX MONTHS</p>
+          <h2 id="legacy-pricing-title">$600 <small>total</small></h2>
+          <p class="legacy-big-detail">Six monthly payments of <strong>$100</strong></p>
+          <p>Group training, personal progress support and your Founders milestones.</p>
+        </div>
+        <div class="legacy-price-card legacy-price-card-secondary">
+          <p class="legacy-kicker">OPTIONAL CONTINUATION</p>
+          <h2>$169 <small>/month</small></h2>
+          <p class="legacy-big-detail"><strong>18 additional months</strong> with a separate signed agreement</p>
+          <p>The continuation does not start automatically.</p>
+        </div>
+        <div class="legacy-savings">
+          <strong>$894</strong>
+          <span>Potential tuition savings across 24 months versus $189/month at the regular rate.</span>
+          <small>Six months at $600 + 18 months at $169 = $3,642 in tuition versus $4,536. Excludes separate charges and any applicable fees.</small>
+        </div>
+      </div>
+    </section>
+
+    <section class="legacy-wrap legacy-section" aria-labelledby="legacy-benefits-title">
+      <div class="legacy-heading">
+        <p class="legacy-kicker">MORE THAN A DISCOUNT</p>
+        <h2 id="legacy-benefits-title">YOUR EXPERIENCE <span>INCLUDES</span></h2>
+        <p>More coaching, meaningful milestones and a clear picture of where your training can go.</p>
+      </div>
+      <div class="legacy-benefit-grid">
+        {benefits.map((benefit, i) => (
+          <article class="legacy-benefit">
+            <span class="legacy-number">{String(i + 1).padStart(2, "0")}</span>
+            <h3>{benefit.title}</h3>
+            <p>{benefit.copy}</p>
+          </article>
+        ))}
+      </div>
+      <p class="legacy-small">Private check-ins and other experiences are scheduled subject to staffing and availability. Exact included benefits will be reflected in the signed agreement. Progress and belt promotions are never guaranteed.</p>
+    </section>
+
+    <section class="legacy-journey" aria-labelledby="legacy-journey-title">
+      <div class="legacy-wrap">
+        <div class="legacy-heading">
+          <p class="legacy-kicker">REAL PROGRESS YOU CAN SEE</p>
+          <h2 id="legacy-journey-title">THE <span>FOUNDERS JOURNEY</span></h2>
+          <p>Give your family reasons to celebrate the work—not just the next belt.</p>
+        </div>
+        <div class="legacy-timeline">
+          {milestones.map((step) => (
+            <article class="legacy-milestone">
+              <span>{step.time}</span>
+              <div><h3>{step.title}</h3><p>{step.copy}</p></div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="legacy-wrap legacy-section legacy-two-up" aria-labelledby="legacy-steps-heading">
+      <div>
+        <p class="legacy-kicker">SIMPLE NEXT STEPS</p>
+        <h2 id="legacy-steps-heading">HOW TO <span>GET STARTED</span></h2>
+        <ol class="legacy-steps">
+          <li><strong>Come experience Burning Tree.</strong><span>New students may start with the $29 offer: two beginner classes and a free uniform.</span></li>
+          <li><strong>Ask about Founders.</strong><span>We explain program eligibility, scheduling, availability and the complete written membership terms.</span></li>
+          <li><strong>Choose your six-month start.</strong><span>Review and accept the six-month agreement before making any membership payment.</span></li>
+          <li><strong>Decide on your next chapter.</strong><span>After six months, continue at $169/month only if you affirmatively accept the separate 18-month agreement.</span></li>
+        </ol>
+      </div>
+      <div class="legacy-next">
+        <img src="/images/logo.png" width="140" height="190" alt="Burning Tree Mixed Martial Arts flame tree logo" loading="lazy" />
+        <h3>YOUR FAMILY HAS A PLACE HERE.</h3>
+        <p>Ready for a real conversation about your child's goals and the right training schedule?</p>
+        <a class="legacy-button" href="#ask-founders">REQUEST FOUNDERS DETAILS</a>
+        <p class="legacy-caption">Prefer to text? <a href="sms:+14102180894">410-218-0894</a></p>
+      </div>
+    </section>
+
+    <section class="legacy-wrap legacy-section legacy-faq" aria-labelledby="legacy-faq-heading">
+      <div class="legacy-heading">
+        <p class="legacy-kicker">CLEAR ANSWERS FOR FAMILIES</p>
+        <h2 id="legacy-faq-heading">FREQUENTLY ASKED <span>QUESTIONS</span></h2>
+      </div>
+      {questions.map((faq) => (
+        <details>
+          <summary>{faq.q}</summary>
+          <p>{faq.a}</p>
+        </details>
+      ))}
+    </section>
+
+    <section class="legacy-contact" id="ask-founders" aria-label="Founders Legacy inquiry">
+      <div class="legacy-wrap legacy-contact-grid">
+        <div>
+          <p class="legacy-kicker">TAKE THE FIRST STEP</p>
+          <h2>LET'S BUILD <span>WHAT'S NEXT.</span></h2>
+          <p>Burning Tree welcomes families from Owings Mills, Reisterstown, Pikesville, Randallstown and nearby communities. Ask about the Founders Experience or take your first class.</p>
+          <p><strong>Call:</strong> <a href={"tel:" + site.phoneHref}>{site.phone}</a></p>
+          <p><strong>Text:</strong> <a href={"sms:" + site.textPhoneHref}>{site.textPhone}</a></p>
+          <p><strong>Address:</strong> {site.addressLine1}, {site.city}, {site.region} {site.postalCode}</p>
+          <p><a class="legacy-button legacy-button-outline" href="/29-trial/">SEE THE $29 INTRO OFFER</a></p>
+        </div>
+        <LeadForm config={inquiryConfig} formId="founders-legacy-inquiry" />
+      </div>
+    </section>
+    <div class="legacy-wrap legacy-disclosure">
+      <p><strong>Membership terms:</strong> This page is an invitation to inquire, not an enrollment contract or checkout. The $600 initial six-month price is proposed as six $100 monthly installments. Any initial or continuation membership requires separate written acceptance, applicable consumer disclosures, and confirmed payment arrangements. The $169 continuation rate applies only to families who separately enroll in the 18-month continuation. Special classes, belt testing, seminars, merchandise and processing charges are not included unless stated in the signed agreement. All cancellation and refund rights under Maryland law apply.</p>
+    </div>
+  </div>
+</BaseLayout>
+<style>
+  .legacy { background: #111; color: #f5f5f5; overflow: hidden; }
+  .legacy-wrap { width: min(1140px, calc(100% - 2.5rem)); margin-inline: auto; }
+  .legacy section { padding-block: clamp(2.5rem, 6vw, 5rem); }
+  .legacy h1,.legacy h2,.legacy h3 { color: #fff; -webkit-text-stroke: 0; }
+  .legacy h1 span,.legacy h2 span { color: #ff4545; }
+  .legacy p { color: #e1dddd; }
+  .legacy-kicker { font-weight: 800; font-size: .78rem; color: #ff6c55!important; letter-spacing: .13em; }
+  .legacy-hero { background: radial-gradient(circle at 12% 0%,rgba(190,37,20,.24),transparent 60%),#131313; }
+  .legacy-hero-grid { display: grid; grid-template-columns: 1.14fr .86fr; gap: 3.5rem; align-items: center; }
+  .legacy h1 { max-width: 850px; font-size: clamp(2.5rem,5.2vw,5.4rem); line-height: 1.04; letter-spacing: -.025em; }
+  .legacy-hero-copy > p:not(.legacy-kicker) { max-width: 580px; }
+  .legacy-deck { font-size: clamp(1.18rem,2.3vw,1.55rem); font-weight: 700; color: #fff!important; line-height: 1.5; }
+  .legacy-actions { display:flex; flex-wrap:wrap; gap: .8rem; margin-top: 1.8rem; }
+  .legacy-button { display: inline-flex; justify-content: center; text-align:center; align-items:center; min-height: 3.15rem; background: #bb1717; padding: .8rem 1.1rem; color: #fff!important; font-weight: 800; border: 2px solid #bb1717; text-decoration: none; transition: background .15s ease; }
+  .legacy-button:hover,.legacy-button:focus-visible { background: #e02b2b; border-color:#e02b2b; }
+  .legacy-button-outline { background: transparent; border-color: #eee; }
+  .legacy-button-outline:hover,.legacy-button-outline:focus-visible { background: #292929; border-color: #eee; }
+  .legacy-caption,.legacy-small { font-size: .83rem; line-height: 1.6; color: #c6bcbc!important; }
+  .legacy-hero-image { border: 3px solid #a91919; background:#242424; position:relative; box-shadow: 18px 18px 0 rgba(121,9,9,.35); }
+  .legacy-hero-image img { width:100%; height:100%; aspect-ratio: 4/4.6; object-fit: cover; object-position: center; }
+  .legacy-image-tag { position:absolute; inset:auto 0 0 0; padding: 1rem; text-align:center; background:rgba(0,0,0,.83); font-family:"Black Ops One",sans-serif; letter-spacing:.08em; font-size:clamp(.95rem,2vw,1.3rem); }
+  .legacy-price-band { background:#f5f1ee; color:#161616; }
+  .legacy-price-grid { display:grid; grid-template-columns:1fr 1fr .82fr; gap:1rem; align-items:stretch; }
+  .legacy-price-card,.legacy-savings { padding:clamp(1rem,3vw,2rem); background:#fff; border-top:5px solid #d31e1e; box-shadow:0 8px 25px #10000015; }
+  .legacy-price-card-secondary { background:#242424; color:#fff; }
+  .legacy-price-card h2 { font-size:clamp(2.8rem,5vw,4.2rem); margin-block:.2rem; color:#141414; }
+  .legacy-price-card-secondary h2 { color:#fff; }
+  .legacy-price-card h2 small { font:700 1rem "Open Sans",sans-serif; color:inherit; }
+  .legacy-price-card p {color:#252525;}
+  .legacy-price-card-secondary p {color:#f3eeee;}
+  .legacy-big-detail {font-weight:700;}
+  .legacy-savings {border-top-color:#101010;display:flex;flex-direction:column;justify-content:center; gap:.55rem; }
+  .legacy-savings strong {font:800 clamp(2.9rem,5vw,4rem) "Black Ops One",sans-serif;color:#b20d0d;}
+  .legacy-savings span {font-weight:800; font-size:1.08rem;}
+  .legacy-savings small {color:#5b5050;font-size:.81rem;line-height:1.6;}
+  .legacy-heading {max-width:800px;margin-bottom:2rem;}
+  .legacy-heading h2,.legacy-two-up h2,.legacy-contact h2 { font-size:clamp(2rem,4vw,3.2rem); }
+  .legacy-benefit-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem; }
+  .legacy-benefit {background:#1c1c1c;border:1px solid #463838;border-top:3px solid #a91a1a;padding:1.6rem;}
+  .legacy-benefit h3 { font-size:clamp(1.08rem,1.7vw,1.35rem);line-height:1.3; }
+  .legacy-benefit p {margin-bottom:0;font-size:.93rem;}
+  .legacy-number {display:block;color:#ff7770;font-weight:900;margin-bottom:.6rem;letter-spacing:.1em;}
+  .legacy-small { margin-top:1.2rem; }
+  .legacy-journey {background:linear-gradient(125deg,#261111,#151515 65%);}
+  .legacy-timeline {display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1rem;}
+  .legacy-milestone {border-top:4px solid #e03131;padding:1rem 1rem 0 0;}
+  .legacy-milestone > span {font-weight:900;color:#fa8888;font-size:.8rem;letter-spacing:.1em;}
+  .legacy-milestone h3 {font-size:1.05rem;margin-top:.8rem;line-height:1.35;}
+  .legacy-milestone p {font-size:.88rem;line-height:1.6;}
+  .legacy-two-up {display:grid;grid-template-columns:1fr .85fr;gap:clamp(2rem,6vw,5rem);align-items:center;}
+  .legacy-steps {padding:0;list-style:none;counter-reset:legacy-step;display:grid;gap:1rem;}
+  .legacy-steps li {display:grid;grid-template-columns:2.5rem 1fr;gap:.7rem;counter-increment:legacy-step;}
+  .legacy-steps li::before {content:counter(legacy-step);display:grid;place-items:center;color:white;background:#b31414;font-weight:900; width:2.2rem;height:2.2rem;}
+  .legacy-steps strong,.legacy-steps span {grid-column:2;}
+  .legacy-steps strong {grid-row:1;font-weight:800;color:#fff;}
+  .legacy-steps span {grid-row:2;font-size:.9rem;line-height:1.6;color:#e4dada;}
+  .legacy-next {text-align:center;padding:2.5rem;background:#211919;border:1px solid #743737;}
+  .legacy-next img {width:100px;height:auto;margin:0 auto 1rem;}
+  .legacy-next h3 {font-size:1.5rem;line-height:1.3;}
+  .legacy-next .legacy-button {margin-top:1rem;}
+  .legacy-next a:not(.legacy-button) {text-decoration:underline;}
+  .legacy-faq details {background:#1d1d1d;border:1px solid #4c3939;margin-bottom:.65rem;padding:1rem 1.25rem;}
+  .legacy-faq summary {cursor:pointer;font-size:1.03rem;font-weight:800;line-height:1.5;}
+  .legacy-faq details[open] summary {color:#ff7e70;}
+  .legacy-faq details p {margin-bottom:0;}
+  .legacy-contact {background:#282020;}
+  .legacy-contact-grid {display:grid;grid-template-columns:.85fr 1.15fr;gap:2rem;align-items:start;}
+  .legacy-contact a:not(.legacy-button) {text-decoration:underline;text-underline-offset:3px;}
+  .legacy-contact .lead-card-compact-card {align-self:start;}
+  .legacy-disclosure {padding:1.5rem 0 2rem;}
+  .legacy-disclosure p {color:#bdb5b5;font-size:.77rem;line-height:1.7;}
+  @media (max-width:950px) { .legacy-price-grid {grid-template-columns:1fr 1fr;} .legacy-savings {grid-column:1/-1;} .legacy-benefit-grid {grid-template-columns:repeat(2,minmax(0,1fr));} .legacy-timeline {grid-template-columns:repeat(3,minmax(0,1fr));} }
+  @media (max-width:700px) { .legacy-wrap {width:calc(100% - 2rem);} .legacy-hero-grid,.legacy-two-up,.legacy-contact-grid,.legacy-price-grid {grid-template-columns:1fr;} .legacy-savings {grid-column:auto;} .legacy-hero-image img {aspect-ratio: 4/3.5;} .legacy-benefit-grid,.legacy-timeline {grid-template-columns:1fr;} .legacy-milestone {display:grid;grid-template-columns:90px 1fr;gap:1rem;padding:1rem 0;} .legacy-milestone h3 {margin-top:0;} .legacy-hero {padding-top:2rem;} }
+</style>
