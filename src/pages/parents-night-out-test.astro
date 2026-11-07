@@ -1,0 +1,149 @@
+---
+const title = "Parents' Night Out — Test Checkout | Burning Tree MMA";
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>{title}</title>
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    body{margin:0;background:#f6f3f3;font:16px/1.55 system-ui,-apple-system,Segoe UI,sans-serif;color:#231616}
+    main{max-width:720px;margin:30px auto;padding:24px;background:#fff;border:1px solid #decaca;border-radius:18px}
+    header{text-align:center;margin-bottom:22px}
+    header img{width:90px;height:auto}
+    h1{font-size:clamp(1.6rem,5vw,2.5rem);line-height:1.15;margin:.2em 0}
+    .tag{display:inline-block;background:#aa1616;color:white;padding:5px 12px;border-radius:30px;font-size:.8rem;font-weight:900;letter-spacing:.04em}
+    .warning{padding:12px;border:2px solid #a41b1b;border-radius:8px;margin:18px 0;background:#fff5f5;font-weight:750}
+    .details{border:1px solid #ded0d0;border-radius:12px;padding:14px;background:#faf8f8}
+    label{display:grid;gap:6px;font-weight:700;margin:14px 0}
+    select{font:inherit;padding:12px;border:1px solid #948888;border-radius:8px;background:white;color:#161616}
+    button{display:block;width:100%;padding:14px;background:#b91f1f;color:white;border:0;border-radius:9px;font:inherit;font-weight:850;cursor:pointer;margin-top:16px}
+    button:disabled{opacity:.45;cursor:not-allowed}
+    .status{margin-top:14px;font-weight:700}
+    .hint{font-size:.92rem;color:#514949}
+    .hidden{display:none}
+    a{color:#8a1111}
+    code{font-size:1.13rem;background:#f5eeee;padding:3px 7px;user-select:all;border-radius:3px}
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <img src="/images/logo.png" alt="Burning Tree Mixed Martial Arts" width="90" height="100" />
+    <p class="tag">STRIPE TEST MODE ONLY</p>
+    <h1>Parents' Night Out — Payment Test</h1>
+    <p>November 20, 2026 · 6–9 PM · $35 per child (simulated)</p>
+  </header>
+  <div class="warning">This is NOT a real registration or purchase. No actual seats will be reserved and no real money will be collected. The live registration and payment page is separate.</div>
+  <p>This quality-assurance checkout creates a <strong>test-only</strong> Airtable record and, if Stripe test mode is configured, lets you complete a simulated payment. It never marks a real child registered or a live order paid.</p>
+  <div class="details">
+    <p><strong>Stripe test card</strong></p>
+    <p>Number: <code>4242 4242 4242 4242</code></p>
+    <p>Expiration: any future month/year · CVC: any 3 digits · ZIP: any 5 digits</p>
+    <p class="hint">Only enter this card if the payment page clearly says Stripe test mode and the checkout is marked TEST ONLY.</p>
+  </div>
+  <p id="qa-ready" class="status">Checking test checkout configuration...</p>
+  <form id="qa-form" class="hidden">
+    <label>Simulated number of children
+      <select name="childCount" id="qa-count">
+        <option value="1">1 child — $35.00 (TEST)</option>
+        <option value="2">2 children — $70.00 (TEST)</option>
+        <option value="3">3 children — $105.00 (TEST)</option>
+        <option value="4">4 children — $140.00 (TEST)</option>
+        <option value="5">5 children — $175.00 (TEST)</option>
+        <option value="6">6 children — $210.00 (TEST)</option>
+      </select>
+    </label>
+    <div id="qa-turnstile"></div>
+    <button id="qa-pay" type="submit">OPEN STRIPE TEST CHECKOUT — $35.00</button>
+  </form>
+  <section id="qa-confirmation" class="hidden" aria-live="polite">
+    <h2 id="qa-heading">Verifying test payment...</h2>
+    <p id="qa-detail"></p>
+  </section>
+  <p id="qa-message" class="status" role="status" aria-live="polite"></p>
+  <p class="hint"><a href="/seminars/#parents-night-out">Return to the live event information</a>. Never use a test result as proof of live payment or real registration.</p>
+</main>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer is:inline></script>
+<script is:inline>
+(() => {
+  const $ = id => document.getElementById(id);
+  const form = $("qa-form"), status = $("qa-ready"), msg = $("qa-message");
+  const btn = $("qa-pay"), count = $("qa-count");
+  let widget = null;
+  function loadCaptcha(tries = 0) {
+    if (widget !== null) return;
+    if (window.turnstile?.render) {
+      try { widget = window.turnstile.render("#qa-turnstile", { sitekey: "0x4AAAAAAD6Ievu-t0Ll1euh" }); return; }
+      catch { /* Retry after async load. */ }
+    }
+    if (tries < 40) setTimeout(() => loadCaptcha(tries + 1), 300);
+  }
+  const params = new URLSearchParams(location.search);
+  if (params.get("qa_checkout") === "success") {
+    status.textContent = "Test payment returned from Stripe. Confirming...";
+    $("qa-confirmation").classList.remove("hidden");
+    const sessionId = params.get("session_id") || "";
+    if (!/^cs_test_[A-Za-z0-9_]{10,180}$/.test(sessionId)) {
+      $("qa-heading").textContent = "Invalid test checkout ID";
+      $("qa-detail").textContent = "Only a Stripe test session can confirm a test payment.";
+    } else {
+      fetch("/api/parents-night-out-test-status?session_id=" + encodeURIComponent(sessionId), { cache:"no-store" })
+        .then(async response => { const body = await response.json(); if (!response.ok) throw Error(body.error || "Unverified"); return body; })
+        .then(body => {
+          $("qa-heading").textContent = body.confirmed ? "TEST PASSED — Payment verified" : "Test payment pending";
+          $("qa-detail").textContent = body.confirmed
+            ? "Stripe test mode confirms $" + (body.amountCents / 100).toFixed(2) + " for " + body.count +
+              " simulated child(ren). The separate Airtable QA record is marked TEST PAID. No real payment was taken."
+            : "Stripe has not confirmed payment in test mode. Do not assume success.";
+        })
+        .catch(error => {
+          $("qa-heading").textContent = "Test verification incomplete";
+          $("qa-detail").textContent = error.message || "Could not verify test session.";
+        });
+    }
+  } else if (params.get("qa_checkout") === "cancelled") {
+    msg.textContent = "Test checkout cancelled. No test payment confirmed.";
+  }
+  fetch("/api/parents-night-out-test-checkout", {cache:"no-store"})
+    .then(response => response.json())
+    .then(data => {
+      if (!data.ready) {
+        status.textContent = "Test checkout is not yet configured with Stripe test credentials. Live checkout remains unchanged.";
+        return;
+      }
+      status.textContent = "Test-only checkout is ready. This will not charge a real card.";
+      if (params.get("qa_checkout") === "success") return;
+      form.classList.remove("hidden");
+      loadCaptcha();
+    })
+    .catch(() => status.textContent = "Could not check Stripe test configuration.");
+  count.addEventListener("change", () => btn.textContent = "OPEN STRIPE TEST CHECKOUT — $" + (Number(count.value)*35).toFixed(2));
+  form.addEventListener("submit", async event => {
+    event.preventDefault();
+    const token = window.turnstile?.getResponse?.(widget) || "";
+    if (!token) { msg.textContent = "Complete the security check first."; return; }
+    btn.disabled = true;
+    msg.textContent = "Creating a Stripe test-only checkout...";
+    try {
+      const r = await fetch("/api/parents-night-out-test-checkout", {
+        method:"POST", headers:{"content-type":"application/json"},
+        body:JSON.stringify({childCount:Number(count.value),turnstileToken:token})
+      });
+      const body = await r.json();
+      if (!r.ok || body.testOnly !== true || !/^https:\/\/checkout\.stripe\.com\//.test(body.checkoutUrl || ""))
+        throw Error(body.error || "Test checkout is unavailable.");
+      location.assign(body.checkoutUrl);
+    } catch(error) {
+      msg.textContent = error.message || "Could not start test checkout.";
+      btn.disabled = false;
+      window.turnstile?.reset?.(widget);
+    }
+  });
+})();
+</script>
+</body>
+</html>
