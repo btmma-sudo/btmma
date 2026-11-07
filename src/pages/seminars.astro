@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { SEMINAR_WAIVERS } from "../data/seminar-waivers.js";
 import SeminarDonations from "../components/SeminarDonations.astro";
+import ParentsNightOut from "../components/ParentsNightOut.astro";
 const eventStructuredData = {
   "@context": "https://schema.org",
   "@graph": [
@@ -31,8 +32,8 @@ const eventStructuredData = {
 };
 ---
 <BaseLayout
-  title="November 2026 Martial Arts Seminars & Registration | Burning Tree MMA"
-  description="Register for United by Purpose, November 15 from 2–4 PM with Masters Mike Lambert and Lee Epperson, and Striking a Nerve, November 21–22, in Owings Mills."
+  title="Upcoming Seminars & Events | Burning Tree Mixed Martial Arts"
+  description="Register and pay online for Burning Tree events in Owings Mills: United by Purpose November 15, Parents Night Out November 20, and Striking a Nerve November 21–22."
   path="/seminars/"
   keywords={["martial arts seminar Owings Mills", "Kenpo seminar Maryland", "martial arts workshop Baltimore County", "martial arts anatomy seminar", "martial arts fundraiser Maryland"]}
   image="/images/burning-tree-kenpo-team.webp"
@@ -43,15 +44,15 @@ const eventStructuredData = {
     <section class="seminar-hero" aria-labelledby="seminar-heading">
       <div class="shell">
         <p class="seminar-eyebrow">BURNING TREE MIXED MARTIAL ARTS · OWINGS MILLS, MD</p>
-        <h1 id="seminar-heading">Two Seminars. <span>One Community.</span></h1>
-        <p>Join us this November for a community fundraising seminar and a special two-day martial arts education event. Register for a seminar, or make a separate donation to support Burning Tree whether or not you can attend.</p>
-        <a class="seminar-cta" href="#events">EXPLORE BOTH SEMINARS</a>
+        <h1 id="seminar-heading">Upcoming Seminars <span>&amp; Events</span></h1>
+        <p>Join us this November for martial arts seminars and Parents' Night Out. Register and pay online for the event you choose, or support Burning Tree with a separate donation.</p>
+        <a class="seminar-cta" href="#events">EXPLORE SEMINARS &amp; EVENTS</a>
         <a class="seminar-cta" href="#donate">DONATE WITHOUT ATTENDING</a>
         <p class="seminar-motto">One Tree. One Family.</p>
       </div>
     </section>
 
-    <section class="shell seminar-events" id="events" aria-label="Upcoming martial arts seminars">
+    <section class="shell seminar-events" id="events" aria-label="Upcoming martial arts seminars and events">
       <article class="seminar-card" id="united-by-purpose">
         <img class="seminar-flyer" src="/images/Gallery/seminar-united-by-purpose-2026.webp" alt="United by Purpose seminar flyer — Sunday November 15, 2026, 2–4 PM; Masters Mike Lambert and Lee Epperson; $50, $75, and $100 participation levels" width="1179" height="1334" loading="eager" decoding="async" onerror="this.onerror=null;this.src='/images/burning-tree-milestones-group-certificates.webp';" />
         <div class="seminar-card-content">
@@ -92,6 +93,8 @@ const eventStructuredData = {
         </div>
       </article>
     </section>
+
+    <ParentsNightOut />
 
     <SeminarDonations />
 
@@ -214,14 +217,14 @@ const eventStructuredData = {
 
     <section class="shell seminar-location" aria-label="Location and questions">
       <div>
-        <h2>Both Seminars at Burning Tree</h2>
+        <h2>Seminars &amp; Events at Burning Tree</h2>
         <p><strong>10210 South Dolfield Road, Suite C</strong></p>
         <p>Owings Mills, MD 21117</p>
         <p>Questions or accessibility needs? Call or text <a href="tel:+14102180894">(410) 218-0894</a>.</p>
       </div>
       <div>
         <p class="seminar-eyebrow">SHARE WITH A TRAINING PARTNER</p>
-        <p>Bring your family, invite another instructor, or share the registration link with someone interested in martial arts. Both events are open to the wider martial arts community.</p>
+        <p>Bring your family, invite another instructor, or share the registration link with someone interested in martial arts. Our seminars are open to the wider martial arts community.</p>
         <p><strong>One Tree. One Family.</strong></p>
       </div>
     </section>
