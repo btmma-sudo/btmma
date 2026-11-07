@@ -1,4 +1,5 @@
 import { PNO_SOURCE, reconcilePnoPayment } from "../../lib/parents-night-out.js";
+import { SEMINAR_SOURCE, reconcileSeminarPayment } from "../../lib/seminar-payment-reconciliation.js";
 // Isolated live payment webhook. Public live checkout is not enabled.
 // Only reconcile signed, paid, verified checkout sessions tied to LIVE_TRIAL_DB.
 export const prerender = false;
@@ -51,6 +52,27 @@ export async function POST({ request, locals }) {
     } catch (error) {
       console.error("Parents Night Out reconciliation pending", String(error).slice(0, 180));
       return reply("Event payment reconciliation pending", 503);
+    }
+  }
+  // Paid seminar tickets: verify Stripe and every signed waiver before updating
+  // the separate Seminar Waivers Airtable table. Never touch trial enrollment.
+  if (event.data?.object?.metadata?.btmma_source === SEMINAR_SOURCE) {
+    const id = event.data?.object?.id;
+    if (typeof id !== "string" || !/^cs_live_[A-Za-z0-9_]{10,180}$/.test(id))
+      return reply("Invalid seminar checkout reference", 400);
+    try {
+      const failed = event.type === "checkout.session.async_payment_failed";
+      const checked = await reconcileSeminarPayment(env, id, failed);
+      // Async methods may complete later. Stripe's async success event will
+      // independently trigger the same idempotent reconciliation.
+      await env.LIVE_TRIAL_DB.prepare(
+        "INSERT OR IGNORE INTO stripe_webhook_events (event_id,event_type) VALUES (?,?)"
+      ).bind(event.id, event.type).run();
+      return reply(checked.confirmed ? "Seminar payment and signed waivers verified" :
+        (checked.failed ? "Seminar payment failed" : "Seminar payment pending"), 200);
+    } catch (error) {
+      console.error("Seminar payment reconciliation pending", String(error).slice(0, 180));
+      return reply("Seminar payment requires reconciliation", 503);
     }
   }
   // Separate birthday deposit fulfillment, verified against Stripe and the saved
