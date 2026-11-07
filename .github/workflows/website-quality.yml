@@ -23,6 +23,8 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
+      - name: Test seminar payment reconciliation without charging cards
+        run: node --test scripts/test-seminar-reconciliation.mjs
       - name: Validate Astro and TypeScript
         run: npm run check
       - name: Build website and sitemap

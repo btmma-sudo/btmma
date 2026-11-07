@@ -96,7 +96,7 @@ export async function POST({ request, locals }) {
     "line_items[0][price_data][product_data][name]": event.name + " — " + ticket.name,
     "line_items[0][quantity]": String(quantity),
     customer_email: email,
-    client_reference_id: "seminar_" + crypto.randomUUID(),
+    client_reference_id: "seminar_" + waiverGroupId,
     "metadata[btmma_source]": "btmma_seminar_live_v1",
     "metadata[event]": input.event,
     "metadata[ticket]": input.ticket,
@@ -117,7 +117,8 @@ export async function POST({ request, locals }) {
       method: "POST",
       headers: {
         Authorization: "Bearer " + env.STRIPE_LIVE_SECRET_KEY,
-        "Content-Type": "application/x-www-form-urlencoded"
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Idempotency-Key": "btmma-seminar-" + waiverGroupId + "-" + input.ticket
       },
       body: params
     });
