@@ -1,0 +1,198 @@
+---
+const title="Seminar Payment Tests | Burning Tree Mixed Martial Arts";
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="robots" content="noindex,nofollow"/>
+<title>{title}</title>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:#f9f7f7;color:#1d1717;font:16px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:740px;margin:2rem auto;padding:clamp(1rem,4vw,2rem);border:1px solid #e1cece;border-radius:18px;background:#fff;box-shadow:0 14px 40px #32000012}
+header{text-align:center}
+header img{width:95px;height:auto}
+h1{font-size:clamp(1.65rem,4vw,2.45rem);line-height:1.1;margin:.6rem 0}
+.tag{display:inline-block;border-radius:100px;background:#ac1616;padding:.4rem .85rem;color:#fff;font-size:.79rem;letter-spacing:.07em;font-weight:850}
+.warning{border:2px solid #a91a1a;background:#fff4f4;border-radius:10px;padding:1rem;margin:1.2rem 0;font-weight:700}
+label{display:grid;gap:.3rem;font-weight:750;margin:1.1rem 0;color:#261919}
+select{font:inherit;padding:.78rem;border:1px solid #a99999;background:#fff;border-radius:8px;color:#1d1717;width:100%}
+select:focus{outline:2px solid #ba2020}
+.card-info{background:#f5f2f2;border:1px solid #dfd5d5;padding:1rem;border-radius:11px}
+code{font-size:1.05rem;font-weight:800;user-select:all}
+button{width:100%;background:#a71919;color:#fff;border:0;border-radius:8px;padding:1rem;font:inherit;font-weight:850;margin-top:.8rem;cursor:pointer}
+button:disabled{opacity:.6;cursor:not-allowed}
+.small{font-size:.9rem;color:#504848}
+#qa-total{font-size:2rem;font-weight:800;color:#ad1919}
+#qa-note{min-height:1.8rem;font-weight:700}
+#qa-confirmation{border-radius:10px;border:1px solid #e2cfcf;padding:1rem;margin:1rem 0}
+[hidden]{display:none!important}
+a{color:#9b1616}
+</style>
+</head>
+<body>
+<main>
+<header>
+<img src="/images/logo.png" alt="Burning Tree Mixed Martial Arts logo" width="95" height="120"/>
+<p class="tag">STRIPE TEST MODE ONLY</p>
+<h1>Test Both Seminar Payments</h1>
+<p>United by Purpose · Striking a Nerve</p>
+</header>
+<div class="warning">This page is for testing only. No money will be charged, no seminar seat is reserved, and no live attendee or waiver record is changed. Never enter a real card on this test page.</div>
+<div class="card-info">
+<p><strong>Approved Stripe test card</strong></p>
+<p><code>4242 4242 4242 4242</code></p>
+<p class="small">Expiration: any future date · CVC: any three digits · ZIP: any valid five digits. Only enter this card in a checkout clearly marked Stripe TEST mode.</p>
+</div>
+<p id="qa-ready" role="status">Checking test payment configuration...</p>
+<form id="qa-form" hidden>
+<label for="qa-event">Select the seminar to test
+<select id="qa-event" required>
+<option value="united">United by Purpose — November 15</option>
+<option value="nerve">Striking a Nerve — November 21–22</option>
+</select>
+</label>
+<label for="qa-ticket">Select ticket
+<select id="qa-ticket" required></select>
+</label>
+<label for="qa-count">Number of simulated attendees
+<select id="qa-count" required>
+<option value="1">1 attendee</option>
+<option value="2">2 attendees</option>
+<option value="3">3 attendees</option>
+<option value="4">4 attendees</option>
+<option value="5">5 attendees</option>
+<option value="6">6 attendees</option>
+</select>
+</label>
+<p>Simulated test charge: <strong id="qa-total">$50.00</strong></p>
+<p class="small">This simulates seminar checkout and Airtable payment tracking. It does not create or sign real seminar waivers.</p>
+<div id="qa-turnstile"></div>
+<p id="qa-note" role="status"></p>
+<button id="qa-pay" type="submit">OPEN STRIPE TEST CHECKOUT — $50.00</button>
+</form>
+<section id="qa-confirmation" hidden role="status" aria-live="polite">
+<h2 id="qa-result-title">Verifying Stripe test payment</h2>
+<p id="qa-result-detail"></p>
+<p class="small">Only a Stripe test-mode session can produce a TEST PAID result. No real payment is collected.</p>
+</section>
+<p><a href="/seminars/">Return to public Seminars &amp; Events page</a></p>
+</main>
+<script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script is:inline>
+(() => {
+const prices = {
+  united:[
+    {id:"general",label:"General Admission — $50",cents:5000},
+    {id:"supporter",label:"Community Supporter — $75",cents:7500},
+    {id:"sponsor",label:"Flame Sponsor — $100",cents:10000}
+  ],
+  nerve:[
+    {id:"day1",label:"Day 1 (Nov 21) — $100",cents:10000},
+    {id:"day2",label:"Day 2 (Nov 22) — $100",cents:10000},
+    {id:"both",label:"Both Days — $190",cents:19000}
+  ]
+};
+const $=id=>document.getElementById(id);
+const form=$("qa-form"), event=$("qa-event"), ticket=$("qa-ticket"), count=$("qa-count"),
+  msg=$("qa-note"), button=$("qa-pay");
+const dollar=c=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(c/100);
+function updateTotal(){
+  const option=prices[event.value].find(x=>x.id===ticket.value);
+  const total=(option?.cents || 0)*Number(count.value);
+  $("qa-total").textContent=dollar(total);
+  button.textContent="OPEN STRIPE TEST CHECKOUT — "+dollar(total);
+}
+function setSeminar(){
+  ticket.replaceChildren();
+  for(const p of prices[event.value]){
+    const option=document.createElement("option");
+    option.value=p.id;
+    option.textContent=p.label;
+    ticket.append(option);
+  }
+  updateTotal();
+}
+event.addEventListener("change",setSeminar);
+ticket.addEventListener("change",updateTotal);
+count.addEventListener("change",updateTotal);
+const params=new URLSearchParams(location.search);
+if(params.get("event")==="nerve")event.value="nerve";
+setSeminar();
+let captcha=null;
+function initTurnstile(tries=0){
+  if(captcha!==null)return;
+  if(window.turnstile?.render){
+    try{captcha=window.turnstile.render("#qa-turnstile",{sitekey:"0x4AAAAAAD6Ievu-t0Ll1euh"});return;}catch{}
+  }
+  if(tries<45)setTimeout(()=>initTurnstile(tries+1),300);
+}
+if(params.get("qa_checkout")==="success"){
+  $("qa-confirmation").hidden=false;
+  const ref=params.get("session_id")||"";
+  if(!/^cs_test_[A-Za-z0-9_]{10,180}$/.test(ref)){
+    $("qa-result-title").textContent="Test checkout reference is invalid";
+    $("qa-result-detail").textContent="A live checkout or invalid reference cannot be counted as a successful test.";
+  }else{
+    fetch("/api/seminar-test-status?session_id="+encodeURIComponent(ref),{cache:"no-store"})
+    .then(async r=>{const data=await r.json();if(!r.ok)throw Error(data.error||"Could not verify the payment.");return data;})
+    .then(data=>{
+      if(data.confirmed){
+        $("qa-result-title").textContent="TEST PASSED — Stripe Payment Verified";
+        $("qa-result-detail").textContent=(data.event==="united"?"United by Purpose":"Striking a Nerve")+
+        " simulated payment of "+dollar(data.amountCents)+" for "+data.count+
+        " attendee(s) was verified with Stripe TEST mode. The separate seminar testing Airtable record is marked TEST PAID.";
+      }else{
+        $("qa-result-title").textContent="Test payment is not yet confirmed";
+        $("qa-result-detail").textContent="Stripe has not confirmed a paid test session. Do not treat this as a successful test.";
+      }
+    }).catch(error=>{
+      $("qa-result-title").textContent="Test verification incomplete";
+      $("qa-result-detail").textContent=error.message;
+    });
+  }
+}else if(params.get("qa_checkout")==="cancelled"){
+  msg.textContent="Test checkout was cancelled. No simulated payment confirmed.";
+}
+fetch("/api/seminar-test-checkout",{cache:"no-store"})
+  .then(async r=>r.json())
+  .then(data=>{
+    if(!data.ready){
+      $("qa-ready").textContent="Test checkout is not configured. Live seminar checkout is unchanged.";
+      return;
+    }
+    $("qa-ready").textContent="Stripe test-only checkout is configured. No real charges will be made.";
+    if(params.get("qa_checkout")==="success")return;
+    form.hidden=false;
+    initTurnstile();
+  })
+  .catch(()=>$("qa-ready").textContent="Unable to check Stripe test-mode configuration.");
+form.addEventListener("submit",async e=>{
+  e.preventDefault();
+  const token=window.turnstile?.getResponse?.(captcha)||"";
+  if(!token){msg.textContent="Please complete the security verification first.";return;}
+  button.disabled=true;
+  msg.textContent="Preparing your Stripe test checkout...";
+  try{
+    const r=await fetch("/api/seminar-test-checkout",{
+      method:"POST",headers:{"content-type":"application/json"},
+      body:JSON.stringify({
+        event:event.value,ticket:ticket.value,attendeeCount:Number(count.value),turnstileToken:token
+      })
+    });
+    const data=await r.json();
+    if(!r.ok||data.testOnly!==true||!/^https:\/\/checkout\.stripe\.com\//.test(data.checkoutUrl||""))
+      throw Error(data.error||"Stripe test checkout unavailable.");
+    location.assign(data.checkoutUrl);
+  }catch(error){
+    msg.textContent=error.message||"Could not open test checkout.";
+    button.disabled=false;
+    window.turnstile?.reset?.(captcha);
+  }
+});
+})();
+</script>
+</body>
+</html>
