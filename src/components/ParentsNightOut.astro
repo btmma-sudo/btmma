@@ -1,0 +1,281 @@
+<section id="parents-night-out" class="pno-section shell" aria-labelledby="pno-heading">
+  <div class="pno-event-card">
+    <a class="pno-flyer-link" href="#parents-night-out-registration" aria-label="Register for Parents' Night Out on November 20">
+      <img src="/images/Gallery/parents-night-out-2026.webp"
+           alt="Burning Tree Parents' Night Out flyer featuring six Burning Tree students — Friday November 20, 6–9 PM, $35 per child, martial arts games, pizza and snacks"
+           width="1122" height="1402" loading="lazy" decoding="async"
+           onerror="this.onerror=null;this.src='/images/kids-martial-arts-group.png';" />
+    </a>
+    <div class="pno-description">
+      <p class="pno-eyebrow">FRIDAY · NOVEMBER 20, 2026 · 6–9 PM</p>
+      <h2 id="pno-heading">Parents' <span>Night Out</span></h2>
+      <p class="pno-lead">Give yourself a night off while we take care of the kids!</p>
+      <p>Three hours of supervised fun at Burning Tree Mixed Martial Arts in Owings Mills, with martial arts activities, games, pizza and snacks.</p>
+      <div class="pno-facts">
+        <strong>$35 <small>per child</small></strong>
+        <span>6–9 PM · November 20</span>
+      </div>
+      <p>Register up to six children in one checkout. Add your contact information, children's names and ages, emergency contact and pickup details. Payment is handled securely through Stripe.</p>
+      <a class="pno-primary" href="#parents-night-out-registration">REGISTER &amp; PAY FOR PARENTS' NIGHT OUT</a>
+      <p class="pno-small">Questions? Call or text <a href="tel:+14102180894">410-218-0894</a>. No membership is required to submit an event registration.</p>
+    </div>
+  </div>
+</section>
+
+<section id="parents-night-out-registration" class="pno-registration shell" aria-labelledby="pno-register-heading">
+  <div class="pno-form-layout">
+    <div class="pno-intro">
+      <p class="pno-eyebrow">NOVEMBER 20 · 6–9 PM</p>
+      <h2 id="pno-register-heading">Register for <span>Parents' Night Out</span></h2>
+      <p><strong>$35 per child.</strong> Fill out the information below, complete the security check and continue to secure card checkout. Apple Pay is available on supported devices.</p>
+      <p>All registration information is saved securely in the event-registration tracker for Burning Tree staff. Payment is not complete until Stripe confirms it.</p>
+      <p><strong>For child safety:</strong> Share any food allergies or needs relevant to supervision in the optional notes. Bring identification for pickup. Contact the studio if you have questions about your child's participation.</p>
+      <p class="pno-small">The event is at 10210 South Dolfield Road, Suite C, Owings Mills, MD 21117.</p>
+    </div>
+    <div class="pno-form-wrap">
+      <form id="pno-form" class="pno-form">
+        <div class="pno-row">
+          <label>Parent/guardian full name
+            <input name="guardian" autocomplete="name" maxlength="120" required />
+          </label>
+          <label>Parent/guardian email
+            <input name="email" type="email" autocomplete="email" maxlength="254" required />
+          </label>
+        </div>
+        <label>Parent/guardian phone
+          <input name="phone" type="tel" autocomplete="tel" maxlength="30" required />
+        </label>
+        <label>How many children are you registering?
+          <select id="pno-count" name="childCount" required>
+            <option value="1">1 child</option>
+            <option value="2">2 children</option>
+            <option value="3">3 children</option>
+            <option value="4">4 children</option>
+            <option value="5">5 children</option>
+            <option value="6">6 children</option>
+          </select>
+        </label>
+        <div id="pno-children" class="pno-children" aria-label="Child information"></div>
+        <div class="pno-row">
+          <label>Emergency contact full name
+            <input name="emergencyContact" autocomplete="off" maxlength="120" required />
+          </label>
+          <label>Emergency contact phone
+            <input name="emergencyPhone" type="tel" autocomplete="off" maxlength="30" required />
+          </label>
+        </div>
+        <label>Authorized person(s) who may pick up the children
+          <input name="pickup" maxlength="120" placeholder="Full name(s)" required />
+        </label>
+        <label>Allergies, dietary restrictions or care notes (optional)
+          <textarea name="careNotes" maxlength="500" rows="3" placeholder="Only information relevant to keeping your child safe at this event"></textarea>
+        </label>
+        <label class="pno-check"><input name="consent" type="checkbox" required />
+          <span>I am a parent or legal guardian authorized to register these children. I confirm the emergency and pickup information is correct, and I agree to the <a href="/terms/" target="_blank" rel="noopener noreferrer">Terms</a> and <a href="/privacy/" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.</span>
+        </label>
+        <div class="pno-total"><span>Registration total</span><strong id="pno-total">$35.00</strong></div>
+        <p class="pno-small">We never collect payment-card numbers on this form. Your registration is confirmed only after successful payment.</p>
+        <div class="pno-security">
+          <p class="pno-small">Security check</p>
+          <div id="pno-turnstile"></div>
+        </div>
+        <p class="pno-message" id="pno-message" role="status" aria-live="polite"></p>
+        <button class="pno-primary pno-submit" id="pno-submit" type="submit">CONTINUE TO SECURE PAYMENT — $35</button>
+      </form>
+      <div id="pno-result" hidden aria-live="polite" tabindex="-1">
+        <h3 id="pno-result-heading">Checking your payment...</h3>
+        <p id="pno-result-detail">We are verifying your checkout with Stripe.</p>
+        <p id="pno-result-note"></p>
+        <a class="pno-primary" href="/seminars/#parents-night-out">VIEW EVENT DETAILS</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  (() => {
+    const form = document.getElementById("pno-form");
+    if (!form) return;
+    const countEl = document.getElementById("pno-count");
+    const holder = document.getElementById("pno-children");
+    const button = document.getElementById("pno-submit");
+    const message = document.getElementById("pno-message");
+    const byId = id => document.getElementById(id);
+    const makeField = (labelText, name, type, options = {}) => {
+      const label = document.createElement("label");
+      label.textContent = labelText;
+      const input = document.createElement("input");
+      input.name = name;
+      input.type = type;
+      input.required = true;
+      if (options.maxlength) input.maxLength = options.maxlength;
+      if (options.min) input.min = options.min;
+      if (options.max) input.max = options.max;
+      if (options.placeholder) input.placeholder = options.placeholder;
+      label.append(input);
+      return label;
+    };
+    const updateChildren = () => {
+      const count = Number(countEl.value);
+      holder.replaceChildren();
+      for (let i = 0; i < count; i++) {
+        const group = document.createElement("fieldset");
+        group.className = "pno-child-fields";
+        const legend = document.createElement("legend");
+        legend.textContent = "Child " + (i + 1);
+        group.append(legend);
+        const row = document.createElement("div");
+        row.className = "pno-row";
+        row.append(
+          makeField("Child's full name", "pno-child-name-" + i, "text", { maxlength: 120 }),
+          makeField("Child's age", "pno-child-age-" + i, "number", { min: 1, max: 17 })
+        );
+        group.append(row);
+        holder.append(group);
+      }
+      const amount = count * 35;
+      byId("pno-total").textContent = "$" + amount.toFixed(2);
+      button.textContent = "CONTINUE TO SECURE PAYMENT — $" + amount;
+    };
+    countEl.addEventListener("change", updateChildren);
+    updateChildren();
+
+    let turnstileWidgetId = null;
+    let turnstileAttempts = 0;
+    function renderSecurity() {
+      if (turnstileWidgetId !== null) return;
+      if (window.turnstile?.render) {
+        try {
+          turnstileWidgetId = window.turnstile.render("#pno-turnstile", {
+            sitekey: "0x4AAAAAAD6Ievu-t0Ll1euh"
+          });
+          return;
+        } catch { /* The challenge script may not be ready. */ }
+      }
+      if (++turnstileAttempts < 40) setTimeout(renderSecurity, 350);
+    }
+    renderSecurity();
+
+    const params = new URLSearchParams(location.search);
+    const result = byId("pno-result");
+    if (params.get("pno_checkout") === "cancelled") {
+      message.textContent = "Checkout was cancelled. No payment is confirmed. Your earlier registration may still be saved; contact us before paying twice.";
+    } else if (params.get("pno_checkout") === "success") {
+      form.hidden = true;
+      result.hidden = false;
+      const ref = params.get("session_id") || "";
+      const show = (heading, detail, note) => {
+        byId("pno-result-heading").textContent = heading;
+        byId("pno-result-detail").textContent = detail;
+        byId("pno-result-note").textContent = note || "";
+        result.focus({ preventScroll: true });
+      };
+      if (!/^cs_live_[A-Za-z0-9_]{10,180}$/.test(ref)) {
+        show("Checkout reference not recognized", "Please keep your Stripe receipt and contact Burning Tree.", "Do not pay again until your first payment has been checked.");
+      } else {
+        fetch("/api/parents-night-out-status?session_id=" + encodeURIComponent(ref), { cache: "no-store" })
+          .then(async r => { const data = await r.json(); if (!r.ok) throw new Error(data.error || "Verification unavailable"); return data; })
+          .then(data => {
+            if (data.confirmed) {
+              show("You're registered!", "Stripe confirms payment of $" + (data.amountCents / 100).toFixed(2) +
+                " for " + data.count + (data.count === 1 ? " child." : " children."), "See you Friday, November 20, from 6–9 PM. Keep your receipt.");
+              try {
+                const key = "btmma_pno_purchase_" + ref;
+                if (sessionStorage.getItem(key) !== "sent") {
+                  window.gtag?.("event", "purchase", { transaction_id: ref, currency: "USD",
+                    value: data.amountCents / 100, items: [{ item_id: "pno_2026_11_20", item_name: "Parents Night Out", quantity: data.count, price: 35 }] });
+                  sessionStorage.setItem(key, "sent");
+                }
+              } catch { /* Analytics is optional. */ }
+            } else {
+              show("Payment still being verified", "Stripe has not confirmed a paid checkout yet.", "Keep your receipt and contact 410-218-0894 before submitting another payment.");
+            }
+          })
+          .catch(e => show("Verification unavailable", e.message, "Contact 410-218-0894 with your Stripe receipt before paying again."));
+      }
+    }
+
+    form.addEventListener("submit", async event => {
+      event.preventDefault();
+      if (!form.reportValidity()) return;
+      const token = window.turnstile?.getResponse?.(turnstileWidgetId) || "";
+      if (!token) { message.textContent = "Please complete the security check before proceeding."; return; }
+      const values = new FormData(form);
+      const count = Number(countEl.value);
+      const children = Array.from({ length: count }, (_, i) => ({
+        name: String(values.get("pno-child-name-" + i) || "").trim(),
+        age: Number(values.get("pno-child-age-" + i))
+      }));
+      const payload = {
+        guardian: String(values.get("guardian") || ""),
+        email: String(values.get("email") || ""),
+        phone: String(values.get("phone") || ""),
+        children,
+        emergencyContact: String(values.get("emergencyContact") || ""),
+        emergencyPhone: String(values.get("emergencyPhone") || ""),
+        pickup: String(values.get("pickup") || ""),
+        careNotes: String(values.get("careNotes") || ""),
+        consent: values.get("consent") === "on",
+        turnstileToken: token
+      };
+      button.disabled = true;
+      message.textContent = "Saving your registration and opening secure payment...";
+      try {
+        const res = await fetch("/api/parents-night-out-checkout", {
+          method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!res.ok || !/^https:\/\/checkout\.stripe\.com\//.test(data.checkoutUrl || ""))
+          throw new Error(data.error || "Secure checkout could not open.");
+        location.assign(data.checkoutUrl);
+      } catch (error) {
+        message.textContent = error.message || "Please contact Burning Tree at 410-218-0894.";
+        button.disabled = false;
+        window.turnstile?.reset?.(turnstileWidgetId);
+      }
+    });
+  })();
+</script>
+
+<style>
+  .pno-section,.pno-registration{margin-top:2.5rem;margin-bottom:2.5rem;scroll-margin-top:115px}
+  .pno-event-card{display:grid;grid-template-columns:minmax(220px,.8fr) minmax(0,1.2fr);gap:clamp(1rem,3vw,2.6rem);align-items:center;background:#fff;border:1px solid #e1d3d3;border-radius:18px;overflow:hidden;box-shadow:0 14px 35px rgba(34,8,8,.13)}
+  .pno-flyer-link{display:block;align-self:stretch;background:#131111}
+  .pno-flyer-link img{display:block;width:100%;height:100%;max-height:710px;object-fit:contain}
+  .pno-description{padding:clamp(1.25rem,3vw,2.5rem) clamp(1.1rem,3vw,2.3rem) clamp(1.25rem,3vw,2.5rem) 0;color:#251717}
+  .pno-eyebrow{font-size:.83rem;letter-spacing:.09em;font-weight:800;color:#a41818}
+  .pno-description h2,.pno-intro h2{font-size:clamp(1.85rem,3.4vw,3rem);line-height:1.1;color:#141111;margin:.5rem 0 .85rem}
+  .pno-description h2 span,.pno-intro h2 span{color:#b21b1b}
+  .pno-lead{font-size:1.2rem;font-weight:800}
+  .pno-description p,.pno-intro p{line-height:1.58}
+  .pno-facts{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin:1.3rem 0}
+  .pno-facts strong{font-size:2.7rem;color:#a61a1a;line-height:1}
+  .pno-facts small{font-size:.9rem;color:#252020}
+  .pno-facts span{font-weight:700}
+  .pno-primary{display:inline-block;background:#b81818;color:#fff!important;border:0;border-radius:9px;padding:1rem 1.1rem;text-align:center;text-decoration:none!important;font-weight:800;letter-spacing:.015em;cursor:pointer;box-shadow:0 5px 0 #5b1010;max-width:100%}
+  .pno-primary:hover{background:#821515}
+  .pno-small{font-size:.89rem;line-height:1.5}
+  .pno-registration{border-top:2px solid #e9d4d4;padding-top:2.5rem}
+  .pno-form-layout{display:grid;grid-template-columns:minmax(220px,.68fr) minmax(0,1.32fr);gap:clamp(1.4rem,4vw,3.5rem);align-items:start}
+  .pno-form-wrap{background:#fff;border:1px solid #e0cece;border-radius:16px;padding:clamp(1rem,3vw,2rem);box-shadow:0 12px 32px rgba(34,8,8,.09)}
+  .pno-form{display:grid;gap:1rem}
+  .pno-form label{display:grid;gap:.35rem;font-weight:700;color:#242020;font-size:.97rem}
+  .pno-form input:not([type="checkbox"]),.pno-form textarea,.pno-form select{font:inherit;display:block;width:100%;border-radius:8px;padding:.72rem .75rem;border:1px solid #a99999;background:#fff;color:#161616}
+  .pno-form input:focus,.pno-form textarea:focus,.pno-form select:focus{outline:2px solid #bb2525;outline-offset:2px}
+  .pno-row{display:grid;grid-template-columns:1fr 1fr;gap:.85rem}
+  .pno-children{display:grid;gap:.75rem}
+  .pno-child-fields{border:1px solid #e6d0d0;border-radius:10px;padding:.9rem;margin:0}
+  .pno-child-fields legend{font-weight:900;color:#9a1414;padding:0 .35rem}
+  .pno-form .pno-check{display:flex;align-items:flex-start;gap:.6rem;font-weight:500;line-height:1.45}
+  .pno-check input{width:18px;height:18px;flex:none;margin-top:.17rem}
+  .pno-total{display:flex;align-items:center;justify-content:space-between;background:#201b1b;color:#fff;border-radius:10px;padding:.9rem 1rem}
+  .pno-total strong{font-size:1.8rem}
+  .pno-security{padding:.7rem 0}
+  .pno-security p{margin:0 0 .35rem}
+  .pno-message{font-weight:700;color:#9a1010;min-height:1.3em;margin:0}
+  .pno-submit{font:inherit;font-weight:800}
+  .pno-submit:disabled{opacity:.65;cursor:progress}
+  #pno-result{padding:.8rem;text-align:center}
+  #pno-result h3{font-size:1.8rem;color:#941919}
+  @media(max-width:760px){.pno-event-card,.pno-form-layout{grid-template-columns:1fr}.pno-description{padding:1.3rem}.pno-flyer-link img{max-height:600px;object-fit:contain}.pno-row{grid-template-columns:1fr}.pno-facts strong{font-size:2.2rem}}
+</style>
