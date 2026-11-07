@@ -117,7 +117,8 @@ export async function POST({ request, locals }) {
       method: "POST",
       headers: {
         Authorization: "Bearer " + env.STRIPE_LIVE_SECRET_KEY,
-        "Content-Type": "application/x-www-form-urlencoded"
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Idempotency-Key": "btmma-seminar-" + waiverGroupId + "-" + input.ticket
       },
       body: params
     });
