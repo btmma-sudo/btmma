@@ -4,8 +4,8 @@ const json = (data, status = 200) => new Response(JSON.stringify(data), {
   status, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" }
 });
 const val = (v, max = 120) => typeof v === "string" ? v.trim().slice(0, max + 1) : "";
-const goodName = s => s.length >= 2 && s.length <= 120 && !/[<>\\r\\n]/.test(s);
-const goodPhone = s => /^[+()\\-. \\d]{7,30}$/.test(s);
+const goodName = s => s.length >= 2 && s.length <= 120 && !/[<>\r\n]/.test(s);
+const goodPhone = s => /^[+()\-. \d]{7,30}$/.test(s);
 const CLOSE_AT = Date.parse("2026-11-20T23:00:00Z"); // 6 PM Eastern, November 20.
 
 export async function POST({ request, locals }) {
@@ -34,7 +34,7 @@ export async function POST({ request, locals }) {
   const pickup = val(form?.pickup);
   const notes = val(form?.careNotes, 500);
   const children = form?.children;
-  if (!goodName(guardian) || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email) ||
+  if (!goodName(guardian) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
       email.length > 254 || !goodPhone(phone) ||
       !goodName(emergencyContact) || !goodPhone(emergencyPhone) ||
       !goodName(pickup) || notes.length > 500 || /[<>]/.test(notes) ||
@@ -75,7 +75,7 @@ export async function POST({ request, locals }) {
       "Guardian Name": guardian,
       "Guardian Email": email,
       "Guardian Phone": phone,
-      "Children and Ages": children.map(c => c.name.trim() + " — age " + c.age).join("\\n"),
+      "Children and Ages": children.map(c => c.name.trim() + " — age " + c.age).join("\n"),
       "Child Count": children.length,
       "Emergency Contact": emergencyContact,
       "Emergency Phone": emergencyPhone,
@@ -125,7 +125,7 @@ export async function POST({ request, locals }) {
     }
     const session = await stripeResponse.json();
     if (session.livemode !== true || !/^cs_live_/.test(session.id || "") ||
-        !/^https:\/\/checkout\\.stripe\\.com\//.test(session.url || ""))
+        !/^https:\/\/checkout\.stripe\.com\//.test(session.url || ""))
       return json({ error: "Checkout could not be verified. Please call 410-218-0894 before paying." }, 503);
 
     await pnoAirtable(env, "/" + encodeURIComponent(record.id), "PATCH", {
