@@ -50,7 +50,7 @@ export async function reconcilePnoPayment(env, sessionId, failed = false) {
       fields["Stripe Checkout Session ID"] !== sessionId ||
       Number(fields["Child Count"]) !== count ||
       Math.round(Number(fields["Total Due"]) * 100) !== PNO_UNIT_CENTS * count ||
-      String(fields["Guardian Email"] || "").toLowerCase() !== String(session.customer_email || "").toLowerCase())
+      String(fields["Guardian Email"] || "").toLowerCase() !== String(session.customer_details?.email || session.customer_email || "").toLowerCase())
     throw new Error("Checkout and event registration details do not match.");
 
   if (session.payment_status === "paid") {
