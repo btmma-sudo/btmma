@@ -36,6 +36,7 @@
     "LIVE_CHECKOUT_ENABLED": "true",
     "LIVE_PILOT_ONLY": "false",
     "SANDBOX_CHECKOUT_ENABLED": "false",
+    "PNO_TEST_CHECKOUT_ENABLED": "true",
     "STUDENT_PORTAL_ENABLED": "true",
     "STUDENT_PORTAL_PAYMENTS_ENABLED": "false"
   }
