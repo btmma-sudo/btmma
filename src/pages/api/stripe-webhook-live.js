@@ -1,3 +1,4 @@
+import { PNO_SOURCE, reconcilePnoPayment } from "../../lib/parents-night-out.js";
 // Isolated live payment webhook. Public live checkout is not enabled.
 // Only reconcile signed, paid, verified checkout sessions tied to LIVE_TRIAL_DB.
 export const prerender = false;
@@ -33,6 +34,25 @@ export async function POST({ request, locals }) {
   if (typeof event.id !== "string" || !event.id.startsWith("evt_")) return reply("Invalid event", 400);
   if (!["checkout.session.completed", "checkout.session.async_payment_succeeded", "checkout.session.async_payment_failed"].includes(event.type)) return reply("Ignored", 200);
   if (event.livemode !== true || !/^((sk|rk)_live_)/.test(String(env.STRIPE_LIVE_SECRET_KEY))) return reply("Live key required", 503);
+  // Parents Night Out: isolated guardian registration in Airtable.
+  // Stripe is independently re-fetched and verified before marking any payment Paid.
+  if (event.data?.object?.metadata?.btmma_source === PNO_SOURCE) {
+    const id = event.data?.object?.id;
+    if (typeof id !== "string" || !/^cs_live_[A-Za-z0-9_]{10,180}$/.test(id))
+      return reply("Invalid Parents Night Out checkout reference", 400);
+    const failed = event.type === "checkout.session.async_payment_failed";
+    try {
+      const reconciliation = await reconcilePnoPayment(env, id, failed);
+      if (!reconciliation.confirmed && !failed) return reply("Event payment awaiting Stripe confirmation", 503);
+      await env.LIVE_TRIAL_DB.prepare(
+        "INSERT OR IGNORE INTO stripe_webhook_events (event_id,event_type) VALUES (?,?)"
+      ).bind(event.id, event.type).run();
+      return reply(reconciliation.confirmed ? "Parents Night Out payment verified" : "Parents Night Out payment failed", 200);
+    } catch (error) {
+      console.error("Parents Night Out reconciliation pending", String(error).slice(0, 180));
+      return reply("Event payment reconciliation pending", 503);
+    }
+  }
   // Separate birthday deposit fulfillment, verified against Stripe and the saved
   // studio-approved amount. Do not run $29 trial logic for this event.
   if (event.data?.object?.metadata?.btmma_source === "btmma_birthday_deposit_v1") {
