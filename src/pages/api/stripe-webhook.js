@@ -1,3 +1,4 @@
+import { SEMINAR_QA_SOURCE, reconcileSeminarQa } from "../../lib/seminar-test-checkout.js";
 // Stripe webhook receiver. Test-mode integration is not yet enabled.
 // Never acknowledge a valid payment as processed until student-specific
 // fulfillment is implemented, otherwise Stripe will not retry it.
@@ -34,6 +35,23 @@ export async function POST({ request, locals }) {
   if (typeof event.id !== "string" || !event.id.startsWith("evt_")) return reply("Invalid event", 400);
   if (!["checkout.session.completed", "checkout.session.async_payment_succeeded", "checkout.session.async_payment_failed"].includes(event.type)) return reply("Ignored", 200);
   if (event.livemode !== false || !String(env.STRIPE_SECRET_KEY).startsWith("sk_test_")) return reply("Test-mode only", 503);
+  // Seminar QA never touches real seminar waivers, live event registrations, or enrollment.
+  // Reconcile only verified Stripe test-mode sessions into a separate QA Airtable table.
+  if (event.data?.object?.metadata?.btmma_source === SEMINAR_QA_SOURCE) {
+    const id = event.data?.object?.id;
+    if (typeof id !== "string" || !/^cs_test_[A-Za-z0-9_]{10,180}$/.test(id))
+      return reply("Invalid test seminar Checkout reference", 400);
+    try {
+      const checked = await reconcileSeminarQa(
+        env, id, event.type === "checkout.session.async_payment_failed"
+      );
+      return reply(checked.confirmed ? "Seminar TEST payment verified" :
+        (checked.failed ? "Seminar TEST payment failed" : "Seminar TEST payment pending"), 200);
+    } catch (error) {
+      console.error("Seminar QA payment requires reconciliation", String(error).slice(0, 160));
+      return reply("Seminar TEST payment reconciliation pending", 503);
+    }
+  }
   const sessionId = event.data?.object?.id;
   if (typeof sessionId !== "string" || !sessionId.startsWith("cs_test_")) return reply("Invalid session", 400);
   const row = await env.TRIAL_DB.prepare("SELECT id, airtable_record_id, state FROM trial_registrations WHERE stripe_session_id = ?").bind(sessionId).first();
