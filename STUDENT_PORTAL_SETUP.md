@@ -53,12 +53,14 @@ $50 late fee. Payments default **OFF**.
    membership invoices/subscriptions *outside* this new portal. Store the
    correct `cus_...` ID on each household, after manual verification.
    This portal **does not** create subscriptions or invoices.
-8. Create a dedicated Stripe customer portal configuration permitting
+8. A dedicated Stripe customer portal configuration has been created in the live
+   account, but its use by the student portal is **disabled**. Confirm it permits
    **invoice/payment-method access only**; disable cancel subscription,
    subscription switching and all other account changes not permitted under
    the membership agreement. Store its `bpc_...` ID as secret variable
-   `STUDENT_PORTAL_STRIPE_PORTAL_CONFIGURATION_ID`.
-9. Set `STUDENT_PORTAL_PAYMENTS_ENABLED=true` **only after** testing
+   `STUDENT_PORTAL_STRIPE_PORTAL_CONFIGURATION_ID` (non-secret config ID).
+9. Set `STUDENT_PORTAL_PAYMENTS_ENABLED=true` and explicitly release the
+   separate code lock `TUITION_BILLING_RELEASED=true` **only after** testing
    authorized account access, incorrect account isolation, receipts,
    billing-account matching, failed checkout, refund, payment updates,
    and any fees with a real billing expert and Maryland counsel.
@@ -91,4 +93,4 @@ References:
 
 ## Live readiness
 
-No student account, video, subscription, invoice, payment, or Stripe Billing configuration has been created by this code change. The public student login page is open, while family login is disabled until verified session secret and database migration are configured. Stripe billing is OFF. Never publish lessons or billing details before confirming privacy and ownership. No 3% card or $50 late fees are implemented.
+No student account, video, subscription, invoice, or payment has been created by this staged rollout. A restricted, noncharging live Stripe Billing Portal configuration has been created, but its student-portal connection remains disabled. See `TUITION_BILLING_28_DAY_ROLLOUT.md` for the 28-day AutoPay/Pay Now staging checklist. The public student login page is open, while family login is disabled until verified session secret and database migration are configured. Stripe billing is OFF. Never publish lessons or billing details before confirming privacy and ownership. No 3% card or $50 late fees are implemented.
