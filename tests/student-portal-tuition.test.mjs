@@ -43,11 +43,13 @@ test("only Stripe's HTTPS invoice host is allowed", () => {
   unsafe.forEach(url=>assert.equal(trustedHostedInvoiceUrl(url),""));
 });
 test("no AutoPay badge for other households, test mode or monthly prices", () => {
-  const active={livemode:true,customer,status:"active",
+  const active={livemode:true,customer,status:"active",collection_method:"charge_automatically",
     items:{data:[{price:{recurring:{interval:"week",interval_count:4}},
       current_period_end:1794441600}]}};
   assert.equal(verifiedAutopay([active],customer).active,true);
   assert.equal(verifiedAutopay([{...active,customer:"cus_other"}],customer).active,false);
   assert.equal(verifiedAutopay([{...active,livemode:false}],customer).active,false);
+  assert.equal(verifiedAutopay([{...active,collection_method:"send_invoice"}],customer).active,false);
+  assert.equal(verifiedAutopay([{...active,pause_collection:{behavior:"void"}}],customer).active,false);
   assert.equal(verifiedAutopay([{...active,items:{data:[{price:{recurring:{interval:"month",interval_count:1}}}]} }],customer).active,false);
 });
