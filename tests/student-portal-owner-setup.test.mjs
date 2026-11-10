@@ -159,6 +159,39 @@ test("password hashing failure has a distinct safe error phase",async()=>{
   }
 });
 
+test("recent email request shows a cooldown without sending again",async()=>{
+  const requestedAt=Math.floor(Date.now()/1000)-42;
+  const db=queryDb({requested_at:requestedAt});
+  let emailRequests=0;
+  const oldFetch=globalThis.fetch;
+  globalThis.fetch=async(url)=>{
+    if(String(url).includes("turnstile/v0/siteverify"))
+      return new Response(JSON.stringify({
+        success:true,hostname:"burningtreemma.com",action:OWNER_INVITE_ACTION
+      }),{status:200,headers:{"content-type":"application/json"}});
+    if(String(url).includes("api.resend.com/emails")){
+      emailRequests++;
+      throw Error("Should not send during cooldown");
+    }
+    throw Error("Unexpected fetch");
+  };
+  try{
+    const form=new FormData();
+    form.set("cf-turnstile-response","test-turnstile-code");
+    const request=new Request(domain+"/api/student-portal/owner-setup/request",{
+      method:"POST",headers:{"Origin":domain},body:form
+    });
+    const response=await requestInvite({request,locals:locals(db)});
+    assert.equal(response.status,200);
+    const result=await response.json();
+    assert.equal(result.ok,true);
+    assert.equal(result.sent,false);
+    assert.match(result.message,/No new email was sent/);
+    assert.ok(result.retryAfterSeconds>0 && result.retryAfterSeconds<=600);
+    assert.equal(emailRequests,0);
+  }finally{globalThis.fetch=oldFetch;}
+});
+
 test("email request only sends the private #token link to the approved owner email",async()=>{
   const db=queryDb();
   const challenge="turnstile-simulated-token";
@@ -185,6 +218,7 @@ test("email request only sends the private #token link to the approved owner ema
     const response=await requestInvite({request,locals:locals(db)});
     assert.equal(response.status,200);
     assert.deepEqual(delivered?.to,[OWNER_EMAIL]);
+    assert.equal((await response.clone().json()).sent,true);
     assert.equal(delivered?.from,"Burning Tree Student Portal <noreply@portal.burningtreemma.com>");
     assert.equal(authHeader,"Bearer fake_portal_resend_key");
     assert.match(delivered.html,/\/student-portal\/setup-owner\/#token=[a-f0-9]{64}/);
