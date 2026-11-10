@@ -30,6 +30,10 @@
 - New enrollment base plan: **$189.00 USD, recurring every 4 weeks**.
 - In Stripe: `recurring.interval = "week"`,
   `recurring.interval_count = 4`; **not** calendar monthly.
+- The connected Stripe account already contains **monthly** $150 and $189
+  recurring prices. Those prices have `interval=month` and **must not** be
+  reused as four-week prices. Create separate approved `week/4` prices after
+  tax and consumer disclosures are confirmed.
 - A 28-day plan normally bills **13 times per 364 days**. Clearly explain this
   annualized difference to families in the signed membership agreement.
 - Existing written commitments, agreed discounts, multiple-student pricing,
