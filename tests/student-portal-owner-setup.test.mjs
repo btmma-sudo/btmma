@@ -37,6 +37,20 @@ function queryDb(ticket){
 }
 const locals=db=>({runtime:{env:{...credentials,LIVE_TRIAL_DB:db}}});
 
+test("owner email request fails closed without a dedicated Resend key even if legacy key exists",async()=>{
+  const db=queryDb();
+  const env={...credentials,RESEND_API_KEY:"legacy-other-team-key",STUDENT_PORTAL_RESEND_API_KEY:undefined,LIVE_TRIAL_DB:db};
+  const form=new FormData();
+  form.set("cf-turnstile-response","dummy-token");
+  const request=new Request(domain+"/api/student-portal/owner-setup/request",{
+    method:"POST",headers:{"Origin":domain},body:form
+  });
+  const response=await requestInvite({request,locals:{runtime:{env}}});
+  assert.equal(response.status,503);
+  assert.match((await response.json()).error,/not configured/);
+  assert.equal(db.statements.length,0);
+});
+
 test("owner destination is the approved exact mailbox; challenge is separately scoped",()=>{
   assert.equal(OWNER_EMAIL,"hybridkenpokarate@gmail.com");
   assert.equal(validPortalChallenge({success:true,hostname:"burningtreemma.com",action:OWNER_INVITE_ACTION},
