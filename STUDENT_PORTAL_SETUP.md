@@ -146,6 +146,44 @@ payments, or allow public self-registration. An owner should have MFA enabled
 on the recipient Google account. Check for successful email delivery and test
 owner login/logout once before onboarding any other families.
 
+## Diagnosing Cloudflare Stream private upload URL failures
+
+If **UPLOAD PRIVATE DRAFT** is active but the page displays
+`Unable to prepare the private video upload`, the portal did not receive
+a successful response when asking the Cloudflare Stream API for an encrypted,
+signed-URL-protected, private direct-upload destination. The browser
+cannot independently determine the cause from that old generic message.
+
+The start-upload API now preserves only Cloudflare's numeric HTTP status
+and (if present) sanitized numeric API error code. The page offers help
+without logging or exposing raw Cloudflare error messages, tokens, provider
+response bodies, user content, or Cloudflare account IDs.
+
+- **401** means authorization failed: check the production encrypted
+  `STUDENT_PORTAL_STREAM_API_TOKEN` secret without posting it in chat.
+- **403** means access was denied: verify `Account → Media → Stream → Edit`
+  and ensure the token is scoped to the exact same Cloudflare account as
+  `STUDENT_PORTAL_STREAM_ACCOUNT_ID`.
+- **400 / 422** means request validation failed.
+- **402 / 409 / 413** can indicate an incompatible storage reservation,
+  plan/capacity, or upload limit; check Hosted Videos and account limits.
+- **429** means rate limited; retry later.
+- **5xx** may indicate a temporary upstream problem.
+
+Cloudflare's direct-upload request fields are already supported:
+`maxDurationSeconds`, `expiry`, `meta`, and
+`requireSignedURLs=true`; the direct-upload endpoint requires
+**Stream Write** permission. The site intentionally requests a
+30-minute reservation to support longer lessons, which uses part of
+the account's available Stream storage while an upload link is outstanding.
+Do not shorten this without reviewing supported lesson lengths.
+
+After a successful deployment, try one short MP4 as a private draft.
+If the request still fails, send **only the HTTP number and numeric
+Cloudflare error code**, never the token, link or video. Once successful,
+confirm the draft stays unpublished and test signed playback on an
+authorized household before publishing to any real students.
+
 ## Diagnosing a disabled instructor upload button
 
 The Instructor Video Manager keeps **UPLOAD PRIVATE DRAFT** disabled if
