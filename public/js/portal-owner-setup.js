@@ -28,7 +28,9 @@
       });
       const data=await response.json();
       show(inviteStatus,data.message||data.error||"Unable to request a setup link.");
-      if(!response.ok)button.disabled=false;
+      // Only disable repeats after the provider accepted a new email. An
+      // existing 10-minute cooldown must not look like a fresh email was sent.
+      if(!response.ok||data.sent!==true)button.disabled=false;
     }catch{
       show(inviteStatus,"The setup email service is temporarily unavailable.");
       button.disabled=false;

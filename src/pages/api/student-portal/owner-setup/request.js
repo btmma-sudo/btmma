@@ -11,7 +11,20 @@ export const prerender=false;
 const json=(body,status=200)=>new Response(JSON.stringify(body),{
   status,headers:secureHeaders({"Content-Type":"application/json; charset=utf-8"})
 });
-const ok=()=>json({ok:true,message:"If this owner account is eligible, a private setup link will arrive at the verified email address."});
+const accepted=()=>json({
+  ok:true,sent:true,
+  message:"The email service accepted your setup request. Check the approved owner's Inbox and Spam folder."
+});
+const notSent=()=>json({
+  ok:true,sent:false,
+  message:"No new setup email was sent. If your owner account is already active, use Student Login. Otherwise, check your earlier setup email or contact the studio."
+});
+const cooldown=seconds=>json({
+  ok:true,sent:false,retryAfterSeconds:seconds,
+  message:"No new email was sent. A setup email was requested recently. Try again in about "+
+    Math.max(1,Math.ceil(seconds/60))+
+    " minute(s). Your earlier setup link can be reused while it is less than 15 minutes old."
+});
 const error=(message,status=503)=>json({ok:false,error:message},status);
 
 export async function POST({request,locals}){
@@ -42,14 +55,18 @@ export async function POST({request,locals}){
 
   const db=env.LIVE_TRIAL_DB;
   try{
-    if(!await firstOwnerNotYetPresent(db))return ok();
+    if(!await firstOwnerNotYetPresent(db))return notSent();
     // This standalone table never changes registration, student, or Stripe data.
     await db.prepare(ownerInviteSchema).run();
     const now=Math.floor(Date.now()/1000);
     const existing=await db.prepare(
       "SELECT requested_at FROM portal_owner_setup_challenges WHERE id='first-owner'"
     ).first();
-    if(existing && now-existing.requested_at<OWNER_COOLDOWN_SECONDS)return ok();
+    if(existing && Number.isFinite(Number(existing.requested_at)) &&
+       now-Number(existing.requested_at)<OWNER_COOLDOWN_SECONDS) {
+      return cooldown(Math.max(1,Math.min(OWNER_COOLDOWN_SECONDS,
+        OWNER_COOLDOWN_SECONDS-(now-Number(existing.requested_at)))));
+    }
     const token=generateOwnerToken();
     const digest=await digestToken(token);
     const saved=await db.prepare(
@@ -59,7 +76,11 @@ export async function POST({request,locals}){
       "expires_at=excluded.expires_at,used_at=NULL " +
       "WHERE portal_owner_setup_challenges.requested_at<=?"
     ).bind(digest,now,now+OWNER_INVITE_LIFETIME_SECONDS,now-OWNER_COOLDOWN_SECONDS).run();
-    if(saved.meta?.changes!==1)return ok();
+    if(saved.meta?.changes!==1) {
+      // A concurrent invitation may already have been processed; do not
+      // claim this request caused a new email to be sent.
+      return notSent();
+    }
 
     // Put the token after #, so it is NOT sent to Cloudflare, referrers or
     // normal HTTP access logs when the recipient opens the setup page.
@@ -99,7 +120,7 @@ export async function POST({request,locals}){
       ).bind(digest).run();
       return error(diagnosis.message+(diagnosis.code!=="unknown"?" Error code: "+diagnosis.code+".":""));
     }
-    return ok();
+    return accepted();
   }catch{
     return error("Secure owner setup is temporarily unavailable.");
   }
