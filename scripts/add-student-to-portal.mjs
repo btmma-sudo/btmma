@@ -39,4 +39,4 @@ console.log("SELECT DISTINCT s.account_id,l.id FROM portal_students s");
 console.log("JOIN portal_accounts a ON a.id=s.account_id AND a.active=1");
 console.log("JOIN portal_lessons l ON l.published=1");
 console.log("WHERE s.id="+quote(studentId)+" AND s.active=1 AND "+sqlProgram+" AND "+sqlRank+";");
-console.log("-- Verify and securely delete the private SQL file.");
+console.log("-- Verify the grants, then securely dispose of the private SQL file.");
