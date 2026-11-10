@@ -16,7 +16,7 @@ const error=(message,status=503)=>json({ok:false,error:message},status);
 
 export async function POST({request,locals}){
   const env=getPortalEnv(locals);
-  if(!env || !env.TURNSTILE_SECRET_KEY || !env.RESEND_API_KEY)
+  if(!env || !env.TURNSTILE_SECRET_KEY || !env.STUDENT_PORTAL_RESEND_API_KEY)
     return error("Owner invitation is not configured.");
   if(!validSameOrigin(request) || new URL(request.url).hostname!=="burningtreemma.com")
     return error("Invalid request.",403);
@@ -66,9 +66,9 @@ export async function POST({request,locals}){
     const link="https://burningtreemma.com/student-portal/setup-owner/#token="+token;
     const response=await fetch("https://api.resend.com/emails",{
       method:"POST",
-      headers:{"Authorization":"Bearer "+env.RESEND_API_KEY,"Content-Type":"application/json"},
+      headers:{"Authorization":"Bearer "+env.STUDENT_PORTAL_RESEND_API_KEY,"Content-Type":"application/json"},
       body:JSON.stringify({
-        from:"Burning Tree MMA <noreply@burningtreemma.com>",
+        from:"Burning Tree Student Portal <noreply@portal.burningtreemma.com>",
         to:[OWNER_EMAIL],
         subject:"Your Burning Tree owner portal setup link",
         html:"<p>Someone requested first-owner access to Burning Tree Mixed Martial Arts.</p>" +

@@ -43,26 +43,48 @@ The first owner/instructor account is reserved for
 `hybridkenpokarate@gmail.com`. The canonical owner setup page is
 `https://burningtreemma.com/student-portal/setup-owner/`.
 
+**Verified Student Portal sending subdomain:** On November 10, the owner
+confirmed `portal.burningtreemma.com` is verified in the CURRENT Resend
+team. The primary `burningtreemma.com` domain belongs to a DIFFERENT
+Resend team and its ownership must not be transferred just to send owner
+invitation emails. The Student Portal alone now sends through
+`Burning Tree Student Portal <noreply@portal.burningtreemma.com>`.
+All other website mail senders and Resend settings are unchanged.
+
+**Required private deployment setting:** In the Resend team where
+`portal.burningtreemma.com` is verified, create a NEW API key authorized
+to **send email** from that subdomain. In Cloudflare Dashboard →
+Workers & Pages → `burningtreemma` → Production → Settings →
+Variables and secrets, add the encrypted **Secret**
+`STUDENT_PORTAL_RESEND_API_KEY` with that newly issued key as its value.
+Do not share the key in chat, GitHub or screenshots. Do not overwrite
+the existing `RESEND_API_KEY` key: other website forms rely on it.
+The setup request fails closed without this dedicated secret.
+Save/deploy the secret as appropriate, keeping
+`STUDENT_PORTAL_PAYMENTS_ENABLED=false` and all other settings unchanged.
+Only after the secret is configured should the owner retry requesting an
+invitation. No need for TinyFish or screenshots.
+
 **Email delivery troubleshooting:** If the setup form displays a delivery
 error after Turnstile succeeds, Resend rejected the server's email request;
 it does NOT mean that a password was set or a real owner login exists.
-The website now displays only a safe HTTP status (for example 401, 403,
+The website displays only a safe HTTP status (for example 401, 403,
 422, 429), and an optional sanitized provider code; it NEVER exposes
 the invite token, API key, provider request body, or recipient metadata.
 Resend's **Logs → Errors** page can identify a rejected POST /emails
 request. A 401 points to the API key, a 403 often means sending-domain
 verification or key permission restrictions, 400/422 points to sender
-or request validation, and 429 means rate limiting. Verify sending
-for `burningtreemma.com` under **Resend → Domains**, and verify that
-the Cloudflare `RESEND_API_KEY` secret is authorized to send from that
-domain. Do not send any keys, complete token-bearing links, or raw log
-request bodies through chat. The email failure path invalidates its
-one-time token and clears its pending cooldown so a new email can
-be requested after fixing the provider.
+or request validation, and 429 means rate limiting. Verify that
+`portal.burningtreemma.com` is in **Resend → Domains** of the
+same team that issued `STUDENT_PORTAL_RESEND_API_KEY`. Do not send any
+keys, complete token-bearing links, or raw log request bodies through
+chat. The email failure path invalidates its one-time token and clears
+its pending cooldown so a new email can be requested after fixing
+the provider.
 
 The owner clicks **Email My Setup Link** and completes Turnstile. The server
-sends a 15-minute one-time token through the existing verified
-`noreply@burningtreemma.com` Resend sender. Tokens are generated from Web
+sends a 15-minute one-time token through the newly verified
+`noreply@portal.burningtreemma.com` Resend sender. Tokens are generated from Web
 Crypto's secure random generator, hashed before D1 storage, delivered
 only to the approved email, and placed in a URL **fragment** so that opening
 the link does not send it in an HTTP GET or ordinary referrer.

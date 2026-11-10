@@ -3,7 +3,7 @@ import {getPortalEnv,secureHeaders} from "../../lib/student-portal-auth.js";
 import {OWNER_INVITE_ACTION} from "../../lib/student-portal-owner-setup.js";
 export const prerender=false;
 const env=getPortalEnv(Astro.locals);
-const ready=!!(env?.TURNSTILE_SECRET_KEY && env?.RESEND_API_KEY);
+const ready=!!(env?.TURNSTILE_SECRET_KEY && env?.STUDENT_PORTAL_RESEND_API_KEY);
 for(const [key,value] of Object.entries(secureHeaders()))Astro.response.headers.set(key,value);
 Astro.response.headers.set("Content-Security-Policy",
   "default-src 'none'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; " +
@@ -49,7 +49,7 @@ button:disabled{opacity:.5;cursor:not-allowed}
   <section id="request-panel" class="panel" aria-labelledby="request-title">
     <h2 id="request-title">Email a private setup link</h2>
     <p>A one-time link will be sent to the preverified Burning Tree owner email address. Links expire after 15 minutes. Only the first approved owner account can be created this way.</p>
-    {!ready ? <p class="status">Secure setup is temporarily unavailable. Please contact the studio.</p> :
+    {!ready ? <p class="status">Secure setup is temporarily unavailable until the Student Portal email connection is verified. Please contact the studio.</p> :
       <form id="owner-invite" method="post" action="/api/student-portal/owner-setup/request">
         <div class="cf-turnstile" data-sitekey="0x4AAAAAAD6Ievu-t0Ll1euh" data-action={OWNER_INVITE_ACTION} data-theme="dark"></div>
         <button type="submit">Email My Setup Link</button>
