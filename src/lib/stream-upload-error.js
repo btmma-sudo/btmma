@@ -8,7 +8,14 @@ export function streamDirectUploadFailure(status, payload) {
   const apiCode=(typeof item?.code==="number" || typeof item?.code==="string") &&
     Number.isInteger(numeric) && numeric>=1 && numeric<=999999 ? numeric : null;
   let description;
-  switch(httpStatus) {
+  // Cloudflare's own API tooling classifies 9106 as Authentication failed.
+  // It can arrive with HTTP 400, so classify by Cloudflare code first,
+  // not only by the generic HTTP status.
+  if(apiCode===9106 || apiCode===10000) {
+    description=apiCode===9106
+      ? "Cloudflare could not authenticate the Stream API request. Check that STUDENT_PORTAL_STREAM_API_TOKEN contains the complete Cloudflare API token (not a Resend email key), and that the production Worker has been saved/deployed. If needed, replace the Stream token with one created for the correct account."
+      : "Cloudflare rejected the Stream credential. Confirm it is active, is scoped to the same Cloudflare account, and has Account → Media → Stream → Edit permission.";
+  } else switch(httpStatus) {
     case 400:
     case 422:
       description="Cloudflare rejected the video upload request. Check the Stream account's settings and video storage availability.";
