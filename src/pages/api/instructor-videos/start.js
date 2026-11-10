@@ -2,6 +2,7 @@ import {
   authorizedInstructor, canPost, readJson, refuse, privateJson,
   validLesson, videoConfig, uploadUrlValid
 } from "../../../lib/instructor-video-manager.js";
+import { streamDirectUploadFailure } from "../../../lib/stream-upload-error.js";
 
 export const prerender = false;
 
@@ -35,8 +36,17 @@ export async function POST({ request, locals }) {
         meta:{name:lesson.title,portalLessonId:id}
       })
     });
-    const result = resp.ok ? await resp.json() : null;
-    if (!result?.success) return refuse("Unable to prepare the private video upload.", 502);
+    // Read the Cloudflare error structure even for HTTP 4xx/5xx. Expose only
+    // a sanitized status and numeric code: never return raw provider messages,
+    // request payloads, account IDs or API tokens to the browser.
+    const result = await resp.json().catch(() => null);
+    if (!resp.ok || result?.success !== true) {
+      const diagnosis=streamDirectUploadFailure(resp.status,result);
+      console.error("Private Stream upload URL request refused", {
+        upstreamStatus:diagnosis.httpStatus, upstreamCode:diagnosis.apiCode
+      });
+      return refuse(diagnosis.message,502);
+    }
     details = result.result;
     if (!/^[a-f0-9]{32}$/i.test(details?.uid || "") ||
         !uploadUrlValid(details?.uploadURL)) return refuse("Upload destination could not be verified.", 502);
