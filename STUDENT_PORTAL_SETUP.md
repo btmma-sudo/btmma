@@ -37,6 +37,36 @@ adds a blanket 3% card surcharge or a $50 late fee.
 - `STUDENT_PORTAL_PAYMENTS_ENABLED=false`, and the separate code billing
   release lock is false. Do not enable live tuition collections.
 
+## First owner account — email-verified, no password in chat
+
+The first owner/instructor account is reserved for
+`hybridkenpokarate@gmail.com`. The canonical owner setup page is
+`https://burningtreemma.com/student-portal/setup-owner/`.
+
+The owner clicks **Email My Setup Link** and completes Turnstile. The server
+sends a 15-minute one-time token through the existing verified
+`noreply@burningtreemma.com` Resend sender. Tokens are generated from Web
+Crypto's secure random generator, hashed before D1 storage, delivered
+only to the approved email, and placed in a URL **fragment** so that opening
+the link does not send it in an HTTP GET or ordinary referrer.
+The browser removes the fragment on load, then sends the token and chosen
+password through HTTPS POST to complete setup. Passwords are stored only as
+salted PBKDF2-SHA256 hashes and are never sent in email or chat.
+
+The separate `portal_owner_setup_challenges` table is created
+idempotently when an eligible request is made. Setup email requests have
+a 10-minute server-enforced cooldown. First-owner setup stops permanently
+once that email account exists or any active publisher has been granted
+staff permissions. Owner and publisher creation and token consumption are
+executed as an atomic Cloudflare D1 batch. The first owner signs in with
+a 12-hour HttpOnly, Secure, SameSite=Lax cookie.
+
+This endpoint **does not** change `STUDENT_PORTAL_PAYMENTS_ENABLED=false`,
+create Stripe objects, enroll a family automatically, modify trial or seminar
+payments, or allow public self-registration. An owner should have MFA enabled
+on the recipient Google account. Check for successful email delivery and test
+owner login/logout once before onboarding any other families.
+
 ## Staff onboarding without browser automation
 
 Until a staff admin interface is explicitly approved, private household

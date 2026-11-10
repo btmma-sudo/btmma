@@ -3,8 +3,8 @@
 // explicit action. Never accept a token copied from an unrelated public form.
 export const PORTAL_TURNSTILE_ACTION = "student_portal_login";
 
-export function validPortalChallenge(result, requestUrl) {
-  if (!result || result.success !== true || result.action !== PORTAL_TURNSTILE_ACTION)
+export function validPortalChallenge(result, requestUrl, requiredAction=PORTAL_TURNSTILE_ACTION) {
+  if (!result || result.success !== true || result.action !== requiredAction)
     return false;
   try {
     const url = new URL(requestUrl);
