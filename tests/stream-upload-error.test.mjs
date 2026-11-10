@@ -13,6 +13,19 @@ test("Stream error handling points to permissions without revealing provider res
   assert.match(error.message,/HTTP 403, Cloudflare error code 10000/);
   assert.doesNotMatch(JSON.stringify(error),/SECRET|sensitive-token|account id 123|Bearer/);
 });
+test("Cloudflare code 9106 overrides generic HTTP 400 request-validation advice",()=>{
+  const status=streamDirectUploadFailure(400,{errors:[{code:9106,message:"Authorization header included secret token"}]});
+  assert.equal(status.apiCode,9106);
+  assert.match(status.message,/could not authenticate|authentication failed/i);
+  assert.match(status.message,/STUDENT_PORTAL_STREAM_API_TOKEN/);
+  assert.match(status.message,/HTTP 400, Cloudflare error code 9106/);
+  assert.doesNotMatch(status.message,/secret token|storage availability/);
+});
+test("Cloudflare code 10000 also gets credential advice even with unusual status",()=>{
+  const status=streamDirectUploadFailure(400,{errors:[{code:10000,message:"token leak"}]});
+  assert.match(status.message,/credential/);
+  assert.doesNotMatch(status.message,/token leak/);
+});
 test("authentication, storage reservation, malformed request and rate limiting failures are actionable",()=>{
   for(const [status,expected] of [
     [400,/rejected the video upload request/],
