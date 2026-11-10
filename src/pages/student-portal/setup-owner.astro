@@ -1,0 +1,75 @@
+---
+import {getPortalEnv,secureHeaders} from "../../lib/student-portal-auth.js";
+import {OWNER_INVITE_ACTION} from "../../lib/student-portal-owner-setup.js";
+export const prerender=false;
+const env=getPortalEnv(Astro.locals);
+const ready=!!(env?.TURNSTILE_SECRET_KEY && env?.RESEND_API_KEY);
+for(const [key,value] of Object.entries(secureHeaders()))Astro.response.headers.set(key,value);
+Astro.response.headers.set("Content-Security-Policy",
+  "default-src 'none'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; " +
+  "img-src 'self' data:; frame-src https://challenges.cloudflare.com; connect-src 'self' https://challenges.cloudflare.com; " +
+  "form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>First Owner Account Setup | Burning Tree MMA</title>
+<style is:inline>
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:#111416;color:#f7f8f9;font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:#fff}
+header{padding:20px max(24px,calc((100% - 730px)/2));background:#080a0c;border-bottom:1px solid #3c4449}
+.brand{font-size:15px;font-weight:850;letter-spacing:.09em;text-decoration:none}
+main{max-width:730px;margin:0 auto;padding:42px 24px 70px}
+.eyebrow{color:#fa8a7c;font-size:.79rem;font-weight:850;letter-spacing:.16em}
+h1{line-height:1.15;letter-spacing:-.04em;font-size:clamp(2rem,6vw,3rem);margin:9px 0 15px}
+h2{font-size:1.45rem;line-height:1.3;margin:0 0 10px}
+p{color:#c5cdd0}
+.panel{background:#1d2226;border:1px solid #475056;border-radius:16px;padding:26px;margin-top:24px}
+label{display:grid;gap:7px;font-weight:700;margin:13px 0}
+input{border:1px solid #737a80;border-radius:8px;padding:13px;color:#121619;background:#fff;font:inherit;width:100%}
+button,.link{display:inline-block;border:0;border-radius:8px;background:#c92d29;color:#fff;padding:13px 20px;font:inherit;font-weight:800;cursor:pointer;text-decoration:none}
+button:disabled{opacity:.5;cursor:not-allowed}
+.status{margin:16px 0 0;padding:12px 14px;border-left:4px solid #f06e64;background:#382727;color:#ffe9e6;border-radius:5px}
+.note{font-size:.86rem;color:#acb8bd}
+[hidden]{display:none!important}
+@media(max-width:600px){main{padding:28px 16px 60px}.panel{padding:19px}header{padding:18px 16px}}
+</style>
+</head>
+<body>
+<header><a class="brand" href="/student-portal/">BURNING TREE · STUDENT PORTAL</a></header>
+<main>
+  <p class="eyebrow">KEEPERS OF THE FLAME · STAFF ACCESS</p>
+  <h1>Secure Owner Account Setup</h1>
+  <p>This private process sets up the first authorized Burning Tree instructor account. Your password is created on this website and is not sent by email or shared with staff.</p>
+  <section id="request-panel" class="panel" aria-labelledby="request-title">
+    <h2 id="request-title">Email a private setup link</h2>
+    <p>A one-time link will be sent to the preverified Burning Tree owner email address. Links expire after 15 minutes. Only the first approved owner account can be created this way.</p>
+    {!ready ? <p class="status">Secure setup is temporarily unavailable. Please contact the studio.</p> :
+      <form id="owner-invite" method="post" action="/api/student-portal/owner-setup/request">
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAAD6Ievu-t0Ll1euh" data-action={OWNER_INVITE_ACTION} data-theme="dark"></div>
+        <button type="submit">Email My Setup Link</button>
+      </form>}
+    <p class="status" id="invite-status" role="status" hidden></p>
+  </section>
+  <section id="claim-panel" class="panel" aria-labelledby="claim-title" hidden>
+    <h2 id="claim-title">Choose your owner password</h2>
+    <p>Use a unique password with at least 12 characters. The link can only be used once.</p>
+    <form id="owner-claim" autocomplete="on">
+      <label>New password <input name="password" type="password" minlength="12" maxlength="200" autocomplete="new-password" required></label>
+      <label>Confirm password <input name="confirm" type="password" minlength="12" maxlength="200" autocomplete="new-password" required></label>
+      <button type="submit">Create My Owner Account</button>
+    </form>
+    <p class="status" id="claim-status" role="status" hidden></p>
+  </section>
+  <p class="note">If you did not request account setup, do not use the link. Need help? Call or text Coach David at <a href="tel:+14102180894">410-218-0894</a>. This process never activates tuition charges or customer subscriptions.</p>
+  <p><a href="/student-portal/">Return to Student Login</a></p>
+</main>
+<script src="/js/portal-owner-setup.js" defer></script>
+{ready && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
+</body>
+</html>
