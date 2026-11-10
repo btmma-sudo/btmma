@@ -49,6 +49,8 @@ export function verifiedAutopay(data, customerId) {
     subscription?.livemode === true &&
     subscription.customer === customerId &&
     subscription.status === "active" &&
+    subscription.collection_method === "charge_automatically" &&
+    !subscription.pause_collection &&
     Array.isArray(subscription.items?.data) &&
     subscription.items.data.some(item => item.price?.recurring?.interval === "week" &&
       item.price?.recurring?.interval_count === 4)
