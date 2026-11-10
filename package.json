@@ -10,7 +10,7 @@
     "preview": "astro preview",
     "check": "astro check",
     "test:tuition": "node --test tests/student-portal-tuition.test.mjs",
-    "test:portal": "node --test tests/student-portal-auth.test.mjs tests/student-portal-tuition.test.mjs tests/student-portal-onboarding.test.mjs tests/student-portal-owner-setup.test.mjs"
+    "test:portal": "node --test tests/student-portal-auth.test.mjs tests/student-portal-tuition.test.mjs tests/student-portal-onboarding.test.mjs tests/student-portal-owner-setup.test.mjs tests/owner-invite-email-errors.test.mjs"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.13",
