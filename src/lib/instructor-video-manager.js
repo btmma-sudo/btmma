@@ -26,9 +26,25 @@ export const sqlProgram = `(
 )`;
 export const sqlRank = "(l.belt_level='All Levels' OR lower(trim(s.belt_rank))=lower(trim(l.belt_level)))";
 
+// Report only which credential is missing or malformed. Never expose the
+// token itself, its length, or any other secret in the instructor UI.
+export function videoConnectionStatus(env) {
+  const accountId=String(env?.STUDENT_PORTAL_STREAM_ACCOUNT_ID || "").trim();
+  const token=env?.STUDENT_PORTAL_STREAM_API_TOKEN;
+  if (!accountId) return {ready:false,code:"account_id_missing",
+    message:"The Cloudflare Stream Account ID is missing from the burningtreemma Worker's production settings."};
+  if (!/^[a-f0-9]{32}$/i.test(accountId)) return {ready:false,code:"account_id_invalid",
+    message:"The Cloudflare Stream Account ID must be exactly 32 hexadecimal characters. Check the value saved in Worker production settings."};
+  if (typeof token!=="string" || !token.trim()) return {ready:false,code:"token_missing",
+    message:"The Cloudflare Stream API token is missing. Add STUDENT_PORTAL_STREAM_API_TOKEN as an encrypted Secret in Worker production settings."};
+  if (/^re_/i.test(token.trim())) return {ready:false,code:"wrong_token_provider",
+    message:"A Resend email API key appears to have been entered instead of a Cloudflare Stream token. Replace only the Stream secret with the Cloudflare token."};
+  if (token.length<=16) return {ready:false,code:"token_invalid",
+    message:"The Cloudflare Stream API token appears incomplete. Recheck the encrypted Stream secret in Worker production settings."};
+  return {ready:true,code:"configured",message:"Stream configuration is present. Uploading a private test video will verify the connection."};
+}
 export function videoConfig(env) {
-  return !!env && /^[a-f0-9]{32}$/i.test(String(env.STUDENT_PORTAL_STREAM_ACCOUNT_ID || "")) &&
-    typeof env.STUDENT_PORTAL_STREAM_API_TOKEN === "string" && env.STUDENT_PORTAL_STREAM_API_TOKEN.length > 16;
+  return videoConnectionStatus(env).ready;
 }
 export async function authorizedInstructor(request, locals) {
   const env = getPortalEnv(locals);
