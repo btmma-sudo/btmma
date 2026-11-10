@@ -1,6 +1,6 @@
 ---
 import {getPortalEnv, getPortalAccount, secureHeaders} from "../lib/student-portal-auth.js";
-import { sqlProgram, sqlRank } from "../lib/instructor-video-manager.js";
+import { sqlProgram, sqlRank, videoConfig } from "../lib/instructor-video-manager.js";
 import StudentPortalPreview from "../components/StudentPortalPreview.astro";
 import {TUITION_BILLING_RELEASED} from "../lib/tuition-billing-launch.js";
 import {verifiedFamilyInvoices, verifiedAutopay} from "../lib/student-portal-tuition.js";
@@ -93,6 +93,10 @@ if (account) {
     } catch { /* Never imply AutoPay is active when Stripe cannot be verified. */ }
   }
 }
+// An instructor with no enrolled family students sees the instructor
+// workspace, not an empty household tuition dashboard.
+const staffOnlyView = !!account && instructorAccess && students.length===0;
+const privateVideoReady = !!account && instructorAccess && videoConfig(env);
 for (const [key,value] of Object.entries(secureHeaders())) Astro.response.headers.set(key,value);
 // Astro compiles page/component <style> blocks into same-origin /_astro/*.css assets.
 // Allow same-origin stylesheets and scripts; keep unrelated external origins blocked.
@@ -235,12 +239,20 @@ Astro.response.headers.set("Content-Security-Policy", "default-src 'none'; scrip
       <>
         <section class="panel member-welcome">
           <div style="display:flex;gap:15px;align-items:center;justify-content:space-between;flex-wrap:wrap">
-            <div><p class="eyebrow">SIGNED IN</p><h2>Welcome back, {account.display_name}!</h2><p class="muted">Your private training dashboard.</p>
-              {instructorAccess && <p><a class="btn" href="/instructor-videos/">OPEN INSTRUCTOR VIDEO MANAGER</a></p>}
-            </div>
+            <div><p class="eyebrow">SIGNED IN</p><h2>Welcome back, {account.display_name}!</h2><p class="muted">{instructorAccess ? "Your private instructor workspace is ready." : "Your private training dashboard."}</p></div>
             <form action="/api/student-portal/logout" method="post"><button class="btn secondary" type="submit">Sign out</button></form>
           </div>
         </section>
+        {instructorAccess && (
+          <section class="panel member-instructor" aria-labelledby="instructor-workspace-title">
+            <p class="eyebrow">INSTRUCTOR ACCESS</p>
+            <h2 id="instructor-workspace-title">Video Lesson Manager</h2>
+            <p class="muted">Create private lessons, assign martial art and belt level, review uploads, and publish to eligible student families. Publishing stays off until you choose to share a lesson.</p>
+            {!privateVideoReady && <p class="notice" role="status">Cloudflare Stream is not connected yet. You can open the manager, but video uploads are disabled until hosting is set up. Enabling Stream may incur charges.</p>}
+            <p><a class="btn" href="/instructor-videos/">OPEN INSTRUCTOR VIDEO MANAGER</a></p>
+          </section>
+        )}
+        {!staffOnlyView && (<>
         <section class="panel member-students" aria-labelledby="people-title">
           <h2 id="people-title">My Students</h2>
           {students.length ? <div class="member-profiles">
@@ -274,6 +286,7 @@ Astro.response.headers.set("Content-Security-Policy", "default-src 'none'; scrip
           </> : <p class="notice">Online tuition payment is not connected to your household yet. Please contact the studio for your exact balance and approved payment options.</p>}
           <p class="muted">Important: Credit-card surcharges and late fees are not being assessed by this portal. Any approved charges must be fully disclosed and legally compliant before activation.</p>
         </section>
+        </>)}
       </>
     )}
   </main>
