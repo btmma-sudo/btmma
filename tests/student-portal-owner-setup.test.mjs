@@ -111,6 +111,54 @@ test("one verified invite creates a staff account transaction and issues secure 
   assert.match(response.headers.get("set-cookie")||"",/HttpOnly; Secure; SameSite=Lax/);
   assert.deepEqual(await response.json(),{ok:true,redirect:"/student-portal/"});
 });
+test("unexpected D1 transaction error is diagnosed without exposing owner secrets",async()=>{
+  const token=generateOwnerToken(),hash=await digestToken(token);
+  const db=queryDb({token_hash:hash,expires_at:Math.floor(Date.now()/1000)+600,used_at:null});
+  db.batch=async()=>{throw new Error("SQL error with sensitive_bind:"+token);};
+  const request=new Request(domain+"/api/student-portal/owner-setup/complete",{
+    method:"POST",headers:{"Origin":domain,"Content-Type":"application/json"},
+    body:JSON.stringify({token,password:"unique-safe-owner-password-123"})
+  });
+  const previous=console.error;
+  const log=[];
+  console.error=(...parts)=>log.push(parts);
+  try {
+    const response=await complete({request,locals:locals(db)});
+    assert.equal(response.status,503);
+    const body=await response.json();
+    assert.equal(body.code,"account_transaction");
+    assert.match(body.error,/database/i);
+    assert.doesNotMatch(JSON.stringify(body),new RegExp(token));
+    assert.doesNotMatch(JSON.stringify(log),new RegExp(token));
+  } finally {console.error=previous;}
+});
+test("password hashing failure has a distinct safe error phase",async()=>{
+  // Test invalid server capability rather than exposing any raw exception.
+  const token=generateOwnerToken(),hash=await digestToken(token);
+  const db=queryDb({token_hash:hash,expires_at:Math.floor(Date.now()/1000)+600,used_at:null});
+  const original=crypto.subtle.deriveBits;
+  let replaced=false;
+  try{
+    crypto.subtle.deriveBits=async()=>{throw new Error("sensitive password hash failure");};
+    replaced=crypto.subtle.deriveBits!==original;
+  }catch{/* Some WebCrypto objects expose read-only methods. */}
+  if(!replaced)return;
+  const previous=console.error;
+  console.error=()=>{};
+  try{
+    const request=new Request(domain+"/api/student-portal/owner-setup/complete",{
+      method:"POST",headers:{"Origin":domain,"Content-Type":"application/json"},
+      body:JSON.stringify({token,password:"unique-safe-owner-password-123"})
+    });
+    const response=await complete({request,locals:locals(db)});
+    assert.equal(response.status,503);
+    assert.equal((await response.json()).code,"password_hash");
+  }finally{
+    crypto.subtle.deriveBits=original;
+    console.error=previous;
+  }
+});
+
 test("email request only sends the private #token link to the approved owner email",async()=>{
   const db=queryDb();
   const challenge="turnstile-simulated-token";
