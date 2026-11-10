@@ -260,8 +260,8 @@ Astro.response.headers.set("Content-Security-Policy", "default-src 'none'; scrip
           </div> : <div class="panel"><p class="muted">Your instructor has not assigned any private lessons yet. Your Kenpo, Muay Thai, Wing Chun, and Leadership video lessons will appear here as they are approved.</p></div>}
         </section>
         <section class="panel member-tuition" aria-labelledby="tuition-title">
-          <h2 id="tuition-title">Monthly Tuition &amp; Payments</h2>
-          <p class="muted">Your exact tuition and due dates come from your family's approved billing account. The portal does not change your membership rate or automatically add fees.</p>
+          <h2 id="tuition-title">Tuition &amp; Payments</h2>
+          <p class="muted">Your family's approved tuition plan, invoices, and payment history are private. Standard tuition is billed every 28 days (every 4 weeks), not once per calendar month. Your signed agreement controls your actual rate and renewal dates.</p>
           {billingReady ? <>
             <p class="muted">{autopay.active
               ? "28-day AutoPay: active." + (autopay.nextBillingDate ? " Next billing period: " + autopay.nextBillingDate + "." : "")
