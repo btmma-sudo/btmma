@@ -14,6 +14,69 @@ Tuition actions have **two additional locks**:
 testing. The new four-week prices are inactive. This portal never automatically
 adds a blanket 3% card surcharge or a $50 late fee.
 
+## Current Cloudflare setup verified on November 10, 2026
+
+- Installed D1 migration `0002_student_portal.sql`: four dedicated
+  `portal_*` tables confirmed in production.
+- Installed `0003_instructor_video_manager.sql` table and video lesson
+  columns; `portal_staff` present with zero assigned privileges.
+  Verify both associated indexes (`idx_portal_lessons_stream_uid`,
+  `idx_portal_lessons_program_rank`) before the first instructor upload;
+  column verification alone does not verify indexes.
+- Cloudflare encrypted secret `STUDENT_PORTAL_SESSION_SECRET` is present;
+  `TURNSTILE_SECRET_KEY` is also configured.
+- The real family email/password sign-in form is shown publicly. This does
+  **not** mean that a family account or staff account exists.
+- A Free-tier Cloudflare WAF rate-limit rule was created: for
+  `POST /api/student-portal/login`, more than 10 requests within
+  10 seconds from the same IP are blocked for 10 seconds. The application
+  also performs per-account 7-failure/15-minute lockout.
+- Cloudflare Stream hosts **no private videos** and the Worker lacks
+  `STUDENT_PORTAL_STREAM_ACCOUNT_ID` and
+  `STUDENT_PORTAL_STREAM_API_TOKEN`. Video upload/playback remains unavailable.
+- `STUDENT_PORTAL_PAYMENTS_ENABLED=false`, and the separate code billing
+  release lock is false. Do not enable live tuition collections.
+
+## Staff onboarding without browser automation
+
+Until a staff admin interface is explicitly approved, private household
+account provisioning is done via staff-only local scripts and Cloudflare D1
+Console. No screenshots or browser agent are needed to **generate** the SQL.
+A privileged person must still verify the guardian, authorize a membership
+and apply generated SQL to the correct production D1 database.
+
+1. For a verified owner/staff member, run
+   `PORTAL_PASSWORD=<secret from secure environment> node scripts/provision-student-portal-account.mjs 'Approved staff display name' 'verified_staff@example.com' > private-account.sql`
+   on a trusted computer, then apply it to the portal database privately.
+   Passwords must be unique and delivered securely. Do not share secrets in
+   GitHub, chat, screenshots, or email. A named staff member must be authorized
+   by the owner; no public enrollment is allowed.
+2. AFTER verifying the account exists, run
+   `node scripts/grant-instructor-video-access.mjs 'verified_staff@example.com' > private-grant.sql`
+   and explicitly approve/apply the privilege grant to `portal_staff`.
+   Staff access is not automatically granted on account creation.
+3. To add a student to an approved active guardian's account and grant only
+   previously published lessons matching the exact program/belt:
+   `node scripts/add-student-to-portal.mjs 'guardian@example.com' 'Student Name' 'American Kenpo Karate' 'Yellow Belt' > private-student.sql`
+   then apply the first `INSERT`, verify it added exactly one student,
+   and only then apply the scoped lesson-access `INSERT`. Never import all
+   trial leads as students without guardian confirmation.
+4. For a verified password reset, use
+   `scripts/reset-student-portal-password.mjs` to generate the private
+   session-revoking SQL and deliver the new password privately.
+5. Validate one real guardian sign-in, one staff sign-in, logout, wrong
+   password, account lockout, Turnstile, and cross-household separation
+   before sending invitations to families.
+
+**Siteverify caveat:** Cloudflare Turnstile analytics may say "Siteverify
+isn't being called" while nobody has submitted this particular login form.
+The login API already calls server-side Siteverify. The hardened login
+also checks for a valid response from the canonical
+`burningtreemma.com` hostname and the unique
+`student_portal_login` action; it still requires a genuine real-login
+test. Never rely on a dashboard analytics warning to determine whether
+the application's server code validates challenges.
+
 ## Privacy and accounts
 
 - Route: `/student-portal/`. Every request is rendered server-side, not a
