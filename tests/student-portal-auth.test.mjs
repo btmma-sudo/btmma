@@ -45,7 +45,9 @@ test("a signed session authenticates only the matching active household",async()
 });
 test("forged, expired and invalidated sessions never identify a household",async()=>{
   const cookie=await createSessionCookie(env,fakeAccount);
-  assert.equal(await getPortalAccount(requestFor(cookie.replace(/.$/,"0")),env),null);
+  const tampered=cookie.replace(/([a-f0-9]); Path=/,(_,digit)=> (digit==="f"?"e":"f")+"; Path=");
+  assert.notEqual(tampered,cookie);
+  assert.equal(await getPortalAccount(requestFor(tampered),env),null);
   assert.equal(await getPortalAccount(requestFor(expiredCookie()),env),null);
   assert.equal(await getPortalAccount(requestFor(cookie),{...env,LIVE_TRIAL_DB:databaseFor({...fakeAccount,session_version:2})}),null);
   assert.equal(await getPortalAccount(requestFor("btmma_student_session=abc.def"),env),null);
