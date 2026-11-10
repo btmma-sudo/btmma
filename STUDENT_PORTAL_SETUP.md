@@ -37,6 +37,38 @@ adds a blanket 3% card surcharge or a $50 late fee.
 - `STUDENT_PORTAL_PAYMENTS_ENABLED=false`, and the separate code billing
   release lock is false. Do not enable live tuition collections.
 
+## Cloudflare password hashing incident — November 10, 2026
+
+**Cause confirmed:** The private owner password form failed at the
+`password_hash` stage before the D1 account-creation batch.
+Cloudflare's workerd rejects PBKDF2 requests exceeding **100,000**
+iterations with `NotSupportedError`, but owner password creation,
+normal family login verification, and private staff helper scripts were
+configured for 210,000. This was a runtime incompatibility, not a
+wrong password, Resend issue, or Cloudflare Turnstile problem.
+
+**Repair:** All password creation, checking, staff provisioning,
+password reset, and security tests now share one constant:
+`PORTAL_PASSWORD_PBKDF2_ITERATIONS=100000`, the platform's current
+supported ceiling. PBKDF2-SHA256 still uses a cryptographically
+random 16-byte salt and a 32-byte derived hash; the portal also
+requires long unique passwords, per-account lockout, Turnstile and
+WAF login rate limiting. Do not silently raise the iteration count
+without a tested migration and alternate KDF implementation.
+
+Previously generated **unapplied** SQL files from the older local
+scripts may contain 210,000-iteration hashes and must be **regenerated**.
+If a household was provisioned manually with those earlier scripts,
+its password must be reset using the repaired script before it can
+log in. Never expose credentials, hashes or authentication tokens in
+GitHub or chat.
+
+Once the repaired website deployment passes tests, the owner should
+request a **fresh** 15-minute invitation and set the account password
+privately. The failed previous attempt did not reach the D1 batch.
+Always verify owner login and logout on the actual website before
+inviting families. Live tuition charges remain disabled.
+
 ## First owner account — email-verified, no password in chat
 
 The first owner/instructor account is reserved for
