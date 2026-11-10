@@ -146,6 +146,34 @@ payments, or allow public self-registration. An owner should have MFA enabled
 on the recipient Google account. Check for successful email delivery and test
 owner login/logout once before onboarding any other families.
 
+## Owner signed-in workspace and private instructor videos
+
+After completing email verification and signing in, an authorized owner/staff
+account sees an **Instructor Video Manager** card and link on the private
+Student Portal. If the staff account has no enrolled students, it does not
+display an empty family tuition or student dashboard. Ordinary family
+accounts do not see instructor controls and cannot access
+`/instructor-videos/`.
+
+The instructor manager at `https://burningtreemma.com/instructor-videos/`
+supports private draft video uploads, processing status, and
+publish/unpublish for verified active student households by eligible
+program and belt rank. The account's D1 `portal_staff` permissions must
+authorize uploads or publishing. New lessons begin unpublished and Stream
+must enforce signed playback URLs before any publishing action.
+
+**Video hosting has not been connected in the prior verified environment.**
+The instructor-only page now shows a self-service checklist for the owner:
+first review and opt into Cloudflare Stream billing; then create a
+Stream-authorized scoped API token, add the production
+`STUDENT_PORTAL_STREAM_ACCOUNT_ID` variable and encrypted
+`STUDENT_PORTAL_STREAM_API_TOKEN` secret to the `burningtreemma` Worker,
+save/deploy, and reload the video manager. Do not expose the token in chat,
+source control or screenshots. Enabling Stream or buying video capacity
+requires the owner's explicit approval; **do not silently enable paid services**.
+Continue keeping `STUDENT_PORTAL_PAYMENTS_ENABLED=false` and
+`TUITION_BILLING_RELEASED=false` while testing.
+
 ## Staff onboarding without browser automation
 
 Until a staff admin interface is explicitly approved, private household
