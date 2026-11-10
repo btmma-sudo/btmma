@@ -13,7 +13,7 @@ import {POST as requestInvite} from "../src/pages/api/student-portal/owner-setup
 const domain="https://burningtreemma.com";
 const credentials={STUDENT_PORTAL_ENABLED:"true",
   STUDENT_PORTAL_SESSION_SECRET:"test-secret-not-used-in-production-and-at-least-32",
-  TURNSTILE_SECRET_KEY:"fake_turnstile_secret",RESEND_API_KEY:"fake_resend_key"};
+  TURNSTILE_SECRET_KEY:"fake_turnstile_secret",STUDENT_PORTAL_RESEND_API_KEY:"fake_portal_resend_key"};
 function queryDb(ticket){
   const db={statements:[],batchCalls:0,
     prepare(sql){
@@ -101,6 +101,7 @@ test("email request only sends the private #token link to the approved owner ema
   const db=queryDb();
   const challenge="turnstile-simulated-token";
   let delivered=null;
+  let authHeader=null;
   const oldFetch=globalThis.fetch;
   globalThis.fetch=async (url,opts)=>{
     if(String(url).includes("turnstile/v0/siteverify"))
@@ -109,6 +110,7 @@ test("email request only sends the private #token link to the approved owner ema
       });
     if(String(url).includes("api.resend.com/emails")){
       delivered=JSON.parse(opts.body);
+      authHeader=opts.headers?.Authorization;
       return new Response(JSON.stringify({id:"fake-email-id"}),{status:200});
     }
     throw Error("Unexpected network target");
@@ -121,6 +123,8 @@ test("email request only sends the private #token link to the approved owner ema
     const response=await requestInvite({request,locals:locals(db)});
     assert.equal(response.status,200);
     assert.deepEqual(delivered?.to,[OWNER_EMAIL]);
+    assert.equal(delivered?.from,"Burning Tree Student Portal <noreply@portal.burningtreemma.com>");
+    assert.equal(authHeader,"Bearer fake_portal_resend_key");
     assert.match(delivered.html,/\/student-portal\/setup-owner\/#token=[a-f0-9]{64}/);
     assert.ok(!JSON.stringify(await response.json()).includes("#token="));
   }finally{globalThis.fetch=oldFetch;}
