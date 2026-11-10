@@ -1,10 +1,11 @@
 ---
-import {authorizedInstructor, PROGRAMS, RANKS, videoConfig} from "../lib/instructor-video-manager.js";
+import {authorizedInstructor, PROGRAMS, RANKS, videoConnectionStatus} from "../lib/instructor-video-manager.js";
 import {secureHeaders} from "../lib/student-portal-auth.js";
 export const prerender = false;
 const staff = await authorizedInstructor(Astro.request, Astro.locals);
 if (!staff) Astro.response.status = 404;
-const ready = !!staff && videoConfig(staff.env);
+const streamStatus = videoConnectionStatus(staff?.env);
+const ready = !!staff && streamStatus.ready;
 let lessons: any[] = [];
 let broken = false;
 if (staff) {
@@ -83,7 +84,8 @@ Astro.response.headers.set("Content-Security-Policy",
         </section>
         {!ready && <section class="panel" role="status" aria-labelledby="stream-setup-title">
           <h2 id="stream-setup-title">Connect Your Private Video Library</h2>
-          <p class="muted">Your instructor account is working, but video hosting has not yet been connected. Uploads stay disabled until the setup is complete. Cloudflare Stream is a separately billed service; review its pricing before enabling it.</p>
+          <p class="callout" role="status">{streamStatus.message}</p>
+          <p class="muted">Uploads stay disabled until the setup is complete. Stream is a separately billed service; review its pricing before enabling it.</p>
           <ol class="muted">
             <li>In <a href="https://dash.cloudflare.com/" target="_blank" rel="noopener noreferrer">Cloudflare</a>, open <strong>Stream / Videos</strong> for your Burning Tree account and review the cost before enabling it.</li>
             <li>Create an account-scoped API token with the required <strong>Stream Write</strong> permission for uploading and protected playback tokens. Keep it private.</li>
@@ -117,7 +119,8 @@ Astro.response.headers.set("Content-Security-Policy",
             <div class="full">
               <p class="note">Belt access is exact: choosing Yellow Belt assigns to active students recorded as Yellow Belt in that martial art. “All Levels” includes every active student enrolled in that program.</p>
               <div class="actions">
-                <button type="submit" class="btn" disabled={!ready || broken || staff.staff.can_upload !== 1}>UPLOAD PRIVATE DRAFT</button>
+                <button type="submit" class="btn" disabled={!ready || broken || staff.staff.can_upload !== 1} aria-describedby="upload-readiness">UPLOAD PRIVATE DRAFT</button>
+                <span id="upload-readiness" class="note" role="status">{broken ? "Uploads are blocked because the lesson database could not be read." : staff.staff.can_upload !== 1 ? "Uploads are blocked because this account does not have instructor upload permission." : !ready ? streamStatus.message : "Upload is available. Select an MP4, MOV or WebM video under 190 MB. New lessons stay private until you publish them."}</span>
                 <span id="upload-status" class="muted" role="status" aria-live="polite"></span>
               </div>
             </div>
