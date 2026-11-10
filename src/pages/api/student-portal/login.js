@@ -1,4 +1,5 @@
 import { getPortalEnv, checkPassword, createSessionCookie, secureHeaders, validSameOrigin } from "../../../lib/student-portal-auth.js";
+import { validPortalChallenge } from "../../../lib/student-portal-turnstile.js";
 export const prerender = false;
 function redirect(url, cookie) {
   const headers = secureHeaders({ Location: url });
@@ -27,7 +28,7 @@ export async function POST({request, locals}) {
     if (ip) body.set("remoteip", ip);
     const verified = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {method:"POST", body});
     const verifyData = verified.ok ? await verified.json() : null;
-    if (!verifyData?.success) return redirect("/student-portal/?error=security");
+    if (!validPortalChallenge(verifyData, request.url)) return redirect("/student-portal/?error=security");
   } catch { return redirect("/student-portal/?error=security"); }
   const db = env.LIVE_TRIAL_DB;
   try {
