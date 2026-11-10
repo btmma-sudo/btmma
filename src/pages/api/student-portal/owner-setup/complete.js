@@ -32,8 +32,10 @@ export async function POST({request,locals}){
   const password=data?.password;
   if(!validOwnerToken(token) || !validOwnerPassword(password))return deny();
   const db=env.LIVE_TRIAL_DB;
+  let stage="owner_preflight";
   try{
     if(!await firstOwnerNotYetPresent(db))return deny();
+    stage="verify_token";
     const tokenHash=await digestToken(token);
     const now=Math.floor(Date.now()/1000);
     const ticket=await db.prepare(
@@ -45,10 +47,12 @@ export async function POST({request,locals}){
     for(let i=0;i<tokenHash.length;i++)diff|=tokenHash.charCodeAt(i)^ticket.token_hash.charCodeAt(i);
     if(diff!==0)return deny();
 
+    stage="password_hash";
     const accountId=crypto.randomUUID();
     const credentials=await passwordDigest(password);
     // Cloudflare D1 db.batch is atomic: no staff privilege is granted without
     // the new owner account and a valid unconsumed email invitation.
+    stage="account_transaction";
     const results=await db.batch([
       db.prepare(
         "INSERT INTO portal_accounts (id,display_name,email,password_salt,password_hash,active) " +
@@ -67,11 +71,32 @@ export async function POST({request,locals}){
       ).bind(now,tokenHash,now)
     ]);
     if(results?.length!==3 || results.some(r=>r.success!==true || r.meta?.changes!==1)){
-      return deny();
+      // The batch transaction has completed; never claim the account was
+      // created successfully until we can independently verify it.
+      console.error("Student owner setup transaction had unexpected result", {
+        stage:"transaction_verification",
+        statements:results?.length===3?3:0,
+        allSucceeded:results?.every(r=>r.success===true)===true,
+        // Changes may not be present on every Cloudflare binding version.
+        hasChangeCounts:results?.every(r=>typeof r.meta?.changes==="number")===true
+      });
+      return json({ok:false,error:"Owner setup could not verify the database update. Please contact the studio before retrying.",code:"transaction_verification"},503);
     }
+    stage="session_cookie";
     const cookie=await createSessionCookie(env,{id:accountId,session_version:1});
     return json({ok:true,redirect:"/student-portal/"},200,cookie);
-  }catch{
-    return json({ok:false,error:"Secure owner setup is temporarily unavailable. No payment was charged."},503);
+  }catch(exception){
+    // Deliberately NEVER log request bodies, password, token, SQL binds,
+    // raw database exception strings, stack traces, account ID or email.
+    const type=(typeof exception?.name==="string" && /^(TypeError|Error|NotSupportedError|OperationError|DataError|InvalidAccessError|QuotaExceededError)$/.test(exception.name)) ? exception.name : "ServerError";
+    console.error("Student owner setup failed", {stage,errorType:type});
+    const errorMessages={
+      owner_preflight:"Could not verify the owner account. Please contact the studio.",
+      verify_token:"Could not verify the owner setup link. Please contact the studio.",
+      password_hash:"Could not securely prepare the account password. Please contact the studio.",
+      account_transaction:"Could not save the owner account to the database. Please contact the studio.",
+      session_cookie:"Owner account saving may have succeeded, but sign-in could not be completed. Please try signing in normally before requesting another link."
+    };
+    return json({ok:false,error:errorMessages[stage]||"Secure owner setup is temporarily unavailable.",code:stage},503);
   }
 }
