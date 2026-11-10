@@ -146,6 +146,31 @@ payments, or allow public self-registration. An owner should have MFA enabled
 on the recipient Google account. Check for successful email delivery and test
 owner login/logout once before onboarding any other families.
 
+## Diagnosing a disabled instructor upload button
+
+The Instructor Video Manager keeps **UPLOAD PRIVATE DRAFT** disabled if
+any of these independent checks fails: (1) Cloudflare Stream account
+ID/token configuration; (2) read-only D1 `portal_lessons` lookup; or
+(3) the signed-in staff member's `portal_staff.can_upload=1` permission.
+
+The instructor page now displays the precise **safe diagnostic reason**
+directly below the button, without exposing any token or Cloudflare
+secret. Stream connection diagnostics check for a missing account ID,
+a malformed 32-character hex account ID, a missing/incomplete API token,
+a token pasted with whitespace, or a Resend email token accidentally
+entered instead of a Cloudflare Stream token (`re_` prefix).
+When both credentials are present, this confirms configuration **shape**,
+not Cloudflare API authorization. A real private-draft upload is still
+required to verify credentials.
+
+If the button remains disabled, the owner should sign in, refresh
+`https://burningtreemma.com/instructor-videos/`, read the reason
+under the button and check only the indicated Worker secret/variable
+or the approved staff upload permission. Never paste credentials,
+logs, or screenshots of tokens into chat or GitHub. Do not enable
+student video publishing until a private upload and access check pass.
+Tuition billing remains disabled.
+
 ## Owner signed-in workspace and private instructor videos
 
 After completing email verification and signing in, an authorized owner/staff
