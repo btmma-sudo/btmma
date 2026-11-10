@@ -126,7 +126,15 @@ salted PBKDF2-SHA256 hashes and are never sent in email or chat.
 
 The separate `portal_owner_setup_challenges` table is created
 idempotently when an eligible request is made. Setup email requests have
-a 10-minute server-enforced cooldown. First-owner setup stops permanently
+a **10-minute server-enforced cooldown from the last accepted email**.
+A repeat request during the cooldown intentionally sends **no new email**.
+The page now clearly says this, provides an approximate retry delay and
+keeps the request button available for a later attempt. A prior 15-minute
+email link can still be used until it expires if the failed password-hash
+attempt did not consume it. The returned `sent:true` flag means the email
+provider accepted a new send request, not a guarantee of inbox delivery.
+If the owner is already provisioned, no new first-owner email is sent.
+First-owner setup stops permanently
 once that email account exists or any active publisher has been granted
 staff permissions. Owner and publisher creation and token consumption are
 executed as an atomic Cloudflare D1 batch. The first owner signs in with
