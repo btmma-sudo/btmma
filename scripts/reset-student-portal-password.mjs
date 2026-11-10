@@ -2,6 +2,7 @@
 // Never run this helper in a browser or publish its output. No accounts are changed
 // by running it; authorized staff must apply the output through private D1 tooling.
 import {pbkdf2Sync, randomBytes} from "node:crypto";
+import {PORTAL_PASSWORD_PBKDF2_ITERATIONS} from "../src/lib/student-portal-password-policy.js";
 
 const email=String(process.argv[2] || "").trim().toLowerCase();
 const password=process.env.PORTAL_PASSWORD || "";
@@ -13,7 +14,7 @@ if (!/^[^\s@]{1,128}@[^\s@]{1,124}\.[^\s@]{2,}$/.test(email) ||
 }
 const quote=s=>"'"+s.replaceAll("'","''")+"'";
 const salt=randomBytes(16).toString("hex");
-const hash=pbkdf2Sync(password,Buffer.from(salt,"hex"),210000,32,"sha256").toString("hex");
+const hash=pbkdf2Sync(password,Buffer.from(salt,"hex"),PORTAL_PASSWORD_PBKDF2_ITERATIONS,32,"sha256").toString("hex");
 console.log("-- PRIVATE: Verify guardian identity before applying to LIVE_TRIAL_DB; delete this file afterwards.");
 console.log("-- Reset the verified household only. Increment session_version to revoke all old sessions.");
 console.log("UPDATE portal_accounts SET password_salt="+quote(salt)+",password_hash="+quote(hash)+

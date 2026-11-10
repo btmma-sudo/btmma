@@ -3,6 +3,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {createHmac, pbkdf2Sync, randomBytes} from "node:crypto";
+import {PORTAL_PASSWORD_PBKDF2_ITERATIONS} from "../src/lib/student-portal-password-policy.js";
 import {
   getPortalEnv, checkPassword, createSessionCookie,
   clearSessionCookie, getPortalAccount, validSameOrigin
@@ -33,7 +34,7 @@ test("portal config fails closed when runtime flag, secret, or database is missi
 });
 test("PBKDF2 hash verification accepts the right private password",async()=>{
   const password="very-long-guardian-password", salt=randomBytes(16);
-  const hash=pbkdf2Sync(password,salt,210000,32,"sha256").toString("hex");
+  const hash=pbkdf2Sync(password,salt,PORTAL_PASSWORD_PBKDF2_ITERATIONS,32,"sha256").toString("hex");
   assert.equal(await checkPassword(password,salt.toString("hex"),hash),true);
   assert.equal(await checkPassword("incorrect-guardian-password",salt.toString("hex"),hash),false);
 });

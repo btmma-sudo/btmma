@@ -1,5 +1,6 @@
 // Isolated student-portal authentication. Never use shared passwords.
 import { STUDENT_PORTAL_RELEASED } from "./student-portal-launch.js";
+import { PORTAL_PASSWORD_PBKDF2_ITERATIONS } from "./student-portal-password-policy.js";
 const enc = new TextEncoder();
 const hex = bytes => [...bytes].map(v => v.toString(16).padStart(2, "0")).join("");
 const unhex = value => new Uint8Array((value.match(/.{2}/g) || []).map(x => parseInt(x, 16)));
@@ -24,7 +25,7 @@ export async function checkPassword(password, salt, expected) {
   if (!/^[a-f0-9]{32}$/.test(salt) || !/^[a-f0-9]{64}$/.test(expected)) return false;
   const key = await crypto.subtle.importKey("raw", enc.encode(password), "PBKDF2", false, ["deriveBits"]);
   const derived = new Uint8Array(await crypto.subtle.deriveBits({
-    name: "PBKDF2", salt: unhex(salt), iterations: 210000, hash: "SHA-256"
+    name: "PBKDF2", salt: unhex(salt), iterations: PORTAL_PASSWORD_PBKDF2_ITERATIONS, hash: "SHA-256"
   }, key, 256));
   const target = unhex(expected);
   let diff = 0;

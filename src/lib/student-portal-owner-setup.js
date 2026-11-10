@@ -1,6 +1,8 @@
 // One-time first-owner enrollment. The only destination is the verified
 // address selected by Burning Tree's owner. Neither the token nor password
 // is written to GitHub, analytics, or a Worker environment variable.
+import {PORTAL_PASSWORD_PBKDF2_ITERATIONS} from "./student-portal-password-policy.js";
+
 export const OWNER_EMAIL = "hybridkenpokarate@gmail.com";
 export const OWNER_DISPLAY_NAME = "Coach David";
 export const OWNER_INVITE_ACTION = "student_portal_owner_invite";
@@ -35,7 +37,7 @@ export async function passwordDigest(password) {
   crypto.getRandomValues(salt);
   const key=await crypto.subtle.importKey("raw",encoder.encode(password),"PBKDF2",false,["deriveBits"]);
   const digest=await crypto.subtle.deriveBits(
-    {name:"PBKDF2",salt,iterations:210000,hash:"SHA-256"},key,256
+    {name:"PBKDF2",salt,iterations:PORTAL_PASSWORD_PBKDF2_ITERATIONS,hash:"SHA-256"},key,256
   );
   return {salt:hex(salt),hash:hex(new Uint8Array(digest))};
 }
