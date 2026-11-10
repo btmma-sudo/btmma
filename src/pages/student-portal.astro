@@ -19,7 +19,8 @@ const code = Astro.url.searchParams.get("error");
 const err = code === "invalid" ? errors.invalid : code === "security" ? errors.security : "";
 // Demo view is static and contains NO real student information or payment operations.
 const showPreview = Astro.url.searchParams.get("preview") === "1";
-let students = [], lessons = [], invoices = [], stripeNotice = "";
+let students = [], lessons = [], stripeNotice = "";
+let invoices: Array<{number:string; due:string; balance:string; status:string; payNowUrl:string}> = [];
 let billingReady = false;
 let paymentEnabled = false;
 let autopay = {active:false, nextBillingDate:""};
