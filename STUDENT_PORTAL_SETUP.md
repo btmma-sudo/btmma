@@ -159,6 +159,13 @@ and (if present) sanitized numeric API error code. The page offers help
 without logging or exposing raw Cloudflare error messages, tokens, provider
 response bodies, user content, or Cloudflare account IDs.
 
+- **HTTP 400 / Cloudflare error 9106** means authentication failed even
+  though the HTTP status says 400. Check the production encrypted
+  `STUDENT_PORTAL_STREAM_API_TOKEN` Secret for a full Cloudflare API token,
+  not a Resend `re_` email key; verify the Worker was saved/deployed.
+  If needed, generate a new account-scoped Stream Edit token, update only
+  the Stream Secret, test a single private draft upload, then revoke the
+  old token. Do not publish the test draft or share any token.
 - **401** means authorization failed: check the production encrypted
   `STUDENT_PORTAL_STREAM_API_TOKEN` secret without posting it in chat.
 - **403** means access was denied: verify `Account → Media → Stream → Edit`
