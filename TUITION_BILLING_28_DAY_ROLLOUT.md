@@ -1,6 +1,6 @@
 # Burning Tree — 28-day AutoPay and Pay Now rollout
 
-**Status: STAGED / NO LIVE TUITION BILLING.** Do not merge or change release locks until the checklist below has been reviewed. This repository does **not** create Stripe subscriptions or collect tuition automatically.
+**Status: SAFE DASHBOARD UPDATE; NO LIVE TUITION BILLING.** The code can be deployed with both billing release locks set to false; do **not** change either lock, create live subscriptions, or onboard families until the checklist below has been reviewed. This repository does **not** create Stripe subscriptions or collect tuition automatically.
 
 ## Current safe state
 
