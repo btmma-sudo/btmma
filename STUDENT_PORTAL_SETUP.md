@@ -1,9 +1,18 @@
 # Private Student Portal — deployment and security checklist
 
-Student portal code may be merged into the website but it is **OFF by default**. Two launch locks must be explicitly released to open the routes: (1) change `STUDENT_PORTAL_RELEASED` from `false` to `true` in `src/lib/student-portal-launch.js` in a reviewed deployment, and (2) set the Cloudflare runtime setting `STUDENT_PORTAL_ENABLED=true`. Either lock independently keeps the portal inaccessible. Until that launch step, requests to both `/student-portal/` and `/api/student-portal/*` return HTTP 404, and there is no public navigation link. It does not alter the
-existing $29 special, seminar checkouts, webhook handlers, or recurring tuition
-agreements. The portal deliberately **does not add** a 3% card surcharge or
-$50 late fee. Payments default **OFF**.
+The public Student Portal landing page and **sample dashboard preview** are
+currently available. Private family sign-in remains fail-closed until Cloudflare
+D1 migrations, account records, session secret, Turnstile and login protections
+are verified. `STUDENT_PORTAL_RELEASED=true` and `STUDENT_PORTAL_ENABLED=true`
+allow the public login route to render but are **not sufficient** to activate
+family accounts. This does not alter existing $29 trial, seminars, events,
+website checkouts, or membership agreements.
+
+Tuition actions have **two additional locks**:
+`TUITION_BILLING_RELEASED=false` in source and
+`STUDENT_PORTAL_PAYMENTS_ENABLED=false` at runtime. Both remain OFF during
+testing. The new four-week prices are inactive. This portal never automatically
+adds a blanket 3% card surcharge or a $50 late fee.
 
 ## Privacy and accounts
 
@@ -35,15 +44,23 @@ $50 late fee. Payments default **OFF**.
 3. Set a random 32+ character Cloudflare Worker secret
    `STUDENT_PORTAL_SESSION_SECRET`. Existing `TURNSTILE_SECRET_KEY` is also
    required. Do not put secrets in `wrangler.jsonc` or GitHub.
-4. For each family, prepare a distinct password privately. Run locally:
+4. For each **consenting, verified guardian** prepare a distinct password privately. Run locally:
    `PORTAL_PASSWORD='use-a-private-password' node scripts/provision-student-portal-account.mjs 'Family display name' 'parent@example.com' > family-account.sql`.
    Avoid terminal history; ideally set PORTAL_PASSWORD via a secret manager
    instead of typing it on command lines. Treat the generated SQL as sensitive.
    Apply it privately with D1 admin tooling, then delete the file securely.
-5. Add authorized students to `portal_students` manually. Publish videos
-   by inserting a valid Stream UID in `portal_lessons`, setting
-   `published=1`, and assigning the lesson specifically to approved
-   households in `portal_lesson_access`.
+   To reset a verified guardian password and revoke existing sessions, run
+   `PORTAL_PASSWORD='<new-private-password>' node scripts/reset-student-portal-password.mjs 'parent@example.com' > private-reset.sql`
+   on a trusted staff machine. Never email or commit SQL, passwords or hashes;
+   verify the guardian's identity and deliver temporary credentials privately.
+   A self-service reset flow is not enabled.
+5. Add guardian-approved students to `portal_students` manually, then
+   attach approved lessons only to verified active households. Existing
+   published lessons must be assigned to newly onboarded students as part of
+   provisioning; simply adding a student does not automatically grant access.
+   Instructors can publish videos using `/instructor-videos/` only after
+   verified staff access is granted in `portal_staff` and Stream is ready.
+   Never grant lesson access to a household just because it submitted a lead.
 6. In Cloudflare Stream, enable `requireSignedURLs` for every lesson.
    Set secrets `STUDENT_PORTAL_STREAM_ACCOUNT_ID` and
    `STUDENT_PORTAL_STREAM_API_TOKEN` (least-privilege Stream token).
@@ -64,8 +81,12 @@ $50 late fee. Payments default **OFF**.
    authorized account access, incorrect account isolation, receipts,
    billing-account matching, failed checkout, refund, payment updates,
    and any fees with a real billing expert and Maryland counsel.
-10. Test login, logout, lockout, cookie forgery, expired sessions, WAF,
-    Stream private-video leakage, mobile layout and Stripe customer access.
+10. Run `npm run test:portal`, `npm run check` and `npm run build`.
+    Test real login, logout, lockout, cookie forgery, expired sessions,
+    Cloudflare WAF limits, private-video leakage, mobile layout, and one
+    household's inability to view any other household's student or billing.
+    Offline unit tests cannot substitute for a live Cloudflare integration
+    and sandbox Stripe transaction test.
     Rotate credentials for affected users if a password was ever shared.
 
 ## Payment policy — compliance hold
