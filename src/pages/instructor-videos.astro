@@ -81,7 +81,17 @@ Astro.response.headers.set("Content-Security-Policy",
           <h1>Build Your <span class="highlight">Video Library.</span></h1>
           <p class="muted">Upload a lesson, choose its martial art and belt level, then publish it to eligible active student families.</p>
         </section>
-        {!ready && <div class="callout" role="alert">Cloudflare Stream is not connected. Uploads are disabled until the video hosting account and API token are configured.</div>}
+        {!ready && <section class="panel" role="status" aria-labelledby="stream-setup-title">
+          <h2 id="stream-setup-title">Connect Your Private Video Library</h2>
+          <p class="muted">Your instructor account is working, but video hosting has not yet been connected. Uploads stay disabled until the setup is complete. Cloudflare Stream is a separately billed service; review its pricing before enabling it.</p>
+          <ol class="muted">
+            <li>In <a href="https://dash.cloudflare.com/" target="_blank" rel="noopener noreferrer">Cloudflare</a>, open <strong>Stream / Videos</strong> for your Burning Tree account and review the cost before enabling it.</li>
+            <li>Create an account-scoped API token with the required <strong>Stream Write</strong> permission for uploading and protected playback tokens. Keep it private.</li>
+            <li>In the <strong>burningtreemma</strong> Worker's production settings, add <code>STUDENT_PORTAL_STREAM_ACCOUNT_ID</code> as your 32-character Cloudflare account ID and <code>STUDENT_PORTAL_STREAM_API_TOKEN</code> as an encrypted secret.</li>
+            <li>Save and deploy the settings. Reload this page; the private-draft upload control will unlock when both values are configured.</li>
+          </ol>
+          <p class="note">Do not paste the Stream token into chat or GitHub. Keep <code>STUDENT_PORTAL_PAYMENTS_ENABLED=false</code> while testing. Uploaded videos require signed playback URLs and start unpublished.</p>
+        </section>}
         {broken && <div class="callout" role="alert">The instructor database migration has not been installed. Contact your website administrator before uploading lessons.</div>}
         <section class="panel" aria-labelledby="upload-title">
           <h2 id="upload-title">Add a New Video Lesson</h2>
