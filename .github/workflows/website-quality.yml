@@ -27,6 +27,8 @@ jobs:
         run: node --test scripts/test-seminar-reconciliation.mjs
       - name: Test sandbox-only payments for both seminars without charging cards
         run: node --test scripts/test-seminar-qa.mjs
+      - name: Test student portal authentication, 28-day tuition and Pay Now safety (no charges)
+        run: npm run test:portal
       - name: Validate Astro and TypeScript
         run: npm run check
       - name: Build website and sitemap

@@ -2,6 +2,8 @@
 import {getPortalEnv, getPortalAccount, secureHeaders} from "../lib/student-portal-auth.js";
 import { sqlProgram, sqlRank } from "../lib/instructor-video-manager.js";
 import StudentPortalPreview from "../components/StudentPortalPreview.astro";
+import {TUITION_BILLING_RELEASED} from "../lib/tuition-billing-launch.js";
+import {verifiedFamilyInvoices, verifiedAutopay} from "../lib/student-portal-tuition.js";
 export const prerender = false;
 const env = getPortalEnv(Astro.locals);
 const account = await getPortalAccount(Astro.request,env);
@@ -17,9 +19,11 @@ const code = Astro.url.searchParams.get("error");
 const err = code === "invalid" ? errors.invalid : code === "security" ? errors.security : "";
 // Demo view is static and contains NO real student information or payment operations.
 const showPreview = Astro.url.searchParams.get("preview") === "1";
-let students = [], lessons = [], invoices = [], stripeNotice = "";
+let students = [], lessons = [], stripeNotice = "";
+let invoices: Array<{number:string; due:string; balance:string; status:string; payNowUrl:string}> = [];
 let billingReady = false;
 let paymentEnabled = false;
+let autopay = {active:false, nextBillingDate:""};
 let instructorAccess = false;
 if (account) {
   try {
@@ -61,7 +65,7 @@ if (account) {
       }
     }
   } catch { stripeNotice = "Your lesson information is temporarily unavailable. Please contact the studio."; }
-  paymentEnabled = env.STUDENT_PORTAL_PAYMENTS_ENABLED === "true" &&
+  paymentEnabled = TUITION_BILLING_RELEASED && env.STUDENT_PORTAL_PAYMENTS_ENABLED === "true" &&
     /^bpc_[A-Za-z0-9]+$/.test(String(env.STUDENT_PORTAL_STRIPE_PORTAL_CONFIGURATION_ID || "")) &&
     /^(sk|rk)_live_/.test(String(env.STRIPE_LIVE_SECRET_KEY || ""));
   billingReady = paymentEnabled && /^cus_[A-Za-z0-9]+$/.test(account.stripe_customer_id || "");
@@ -73,15 +77,19 @@ if (account) {
       });
       if (response.ok) {
         const result = await response.json();
-        invoices = (result.data || []).filter((i: any)=>i.livemode===true &&
-          i.customer===account.stripe_customer_id).map((i: any)=>({
-          number: String(i.number || "Invoice").slice(0,60),
-          due: Number.isInteger(i.due_date) ? new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",year:"numeric",month:"short",day:"numeric"}).format(new Date(i.due_date*1000)) : "See invoice",
-          balance: new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(Math.max(0,Number(i.amount_remaining || 0))/100),
-          status: String(i.status || "unknown").slice(0,20)
-        }));
+        invoices = verifiedFamilyInvoices(result.data || [], account.stripe_customer_id);
       } else stripeNotice = "Your billing history is temporarily unavailable.";
     } catch { stripeNotice = "Your billing history is temporarily unavailable."; }
+    try {
+      const response = await fetch("https://api.stripe.com/v1/subscriptions?customer=" +
+        encodeURIComponent(account.stripe_customer_id) + "&status=all&limit=20", {
+        headers:{"Authorization":"Bearer "+env.STRIPE_LIVE_SECRET_KEY}
+      });
+      if (response.ok) {
+        const result = await response.json();
+        autopay = verifiedAutopay(result.data || [], account.stripe_customer_id);
+      }
+    } catch { /* Never imply AutoPay is active when Stripe cannot be verified. */ }
   }
 }
 for (const [key,value] of Object.entries(secureHeaders())) Astro.response.headers.set(key,value);
@@ -252,13 +260,16 @@ Astro.response.headers.set("Content-Security-Policy", "default-src 'none'; scrip
           </div> : <div class="panel"><p class="muted">Your instructor has not assigned any private lessons yet. Your Kenpo, Muay Thai, Wing Chun, and Leadership video lessons will appear here as they are approved.</p></div>}
         </section>
         <section class="panel member-tuition" aria-labelledby="tuition-title">
-          <h2 id="tuition-title">Monthly Tuition &amp; Payments</h2>
-          <p class="muted">Your exact tuition and due dates come from your family's approved billing account. The portal does not change your membership rate or automatically add fees.</p>
+          <h2 id="tuition-title">Tuition &amp; Payments</h2>
+          <p class="muted">Your family's approved tuition plan, invoices, and payment history are private. Standard tuition is billed every 28 days (every 4 weeks), not once per calendar month. Your signed agreement controls your actual rate and renewal dates.</p>
           {billingReady ? <>
-            {invoices.length ? <div style="overflow-x:auto"><table class="price-table"><thead><tr><th>Invoice</th><th>Due date</th><th>Balance</th><th>Status</th></tr></thead><tbody>
-              {invoices.map((i: any)=><tr><td>{i.number}</td><td>{i.due}</td><td>{i.balance}</td><td>{i.status}</td></tr>)}
+            <p class="muted">{autopay.active
+              ? "28-day AutoPay: active." + (autopay.nextBillingDate ? " Next billing period: " + autopay.nextBillingDate + "." : "")
+              : "28-day AutoPay is not active for this household. Contact the studio to confirm your enrollment and billing authorization."}</p>
+            {invoices.length ? <div style="overflow-x:auto"><table class="price-table"><thead><tr><th>Invoice</th><th>Due date</th><th>Balance</th><th>Status</th><th>Payment</th></tr></thead><tbody>
+              {invoices.map((i: any)=><tr><td>{i.number}</td><td>{i.due}</td><td>{i.balance}</td><td>{i.status}</td><td>{i.payNowUrl ? <a href={i.payNowUrl} target="_blank" rel="noopener noreferrer" aria-label={"Pay invoice " + i.number + " securely through Stripe"}>Pay Now</a> : "—"}</td></tr>)}
             </tbody></table></div> : <p class="muted">{stripeNotice || "No invoices to display yet."}</p>}
-            <form method="post" action="/api/student-portal/billing"><button class="btn" type="submit">OPEN SECURE TUITION BILLING</button></form>
+            <form method="post" action="/api/student-portal/billing"><button class="btn" type="submit">MANAGE AUTOPAY &amp; PAYMENT METHOD</button></form>
           </> : <p class="notice">Online tuition payment is not connected to your household yet. Please contact the studio for your exact balance and approved payment options.</p>}
           <p class="muted">Important: Credit-card surcharges and late fees are not being assessed by this portal. Any approved charges must be fully disclosed and legally compliant before activation.</p>
         </section>

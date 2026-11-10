@@ -1,4 +1,5 @@
 import {getPortalEnv, getPortalAccount, secureHeaders, validSameOrigin} from "../../../lib/student-portal-auth.js";
+import {TUITION_BILLING_RELEASED} from "../../../lib/tuition-billing-launch.js";
 export const prerender = false;
 const error = (message,status=503) => new Response(message,{status,headers:secureHeaders()});
 export async function POST({request,locals}) {
@@ -8,7 +9,7 @@ export async function POST({request,locals}) {
   if (!account) return error("Sign in to your student account first.",401);
   // This feature is explicitly opt-in. No automatic card surcharge or late fee
   // is assessed here: Stripe is responsible for existing approved invoices.
-  if (env.STUDENT_PORTAL_PAYMENTS_ENABLED !== "true" ||
+  if (!TUITION_BILLING_RELEASED || !env || env.STUDENT_PORTAL_PAYMENTS_ENABLED !== "true" ||
       !/^bpc_[a-zA-Z0-9]+$/.test(String(env.STUDENT_PORTAL_STRIPE_PORTAL_CONFIGURATION_ID || "")) ||
       !/^(sk|rk)_live_/.test(String(env.STRIPE_LIVE_SECRET_KEY || "")) ||
       !/^cus_[A-Za-z0-9]+$/.test(String(account.stripe_customer_id || "")))

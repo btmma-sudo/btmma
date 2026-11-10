@@ -50,15 +50,20 @@
   </section>
 
   <section class="panel demo-tuition">
-    <h2>Monthly Tuition &amp; Payments</h2>
-    <p class="tuition-intro">Example only — actual balances and due dates will come from each family's verified account.</p>
+    <h2>Tuition &amp; Payments</h2>
+    <p class="tuition-intro">Preview of 28-day billing. Your family's actual tuition, invoices, and next renewal date will appear here once verified.</p>
     <div class="tuition-rows" aria-label="Example tuition dashboard">
-      <div class="tuition-row"><span>Tuition Balance</span><strong>Displayed after setup</strong></div>
-      <div class="tuition-row"><span>Next Due Date</span><strong>From your account</strong></div>
-      <div class="tuition-row"><span>Payment History</span><strong>Private to your family</strong></div>
+      <div class="tuition-row"><span>Billing frequency</span><strong>Every 28 days</strong></div>
+      <div class="tuition-row"><span>Tuition balance</span><strong>Your verified balance</strong></div>
+      <div class="tuition-row"><span>Next billing date</span><strong>From your account</strong></div>
+      <div class="tuition-row"><span>Payment history</span><strong>Private to your family</strong></div>
+      <div class="tuition-row"><span>AutoPay</span><strong>Available after setup</strong></div>
     </div>
-    <span class="disabled-pay" aria-disabled="true">TUITION BILLING — NOT ACTIVE</span>
-    <p class="preview-disclaimer">Preview only. No real student data, live videos, or payment processing are available without an authorized account.</p>
+    <div class="demo-action-row" aria-label="Payment features (preview only)">
+      <span class="disabled-pay" aria-disabled="true">Pay Now — preview</span>
+      <span class="disabled-pay secondary" aria-disabled="true">Manage payment method — preview</span>
+    </div>
+    <p class="preview-disclaimer">Demonstration only. No cards are charged here. Automatic tuition and Pay Now remain off until authorized family accounts and secure payment testing are complete. Any processing fees must be separately disclosed and compliant.</p>
   </section>
 </div>
 
@@ -93,7 +98,7 @@
   .tuition-row strong{font-size:.92rem;text-align:right;font-weight:700;color:#f5f5f6;margin-left:auto}
   .tuition-row:last-child{border-bottom:0}
   .disabled-pay{display:inline-block;background:#9c302b;color:white;border-radius:9px;padding:13px 18px;font-size:.86rem;letter-spacing:.01em;font-weight:800;margin-top:20px;opacity:.75}
-  .preview-disclaimer{font-size:.76rem;color:#c0c5c8;line-height:1.5;margin:12px 0 0}
+  .demo-action-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}\n  .disabled-pay.secondary{background:#343c40;border:1px solid #657075}\n  .preview-disclaimer{font-size:.76rem;color:#c0c5c8;line-height:1.5;margin:12px 0 0}
   @media(min-width:850px){.lesson-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}}
   @media(max-width:440px){
     .screenshot-demo .panel{border-radius:14px}
