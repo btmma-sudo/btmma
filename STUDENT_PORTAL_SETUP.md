@@ -43,6 +43,23 @@ The first owner/instructor account is reserved for
 `hybridkenpokarate@gmail.com`. The canonical owner setup page is
 `https://burningtreemma.com/student-portal/setup-owner/`.
 
+**Email delivery troubleshooting:** If the setup form displays a delivery
+error after Turnstile succeeds, Resend rejected the server's email request;
+it does NOT mean that a password was set or a real owner login exists.
+The website now displays only a safe HTTP status (for example 401, 403,
+422, 429), and an optional sanitized provider code; it NEVER exposes
+the invite token, API key, provider request body, or recipient metadata.
+Resend's **Logs → Errors** page can identify a rejected POST /emails
+request. A 401 points to the API key, a 403 often means sending-domain
+verification or key permission restrictions, 400/422 points to sender
+or request validation, and 429 means rate limiting. Verify sending
+for `burningtreemma.com` under **Resend → Domains**, and verify that
+the Cloudflare `RESEND_API_KEY` secret is authorized to send from that
+domain. Do not send any keys, complete token-bearing links, or raw log
+request bodies through chat. The email failure path invalidates its
+one-time token and clears its pending cooldown so a new email can
+be requested after fixing the provider.
+
 The owner clicks **Email My Setup Link** and completes Turnstile. The server
 sends a 15-minute one-time token through the existing verified
 `noreply@burningtreemma.com` Resend sender. Tokens are generated from Web

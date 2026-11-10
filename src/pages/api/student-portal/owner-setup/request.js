@@ -1,5 +1,6 @@
 import {getPortalEnv,secureHeaders,validSameOrigin} from "../../../../lib/student-portal-auth.js";
 import {validPortalChallenge} from "../../../../lib/student-portal-turnstile.js";
+import {classifyOwnerInviteEmailFailure} from "../../../../lib/owner-invite-email-errors.js";
 import {
   OWNER_EMAIL,OWNER_INVITE_ACTION,OWNER_COOLDOWN_SECONDS,
   OWNER_INVITE_LIFETIME_SECONDS,ownerInviteSchema,generateOwnerToken,
@@ -78,12 +79,25 @@ export async function POST({request,locals}){
       })
     });
     if(!response.ok){
-      // Make a new request possible after the email service recovers.
+      // Resend rejections used to disappear behind an unhelpful generic error.
+      // Record *only* a sanitized status and provider error name, never a
+      // setup token, email body, API key, or raw provider response.
+      let providerError=null;
+      try{
+        if((response.headers.get("content-type")||"").includes("application/json"))
+          providerError=await response.json();
+      }catch{/* Provider error text may not be JSON. */}
+      const diagnosis=classifyOwnerInviteEmailFailure(response.status,providerError);
+      console.error("Student owner invitation email rejected",{
+        provider:"resend",httpStatus:response.status,providerCode:diagnosis.code
+      });
+      // No token should remain usable when its email was rejected.
+      // Reset the cooldown so the owner can retry after fixing the provider.
       await db.prepare(
         "UPDATE portal_owner_setup_challenges SET requested_at=0,expires_at=0,token_hash='expired' " +
         "WHERE id='first-owner' AND token_hash=?"
       ).bind(digest).run();
-      return error("The setup email could not be delivered. Please try again later.");
+      return error(diagnosis.message+(diagnosis.code!=="unknown"?" Error code: "+diagnosis.code+".":""));
     }
     return ok();
   }catch{
