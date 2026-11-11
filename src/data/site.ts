@@ -1,5 +1,7 @@
 import { weeklySchedule, formatClock } from "./schedule";
 
+export const kidsStartingAge = "Kids can start martial arts between ages 4 and 4½.";
+
 export type ThemeName = "flame" | "wellness";
 
 export type NavItem = {
@@ -340,6 +342,10 @@ export const faqPage: SupportingPage & {
   },
   faqs: [
     {
+      question: "What age can my child start martial arts?",
+      answer: kidsStartingAge + " Coach David can help you choose the right first class."
+    },
+    {
       question: "Do I need experience before starting martial arts classes?",
       answer:
         "No. Burning Tree MMA welcomes complete beginners in both kids and adult programs and helps students start at the right pace."
@@ -544,10 +550,10 @@ export const programPages: ProgramPage[] = [
       {
         label: "Kids",
         programInterest: "Jr. Kenpo",
-        audience: "Ages 5–12",
+        audience: "Kids up to age 12",
         curriculum: {
           title: "A structured Jr. Kenpo path with real progression.",
-          copy: "Our Kids Karate program blends fun and discipline to help children develop focus, respect, and self-control. Through structured drills, games, and partner work, students build confidence while learning real self-defense skills in a safe, supportive environment. Parents love seeing their kids grow stronger both on the mats and in school."
+          copy: kidsStartingAge + " Our Kids Karate program blends fun and discipline to help children develop focus, respect, and self-control. Through structured drills, games, and partner work, students build confidence while learning real self-defense skills in a safe, supportive environment. Parents love seeing their kids grow stronger both on the mats and in school."
         },
         benefits: {
           title: "Why families choose this program",

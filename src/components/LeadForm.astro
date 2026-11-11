@@ -1,5 +1,5 @@
 ---
-import { programInterestOptions, type LeadFormConfig } from "../data/site";
+import { kidsStartingAge, programInterestOptions, type LeadFormConfig } from "../data/site";
 
 import { studentAgeGroups } from "../lib/class-help";
 
@@ -39,10 +39,11 @@ const fields = config?.fields ?? "standard";
         <input id={formId + "-contact"} name="preferredContact" placeholder="Email address or callback number" aria-describedby={formId + "-contact-help"} maxlength="254" required />
         <small id={formId + "-contact-help"}>Enter your email for a reply or your phone number for a call.</small>
         <label for={formId + "-age"}>Student age group</label>
-        <select id={formId + "-age"} name="studentAgeGroup" required>
+        <select id={formId + "-age"} name="studentAgeGroup" aria-describedby={formId + "-age-help"} required>
           <option value="">Select an age group</option>
           {studentAgeGroups.map((group) => <option value={group}>{group}</option>)}
         </select>
+        <small id={formId + "-age-help"}>{kidsStartingAge}</small>
         {transferDays && (
           <>
             <label for={formId + "-experience"}>Current style or belt rank</label>

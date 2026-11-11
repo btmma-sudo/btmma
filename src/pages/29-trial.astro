@@ -1,5 +1,6 @@
 ---
 import LeadForm from "../components/LeadForm.astro";
+import { kidsStartingAge } from "../data/site";
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 <BaseLayout
@@ -53,6 +54,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         <label for="studentName">Student's full name</label>
         <input id="studentName" name="studentName" type="text" autocomplete="off" maxlength="120" required />
         <p id="dob-label" class="form-heading">Student's date of birth</p>
+        <p>{kidsStartingAge}</p>
         <div class="dob-fields" role="group" aria-labelledby="dob-label">
           <label for="dobMonth">Month
             <select id="dobMonth" autocomplete="bday-month" required>

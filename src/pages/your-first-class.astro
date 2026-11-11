@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ClassSchedule from "../components/ClassSchedule.astro";
-import { site } from "../data/site";
+import { kidsStartingAge, site } from "../data/site";
 
 const breadcrumbSchema = {
   "@context": "https://schema.org",
@@ -107,7 +107,7 @@ const faqSchema = {
       <h2 id="first-program-heading">Which Program Should I Choose?</h2>
       <p class="first-section-intro">You don't have to figure it out alone. Choose by age and what sounds interesting, and we'll help confirm the right class.</p>
       <div class="first-program-grid">
-        <article class="first-program-card"><h3>Kids Martial Arts</h3><p>For kids building focus, confidence, discipline, and skills step by step. Explore junior Kenpo, Muay Thai, and Wing Chun.</p><a href="/kids-martial-arts">Explore Kids Classes</a></article>
+        <article class="first-program-card"><h3>Kids Martial Arts</h3><p>{kidsStartingAge} Explore junior Kenpo, Muay Thai, and Wing Chun.</p><a href="/kids-martial-arts">Explore Kids Classes</a></article>
         <article class="first-program-card"><h3>American Kenpo Karate</h3><p>A great starting point for structured self-defense, technique, and personal progress.</p><a href="/kenpo-karate">Explore Kenpo</a></article>
         <article class="first-program-card"><h3>Muay Thai</h3><p>Try punches, kicks, footwork, and controlled pad work while improving fitness and coordination.</p><a href="/muay-thai">Explore Muay Thai</a></article>
         <article class="first-program-card"><h3>Wing Chun &amp; Self-Defense</h3><p>Explore close-range movement and timing in Wing Chun, or ask about our Sunday women's self-defense / Sanuces class.</p><div class="first-card-links"><a href="/wing-chun">Wing Chun</a><a href="/womens-defense">Women's Self-Defense</a></div></article>

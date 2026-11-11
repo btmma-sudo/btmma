@@ -3,7 +3,7 @@ import ProgramInquiry from "../components/ProgramInquiry.astro";
 import TransferInquiry from "../components/TransferInquiry.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { weeklySchedule, formatClassTime } from "../data/schedule";
-import { site } from "../data/site";
+import { kidsStartingAge, site } from "../data/site";
 
 const kidsSchedule = weeklySchedule
   .map((day) => ({
@@ -20,7 +20,7 @@ const leadershipSlot = leadershipSchedule?.slots.find((slot) => slot.cls === "Le
 const faqs = [
   {
     question: "What age can my child start martial arts?",
-    answer: "Our Jr. Kenpo program welcomes ages 5–12. Contact us about the best fit for your child in Jr. Muay Thai or Jr. Wing Chun."
+    answer: kidsStartingAge + " Jr. Kenpo welcomes kids up to age 12. Ask Coach David which junior class is the best fit for your child."
   },
   {
     question: "Does my child need any experience?",
@@ -202,9 +202,9 @@ const serviceSchema = {
         <article class="kids-program-card">
           <img src="/images/kids-martial-arts-karate-guard.png" alt="Young Burning Tree Karate student practicing a focused guard position in a black uniform and yellow belt" loading="lazy" decoding="async" width="600" height="440" />
           <div class="kids-program-content">
-            <span class="kids-program-tag">AGES 5–12 • MONDAYS</span>
+            <span class="kids-program-tag">KIDS UP TO AGE 12 • MONDAYS</span>
             <h3>Kids Kenpo Karate</h3>
-            <p>Our junior American Kenpo karate classes introduce kids ages 5–12 to fundamental techniques, coordination, respect, and belt progression. A clear learning structure helps beginners celebrate small milestones while practicing focus and self-control.</p>
+            <p>{kidsStartingAge} Our junior American Kenpo karate classes teach fundamental techniques, coordination, respect, and belt progression. A clear learning structure helps beginners celebrate small milestones while practicing focus and self-control.</p>
             <a href="/kenpo-karate">Explore Jr. Kenpo <span aria-hidden="true">→</span></a>
           </div>
         </article>
@@ -330,7 +330,7 @@ const serviceSchema = {
           <p class="kids-eyebrow">YOUR NEIGHBORHOOD MARTIAL ARTS SCHOOL</p>
           <h2 id="kids-local-heading">Kids karate and martial arts in Owings Mills, Maryland</h2>
           <p>Burning Tree Mixed Martial Arts is located in Owings Mills in Baltimore County. If you're looking for a kids martial arts school near Reisterstown, Pikesville, Randallstown, or surrounding communities, you can visit our Owings Mills location to learn about beginner classes.</p>
-          <p>Choosing a class for your child? <a href="#kids-schedule-heading">Check the junior class schedule</a>, read <a href="/your-first-class/">what to expect on your first visit</a>, or explore <a href="/success-stories/">Burning Tree parent success stories</a>. Our Jr. Kenpo program welcomes ages 5–12; contact us about placement for other junior programs.</p>
+          <p>Choosing a class for your child? <a href="#kids-schedule-heading">Check the junior class schedule</a>, read <a href="/your-first-class/">what to expect on your first visit</a>, or explore <a href="/success-stories/">Burning Tree parent success stories</a>. Ask Coach David about placement for junior programs.</p>
           <address>
             <strong>Burning Tree Mixed Martial Arts</strong>
             <span>{site.addressLine1}, {site.city}, {site.region} {site.postalCode}</span>
