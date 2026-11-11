@@ -7,9 +7,10 @@ type Props = {
   config?: LeadFormConfig;
   formId?: string;
   loadTurnstile?: boolean;
+  transferDays?: readonly string[];
 };
 
-const { config, formId = "lead-form", loadTurnstile = true } = Astro.props;
+const { config, formId = "lead-form", loadTurnstile = true, transferDays } = Astro.props;
 
 const title = config?.title ?? "Start Your First Step";
 const intro = config?.intro ?? "Tell us what you are interested in and we will follow up with the best class option.";
@@ -42,6 +43,18 @@ const fields = config?.fields ?? "standard";
           <option value="">Select an age group</option>
           {studentAgeGroups.map((group) => <option value={group}>{group}</option>)}
         </select>
+        {transferDays && (
+          <>
+            <label for={formId + "-experience"}>Current style or belt rank</label>
+            <input id={formId + "-experience"} name="trainingExperience" maxlength="140" required />
+            <label for={formId + "-day"}>Preferred training day</label>
+            <select id={formId + "-day"} name="preferredDay" required>
+              <option value="">Select a day</option>
+              {transferDays.map((day) => <option value={day}>{day}</option>)}
+              <option value="Flexible">I’m flexible</option>
+            </select>
+          </>
+        )}
       </>
     ) : fields === "emailOnly" ? (
       <>

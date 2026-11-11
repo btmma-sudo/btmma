@@ -1,0 +1,73 @@
+---
+import LeadForm from "./LeadForm.astro";
+import { weeklySchedule } from "../data/schedule";
+
+interface Props {
+  program: "kids" | "teens-adults";
+}
+
+const { program } = Astro.props;
+const isKids = program === "kids";
+const classPrefix = isKids ? "Jr." : "Teens & Adults";
+const transferDays = weeklySchedule
+  .filter(({ slots }) => slots.some(({ cls }) => cls.startsWith(classPrefix)))
+  .map(({ day }) => day);
+---
+
+<section class="transfer-inquiry shell" aria-labelledby="transfer-heading">
+  <div class="transfer-copy">
+    <h2 id="transfer-heading">Already Training? Come Meet Us</h2>
+    <p>Your training experience matters. Come try a class, meet Coach David, and find the right place to continue your training.</p>
+    <p>
+      Students from any martial arts style are welcome. Before you enroll, talk with Coach David
+      about {isKids ? "your child’s" : "your"} training and current belt rank. He’ll recommend a first
+      class and explain how belt placement works at Burning Tree.
+    </p>
+    {isKids && (
+      <p>
+        Students who listen to feedback, treat others with respect, and show they’re ready for
+        more responsibility can work toward joining our signature <a href="#leadership-class">Leadership Class</a>.
+      </p>
+    )}
+    <div class="transfer-actions">
+      <a href="#transfer-inquiry">Talk With Coach David</a>
+      <a href={`/29-trial/?from=${program}`}>Start My $29 Trial</a>
+    </div>
+  </div>
+  <LeadForm
+    formId="transfer-inquiry"
+    loadTurnstile={false}
+    transferDays={transferDays}
+    config={{
+      title: "Talk With Coach David",
+      intro: "Tell us about your training and what day works for you. Coach David will follow up to recommend a first class.",
+      submitLabel: "Send My Inquiry",
+      fields: "classHelp"
+    }}
+  />
+</section>
+
+<style>
+  .transfer-inquiry {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
+    align-items: start;
+    gap: clamp(1.25rem, 4vw, 3rem);
+    padding-block: clamp(2.5rem, 6vw, 4.5rem);
+  }
+  .transfer-copy h2 { color: #171717; -webkit-text-stroke: 0; text-transform: none; }
+  .transfer-copy a { color: #970813; font-weight: 800; }
+  .transfer-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.5rem; }
+  .transfer-actions a {
+    padding: .7rem 1rem;
+    border: 2px solid #970813;
+    border-radius: .45rem;
+    text-decoration: none;
+  }
+  .transfer-actions a:last-child { background: #970813; color: #fff; }
+  .transfer-inquiry :global(.lead-card-compact-card) { color: #f5f5f5; scroll-margin-top: 140px; }
+  .transfer-inquiry :global(.lead-card-compact-card h2) { color: #fff; -webkit-text-stroke: 0; }
+  @media (max-width: 760px) {
+    .transfer-inquiry { grid-template-columns: 1fr; }
+  }
+</style>

@@ -1,5 +1,6 @@
 ---
 import ProgramInquiry from "../components/ProgramInquiry.astro";
+import TransferInquiry from "../components/TransferInquiry.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { weeklySchedule, formatClassTime } from "../data/schedule";
 import { site } from "../data/site";
@@ -168,6 +169,8 @@ const serviceSchema = {
         <a class="kids-button" href="/29-trial/?from=kids">Try 2 Beginner Classes for $29</a>
       </div>
     </section>
+
+    <TransferInquiry program="kids" />
 
     <ProgramInquiry
       heading="Finding confidence and discipline"

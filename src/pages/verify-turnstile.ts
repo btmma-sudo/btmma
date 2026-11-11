@@ -2,6 +2,14 @@ export const prerender = false;
 
 import type { APIRoute } from "astro";
 import { studentAgeGroups } from "../lib/class-help";
+import { weeklySchedule } from "../data/schedule";
+
+const transferSources = ["/kids-martial-arts/#transfer-inquiry", "/teens-adults-martial-arts/#transfer-inquiry"];
+const classHelpSources = [
+  "/kids-martial-arts/#class-inquiry",
+  "/teens-adults-martial-arts/#class-inquiry",
+  ...transferSources
+];
 
 // All ordinary website inquiries are saved straight to the existing Leads table.
 // The $29 registration/payment endpoints remain separate and unchanged.
@@ -60,6 +68,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
   const program = formText(form, "programInterest", 120);
   const comments = formText(form, "comments", 3000);
   const source = formText(form, "source", 500) || "/";
+  const isTransfer = isClassHelp && transferSources.includes(source);
+  const trainingExperience = formText(form, "trainingExperience", 140);
+  const preferredDay = formText(form, "preferredDay", 20);
   // These fields are untrusted optional client metadata; trim to the CRM's
   // conservative lengths, never trust them for authorization or payment.
   const firstLandingPage = formText(form, "firstLandingPage", 160);
@@ -80,6 +91,12 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
   } else if (!emailPattern.test(email) || (!name && !program) || (program !== "ChimpmanGi" && !phone)) {
     return json({ success: false, error: "Please complete all required fields correctly." }, 400);
+  }
+
+  if (isTransfer && (!trainingExperience || !(
+    preferredDay === "Flexible" || weeklySchedule.some(({ day }) => day === preferredDay)
+  ))) {
+    return json({ success: false, error: "Please enter the student's current style or belt rank and select a preferred day." }, 400);
   }
 
   if (!env.TURNSTILE_SECRET_KEY || !env.AIRTABLE_API_TOKEN || !env.AIRTABLE_BASE_ID) {
@@ -108,7 +125,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   const fields: Record<string, string | boolean> = {
     [FIELDS.name]: name || "Website inquiry",
     [FIELDS.source]: isClassHelp
-      ? (["/kids-martial-arts/#class-inquiry", "/teens-adults-martial-arts/#class-inquiry"].includes(source) ? source : "/29-trial/#help-find-a-class")
+      ? (classHelpSources.includes(source) ? source : "/29-trial/#help-find-a-class")
       : (source.startsWith("/") ? source : "/"),
     [FIELDS.stage]: "New"
   };
@@ -119,8 +136,15 @@ export const POST: APIRoute = async ({ request, locals }) => {
     fields[FIELDS.smsConsentRecordedAt] = new Date().toISOString();
   }
   if (isClassHelp) {
-    fields[FIELDS.notes] = "Class inquiry\nStudent age group: " + studentAgeGroup +
-      "\nPreferred contact: " + (email ? "Email" : "Phone call");
+    const notes = [
+      isTransfer ? "Experienced student inquiry" : "Class inquiry",
+      "Student age group: " + studentAgeGroup,
+      "Preferred contact: " + (email ? "Email" : "Phone call")
+    ];
+    if (isTransfer) {
+      notes.push("Current style or belt rank: " + trainingExperience, "Preferred training day: " + preferredDay);
+    }
+    fields[FIELDS.notes] = notes.join("\n");
   } else {
     if (program) fields[FIELDS.program] = program;
     if (comments) fields[FIELDS.notes] = comments;

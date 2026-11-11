@@ -1,5 +1,6 @@
 ---
 import ProgramInquiry from "../components/ProgramInquiry.astro";
+import TransferInquiry from "../components/TransferInquiry.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { weeklySchedule, formatClassTime } from "../data/schedule";
 import { site } from "../data/site";
@@ -188,6 +189,8 @@ const breadcrumbSchema = {
         <a class="ta-button" href="/29-trial/?from=teens-adults">Claim Your $29 New Student Special</a>
       </div>
     </section>
+
+    <TransferInquiry program="teens-adults" />
 
     <ProgramInquiry
       heading="How Coach David got his start"
