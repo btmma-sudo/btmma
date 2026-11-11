@@ -20,7 +20,14 @@ export async function sendOwnerSms(env, kind) {
         signal: AbortSignal.timeout(4000)
       }
     );
-    if (!response.ok) console.warn("Owner SMS rejected", { kind, status: response.status });
+    if (!response.ok) {
+      const error = await response.json().catch(() => null);
+      console.warn("Owner SMS rejected", {
+        kind,
+        status: response.status,
+        twilioCode: Number.isInteger(error?.code) ? error.code : null
+      });
+    }
   } catch {
     console.warn("Owner SMS request failed", { kind });
   }
