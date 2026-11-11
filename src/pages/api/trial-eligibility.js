@@ -1,3 +1,5 @@
+import { questionnaireAccessToken } from "../../lib/trial-confirmation.js";
+import { upcomingTrialClasses, trialClassGroup } from "../../data/trial-classes";
 // Cloudflare Pages Function: server-side eligibility precheck.
 // Requires AIRTABLE_API_TOKEN, AIRTABLE_BASE_ID and TURNSTILE_SECRET_KEY.
 // This is a precheck only; it deliberately does not create a payment session.
@@ -24,18 +26,10 @@ async function checkoutGrant(secret, recordId) {
   const mac = new Uint8Array(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(payload)));
   return payload + "." + Array.from(mac, b => b.toString(16).padStart(2, "0")).join("");
 }
-// A signed, short-lived capability for Step 3 after payment verification.
-// Issued only with an approved registration; payment is checked again at submission.
-async function questionnaireAccessToken(secret, recordId) {
-  if (!secret || !/^rec[A-Za-z0-9]{14}$/.test(recordId)) return null;
-  const expires = String(Date.now() + 30 * 86400000);
-  const message = "btmma-questionnaire-v1|" + recordId + "|" + expires;
-  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret),
-    { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
-  const mac = new Uint8Array(await crypto.subtle.sign("HMAC", key,
-    new TextEncoder().encode(message)));
-  return "qt1." + recordId + "." + expires + "." +
-    Array.from(mac, b => b.toString(16).padStart(2, "0")).join("");
+function trialRequestNote(program, classOption) {
+  const note = "Requested program: " + program + ". Submitted through the $29 New Student Special.";
+  return classOption ? note + "\nPreferred first class: " + classOption.label + " (" +
+    classOption.id.slice(0, 10) + "). Awaiting Coach David's confirmation." : note;
 }
 export const prerender = false;
 export async function POST({ request, locals }) {
@@ -49,7 +43,7 @@ export async function POST({ request, locals }) {
   }
   let data;
   try { data = await request.json(); } catch { return json({ success: false, error: "Invalid registration." }, 400); }
-  const { studentType, studentName, studentDob, guardianName, email, phone, programInterest, turnstileToken, attribution } = data || {};
+  const { studentType, studentName, studentDob, guardianName, email, phone, turnstileToken, attribution, preferredClass } = data || {};
   // Parse a calendar date strictly; reject impossible and future dates.
   const dobValid = typeof studentDob === "string" && /^\d{4}-\d{2}-\d{2}$/.test(studentDob);
   const dobDate = dobValid ? new Date(studentDob + "T00:00:00Z") : null;
@@ -63,6 +57,14 @@ export async function POST({ request, locals }) {
   const age = calendarDateValid ? today.getUTCFullYear() - birthYear -
     (today.getUTCMonth() + 1 < birthMonth ||
       (today.getUTCMonth() + 1 === birthMonth && today.getUTCDate() < birthDay) ? 1 : 0) : NaN;
+  const classOption = typeof preferredClass === "string"
+    ? upcomingTrialClasses(today).find(slot => slot.id === preferredClass)
+    : null;
+  if (preferredClass !== undefined && (!classOption || !calendarDateValid ||
+      classOption.group !== trialClassGroup(studentDob, classOption.id.slice(0, 10)))) {
+    return json({ success: false, error: "Please choose an upcoming class for the student's age group." }, 400);
+  }
+  const programInterest = classOption?.program ?? data?.programInterest;
   if (!["minor", "adult"].includes(studentType) || typeof studentName !== "string" || studentName.trim().length < 2 ||
       studentName.length > 120 || !calendarDateValid || !Number.isInteger(age) || age < 3 || age > 110 ||
       (studentType === "minor" && (!guardianName || typeof guardianName !== "string" || guardianName.trim().length < 2)) ||
@@ -315,6 +317,22 @@ export async function POST({ request, locals }) {
             sameDob(fields, studentDob) &&
             !fields[trialUsedFieldName] && fields["Payment Status"] !== "Paid") {
           if (!await reserveStudent(env.TRIAL_DB, record.id, reservationStudentKey || record.id)) return json({ success: true, eligible: false, message: "Please contact the studio to verify this registration." });
+          if (classOption && env.TRIAL_REGISTRATION_CONTEXT === "live") {
+            const notes = String(fields["Additional Notes"] || "")
+              .split("\n").filter(line => !line.startsWith("Requested program:") &&
+                !line.startsWith("Preferred first class:")).filter(Boolean);
+            const updated = await fetch(
+              "https://api.airtable.com/v0/" + encodeURIComponent(env.AIRTABLE_BASE_ID) + "/tblZCXEuRKXiPZlc7/" + encodeURIComponent(record.id),
+              {
+                method: "PATCH",
+                headers: { Authorization: "Bearer " + env.AIRTABLE_API_TOKEN, "Content-Type": "application/json" },
+                body: JSON.stringify({ fields: { "Additional Notes": [
+                  trialRequestNote(programInterest, classOption), ...notes
+                ].join("\n") }, typecast: false })
+              }
+            );
+            if (!updated.ok) throw new Error("Class preference update failed");
+          }
           return json({
             checkoutGrant: await checkoutGrant(env.STRIPE_WEBHOOK_SECRET, record.id),
             questionnaireAccess: env.TRIAL_REGISTRATION_CONTEXT === "live" ? await questionnaireAccessToken(env.STRIPE_WEBHOOK_SECRET, record.id) : null,
@@ -349,7 +367,7 @@ export async function POST({ request, locals }) {
         return json({ success: false, error: "Registration contact details need verification. Please call (202) 368-4395." }, 503);
       }
       fields[phoneField.id] = phone.trim();
-      fields[notesField.id] = "Requested program: " + programInterest + ". Submitted through the $29 New Student Special.";
+      fields[notesField.id] = trialRequestNote(programInterest, classOption);
       // Save first-touch metadata alongside the approved student registration.
       const firstTouch = attribution && typeof attribution === "object" && !Array.isArray(attribution) ? attribution : {};
       for (const [fieldLabel, rawValue, maxLength] of [

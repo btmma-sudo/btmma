@@ -112,10 +112,12 @@ const schema = {
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-MNQC3K79EV');
-      // New Burning Tree GA4 property; preserve the existing property and its historical tracking.
-      gtag('config', 'G-5M75V93ZV5');
+      if (!window.location.hash.startsWith('#goals=')) {
+        gtag('js', new Date());
+        gtag('config', 'G-MNQC3K79EV');
+        // New Burning Tree GA4 property; preserve the existing property and its historical tracking.
+        gtag('config', 'G-5M75V93ZV5');
+      }
     </script>
     <!-- End Google tag -->
     <!-- Optional first-touch attribution for CRM reporting; no student details. -->

@@ -1,3 +1,4 @@
+import { sendTrialConfirmation } from "../../lib/trial-confirmation.js";
 import { PNO_SOURCE, reconcilePnoPayment } from "../../lib/parents-night-out.js";
 import { SEMINAR_SOURCE, reconcileSeminarPayment } from "../../lib/seminar-payment-reconciliation.js";
 // Isolated live payment webhook. Public live checkout is not enabled.
@@ -126,11 +127,13 @@ export async function POST({ request, locals }) {
     await env.LIVE_TRIAL_DB.prepare("UPDATE trial_registrations SET state = 'manual_review', updated_at = CURRENT_TIMESTAMP WHERE id = ? AND state != 'paid'").bind(row.id).run();
   } else {
     if (session.payment_status !== "paid") return reply("Awaiting payment", 503);
+    let registrationEmail;
     if (row.state !== "paid") {
       const url = "https://api.airtable.com/v0/" + encodeURIComponent(env.AIRTABLE_BASE_ID) + "/tblZCXEuRKXiPZlc7/" + encodeURIComponent(row.airtable_record_id);
       const current = await fetch(url, { headers: { Authorization: "Bearer " + env.AIRTABLE_API_TOKEN } });
       if (!current.ok) return reply("Airtable verification unavailable", 503);
       const student = await current.json();
+      registrationEmail = student.fields?.Email;
       // Resolve canonical Airtable field IDs instead of relying on visible labels.
       // The existing checkbox may be spelled "Trial" or "Trail" in the base.
       const schemaResponse = await fetch(
@@ -178,6 +181,23 @@ export async function POST({ request, locals }) {
       const paidUpdate = await env.LIVE_TRIAL_DB.prepare("UPDATE trial_registrations SET state = 'paid', stripe_payment_intent_id = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND stripe_session_id = ?")
         .bind(typeof session.payment_intent === "string" ? session.payment_intent : null, row.id, sessionId).run();
       if (paidUpdate.meta?.changes !== 1) return reply("Payment reconciliation pending", 503);
+    }
+    if (env.RESEND_API_KEY) {
+      // Use the registration contact even when a different person paid for the student.
+      if (!registrationEmail) {
+        const lead = await fetch("https://api.airtable.com/v0/" + encodeURIComponent(env.AIRTABLE_BASE_ID) +
+          "/tblZCXEuRKXiPZlc7/" + encodeURIComponent(row.airtable_record_id), {
+          headers: { Authorization: "Bearer " + env.AIRTABLE_API_TOKEN }
+        });
+        if (!lead.ok) return reply("Trial confirmation email pending", 503);
+        registrationEmail = (await lead.json()).fields?.Email;
+      }
+      if (registrationEmail && !await sendTrialConfirmation(env, {
+        recordId: row.airtable_record_id,
+        email: registrationEmail,
+        paid: true,
+        issuedAt: Number(session.created) * 1000
+      })) return reply("Trial confirmation email pending", 503);
     }
   }
   await env.LIVE_TRIAL_DB.prepare("INSERT OR IGNORE INTO stripe_webhook_events (event_id, event_type) VALUES (?, ?)")

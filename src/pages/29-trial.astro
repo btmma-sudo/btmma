@@ -26,14 +26,21 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       </div>
       <p><strong>One Tree. One Family.</strong></p>
     </section>
-    <nav class="trial-steps" aria-label="Three steps to get started"><ol>
+    <section class="upcoming-trial-classes" aria-labelledby="upcoming-trial-title">
+      <h2 id="upcoming-trial-title">Upcoming Beginner Classes</h2>
+      <div class="upcoming-trial-groups">
+        <div><h3>Kids</h3><ul id="upcoming-kids"></ul></div>
+        <div><h3>Teens &amp; Adults</h3><ul id="upcoming-teens-adults"></ul></div>
+      </div>
+      <p>See more times when you choose your preferred class below.</p>
+    </section>
+    <nav class="trial-steps" aria-label="Two steps to get started"><ol>
       <li id="trial-step-1" class="current" aria-current="step"><strong>1</strong><span>Student Questionnaire</span></li>
       <li id="trial-step-2"><strong>2</strong><span>$29 Payment</span></li>
-      <li id="trial-step-3"><strong>3</strong><span>Goals Questionnaire</span></li>
-    </ol><p><strong>Complete all 3 steps:</strong> (1) answer the short student information form, (2) pay $29, and (3) complete the goals questionnaire that appears after your payment is verified. Your details from Step 1 are saved automatically—no need to enter them again.</p></nav>
+    </ol><p>Choose a preferred class and complete the $29 trial payment. Coach David will contact you after payment is verified to confirm your first class. Please wait for his confirmation before coming in.</p></nav>
     <section class="registration" id="registration">
       <h2>Step 1: Student Information Questionnaire</h2>
-      <p>Complete this short first questionnaire with the student’s name, birth date, contact information and chosen martial art. After paying $29 in Step 2, a different questionnaire will open in Step 3 to learn about goals and training preferences. You will not have to reenter Step 1 answers. Siblings may share parent contact details but register separately.</p>
+      <p>Enter your student’s details and choose a preferred first class. Siblings may share parent contact details and register separately.</p>
       <p class="first-class-help">First time on the mats? <a href="/your-first-class">See what to wear, where to park, and what happens after you register.</a></p>
       <form id="student-registration" class="form">
         <div id="step-one-fields">
@@ -114,13 +121,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         <input id="contactEmail" name="email" type="email" autocomplete="email" required />
         <label for="contactPhone">Contact phone</label>
         <input id="contactPhone" name="phone" type="tel" autocomplete="tel" required />
-        <label for="programInterest">Interested program</label>
-        <select id="programInterest" name="programInterest" required>
-          <option value="">Choose a program</option>
-          <option>Kenpo Karate</option>
-          <option>Muay Thai</option>
-          <option>Wing Chun</option>
+        <label for="preferredClass">Preferred first class</label>
+        <select id="preferredClass" name="preferredClass" aria-describedby="preferred-class-help" required>
+          <option value="">Choose an upcoming class</option>
         </select>
+        <p class="fine-print" id="preferred-class-help">Times are Eastern. Coach David confirms your class after payment is verified.</p>
 
         </div>
         <p class="fine-print">By submitting, you agree to our <a href="/privacy">Privacy Policy</a> and <a href="/terms">Terms of Service</a>.</p>
@@ -138,7 +143,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         <button class="verify-registration-button" type="submit">COMPLETE STEP 1 &amp; CHOOSE PAYMENT</button>
         <div id="payment-stage" hidden>
           <h3>Step 2: Complete Your $29 Payment</h3>
-          <p>Card and Apple Pay use secure Stripe checkout. Cash App and Zelle require Coach David to verify the transfer before Step 3 opens.</p>
+          <p>Card and Apple Pay use secure Stripe checkout. Cash App and Zelle require Coach David to verify the transfer before your questionnaire opens.</p>
         <button id="applepay-button" type="button" hidden disabled>APPLE PAY / APPLE CASH — $29</button>
         <button id="checkout-button" type="button" hidden disabled>PAY $29 WITH CREDIT / DEBIT CARD</button>
         <a id="checkout-fallback" class="cta" hidden rel="noopener noreferrer">OPEN SECURE $29 CARD CHECKOUT</a>
@@ -153,8 +158,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <p>Add “BTMMA New Student Special” in the payment note. Once paid, text the student's name and your payment confirmation to <a href="sms:+14102180894">(410) 218-0894</a>.</p>
           <p><strong>Your registration is pending.</strong> We will confirm it only after verifying the $29 payment in our Cash App account. Do not pay again through Stripe.</p>
           <p>Need to change payment methods? Call <a href="tel:+12023684395">(202) 368-4395</a>.</p>
-                    <p class="manual-step3-help">After Coach David verifies your payment, return to this page on the same device to complete Step 3.</p>
-          <button type="button" class="check-step-three">CHECK PAYMENT &amp; CONTINUE TO STEP 3</button>
+                    <p class="manual-step3-help">After Coach David verifies your payment, check payment status here to open the goals questionnaire. You can also use the link in your registration email.</p>
+          <button type="button" class="check-step-three">CHECK PAYMENT STATUS</button>
 <button type="button" id="cashapp-new-student">REGISTER ANOTHER STUDENT</button>
         </div>
         <div id="zelle-instructions" class="cashapp-instructions" hidden aria-live="polite">
@@ -168,8 +173,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <p>After sending, <strong>text the student's name and your Zelle payment confirmation</strong> to <a href="sms:+14102180894">(410) 218-0894</a>.</p>
           <p><strong>Your registration is pending.</strong> Burning Tree will confirm it only after verifying the $29 transfer was received through Zelle. Choosing this option does not automatically confirm payment. <strong>Do not pay a second time</strong> by card, Apple Pay or Cash App.</p>
           <p>Need help or want to change payment methods? Call or text <a href="tel:+14102180894">(410) 218-0894</a> before sending another payment.</p>
-                    <p class="manual-step3-help">After Coach David verifies your payment, return to this page on the same device to complete Step 3.</p>
-          <button type="button" class="check-step-three">CHECK PAYMENT &amp; CONTINUE TO STEP 3</button>
+                    <p class="manual-step3-help">After Coach David verifies your payment, check payment status here to open the goals questionnaire. You can also use the link in your registration email.</p>
+          <button type="button" class="check-step-three">CHECK PAYMENT STATUS</button>
 <button type="button" id="zelle-new-student">REGISTER ANOTHER STUDENT</button>
         </div>
         </div>
@@ -180,16 +185,20 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         <h2 id="checkout-result-title">Verifying your payment...</h2>
         <p id="checkout-result-message" role="status">Checking your secure Stripe transaction.</p>
         <p>Please do not make another payment while confirmation is pending.</p>
-        <a class="cta" id="step-three-jump" href="#post-payment" hidden>CONTINUE TO STEP 3</a>
+        <a class="cta" id="step-three-jump" hidden>COMPLETE YOUR GOALS QUESTIONNAIRE</a>
         <a class="cta" href="tel:+12023684395">QUESTIONS? CALL (202) 368-4395</a>
       </div>
     </section>
+    <section class="registration" id="goals-access" hidden>
+      <h2>Enrollment Goals Questionnaire</h2>
+      <p id="goals-access-status" role="status">Checking your trial payment…</p>
+      <p>Questions? Call <a href="tel:+12023684395">(202) 368-4395</a>.</p>
+    </section>
     <section class="registration" id="post-payment" hidden aria-labelledby="post-payment-title">
-      <h2 id="post-payment-title">Step 3: Enrollment Goals Questionnaire</h2>
-      <p>Payment verified! Please complete this last step to help us prepare for your classes—no need to reenter anything from Step 1.</p>
+      <h2 id="post-payment-title">Enrollment Goals Questionnaire</h2>
+      <p>Complete this before your first class so Coach David can prepare for your visit.</p>
       <form id="post-payment-questionnaire" class="form">
         <section class="questionnaire-online" aria-labelledby="questionnaire-title">
-          <p class="questionnaire-eyebrow">STEP 3 OF 3 — AFTER VERIFIED PAYMENT</p>
           <h3 id="questionnaire-title">Tell Us About Your Goals</h3>
           <p>Your payment is verified. We already have your name, contact information, date of birth and chosen martial art from Step 1.</p>
           <p class="questionnaire-note">Please share your main goal in Question 3. All other questions are optional, and you can discuss them with Coach David later.</p>
@@ -270,14 +279,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 <label class="question-option"><input type="radio" name="q19" value="Drove by" /><span>Drove by</span></label>
 <label class="question-option"><input type="radio" name="q19" value="Community event" /><span>Community event</span></label>
 <label class="question-option"><input type="radio" name="q19" value="Other" /><span>Other</span></label></div><label class="question-subfield" for="q19Referrer">Referred by (optional)<input id="q19Referrer" name="q19Referrer" type="text" maxlength="120" /></label><label class="question-subfield" for="q19Other">Other source (optional)<input id="q19Other" name="q19Other" type="text" maxlength="120" /></label></div>
-<div class="question-line"><label class="question-label" for="preferredFirstClass">Preferred first class date or time (optional)</label><input id="preferredFirstClass" type="text" name="preferredFirstClass" maxlength="160" placeholder="Example: Next Tuesday after 5 PM" /></div>
 <label class="questionnaire-permission"><input type="checkbox" name="contactPermission" value="yes" /><span>You may contact me about this registration, trial scheduling, and follow-up. Promotional text marketing requires separate consent.</span></label></div></details>
           <p class="questionnaire-bottom">Your answers will be saved to the existing student registration. This is not a membership contract.</p>
         </section>
 
 
         <p id="post-payment-status" class="notice" role="status" aria-live="polite">Tell us about your main goal, then send your answers securely.</p>
-        <button id="post-payment-submit" type="submit">FINISH REGISTRATION — SEND QUESTIONNAIRE</button>
+        <button id="post-payment-submit" type="submit">SEND GOALS QUESTIONNAIRE</button>
         <button id="step3-new-student" type="button" class="register-more-students">REGISTER ANOTHER STUDENT</button>
       </form>
       <div id="post-payment-done" hidden>
@@ -387,7 +395,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       if (dobYear.value !== digits) dobYear.value = digits;
       dobYear.setCustomValidity("");
       studentDob.value = "";
-      if (!dobMonth.value || !dobDay.value || !/^[0-9]{4}$/.test(digits)) return false;
+      if (!dobMonth.value || !dobDay.value || !/^[0-9]{4}$/.test(digits)) {
+        studentDob.dispatchEvent(new Event("change"));
+        return false;
+      }
       const year = Number(digits);
       const month = Number(dobMonth.value);
       const day = Number(dobDay.value);
@@ -397,9 +408,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         date.getTime() <= Date.now();
       if (!valid) {
         dobYear.setCustomValidity("Enter a valid date of birth that is not in the future.");
+        studentDob.dispatchEvent(new Event("change"));
         return false;
       }
       studentDob.value = digits + "-" + dobMonth.value + "-" + dobDay.value;
+      studentDob.dispatchEvent(new Event("change"));
       return true;
     };
     dobMonth?.addEventListener("change", syncDob);
@@ -413,12 +426,30 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     // Signed access identifies the student, not payment. The API independently
     // verifies Stripe or staff-confirmed Cash App/Zelle before unlocking Step 3.
     const accessKey = "btmma_trial_questionnaire_access_v1";
-    let questionnaireAccess = null;
-    try { questionnaireAccess = window.localStorage.getItem(accessKey); }
-    catch { /* Stripe checkout returns also carry a verifiable session ID. */ }
-    let verifiedSessionId = null;
+    const goalsMode = window.location.hash.startsWith("#goals=");
+    const goalsReference = goalsMode ? window.location.hash.slice(7) : "";
+    let questionnaireAccess = /^qt1\.rec[A-Za-z0-9]{14}\.\d{13}\.[a-f0-9]{64}$/.test(goalsReference)
+      ? goalsReference : null;
+    if (!goalsMode) {
+      try { questionnaireAccess = window.localStorage.getItem(accessKey); }
+      catch { /* Stripe checkout returns also carry a verifiable session ID. */ }
+    }
+    let verifiedSessionId = /^cs_live_[A-Za-z0-9_]{10,240}$/.test(goalsReference) ? goalsReference : null;
+    const showGoalsLink = (sessionId) => {
+      const reference = sessionId || questionnaireAccess;
+      if (stepThreeJump && reference) {
+        stepThreeJump.href = "/29-trial/?view=goals#goals=" + reference;
+        stepThreeJump.hidden = false;
+      }
+    };
+    const openGoals = document.getElementById("goals-access");
+    const goalsStatus = document.getElementById("goals-access-status");
+    if (goalsMode) {
+      document.querySelector(".trial-page")?.classList.add("goals-mode");
+      if (openGoals) openGoals.hidden = false;
+    }
     const setStep = (num, finished = false) => {
-      for (let i = 1; i <= 3; i++) {
+      for (let i = 1; i <= 2; i++) {
         const step = document.getElementById("trial-step-" + i);
         if (!step) continue;
         step.classList.toggle("current", i === num && !finished);
@@ -428,16 +459,19 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       }
     };
     const showStepThree = (completed = false) => {
+      if (openGoals) openGoals.hidden = true;
       if (step3Panel) step3Panel.hidden = false;
       if (postForm) postForm.hidden = completed;
       if (donePanel) donePanel.hidden = !completed;
       if (stepThreeJump) stepThreeJump.hidden = completed;
-      setStep(3, completed);
+      setStep(2, true);
       if (form) form.hidden = true;
-      if (step3Panel && !completed) step3Panel.scrollIntoView({ behavior: "smooth", block: "start" });
-      if (completed) {
-        try { window.localStorage.removeItem(accessKey); }
-        catch { /* Confirmation doesn't require browser storage. */ }
+      if (step3Panel) step3Panel.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (completed && questionnaireAccess) {
+        try {
+          if (window.localStorage.getItem(accessKey) === questionnaireAccess)
+            window.localStorage.removeItem(accessKey);
+        } catch { /* Confirmation doesn't require browser storage. */ }
       }
     };
     const checkStepThree = async ({ sessionId = null, quiet = false } = {}) => {
@@ -456,12 +490,26 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         if (!response.ok) throw new Error(result.error || "Payment verification is temporarily unavailable.");
         if (result.paid === true) {
           verifiedSessionId = sessionId || verifiedSessionId;
-          showStepThree(result.completed === true);
+          if (goalsMode) {
+            showStepThree(result.completed === true);
+          } else {
+            const resultPanel = document.getElementById("checkout-result");
+            if (resultPanel) resultPanel.hidden = false;
+            if (form) form.hidden = true;
+            const heading = document.getElementById("checkout-result-title");
+            const message = document.getElementById("checkout-result-message");
+            if (heading) heading.textContent = "Your trial payment is verified";
+            if (message) message.textContent = "Coach David will contact you to confirm your first class. Please complete your goals questionnaire before class.";
+            if (!result.completed) showGoalsLink(sessionId);
+            setStep(2, true);
+          }
           return true;
         }
+        if (goalsStatus && goalsMode) goalsStatus.textContent = "Your questionnaire will open after your $29 payment is verified. Please try this link again once your payment is confirmed.";
         if (!quiet && notice) notice.textContent = "Your registration is saved, but the $29 payment is still awaiting verification. Please do not pay twice.";
         return false;
       } catch (error) {
+        if (goalsStatus && goalsMode) goalsStatus.textContent = error?.message || "We could not open your questionnaire. Please contact Coach David.";
         if (!quiet && notice) notice.textContent = error?.message || "Payment verification could not be checked.";
         return false;
       }
@@ -504,8 +552,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     });
     document.getElementById("step3-new-student")?.addEventListener("click", () => {
       try { window.localStorage.removeItem(accessKey); } catch { /* Optional. */ }
-      window.location.assign("/29-trial/#registration");
+      window.history.replaceState(null, "", "/29-trial/#registration");
+      window.location.reload();
     });
+    if (goalsMode) {
+      if (questionnaireAccess || verifiedSessionId) void checkStepThree({ sessionId: verifiedSessionId });
+      else if (goalsStatus) goalsStatus.textContent = "This questionnaire link is invalid. Please use the link in your confirmation message.";
+      return;
+    }
     document.querySelectorAll(".check-step-three").forEach(button => {
       button.addEventListener("click", () => { void checkStepThree(); });
     });
@@ -587,6 +641,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         if (zelleButton) zelleButton.hidden = true;
         if (cashAppInstructions) cashAppInstructions.hidden = false;
         notice.textContent = "Opening Cash App with $BTMMA and $29. Check the details before sending. We'll verify your payment manually.";
+        if (result.confirmationEmailSent) notice.textContent += " Check your email for the goals questionnaire link.";
         // Restore receipt instructions only after returning from this approved
         // Cash App selection, not on every future visit to the trial page.
         try {
@@ -656,6 +711,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         if (cashAppInstructions) cashAppInstructions.hidden = true;
         if (zelleInstructions) zelleInstructions.hidden = false;
         notice.textContent = "Zelle selected: $29 to Coach David's mobile (410) 218-0894. Registration stays pending until we verify payment.";
+        if (result.confirmationEmailSent) notice.textContent += " Check your email for the goals questionnaire link.";
         try {
           const bytes = window.crypto.getRandomValues(new Uint8Array(16));
           const returnToken = Array.from(bytes, b => b.toString(16).padStart(2, "0")).join("");
@@ -745,18 +801,19 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             recordVerifiedPurchase(sessionId);
           }
           if (result.status === "confirmed") {
-            if (heading) heading.textContent = "Payment verified — one last step!";
-            if (message) message.textContent = "Your $29 payment is verified. Please complete Step 3 below so we can prepare for your two beginner classes and free uniform. Your student information is already saved.";
+            if (heading) heading.textContent = "Your trial payment is verified";
+            if (message) message.textContent = "Coach David will contact you to confirm your first class. Use the link below or in your confirmation email to complete the goals questionnaire before class.";
           } else if (result.status === "processing") {
             if (heading) heading.textContent = "Payment received!";
-            if (message) message.textContent = "Stripe verified your $29 payment. Please complete Step 3 below while your registration finishes processing. Do not pay again.";
+            if (message) message.textContent = "Stripe verified your $29 payment. Coach David will contact you to confirm your first class. You can complete the goals questionnaire before class.";
           } else {
             if (heading) heading.textContent = "Payment confirmation pending";
             if (message) message.textContent = "Payment has not yet been confirmed. If you have a Stripe receipt, contact the studio before trying again.";
           }
-          // Step 3 is unlocked by a second independent server-side check.
+          // The questionnaire verifies payment independently when opened.
           if (result.status === "confirmed" || result.status === "processing") {
-            await checkStepThree({ sessionId });
+            showGoalsLink(sessionId);
+            setStep(2, true);
           }
         } catch {
           if (heading) heading.textContent = "Payment verification pending";
@@ -815,9 +872,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       cleanUrl.searchParams.delete("zelle_return");
       window.history.replaceState(window.history.state, "", cleanUrl.pathname + cleanUrl.search + cleanUrl.hash);
     }
-    // Check older direct-transfer signups on this device without requiring
-    // a duplicate registration or another payment.
-    if (questionnaireAccess) { void checkStepThree({ quiet: true }); }
     // Fail closed until the server confirms whether checkout is test or live.
     (async () => {
       try {
@@ -928,7 +982,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           if (applePayHelp) applePayHelp.hidden = false;
           if (cashAppButton) { cashAppButton.hidden = false; cashAppButton.disabled = false; }
           if (zelleButton) { zelleButton.hidden = false; zelleButton.disabled = false; }
-          notice.textContent = "Step 1 is complete. Choose a payment method for Step 2. After payment is verified, Step 3 will open automatically. Apple Pay and cards use Stripe; Cash App and Zelle require manual payment verification.";
+          notice.textContent = "Step 1 is complete. Choose a payment method for Step 2. Coach David will confirm your first class after payment is verified. Apple Pay and cards use Stripe; Cash App and Zelle require manual payment verification.";
         }
       } catch (error) {
         notice.textContent = error?.name === "AbortError"
@@ -949,9 +1003,51 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
 })();
 </script>
+<script>
+  import { upcomingTrialClasses, trialClassGroup } from "../data/trial-classes";
+
+  const preference = document.querySelector<HTMLSelectElement>("#preferredClass");
+  const dob = document.querySelector<HTMLInputElement>("#studentDob");
+  if (preference && dob) {
+    const refreshOptions = () => {
+      const selected = preference.value;
+      preference.replaceChildren(new Option("Choose an upcoming class", ""));
+      const slots = upcomingTrialClasses();
+      for (const [group, label] of [["kids", "Kids"], ["teens-adults", "Teens & Adults"]]) {
+        const choices = slots.filter(slot => slot.group === group &&
+          (!dob.value || trialClassGroup(dob.value, slot.id.slice(0, 10)) === group));
+        if (!choices.length) continue;
+        const options = document.createElement("optgroup");
+        options.label = label;
+        options.append(...choices.map(slot => new Option(slot.label, slot.id)));
+        preference.append(options);
+      }
+      if (Array.from(preference.options).some(option => option.value === selected)) {
+        preference.value = selected;
+      }
+    };
+    const upcoming = upcomingTrialClasses();
+    for (const group of ["kids", "teens-adults"]) {
+      const list = document.getElementById("upcoming-" + group);
+      for (const slot of upcoming.filter(option => option.group === group).slice(0, 3)) {
+        const item = document.createElement("li");
+        item.textContent = slot.label;
+        list?.append(item);
+      }
+    }
+    refreshOptions();
+    dob.addEventListener("change", refreshOptions);
+    preference.addEventListener("focus", refreshOptions);
+  }
+</script>
 <style>
+  .upcoming-trial-classes { max-width: 700px; margin: 0 auto 24px; padding: 18px 20px; }
+  .upcoming-trial-groups { display: flex; flex-wrap: wrap; gap: 16px 40px; }
+  .upcoming-trial-groups ul { padding-inline-start: 20px; }
+  .upcoming-trial-groups li { margin-block: 5px; }
+  .goals-mode > :not(#goals-access):not(#post-payment):not(.contact) { display: none; }
   .trial-page .trial-steps { max-width: 840px; margin: 4px auto 28px; padding: 0 14px; text-align: center; }
-  .trial-page .trial-steps ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .trial-page .trial-steps ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
   .trial-page .trial-steps li { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px 7px; background: #171717; border: 1px solid #666; color: #fff; border-radius: 12px; font-size: clamp(.72rem, 2.3vw, .96rem); }
   .trial-page .trial-steps li strong { width: 32px; height: 32px; display: grid; place-items: center; background: #444; border-radius: 50%; font-size: 1.05rem; }
   .trial-page .trial-steps li.current { border: 2px solid #e54643; }

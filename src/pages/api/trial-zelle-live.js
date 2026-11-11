@@ -1,3 +1,4 @@
+import { sendTrialConfirmation } from "../../lib/trial-confirmation.js";
 // Dedicated $29 trial Zelle option; no changes to Stripe or Cash App paths.
 // Zelle sends to Coach David's enrolled mobile: 410-218-0894.
 // Selecting this option NEVER means that a payment was received or a trial was paid.
@@ -101,8 +102,12 @@ export async function POST({ request, locals }) {
   } catch {
     return json({ error: "Zelle selection could not be recorded. Do not send money yet; contact Coach David." }, 503);
   }
+  const confirmationEmailSent = await sendTrialConfirmation(env, {
+    recordId, email: fields.Email, paid: false, issuedAt: Date.parse(record.record.createdTime)
+  });
   return json({
     success: true,
+    confirmationEmailSent,
     state: "pending_manual_verification",
     amount: 29,
     recipientPhone: "410-218-0894",

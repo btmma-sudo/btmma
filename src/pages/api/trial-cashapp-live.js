@@ -1,3 +1,4 @@
+import { sendTrialConfirmation } from "../../lib/trial-confirmation.js";
 // Direct Cash App is separate from Stripe. Selecting it requests manual
 // payment verification; it must NEVER mark a trial paid automatically.
 export const prerender = false;
@@ -36,13 +37,13 @@ async function notePendingPayment(env, recordId) {
   const existing = typeof data.fields?.["Additional Notes"] === "string"
     ? data.fields["Additional Notes"] : "";
   const flag = "Cash App direct payment selected: $29 to $BTMMA. PENDING verification in Cash App. Do not mark Paid until personally verified.";
-  if (existing.includes(flag)) return true;
+  if (existing.includes(flag)) return data;
   const response = await fetch(url, {
     method: "PATCH",
     headers: { ...headers, "Content-Type": "application/json" },
     body: JSON.stringify({ fields: { "Additional Notes": (existing ? existing + "\n" : "") + flag }, typecast: false })
   });
-  return response.ok;
+  return response.ok ? data : null;
 }
 
 export async function POST({ request, locals }) {
@@ -70,9 +71,14 @@ export async function POST({ request, locals }) {
     if (updated.meta?.changes !== 1)
       return json({ error: "Payment selection needs review. Please contact the studio." }, 409);
   }
+  let confirmationEmailSent = false;
   try {
-    if (!(await notePendingPayment(env, recordId)))
+    const lead = await notePendingPayment(env, recordId);
+    if (!lead)
       console.warn("Cash App manual verification note needs follow-up");
+    else confirmationEmailSent = await sendTrialConfirmation(env, {
+      recordId, email: lead.fields?.Email, paid: false, issuedAt: Date.parse(lead.createdTime)
+    });
   } catch {
     console.warn("Cash App manual verification note could not be saved");
   }
@@ -83,6 +89,7 @@ export async function POST({ request, locals }) {
     cashtag: "$BTMMA",
     paymentUrl: "https://cash.app/pay/link/tvqncp9q",
     amount: 29,
+    confirmationEmailSent,
     state: "pending_manual_verification"
   });
 }
