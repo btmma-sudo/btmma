@@ -1,12 +1,15 @@
 ---
 import { programInterestOptions, type LeadFormConfig } from "../data/site";
 
+import { studentAgeGroups } from "../lib/class-help";
+
 type Props = {
   config?: LeadFormConfig;
   formId?: string;
+  loadTurnstile?: boolean;
 };
 
-const { config, formId = "lead-form" } = Astro.props;
+const { config, formId = "lead-form", loadTurnstile = true } = Astro.props;
 
 const title = config?.title ?? "Start Your First Step";
 const intro = config?.intro ?? "Tell us what you are interested in and we will follow up with the best class option.";
@@ -23,9 +26,24 @@ const fields = config?.fields ?? "standard";
   <form
     class="lead-form-compact"
     method="post"
+    id={fields === "classHelp" ? formId + "-request" : undefined}
     data-submit-label={submitLabel}
     data-lead-form>
-    {fields === "emailOnly" ? (
+    {fields === "classHelp" ? (
+      <>
+        <input type="hidden" name="inquiryType" value="classHelp" />
+        <label for={formId + "-name"}>Your name</label>
+        <input id={formId + "-name"} name="fullName" autocomplete="name" maxlength="140" required />
+        <label for={formId + "-contact"}>Preferred contact method</label>
+        <input id={formId + "-contact"} name="preferredContact" placeholder="Email address or callback number" aria-describedby={formId + "-contact-help"} maxlength="254" required />
+        <small id={formId + "-contact-help"}>Enter your email for a reply or your phone number for a call.</small>
+        <label for={formId + "-age"}>Student age group</label>
+        <select id={formId + "-age"} name="studentAgeGroup" required>
+          <option value="">Select an age group</option>
+          {studentAgeGroups.map((group) => <option value={group}>{group}</option>)}
+        </select>
+      </>
+    ) : fields === "emailOnly" ? (
       <>
         <input name="fullName" type="text" placeholder="Name (optional)" autocomplete="name" />
         <input name="email" type="email" placeholder="Email" autocomplete="email" required />
@@ -59,8 +77,8 @@ const fields = config?.fields ?? "standard";
     )}
 
     <input name="source" type="hidden" value="" data-source-field />
-    <div class="cf-turnstile" data-sitekey="0x4AAAAAAD6Ievu-t0Ll1euh"></div>
-    {fields !== "emailOnly" && (
+    <div class="cf-turnstile" data-sitekey="0x4AAAAAAD6Ievu-t0Ll1euh" data-size={fields === "classHelp" ? "flexible" : undefined}></div>
+    {fields === "standard" && (
       <label class="lead-sms-optin">
         <input type="checkbox" name="smsConsent" value="yes" />
         <span>Yes, I agree to receive automated text messages from Burning Tree Mixed Martial Arts about my inquiry and classes at the number provided. Message frequency varies; message and data rates may apply. Reply STOP to unsubscribe or HELP for help. Consent is optional and is not required to purchase or enroll.</span>
@@ -77,7 +95,7 @@ const fields = config?.fields ?? "standard";
     <button class="button" type="submit">{submitLabel}</button>
   </form>
 </section>
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+{loadTurnstile && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
 
 <script is:inline>
   if (!(window).__btmmaLeadFormsInitialized) {
@@ -194,6 +212,8 @@ const fields = config?.fields ?? "standard";
             status.dataset.state = "error";
           }
         } finally {
+          const widget = form.querySelector(".cf-turnstile");
+          if (widget) window.turnstile?.reset(widget);
           if (submitButton instanceof HTMLButtonElement) {
             submitButton.disabled = false;
             submitButton.textContent = defaultSubmitLabel;

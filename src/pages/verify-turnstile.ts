@@ -1,6 +1,7 @@
 export const prerender = false;
 
 import type { APIRoute } from "astro";
+import { studentAgeGroups } from "../lib/class-help";
 
 // All ordinary website inquiries are saved straight to the existing Leads table.
 // The $29 registration/payment endpoints remain separate and unchanged.
@@ -45,11 +46,17 @@ export const POST: APIRoute = async ({ request, locals }) => {
   }
 
   const token = formText(form, "cf-turnstile-response", 4096);
-  const email = formText(form, "email", 254);
+  const isClassHelp = formText(form, "inquiryType", 20) === "classHelp";
+  const preferredContact = formText(form, "preferredContact", 254);
+  const studentAgeGroup = formText(form, "studentAgeGroup", 40);
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const email = isClassHelp
+    ? (emailPattern.test(preferredContact) ? preferredContact : "")
+    : formText(form, "email", 254);
   const name = formText(form, "fullName", 140);
-  const phone = formText(form, "phone", 40);
+  const phone = isClassHelp ? (email ? "" : preferredContact) : formText(form, "phone", 40);
   // Only an explicit, optional, checked website opt-in counts as permission.
-  const smsConsent = phone.length > 0 && formText(form, "smsConsent", 10) === "yes";
+  const smsConsent = !isClassHelp && phone.length > 0 && formText(form, "smsConsent", 10) === "yes";
   const program = formText(form, "programInterest", 120);
   const comments = formText(form, "comments", 3000);
   const source = formText(form, "source", 500) || "/";
@@ -66,8 +73,12 @@ export const POST: APIRoute = async ({ request, locals }) => {
   }
   // Some newsletter/product-interest forms request only an email; standard
   // inquiry forms require name and phone in the browser as well.
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
-      (!name && !program) || (program !== "ChimpmanGi" && !phone)) {
+  if (isClassHelp) {
+    const validPhone = /^[+()0-9. -]+$/.test(phone) && /^\d{10,15}$/.test(phone.replace(/\D/g, ""));
+    if (!name || !studentAgeGroups.includes(studentAgeGroup) || (!email && !validPhone)) {
+      return json({ success: false, error: "Please enter your name, an email address or callback number, and the student's age group." }, 400);
+    }
+  } else if (!emailPattern.test(email) || (!name && !program) || (program !== "ChimpmanGi" && !phone)) {
     return json({ success: false, error: "Please complete all required fields correctly." }, 400);
   }
 
@@ -96,17 +107,22 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   const fields: Record<string, string | boolean> = {
     [FIELDS.name]: name || "Website inquiry",
-    [FIELDS.email]: email,
-    [FIELDS.source]: source.startsWith("/") ? source : "/",
+    [FIELDS.source]: isClassHelp ? "/29-trial/#help-find-a-class" : (source.startsWith("/") ? source : "/"),
     [FIELDS.stage]: "New"
   };
+  if (email) fields[FIELDS.email] = email;
   if (phone) fields[FIELDS.phone] = phone;
   if (smsConsent) {
     fields[FIELDS.smsConsent] = true;
     fields[FIELDS.smsConsentRecordedAt] = new Date().toISOString();
   }
-  if (program) fields[FIELDS.program] = program;
-  if (comments) fields[FIELDS.notes] = comments;
+  if (isClassHelp) {
+    fields[FIELDS.notes] = "Class inquiry\nStudent age group: " + studentAgeGroup +
+      "\nPreferred contact: " + (email ? "Email" : "Phone call");
+  } else {
+    if (program) fields[FIELDS.program] = program;
+    if (comments) fields[FIELDS.notes] = comments;
+  }
   if (firstLandingPage.startsWith("/")) fields[FIELDS.firstLandingPage] = firstLandingPage;
   if (acquisitionSource) fields[FIELDS.acquisitionSource] = acquisitionSource;
   if (acquisitionMedium) fields[FIELDS.acquisitionMedium] = acquisitionMedium;

@@ -1,4 +1,5 @@
 ---
+import LeadForm from "../components/LeadForm.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 <BaseLayout
@@ -19,7 +20,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         <h2>2 Beginner Classes + FREE Uniform</h2>
         <p>One trial per new student. Each sibling registers separately.</p>
       </div>
-      <a class="cta register-student-cta" href="#registration">REGISTER YOUR STUDENT</a>
+      <div class="trial-actions">
+        <a class="cta register-student-cta" href="#registration">Start My $29 Trial</a>
+        <a class="cta class-help-cta" href="#help-find-a-class">Help Me Find a Class</a>
+      </div>
       <p><strong>One Tree. One Family.</strong></p>
     </section>
     <nav class="trial-steps" aria-label="Three steps to get started"><ol>
@@ -281,6 +285,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         <p>We've received your enrollment questionnaire. We'll contact you about your first classes.</p>
       </div>
     </section>
+    <div class="trial-inquiry">
+      <LeadForm
+        formId="help-find-a-class"
+        loadTurnstile={false}
+        config={{
+          title: "Help Me Find a Class",
+          intro: "Coach David will follow up to help you choose a beginner class.",
+          submitLabel: "Send My Inquiry",
+          fields: "classHelp",
+        }}
+      />
+    </div>
     <section class="contact">
       <h2>Questions? We're Here to Help.</h2>
       <p>Call <a href="tel:+12023684395">(202) 368-4395</a></p>
@@ -921,7 +937,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       } finally {
         clearTimeout(timeout);
         submit.disabled = false;
-        window.turnstile?.reset();
+        const widget = form.querySelector(".cf-turnstile");
+        if (widget) window.turnstile?.reset(widget);
       }
     });
   }
@@ -1276,8 +1293,22 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     cursor: pointer;
   }
   .trial-page .cta { max-width: 100%; }
+  .trial-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+  .trial-inquiry {
+    display: grid;
+    justify-items: center;
+    padding: 20px 12px 36px;
+  }
+  .trial-inquiry :global(.lead-card-compact-card) { border-radius: 12px; }
+  .trial-inquiry :global(small) { color: var(--muted); }
   /* Clear, high-contrast text on the two registration action buttons. */
   .trial-page .register-student-cta,
+  .trial-page .class-help-cta,
   .trial-page .form button.verify-registration-button {
     background-color: #741010;
     color: #ffffff;
@@ -1291,12 +1322,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     white-space: normal;
     padding: 15px 20px;
   }
+  .trial-page .class-help-cta {
+    background: #171717;
+    color: #fff;
+  }
+  .trial-page .class-help-cta:hover { background: #333; }
   .trial-page .register-student-cta:hover,
   .trial-page .form button.verify-registration-button:hover {
     background-color: #901818;
     color: #ffffff;
   }
   .trial-page .register-student-cta:focus-visible,
+  .trial-page .class-help-cta:focus-visible,
   .trial-page .form button.verify-registration-button:focus-visible {
     outline: 3px solid #ffffff;
     outline-offset: 3px;

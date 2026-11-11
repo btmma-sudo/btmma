@@ -26,7 +26,7 @@ export type LeadFormConfig = {
   submitLabel?: string;
   webhookPath?: string;
   hideProgramSelect?: boolean;
-  fields?: "standard" | "emailOnly";
+  fields?: "standard" | "emailOnly" | "classHelp";
 };
 
 export type SEOData = {
