@@ -9,7 +9,7 @@ export async function sendInquiryAcknowledgement(env, { email, recordId }) {
 
   const body = [
     "Thank you for reaching out to Burning Tree Mixed Martial Arts.",
-    "We received your request. Coach David or a member of our team will follow up to help you find the right class.",
+    "We received your request. Coach David or a member of our team will follow up about your request.",
     "If you are preparing for a first visit, our guide explains what to wear and what to expect:",
     "https://burningtreemma.com/your-first-class/",
     "Submitting an inquiry does not book a class or create a paid membership.",
