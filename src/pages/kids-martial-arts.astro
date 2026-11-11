@@ -10,6 +10,11 @@ const kidsSchedule = weeklySchedule
   }))
   .filter((day) => day.slots.length > 0);
 
+const leadershipSchedule = weeklySchedule.find((day) =>
+  day.slots.some((slot) => slot.cls === "Leadership")
+);
+const leadershipSlot = leadershipSchedule?.slots.find((slot) => slot.cls === "Leadership");
+
 const faqs = [
   {
     question: "What age can my child start martial arts?",
@@ -186,6 +191,26 @@ const serviceSchema = {
           </div>
         </article>
       </div>
+    </section>
+
+    <section class="kids-leadership shell" id="leadership-class" aria-labelledby="kids-leadership-heading">
+      <h2 id="kids-leadership-heading">Leadership Class</h2>
+      <p class="kids-section-intro">In our signature Leadership Class, students learn to lead by example while continuing their martial arts training.</p>
+      <div class="kids-leadership-grid">
+        <div>
+          <h3>What students practice</h3>
+          <p>Students practice speaking clearly, working through challenges as a team, and encouraging their training partners. They learn to take responsibility for their actions, follow through on commitments, and set an example younger students can follow.</p>
+        </div>
+        <div>
+          <h3>How students earn the opportunity</h3>
+          <p>Students build toward Leadership Class in their regular training by listening to feedback, treating others with respect, and showing they can handle more responsibility. Ask Coach David what your child can work on and when they may be ready to join.</p>
+          <p>Students who show they are ready to mentor peers and take on greater responsibility may be invited into our advanced Black Belt Leadership program.</p>
+        </div>
+      </div>
+      <p class="kids-choose-note">
+        {leadershipSchedule && leadershipSlot && <><strong>{leadershipSchedule.day}s · {formatClassTime(leadershipSlot.start, leadershipSlot.end)}</strong>{" · "}</>}
+        <a href={"tel:" + site.phoneHref}>Ask Coach David about Leadership Class</a>
+      </p>
     </section>
 
     <section class="kids-choose shell" aria-labelledby="kids-choose-heading">
@@ -426,9 +451,14 @@ const serviceSchema = {
   .kids-final-small a { text-decoration: underline; font-weight: 800; }
   .kids-final-cta .kids-tagline { font-family: "Black Ops One",cursive; font-size: 1.2rem; margin: 1.6rem auto 0; }
 
-  .kids-choose, .kids-parent-guide, .kids-local { padding-top: 4rem; padding-bottom: 4rem; }
-  .kids-choose, .kids-local { border-top: 1px solid #ebebeb; }
+  .kids-leadership, .kids-choose, .kids-parent-guide, .kids-local { padding-top: 4rem; padding-bottom: 4rem; }
+  .kids-leadership, .kids-choose, .kids-local { border-top: 1px solid #ebebeb; }
   .kids-choose-grid, .kids-parent-guide-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1.1rem; }
+  .kids-leadership { scroll-margin-top: 140px; }
+  .kids-leadership-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1.1rem; }
+  .kids-leadership-grid > div { border-left: 3px solid #970813; background: #fafafa; padding: 1.45rem; }
+  .kids-leadership-grid h3 { font-size: 1.2rem; margin: 0 0 .65rem; }
+  .kids-leadership-grid p:last-child { margin-bottom: 0; }
   .kids-choose-grid > div, .kids-parent-guide-grid > article { border: 1px solid #e0e0e0; background: #fafafa; border-radius: 7px; padding: 1.45rem; }
   .kids-choose-grid h3, .kids-parent-guide-grid h3 { font-size: 1.2rem; margin: 0 0 .65rem; }
   .kids-choose-grid p, .kids-parent-guide-grid p { margin: 0; font-size: .96rem; }
@@ -454,8 +484,8 @@ const serviceSchema = {
     .kids-hero-media img { height:auto; aspect-ratio:1353 / 1086; object-fit:contain; }
   }
   @media (max-width: 760px) {
-    .kids-choose, .kids-parent-guide, .kids-local { padding-top: 3rem; padding-bottom: 3rem; }
-    .kids-choose-grid, .kids-parent-guide-grid, .kids-local-panel { grid-template-columns: 1fr; }
+    .kids-leadership, .kids-choose, .kids-parent-guide, .kids-local { padding-top: 3rem; padding-bottom: 3rem; }
+    .kids-leadership-grid, .kids-choose-grid, .kids-parent-guide-grid, .kids-local-panel { grid-template-columns: 1fr; }
     .kids-local-panel { gap: 1.3rem; }
     .kids-local-actions { align-items: stretch; flex-direction: column; }
     .kids-map-link { text-align: center; }
