@@ -3,6 +3,7 @@ export const prerender = false;
 import type { APIRoute } from "astro";
 import { studentAgeGroups } from "../lib/class-help";
 import { weeklySchedule } from "../data/schedule";
+import { sendOwnerSms } from "../lib/owner-sms.js";
 
 const transferSources = ["/kids-martial-arts/#transfer-inquiry", "/teens-adults-martial-arts/#transfer-inquiry"];
 const classHelpSources = [
@@ -183,5 +184,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
     return json({ success: false, error: "We couldn't send your request. Please try again or call (202) 368-4395." }, 502);
   }
 
+  await sendOwnerSms(env, "inquiry");
   return json({ success: true }, 200);
 };

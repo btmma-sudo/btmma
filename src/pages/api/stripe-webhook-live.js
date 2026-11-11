@@ -1,4 +1,5 @@
 import { sendTrialConfirmation } from "../../lib/trial-confirmation.js";
+import { sendOwnerSms } from "../../lib/owner-sms.js";
 import { PNO_SOURCE, reconcilePnoPayment } from "../../lib/parents-night-out.js";
 import { SEMINAR_SOURCE, reconcileSeminarPayment } from "../../lib/seminar-payment-reconciliation.js";
 // Isolated live payment webhook. Public live checkout is not enabled.
@@ -178,9 +179,11 @@ export async function POST({ request, locals }) {
         });
         return reply("Airtable update rejected: HTTP " + updated.status + "; type=" + (typeof type === "string" ? type.slice(0, 80) : "unknown") + "; field=" + (typeof detail === "string" ? detail.match(/(?:field|column)\s+[\x27\x22]?([\w $-]{1,60})/i)?.[1] || "not specified" : "unknown"), 503);
       }
-      const paidUpdate = await env.LIVE_TRIAL_DB.prepare("UPDATE trial_registrations SET state = 'paid', stripe_payment_intent_id = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND stripe_session_id = ?")
+      // Only the request that transitions this registration to paid sends the text.
+      const paidUpdate = await env.LIVE_TRIAL_DB.prepare("UPDATE trial_registrations SET state = 'paid', stripe_payment_intent_id = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND stripe_session_id = ? AND state != 'paid'")
         .bind(typeof session.payment_intent === "string" ? session.payment_intent : null, row.id, sessionId).run();
       if (paidUpdate.meta?.changes !== 1) return reply("Payment reconciliation pending", 503);
+      await sendOwnerSms(env, "trialPaid");
     }
     if (env.RESEND_API_KEY) {
       // Use the registration contact even when a different person paid for the student.
