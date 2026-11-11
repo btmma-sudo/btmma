@@ -38,7 +38,7 @@ export async function checkOwnerSmsAuthentication(env) {
   try {
     const response = await fetch(twilioAccountUrl(accountSid) + ".json", {
       headers: { Authorization: twilioAuthorization(accountSid, authToken) },
-      redirect: "error",
+      redirect: "manual",
       signal: AbortSignal.timeout(4000)
     });
     const twilioCode = response.ok ? null : await twilioErrorCode(response);
@@ -64,7 +64,7 @@ export async function sendOwnerSms(env, kind) {
           "Content-Type": "application/x-www-form-urlencoded"
         },
         body: new URLSearchParams({ From: from, To: to, Body: messages[kind] }),
-        redirect: "error",
+        redirect: "manual",
         signal: AbortSignal.timeout(4000)
       }
     );
