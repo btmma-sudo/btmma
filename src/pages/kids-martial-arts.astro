@@ -1,4 +1,5 @@
 ---
+import ProgramInquiry from "../components/ProgramInquiry.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { weeklySchedule, formatClassTime } from "../data/schedule";
 import { site } from "../data/site";
@@ -128,8 +129,9 @@ const serviceSchema = {
           <p class="kids-subhead">Kids karate, Muay Thai, and Wing Chun classes in Owings Mills, MD—helping children practice confidence, focus, discipline, and respect, one class at a time.</p>
           <p class="kids-lead">Some kids are shy. Some have energy to spare. Some just need a place where they can feel proud of themselves. At Burning Tree, we meet them where they are and help them keep growing.</p>
           <div class="kids-actions">
-            <a class="kids-button" href="/29-trial">Claim the $29 New Student Special</a>
-            <a class="kids-secondary" href="#kids-programs">Explore Kids Classes</a>
+            <a class="kids-button" href="/29-trial/?from=kids">Claim the $29 New Student Special</a>
+            <a class="kids-button program-inquiry-button" href="#class-inquiry">Ask About Classes</a>
+            <a class="kids-secondary" href="#kids-schedule-heading">See Class Times</a>
           </div>
           <p class="kids-offer-note"><strong>2 beginner classes + FREE uniform for $29</strong> • New students only</p>
         </div>
@@ -144,6 +146,37 @@ const serviceSchema = {
         </div>
       </div>
     </section>
+
+    <section class="kids-schedule" aria-labelledby="kids-schedule-heading">
+      <div class="shell">
+        <p class="kids-eyebrow">FIND A TIME THAT WORKS</p>
+        <h2 id="kids-schedule-heading" class="class-times-anchor">Our junior class schedule</h2>
+        <p class="kids-section-intro">Junior beginner classes run Monday through Thursday. Ask Coach David before attending Saturday sparring.</p>
+        <div class="kids-schedule-grid">
+          {kidsSchedule.map((day) => (
+            <article class="kids-schedule-day">
+              <h3>{day.day}</h3>
+              <ul>
+                {day.slots.map((slot) => (
+                  <li><span>{slot.cls}</span><strong>{formatClassTime(slot.start, slot.end)}</strong></li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+        <p class="kids-schedule-note">Class placement and availability can vary. Ask us about the right fit for your child.</p>
+        <a class="kids-button" href="/29-trial/?from=kids">Try 2 Beginner Classes for $29</a>
+      </div>
+    </section>
+
+    <ProgramInquiry
+      heading="Finding confidence and discipline"
+      story="My grandson has learned discipline, confidence and martial arts techniques."
+    attribution="Kelly W. · Grandparent"
+      storyUrl="/success-stories/"
+      storyLinkLabel="Read more family stories"
+      intro="Tell us your child’s age group. Coach David will help you choose a class."
+    />
 
     <section class="kids-benefits" aria-labelledby="kids-benefits-heading">
       <div class="shell">
@@ -243,7 +276,7 @@ const serviceSchema = {
           <p class="kids-eyebrow">NEW HERE? YOU'RE IN THE RIGHT PLACE.</p>
           <h2 id="first-class-heading">Their first class should feel exciting—not intimidating.</h2>
           <p>We've all been beginners. Your child doesn't need to know how to punch, kick, or tie a belt before walking through our doors. They just need the chance to try.</p>
-          <a class="kids-button" href="/29-trial">Get Started for $29</a>
+          <a class="kids-button" href="/29-trial/?from=kids">Get Started for $29</a>
         </div>
         <ol class="kids-steps">
           <li><span>1</span><div><strong>Choose your starting class.</strong><p>Tell us about your child, and we'll help find the right beginner session.</p></div></li>
@@ -288,28 +321,6 @@ const serviceSchema = {
       </div>
     </section>
 
-    <section class="kids-schedule" aria-labelledby="kids-schedule-heading">
-      <div class="shell">
-        <p class="kids-eyebrow">FIND A TIME THAT WORKS</p>
-        <h2 id="kids-schedule-heading">Our junior class schedule</h2>
-        <p class="kids-section-intro">Current junior classes, pulled from our shared weekly schedule so the times stay in sync across the site.</p>
-        <div class="kids-schedule-grid">
-          {kidsSchedule.map((day) => (
-            <article class="kids-schedule-day">
-              <h3>{day.day}</h3>
-              <ul>
-                {day.slots.map((slot) => (
-                  <li><span>{slot.cls}</span><strong>{formatClassTime(slot.start, slot.end)}</strong></li>
-                ))}
-              </ul>
-            </article>
-          ))}
-        </div>
-        <p class="kids-schedule-note">Class placement and availability can vary. Ask us about the right fit for your child.</p>
-        <a class="kids-button" href="/29-trial">Try 2 Beginner Classes for $29</a>
-      </div>
-    </section>
-
     <section class="kids-local shell" aria-labelledby="kids-local-heading">
       <div class="kids-local-panel">
         <div>
@@ -323,7 +334,7 @@ const serviceSchema = {
             <a href={"tel:" + site.phoneHref}>{site.phone}</a>
           </address>
           <div class="kids-local-actions">
-            <a class="kids-button" href="/29-trial">Claim the $29 Beginner Special</a>
+            <a class="kids-button" href="/29-trial/?from=kids">Claim the $29 Beginner Special</a>
             <a class="kids-map-link" href={site.mapUrl} target="_blank" rel="noopener noreferrer">Get directions to our Owings Mills school →</a>
           </div>
         </div>
@@ -358,7 +369,7 @@ const serviceSchema = {
         <p class="kids-eyebrow">LET'S GET YOUR CHILD STARTED</p>
         <h2 id="kids-final-heading">You don't have to wait for your child to feel confident to give them a chance to grow.</h2>
         <p>We would love to welcome your family to Burning Tree Mixed Martial Arts in Owings Mills.</p>
-        <a class="kids-button kids-button-light" href="/29-trial">Claim 2 Classes + a FREE Uniform for $29</a>
+        <a class="kids-button kids-button-light" href="/29-trial/?from=kids">Claim 2 Classes + a FREE Uniform for $29</a>
         <p class="kids-final-small">New students only. Questions? <a href={"tel:" + site.phoneHref}>Call {site.phone}</a>.</p>
         <p class="kids-tagline">One Tree. One Family. <span aria-hidden="true">🔥</span></p>
       </div>
@@ -367,6 +378,9 @@ const serviceSchema = {
 </BaseLayout>
 
 <style>
+  .kids-button.program-inquiry-button { background: transparent; color: #fff; border-color: #ddd; }
+  .kids-button.program-inquiry-button:hover { background: #333; }
+  .class-times-anchor { scroll-margin-top: 140px; }
   .kids-page { background: #fff; color: #1d1d1d; }
   .kids-page :where(h1,h2,h3) { -webkit-text-stroke: 0; text-transform: none; line-height: 1.12; }
   .kids-page :where(h2,h3) { color: #171717; }

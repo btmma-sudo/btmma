@@ -1,4 +1,5 @@
 ---
+import ProgramInquiry from "../components/ProgramInquiry.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { weeklySchedule, formatClassTime } from "../data/schedule";
 import { site } from "../data/site";
@@ -153,8 +154,9 @@ const breadcrumbSchema = {
           <p class="ta-hero-subhead">Beginner-friendly martial arts classes for teens and adults in Owings Mills—built around real skills, stronger confidence, and steady progress.</p>
           <p class="ta-hero-lead">Maybe you've always wanted to learn self-defense. Maybe you're ready for a challenge beyond the gym. Or maybe you just want to feel more confident in yourself. Whether you're a teen trying your first class, an adult beginner, or someone returning after a break, you don't need experience to take the first step.</p>
           <div class="ta-hero-actions">
-            <a class="ta-button" href="/29-trial">Try 2 Classes + a FREE Uniform for $29</a>
-            <a class="ta-text-link ta-text-link-light" href="#ta-programs">Explore Our Classes →</a>
+            <a class="ta-button" href="/29-trial/?from=teens-adults">Try 2 Classes + a FREE Uniform for $29</a>
+            <a class="ta-button program-inquiry-button" href="#class-inquiry">Ask About Classes</a>
+            <a class="ta-text-link ta-text-link-light" href="#ta-schedule-heading">See Class Times</a>
           </div>
           <p class="ta-hero-note">New students only • Questions? <a href={"tel:" + site.phoneHref}>{site.phone}</a></p>
         </div>
@@ -164,6 +166,36 @@ const breadcrumbSchema = {
         </div>
       </div>
     </section>
+
+    <section class="ta-schedule" aria-labelledby="ta-schedule-heading">
+      <div class="shell">
+        <p class="ta-eyebrow">FIND YOUR TRAINING TIME</p>
+        <h2 id="ta-schedule-heading" class="class-times-anchor">Teen, adult & women's self-defense class schedule</h2>
+        <p class="ta-intro">Beginner classes for teens and adults run Monday through Thursday. Ask Coach David about Saturday open mat or Sunday women’s self-defense.</p>
+        <div class="ta-schedule-grid">
+          {adultSchedule.map((day) => (
+            <article class="ta-schedule-day">
+              <h3>{day.day}</h3>
+              <ul>
+                {day.slots.map((slot) => (
+                  <li><strong>{slot.cls}</strong><span>{formatClassTime(slot.start, slot.end)}</span></li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+        <p class="ta-schedule-note">Class placement and attendance may depend on experience and instructor guidance. Contact us with questions about your first class or Saturday open mat.</p>
+        <a class="ta-button" href="/29-trial/?from=teens-adults">Claim Your $29 New Student Special</a>
+      </div>
+    </section>
+
+    <ProgramInquiry
+      heading="How Coach David got his start"
+      story="Coach David started Kenpo at age 13 in nearby Reisterstown. He progressed into the adult program, earned his first-degree black belt, and began teaching full-time in 2000."
+      storyUrl="/about/"
+      storyLinkLabel="Read Coach David’s story"
+      intro="Tell us whether you’re looking for teen or adult classes. Coach David will help you find a starting point."
+    />
 
     <section class="ta-benefits" aria-labelledby="ta-benefits-heading">
       <div class="shell">
@@ -275,7 +307,7 @@ const breadcrumbSchema = {
           <h2 id="ta-chooser-heading">You don't have to pick the perfect martial art before you walk in.</h2>
           <p>Want traditional karate and self-defense? Start by exploring <a href="/kenpo-karate">Kenpo</a>. Want striking drills and conditioning? Look at <a href="/muay-thai">Muay Thai</a>. Interested in precise close-range techniques? Try <a href="/wing-chun">Wing Chun</a>.</p>
           <p>Tell us what you're interested in, and we'll help you choose a good first class.</p>
-          <a class="ta-button" href="/29-trial">Get Started for $29</a>
+          <a class="ta-button" href="/29-trial/?from=teens-adults">Get Started for $29</a>
         </div>
         <div class="ta-chooser-points">
           <p><strong>No experience necessary</strong><span>New students are welcome.</span></p>
@@ -317,28 +349,6 @@ const breadcrumbSchema = {
           <li><span>2</span><div><h3>Show up and start learning.</h3><p>Wear comfortable athletic clothes, bring water, and let us know you're new.</p></div></li>
           <li><span>3</span><div><h3>Build on your first class.</h3><p>Practice, ask questions, and discover what you can accomplish with consistent training.</p></div></li>
         </ol>
-      </div>
-    </section>
-
-    <section class="ta-schedule" aria-labelledby="ta-schedule-heading">
-      <div class="shell">
-        <p class="ta-eyebrow">FIND YOUR TRAINING TIME</p>
-        <h2 id="ta-schedule-heading">Teen, adult & women's self-defense class schedule</h2>
-        <p class="ta-intro">These class times come from our shared school schedule, so updates to the schedule carry through to this page.</p>
-        <div class="ta-schedule-grid">
-          {adultSchedule.map((day) => (
-            <article class="ta-schedule-day">
-              <h3>{day.day}</h3>
-              <ul>
-                {day.slots.map((slot) => (
-                  <li><strong>{slot.cls}</strong><span>{formatClassTime(slot.start, slot.end)}</span></li>
-                ))}
-              </ul>
-            </article>
-          ))}
-        </div>
-        <p class="ta-schedule-note">Class placement and attendance may depend on experience and instructor guidance. Contact us with questions about your first class or Saturday open mat.</p>
-        <a class="ta-button" href="/29-trial">Claim Your $29 New Student Special</a>
       </div>
     </section>
 
@@ -392,7 +402,7 @@ const breadcrumbSchema = {
           <p>New to training or returning after a break? <a href="/your-first-class/">See how your first class works</a> and <a href="#ta-schedule-heading">compare our weeknight training schedule</a>. Kenpo meets Monday, Muay Thai Tuesday and Thursday, and Wing Chun Wednesday; <a href="/womens-defense/">women's self-defense / Sanuces</a> meets Sunday. Ask about class placement before attending.</p>
           <address><strong>{site.name}</strong><span>{site.addressLine1}, {site.city}, {site.region} {site.postalCode}</span><a href={"tel:" + site.phoneHref}>{site.phone}</a></address>
           <div class="ta-local-actions">
-            <a class="ta-button" href="/29-trial">Try Two Classes for $29</a>
+            <a class="ta-button" href="/29-trial/?from=teens-adults">Try Two Classes for $29</a>
             <a class="ta-text-link" href={site.mapUrl} target="_blank" rel="noopener noreferrer">Get Directions →</a>
           </div>
         </div>
@@ -427,7 +437,7 @@ const breadcrumbSchema = {
         <p class="ta-eyebrow">YOUR NEXT CHAPTER STARTS HERE</p>
         <h2 id="ta-final-heading">You don't have to be ready for everything. Just ready to start.</h2>
         <p>Come experience the difference at Burning Tree Mixed Martial Arts. We would love to welcome you onto the mats.</p>
-        <a class="ta-button ta-button-light" href="/29-trial">2 Beginner Classes + FREE Uniform — $29</a>
+        <a class="ta-button ta-button-light" href="/29-trial/?from=teens-adults">2 Beginner Classes + FREE Uniform — $29</a>
         <p class="ta-small">New students only. Have questions? <a href={"tel:" + site.phoneHref}>Call or text {site.phone}</a>.</p>
         <p class="ta-tagline">One Tree. One Family. <span aria-hidden="true">🔥</span></p>
       </div>
@@ -436,6 +446,9 @@ const breadcrumbSchema = {
 </BaseLayout>
 
 <style>
+  .ta-button.program-inquiry-button { background: transparent; color: #fff; border-color: #ddd; }
+  .ta-button.program-inquiry-button:hover { background: #333; }
+  .class-times-anchor { scroll-margin-top: 140px; }
   .ta-page { background:#fff; color:#1c1c1c; }
   .ta-page :where(h1,h2,h3) { text-transform:none; line-height:1.12; }
   .ta-page :where(h2,h3) { color:#171717; }

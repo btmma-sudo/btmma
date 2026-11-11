@@ -127,8 +127,6 @@ const schema = {
           const key = "btmma_first_touch_v1";
           const ttl = 30 * 24 * 60 * 60 * 1000;
           const prior = JSON.parse(window.localStorage.getItem(key) || "null");
-          if (prior && typeof prior.savedAt === "number" &&
-              Date.now() >= prior.savedAt && Date.now() - prior.savedAt < ttl) return;
           const params = new URLSearchParams(window.location.search);
           let hostname = "";
           try { hostname = new URL(document.referrer).hostname.toLowerCase().replace(/^www\./, ""); } catch {}
@@ -146,6 +144,9 @@ const schema = {
               medium ||= "unknown";
             } else { source = hostname || "direct"; medium ||= hostname ? "referral" : "none"; }
           }
+          if (prior && typeof prior.savedAt === "number" &&
+              Date.now() >= prior.savedAt && Date.now() - prior.savedAt < ttl &&
+              (prior.acquisitionSource !== "direct" || source === "direct")) return;
           if (!medium) medium = "campaign";
           window.localStorage.setItem(key, JSON.stringify({
             savedAt: Date.now(),

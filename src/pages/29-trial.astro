@@ -936,12 +936,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       }
       const payload = Object.fromEntries(values.entries());
       delete payload["cf-turnstile-response"];
+      // Keep the originating program page even if browser storage is unavailable.
+      const landingPages = { kids: "/kids-martial-arts/", "teens-adults": "/teens-adults-martial-arts/" };
+      const landingPage = Object.hasOwn(landingPages, checkoutReturn.get("from"))
+        ? landingPages[checkoutReturn.get("from")] : "/29-trial/";
+      payload.attribution = { firstLandingPage: landingPage };
       // Attach optional first-touch metadata. Never put student information in analytics.
       try {
         const firstTouch = JSON.parse(window.localStorage.getItem("btmma_first_touch_v1") || "null");
-        if (firstTouch && typeof firstTouch === "object" && !Array.isArray(firstTouch)) {
+        if (firstTouch && Number.isFinite(firstTouch.savedAt) && firstTouch.savedAt <= Date.now() &&
+            Date.now() - firstTouch.savedAt < 30 * 24 * 60 * 60 * 1000) {
           payload.attribution = {
-            firstLandingPage: firstTouch.firstLandingPage || "",
+            firstLandingPage: firstTouch.firstLandingPage || landingPage,
             acquisitionSource: firstTouch.acquisitionSource || "",
             acquisitionMedium: firstTouch.acquisitionMedium || "",
             utmCampaign: firstTouch.utmCampaign || "",

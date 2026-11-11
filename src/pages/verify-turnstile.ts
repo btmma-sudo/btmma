@@ -107,7 +107,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   const fields: Record<string, string | boolean> = {
     [FIELDS.name]: name || "Website inquiry",
-    [FIELDS.source]: isClassHelp ? "/29-trial/#help-find-a-class" : (source.startsWith("/") ? source : "/"),
+    [FIELDS.source]: isClassHelp
+      ? (["/kids-martial-arts/#class-inquiry", "/teens-adults-martial-arts/#class-inquiry"].includes(source) ? source : "/29-trial/#help-find-a-class")
+      : (source.startsWith("/") ? source : "/"),
     [FIELDS.stage]: "New"
   };
   if (email) fields[FIELDS.email] = email;

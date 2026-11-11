@@ -1,0 +1,58 @@
+---
+import LeadForm from "./LeadForm.astro";
+
+interface Props {
+  heading: string;
+  story: string;
+  attribution?: string;
+  storyUrl: string;
+  storyLinkLabel: string;
+  intro: string;
+}
+
+const { heading, story, attribution, storyUrl, storyLinkLabel, intro } = Astro.props;
+---
+
+<section class="program-inquiry shell" aria-labelledby="program-story-heading">
+  <div class="program-story">
+    <h2 id="program-story-heading">{heading}</h2>
+    {attribution ? (
+      <figure>
+        <blockquote><p>“{story}”</p></blockquote>
+        <figcaption>{attribution}</figcaption>
+      </figure>
+    ) : <p>{story}</p>}
+    <a href={storyUrl}>{storyLinkLabel}</a>
+  </div>
+  <LeadForm formId="class-inquiry" config={{
+    title: "Ask About Classes",
+    intro,
+    submitLabel: "Send My Inquiry",
+    fields: "classHelp",
+  }} />
+</section>
+
+<style>
+  .program-inquiry {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
+    align-items: start;
+    gap: clamp(1.25rem, 4vw, 3rem);
+    padding-block: clamp(2.5rem, 6vw, 4.5rem);
+  }
+  .program-story {
+    padding: clamp(1.2rem, 3vw, 2rem);
+    border-left: 4px solid #970813;
+    background: #f5f5f5;
+    color: #242424;
+  }
+  .program-story h2 { color: #171717; -webkit-text-stroke: 0; text-transform: none; }
+  .program-inquiry :global(.lead-card-compact-card) { color: #f5f5f5; justify-self: center; }
+  .program-inquiry :global(.lead-card-compact-card h2) { color: #fff; -webkit-text-stroke: 0; }
+  .program-story figure, .program-story blockquote { margin: 0; }
+  .program-story figcaption { margin-bottom: 1rem; font-weight: 700; }
+  .program-story a { color: #970813; font-weight: 800; text-decoration: underline; }
+  @media (max-width: 760px) {
+    .program-inquiry { grid-template-columns: 1fr; }
+  }
+</style>
