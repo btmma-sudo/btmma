@@ -27,6 +27,9 @@ export async function sendTrialConfirmation(env, { recordId, email, paid, issued
     "Please complete your goals questionnaire before class so we can prepare for your visit." +
       (paid ? "" : " The link will open once your payment is verified."),
     url,
+    "What to wear, where to go, and what to expect at your first class:",
+    "https://burningtreemma.com/your-first-class/",
+    "The $29 introductory special does not automatically start an ongoing membership or recurring tuition.",
     "Questions? Call (202) 368-4395.",
     "Coach David\nBurning Tree Mixed Martial Arts\nOne Tree. One Family."
   ].join("\n\n");

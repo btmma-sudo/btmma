@@ -4,6 +4,7 @@ import type { APIRoute } from "astro";
 import { studentAgeGroups } from "../lib/class-help";
 import { weeklySchedule } from "../data/schedule";
 import { sendOwnerSms } from "../lib/owner-sms.js";
+import { sendInquiryAcknowledgement } from "../lib/inquiry-acknowledgement.js";
 
 const transferSources = ["/kids-martial-arts/#transfer-inquiry", "/teens-adults-martial-arts/#transfer-inquiry"];
 const classHelpSources = [
@@ -29,7 +30,8 @@ const FIELDS = {
   utmCampaign: "fld6kkeJbxMN5aAKx",
   originalReferrer: "fldUXoAZPEi4NPegv",
   smsConsent: "fldnhZMo4eWpK0hOD",
-  smsConsentRecordedAt: "fldewgpFJYCZ4I5oG"
+  smsConsentRecordedAt: "fldewgpFJYCZ4I5oG",
+  welcomeEmailSent: "fldjb21fTjrI295aN"
 } as const;
 
 function json(data: object, status: number) {
@@ -158,6 +160,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   // Only acknowledge success after Airtable confirms creation. Do not forward
   // to the inactive Make webhook (which previously accepted but dropped leads).
+  let savedRecordId = "";
   try {
     const response = await fetch(
       "https://api.airtable.com/v0/" + encodeURIComponent(String(env.AIRTABLE_BASE_ID)) + "/" + LEADS_TABLE,
@@ -179,11 +182,31 @@ export const POST: APIRoute = async ({ request, locals }) => {
       console.error("Website inquiry save returned no valid record ID");
       return json({ success: false, error: "We couldn't confirm your request. Please call (202) 368-4395." }, 502);
     }
+    savedRecordId = saved.id;
   } catch {
     console.error("Website inquiry Airtable request failed");
     return json({ success: false, error: "We couldn't send your request. Please try again or call (202) 368-4395." }, 502);
   }
 
-  await sendOwnerSms(env, "inquiry");
+  // Follow up with an acknowledgment only for an actual saved, valid email.
+  // Provider failures never erase an accepted lead or claim an email was sent.
+  const [emailAccepted] = await Promise.all([
+    email ? sendInquiryAcknowledgement(env, { email, recordId: savedRecordId }) : Promise.resolve(false),
+    sendOwnerSms(env, "inquiry").then(() => false)
+  ]);
+  if (emailAccepted) {
+    try {
+      const updated = await fetch(
+        "https://api.airtable.com/v0/" + encodeURIComponent(String(env.AIRTABLE_BASE_ID)) +
+          "/" + LEADS_TABLE + "/" + encodeURIComponent(savedRecordId),
+        {
+          method: "PATCH",
+          headers: { Authorization: "Bearer " + env.AIRTABLE_API_TOKEN, "Content-Type": "application/json" },
+          body: JSON.stringify({ fields: { [FIELDS.welcomeEmailSent]: true }, typecast: false })
+        }
+      );
+      if (!updated.ok) console.warn("Inquiry email accepted but CRM sent marker was not updated", { status: updated.status });
+    } catch { console.warn("Inquiry sent marker unavailable"); }
+  }
   return json({ success: true }, 200);
 };

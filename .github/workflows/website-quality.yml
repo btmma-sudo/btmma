@@ -29,6 +29,8 @@ jobs:
         run: node --test scripts/test-seminar-qa.mjs
       - name: Test student portal authentication, safe onboarding, 28-day tuition and Pay Now safety (no charges)
         run: npm run test:portal
+      - name: Test student inquiry acknowledgments and funnel handoffs without payments
+        run: node --test tests/student-funnel-handoff.test.mjs
       - name: Validate Astro and TypeScript
         run: npm run check
       - name: Build website and sitemap
