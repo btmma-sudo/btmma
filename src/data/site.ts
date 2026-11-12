@@ -110,16 +110,16 @@ export const site = {
   textPhone: "(410) 218-0894",
   textPhoneHref: "+14102180894",
   email: "info@burningtreemma.com",
-  addressLine1: "10210 S Dolfield Rd",
+  addressLine1: "10210 S Dolfield Rd, Suite C",
   city: "Owings Mills",
   region: "MD",
   regionName: "Maryland",
   postalCode: "21117",
   country: "US",
   mapUrl:
-    "https://www.google.com/maps?q=10210%20S%20Dolfield%20Rd%20Owings%20Mills%20MD%2021117",
+    "https://www.google.com/maps?q=10210%20S%20Dolfield%20Rd%2C%20Suite%20C%2C%20Owings%20Mills%20MD%2021117",
   mapEmbedUrl:
-    "https://www.google.com/maps?q=10210%20S%20Dolfield%20Rd%20Owings%20Mills%20MD%2021117&output=embed",
+    "https://www.google.com/maps?q=10210%20S%20Dolfield%20Rd%2C%20Suite%20C%2C%20Owings%20Mills%20MD%2021117&output=embed",
   primaryDomain: "https://burningtreemma.com",
   tagline: "Burning Tree MMA: Keepers of the Flame",
   latitude: 39.4120992,
@@ -363,7 +363,7 @@ export const faqPage: SupportingPage & {
     {
       question: "Where is Burning Tree MMA located?",
       answer:
-        "We are located at 10210 S Dolfield Rd in Owings Mills, Maryland, serving local families and adults looking for martial arts classes near them."
+        "We are located at 10210 S Dolfield Rd, Suite C, in Owings Mills, Maryland, serving local families and adults looking for martial arts classes near them."
     },
     {
       question: "What does the $29 new student special include?",
