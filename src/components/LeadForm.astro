@@ -38,11 +38,21 @@ const fields = config?.fields ?? "standard";
         <label for={formId + "-contact"}>Preferred contact method</label>
         <input id={formId + "-contact"} name="preferredContact" placeholder="Email address or callback number" aria-describedby={formId + "-contact-help"} maxlength="254" required />
         <small id={formId + "-contact-help"}>Enter your email for a reply or your phone number for a call.</small>
-        <label for={formId + "-age"}>Student age group</label>
-        <select id={formId + "-age"} name="studentAgeGroup" aria-describedby={formId + "-age-help"} required>
-          <option value="">Select an age group</option>
-          {studentAgeGroups.map((group) => <option value={group}>{group}</option>)}
-        </select>
+        {formId === "help-find-a-class" ? (
+          <>
+            <label for={formId + "-age"}>Student’s age in years</label>
+            <input id={formId + "-age"} name="studentAge" type="number" inputmode="decimal"
+              min="0" max="120" step="any" placeholder="e.g., 12" aria-describedby={formId + "-age-help"} required />
+          </>
+        ) : (
+          <>
+            <label for={formId + "-age"}>Student age group</label>
+            <select id={formId + "-age"} name="studentAgeGroup" aria-describedby={formId + "-age-help"} required>
+              <option value="">Select an age group</option>
+              {studentAgeGroups.map((group) => <option value={group}>{group}</option>)}
+            </select>
+          </>
+        )}
         <small id={formId + "-age-help"}>{kidsStartingAge}</small>
         {transferDays && (
           <>

@@ -7,6 +7,7 @@ import { sendOwnerSms } from "../lib/owner-sms.js";
 import { sendInquiryAcknowledgement } from "../lib/inquiry-acknowledgement.js";
 
 const transferSources = ["/kids-martial-arts/#transfer-inquiry", "/teens-adults-martial-arts/#transfer-inquiry"];
+const trialClassHelpSource = "/29-trial/#help-find-a-class";
 const classHelpSources = [
   "/kids-martial-arts/#class-inquiry",
   "/teens-adults-martial-arts/#class-inquiry",
@@ -59,6 +60,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
   const token = formText(form, "cf-turnstile-response", 4096);
   const isClassHelp = formText(form, "inquiryType", 20) === "classHelp";
   const preferredContact = formText(form, "preferredContact", 254);
+  const rawStudentAge = form.get("studentAge");
+  const studentAge = typeof rawStudentAge === "string" && rawStudentAge.trim()
+    ? Number(rawStudentAge)
+    : NaN;
   const studentAgeGroup = formText(form, "studentAgeGroup", 40);
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const email = isClassHelp
@@ -71,6 +76,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   const program = formText(form, "programInterest", 120);
   const comments = formText(form, "comments", 3000);
   const source = formText(form, "source", 500) || "/";
+  const requiresExactAge = isClassHelp && !classHelpSources.includes(source);
   const isTransfer = isClassHelp && transferSources.includes(source);
   const trainingExperience = formText(form, "trainingExperience", 140);
   const preferredDay = formText(form, "preferredDay", 20);
@@ -89,8 +95,13 @@ export const POST: APIRoute = async ({ request, locals }) => {
   // inquiry forms require name and phone in the browser as well.
   if (isClassHelp) {
     const validPhone = /^[+()0-9. -]+$/.test(phone) && /^\d{10,15}$/.test(phone.replace(/\D/g, ""));
-    if (!name || !studentAgeGroups.includes(studentAgeGroup) || (!email && !validPhone)) {
-      return json({ success: false, error: "Please enter your name, an email address or callback number, and the student's age group." }, 400);
+    if (requiresExactAge && !(studentAge >= 0 && studentAge <= 120)) {
+      return json({ success: false, error: "Please enter the student’s age in years." }, 400);
+    }
+    if (!name || (!requiresExactAge && !studentAgeGroups.includes(studentAgeGroup)) || (!email && !validPhone)) {
+      return json({ success: false, error: requiresExactAge
+        ? "Please enter your name and an email address or callback number."
+        : "Please enter your name, an email address or callback number, and the student's age group." }, 400);
     }
   } else if (!emailPattern.test(email) || (!name && !program) || (program !== "ChimpmanGi" && !phone)) {
     return json({ success: false, error: "Please complete all required fields correctly." }, 400);
@@ -128,7 +139,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   const fields: Record<string, string | boolean> = {
     [FIELDS.name]: name || "Website inquiry",
     [FIELDS.source]: isClassHelp
-      ? (classHelpSources.includes(source) ? source : "/29-trial/#help-find-a-class")
+      ? (requiresExactAge ? trialClassHelpSource : source)
       : (source.startsWith("/") ? source : "/"),
     [FIELDS.stage]: "New"
   };
@@ -141,7 +152,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   if (isClassHelp) {
     const notes = [
       isTransfer ? "Experienced student inquiry" : "Class inquiry",
-      "Student age group: " + studentAgeGroup,
+      requiresExactAge ? "Student age: " + studentAge + " years" : "Student age group: " + studentAgeGroup,
       "Preferred contact: " + (email ? "Email" : "Phone call")
     ];
     if (isTransfer) {
