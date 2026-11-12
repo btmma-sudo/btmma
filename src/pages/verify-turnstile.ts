@@ -199,6 +199,50 @@ export const POST: APIRoute = async ({ request, locals }) => {
     return json({ success: false, error: "We couldn't send your request. Please try again or call (202) 368-4395." }, 502);
   }
 
+  // Mirror class-finder inquiries into the dedicated interest tracker while
+  // retaining the original Leads record as the source for all existing follow-ups.
+  // Failure of this secondary write must not turn an accepted lead into a
+  // submission error (which could encourage the visitor to submit duplicates).
+  if (isClassHelp) {
+    const interestFields: Record<string, string | number | string[]> = {
+      "fld4kvkHaVK1wcoxc": name,
+      "fldyWYjjHO0x6j0U0": source === trialClassHelpSource
+        ? "Website — Help Me Find a Class"
+        : "Website — Other Class Inquiry",
+      "fldfqKKa5J94gaULh": "Follow-Up Needed",
+      "fldytiHBSnpp5a3zF": email ? "Email" : "Phone Call",
+      "fldobSgrHGWQq8Xce": [savedRecordId],
+      "fldqdU0qc3azamJe5": [
+        "Submitted through the website class inquiry form.",
+        "Page: " + (source.startsWith("/") ? source : "/"),
+        requiresExactAge ? "Student age: " + studentAge + " years" : "Student age group: " + studentAgeGroup,
+        isTransfer ? "Training experience: " + trainingExperience : "",
+        isTransfer ? "Preferred day: " + preferredDay : ""
+      ].filter(Boolean).join("\n")
+    };
+    if (email) interestFields["fldeuGky4Xjfgd0pG"] = email;
+    if (phone) interestFields["flddZHBViNIgIf54R"] = phone;
+    if (requiresExactAge) interestFields["fld7Qb93CShhDvu90"] = studentAge;
+    try {
+      const interestResponse = await fetch(
+        "https://api.airtable.com/v0/" + encodeURIComponent(String(env.AIRTABLE_BASE_ID)) + "/tblMJMwrSasASZtk6",
+        {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + env.AIRTABLE_API_TOKEN,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ fields: interestFields, typecast: false })
+        }
+      );
+      if (!interestResponse.ok) {
+        console.warn("Class interest tracker save failed", { status: interestResponse.status });
+      }
+    } catch {
+      console.warn("Class interest tracker unavailable; main CRM lead was saved");
+    }
+  }
+
   // Follow up with an acknowledgment only for an actual saved, valid email.
   // Provider failures never erase an accepted lead or claim an email was sent.
   const [emailAccepted] = await Promise.all([
