@@ -1,0 +1,108 @@
+---
+import { guideOwner, initializeGuideUpdates } from "../../lib/site-guide-updates.js";
+import { secureHeaders, validSameOrigin } from "../../lib/student-portal-auth.js";
+
+export const prerender = false;
+for (const [name, value] of Object.entries(secureHeaders({ "Referrer-Policy": "same-origin" }))) {
+  Astro.response.headers.set(name, value);
+}
+const db = await guideOwner(Astro.request, Astro.locals);
+if (!db) return new Response("Not found", { status: 404, headers: secureHeaders() });
+await initializeGuideUpdates(db);
+let error = "";
+if (Astro.request.method === "POST") {
+  if (!validSameOrigin(Astro.request)) return new Response("Invalid request", { status: 403, headers: secureHeaders() });
+  if (Number(Astro.request.headers.get("Content-Length")) > 10000) return new Response("Request too large", { status: 413, headers: secureHeaders() });
+  if (!Astro.request.headers.get("Content-Type")?.startsWith("application/x-www-form-urlencoded") || !Astro.request.body) {
+    return new Response("Invalid form", { status: 400, headers: secureHeaders() });
+  }
+  const reader = Astro.request.body.getReader();
+  const decoder = new TextDecoder();
+  let bytes = 0;
+  let body = "";
+  for (;;) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    bytes += value.length;
+    if (bytes > 10000) {
+      await reader.cancel();
+      return new Response("Request too large", { status: 413, headers: secureHeaders() });
+    }
+    body += decoder.decode(value, { stream: true });
+  }
+  const form = new URLSearchParams(body + decoder.decode());
+  const remove = Number(form.get("remove"));
+  if (Number.isSafeInteger(remove) && remove > 0) {
+    await db.prepare("DELETE FROM site_guide_updates WHERE id=?").bind(remove).run();
+    return Astro.redirect("/student-portal/chat-updates/", 303);
+  }
+  const visibility = String(form.get("visibility") ?? "");
+  const email = String(form.get("email") ?? "").trim().toLowerCase();
+  const match = String(form.get("match") ?? "").trim();
+  const answer = String(form.get("answer") ?? "").trim();
+  const days = Number(form.get("days"));
+  const household = visibility === "household" && email ? await db.prepare(
+    "SELECT id FROM portal_accounts WHERE lower(email)=? AND active=1",
+  ).bind(email).first() : null;
+  if (!["public", "household"].includes(visibility) || (visibility === "household" && !household) ||
+      !/[a-z0-9]/i.test(match) || match.length < 5 || match.length > 100 ||
+      !answer || answer.length > 700 || !Number.isInteger(days) || days < 1 || days > 90) {
+    error = "Check the match phrase, answer, expiration, and household email.";
+  } else {
+    await db.prepare(
+      "INSERT INTO site_guide_updates (account_id, match_phrase, answer, expires_at) VALUES (?, ?, ?, datetime('now', ?))",
+    ).bind(household?.id ?? null, match, answer, "+" + days + " days").run();
+    return Astro.redirect("/student-portal/chat-updates/", 303);
+  }
+}
+const { results } = await db.prepare(
+  `SELECT u.id, u.match_phrase, u.answer, u.expires_at, a.email
+   FROM site_guide_updates u LEFT JOIN portal_accounts a ON a.id = u.account_id
+   WHERE u.expires_at > datetime('now') ORDER BY u.id DESC LIMIT 500`,
+).all();
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Chat Updates | Burning Tree</title>
+  </head>
+  <body>
+    <main>
+      <a href="/student-portal/">Student Portal</a>
+      <h1>Chat Updates</h1>
+      <p>Publish verified openings, cancellations, or prices. Choose Household for a balance or payment update only that signed-in family can see.</p>
+      {error && <p role="alert">{error}</p>}
+      <form method="post">
+        <label>Who can see it <select name="visibility" required><option value="household">Household</option><option value="public">Public</option></select></label>
+        <label>Household portal email <input type="email" name="email" maxlength="254" /></label>
+        <label>Words to match in the visitor’s question <input name="match" required minlength="5" maxlength="100" placeholder="birthday party availability" /></label>
+        <label>Verified answer <textarea name="answer" required maxlength="700" rows="4"></textarea></label>
+        <label>Expires in days <input type="number" name="days" min="1" max="90" value="1" required /></label>
+        <button type="submit">Publish answer</button>
+      </form>
+      <h2>Active answers</h2>
+      {results.length === 0 && <p>No active answers.</p>}
+      {results.map((entry: any) => (
+        <article>
+          <h3>{entry.match_phrase}</h3>
+          <p>{entry.answer}</p>
+          <small>{entry.email ?? "Public"} · Expires {entry.expires_at} UTC</small>
+          <form method="post"><button name="remove" value={entry.id}>Remove answer</button></form>
+        </article>
+      ))}
+    </main>
+  </body>
+</html>
+<style>
+  body { margin: 0; color: #241c19; background: #fffaf7; font: 16px/1.5 system-ui, sans-serif; }
+  main { max-width: 44rem; margin: auto; padding: 1.5rem; }
+  a { color: #8d281a; }
+  form, label { display: grid; gap: .45rem; }
+  form { gap: .9rem; }
+  input, textarea, select, button { font: inherit; padding: .5rem; }
+  button { justify-self: start; background: #8d281a; color: white; border: 0; border-radius: .35rem; }
+  article { border-top: 1px solid #d8c6bf; padding-block: 1rem; }
+  article form { margin-top: .6rem; }
+</style>

@@ -1,4 +1,5 @@
 import type { APIRoute } from "astro";
+import { findGuideUpdate } from "../../lib/site-guide-updates.js";
 import { verifiedGuideAnswer } from "../../lib/site-guide-answers";
 
 export const prerender = false;
@@ -74,6 +75,11 @@ export const POST: APIRoute = async ({ request, locals, url }) => {
     const followUp = typeof previousQuestion === "string" && previousQuestion.length <= 300
       && /^(and\b|what about\b|how about\b)|\b(it|that|they|them|there|those)\b/i.test(question);
     const topic = followUp && typeof previousQuestion === "string" ? previousQuestion : "";
+    const update = await findGuideUpdate(question, topic, request, locals);
+    if (update?.account_id) return reply(update.answer, [{ url: "/student-portal/", label: "Student Portal" }]);
+    if (update && !/\b(my|our|i|we)\b.*\b(balance|owe|paid|payment|invoice|receipt)\b/i.test(question)) {
+      return reply(update.answer);
+    }
     const verified = await verifiedGuideAnswer(question, topic, request, locals);
     if (verified) return reply(verified.answer, verified.links);
     if (!env.AI) return reply(unavailable, [inquiry], 503);

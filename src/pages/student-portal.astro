@@ -1,6 +1,7 @@
 ---
 import {getPortalEnv, getPortalAccount, secureHeaders} from "../lib/student-portal-auth.js";
 import { sqlProgram, sqlRank, videoConfig } from "../lib/instructor-video-manager.js";
+import { OWNER_EMAIL } from "../lib/student-portal-owner-setup.js";
 import SiteGuide from "../components/SiteGuide.astro";
 import StudentPortalPreview from "../components/StudentPortalPreview.astro";
 import {TUITION_BILLING_RELEASED} from "../lib/tuition-billing-launch.js";
@@ -293,6 +294,7 @@ Astro.response.headers.set("Content-Security-Policy", "default-src 'none'; scrip
     )}
   </main>
   <footer class="foot"><div class="shell"><strong>Keepers of the Flame · One Tree. One Family.</strong><p>Need help with your student account? Call or text Coach David at <a href="tel:+14102180894">410-218-0894</a>.</p><p>Burning Tree Mixed Martial Arts · Owings Mills, Maryland</p></div></footer>
+{account?.email?.toLowerCase() === OWNER_EMAIL.toLowerCase() && <p><a href="/student-portal/chat-updates/">Manage chat updates</a></p>}
 {account && <SiteGuide />}
 </body>
 </html>
