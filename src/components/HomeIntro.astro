@@ -4,7 +4,7 @@
     <span>Discipline</span>
     <span>Focus</span>
     <span class="motto">One Tree.<br />One Family.</span>
-    <img src="/images/logo.png" width="707" height="960" alt="" decoding="async" />
+    <img data-intro-src="/images/logo.png" width="707" height="960" alt="" decoding="async" />
   </div>
   <button type="button" autofocus>Skip intro</button>
 </dialog>
@@ -19,6 +19,8 @@
     } catch {
       return;
     }
+    const logo = intro.querySelector<HTMLImageElement>("img[data-intro-src]");
+    if (logo?.dataset.introSrc) logo.src = logo.dataset.introSrc;
     intro.showModal();
     const end = () => { if (intro.open) intro.close(); };
     intro.querySelector("button")?.addEventListener("click", end);
