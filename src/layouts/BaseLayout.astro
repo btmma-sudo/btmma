@@ -1,5 +1,6 @@
 ---
 import Header from "../components/Header.astro";
+import SiteGuide from "../components/SiteGuide.astro";
 import Footer from "../components/Footer.astro";
 import "../styles/global.css";
 import { site, type ThemeName } from "../data/site";
@@ -210,6 +211,7 @@ src="https://www.facebook.com/tr?id=1531558921681879&ev=PageView&noscript=1"
       <slot />
     </main>
     <Footer />
+    <SiteGuide />
     <script is:inline>
       if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
         const revealSelectors = [

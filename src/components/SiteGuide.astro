@@ -1,0 +1,184 @@
+<site-guide>
+  <button type="button" class="launcher" aria-expanded="false" aria-controls="site-guide-panel">Ask Burning Tree</button>
+  <section id="site-guide-panel" class="panel" aria-labelledby="site-guide-heading" hidden>
+    <header>
+      <h2 id="site-guide-heading">Ask Burning Tree</h2>
+      <button type="button" class="close" aria-label="Close website chat">×</button>
+    </header>
+    <nav aria-label="Popular pages">
+      <a href="/29-trial/#help-find-a-class">Find a class</a>
+      <a href="/#weekly-schedule">Class schedule</a>
+      <a href="/29-trial/">$29 special</a>
+      <a href="/private-lessons/">Private lessons</a>
+      <a href="/seminars/">Events</a>
+    </nav>
+    <div class="conversation" role="log" aria-label="Chat messages" aria-relevant="additions text"></div>
+    <form>
+      <label for="site-guide-question">Ask about classes, schedules, or signup</label>
+      <div class="input-row">
+        <input id="site-guide-question" name="question" maxlength="300" required placeholder="Do you have classes for kids?" />
+        <button type="submit">Send</button>
+      </div>
+    </form>
+  </section>
+</site-guide>
+
+<script>
+  class SiteGuide extends HTMLElement {
+    connectedCallback() {
+      const launcher = this.querySelector<HTMLButtonElement>(".launcher")!;
+      const panel = this.querySelector<HTMLElement>(".panel")!;
+      const close = this.querySelector<HTMLButtonElement>(".close")!;
+      const form = this.querySelector<HTMLFormElement>("form")!;
+      const question = this.querySelector<HTMLInputElement>("input")!;
+      const submit = this.querySelector<HTMLButtonElement>('[type="submit"]')!;
+      const conversation = this.querySelector<HTMLElement>(".conversation")!;
+
+      const toggle = (open: boolean) => {
+        panel.hidden = !open;
+        launcher.setAttribute("aria-expanded", String(open));
+        (open ? close : launcher).focus();
+      };
+
+      launcher.addEventListener("click", () => toggle(panel.hidden));
+      close.addEventListener("click", () => toggle(false));
+      panel.addEventListener("keydown", event => {
+        if (event.key === "Escape") toggle(false);
+      });
+      panel.addEventListener("click", event => {
+        if (event.target instanceof HTMLAnchorElement && event.target.pathname === location.pathname) {
+          toggle(false);
+        }
+      });
+
+      const addMessage = (message: string, className: string) => {
+        const paragraph = document.createElement("p");
+        paragraph.className = className;
+        paragraph.textContent = message;
+        conversation.append(paragraph);
+        conversation.scrollTop = conversation.scrollHeight;
+        return paragraph;
+      };
+
+      form.addEventListener("submit", async event => {
+        event.preventDefault();
+        const value = question.value.trim();
+        if (!value || submit.disabled) return;
+        addMessage(value, "visitor");
+        question.value = "";
+        submit.disabled = true;
+        const answer = addMessage("Checking the website…", "answer");
+        try {
+          const response = await fetch("/api/site-guide", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ question: value }),
+            signal: AbortSignal.timeout(15000),
+          });
+          const data = await response.json();
+          answer.textContent = data.answer;
+          for (const link of data.links) {
+            if (!link.url.startsWith("/") || link.url.startsWith("//")) continue;
+            const anchor = document.createElement("a");
+            anchor.href = link.url;
+            anchor.textContent = link.label;
+            answer.append(anchor);
+          }
+        } catch {
+          answer.textContent = "Chat is temporarily unavailable. Use the links above to keep exploring.";
+        } finally {
+          submit.disabled = false;
+          conversation.scrollTop = conversation.scrollHeight;
+        }
+      });
+    }
+  }
+  customElements.define("site-guide", SiteGuide);
+</script>
+
+<style>
+  site-guide {
+    position: fixed;
+    z-index: 40;
+    right: max(1rem, env(safe-area-inset-right));
+    bottom: max(1rem, env(safe-area-inset-bottom));
+    display: grid;
+    justify-items: end;
+    gap: .6rem;
+    color: #261a17;
+    font: inherit;
+  }
+  button {
+    cursor: pointer;
+    font: inherit;
+    font-weight: 700;
+    border-radius: .65rem;
+    border: 1px solid transparent;
+  }
+  .launcher, button[type="submit"] {
+    background: #a32a18;
+    color: white;
+    padding: .65rem .95rem;
+  }
+  .launcher { box-shadow: 0 3px 16px #0004; }
+  .panel {
+    order: -1;
+    width: min(23rem, calc(100vw - 2rem));
+    max-height: calc(100dvh - 6rem);
+    overflow: auto;
+    background: #fffdf9;
+    border: 1px solid #dbc9c0;
+    border-radius: 1rem;
+    box-shadow: 0 8px 32px #0004;
+    padding: .9rem;
+  }
+  .panel[hidden] { display: none; }
+  header, .input-row {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+  header { justify-content: space-between; }
+  h2 { margin: 0; font-size: 1.12rem; color: #261a17; }
+  .close { background: transparent; color: #261a17; min-width: 2.75rem; min-height: 2.75rem; font-size: 1.4rem; }
+  nav { display: flex; flex-wrap: wrap; gap: .35rem; margin-block: .5rem; }
+  nav a {
+    border: 1px solid #dbc9c0;
+    border-radius: .5rem;
+    padding: .45rem .55rem;
+    color: #712017;
+    font-size: .84rem;
+  }
+  .conversation { max-height: min(15rem, 32dvh); overflow: auto; }
+  .conversation:empty { display: none; }
+  .conversation :global(p) {
+    margin: .45rem 0;
+    padding: .6rem;
+    border-radius: .55rem;
+    font-size: .92rem;
+    overflow-wrap: anywhere;
+  }
+  .conversation :global(.visitor) { background: #f4e5dd; }
+  .conversation :global(.answer) { background: #f4f0ec; }
+  .conversation :global(a) {
+    display: block;
+    margin-top: .35rem;
+    color: #712017;
+    text-decoration: underline;
+  }
+  form { margin-top: .7rem; }
+  label { display: block; font-weight: 600; font-size: .85rem; margin-bottom: .3rem; }
+  input {
+    min-width: 0;
+    width: 100%;
+    background: #fff;
+    color: #261a17;
+    border: 1px solid #8e776d;
+    border-radius: .5rem;
+    font: inherit;
+    padding: .6rem;
+  }
+  button:disabled { opacity: .65; cursor: wait; }
+  :is(a, button, input):focus-visible { outline: 2px solid #a32a18; outline-offset: 2px; }
+  @media print { site-guide { display: none; } }
+</style>

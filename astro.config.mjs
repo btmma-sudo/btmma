@@ -1,4 +1,5 @@
 import { defineConfig } from "astro/config";
+import { siteGuideIndex } from "./scripts/build-site-guide.mjs";
 import sitemap from "@astrojs/sitemap";
 import cloudflare from "@astrojs/cloudflare";
 import fs from "fs";
@@ -30,7 +31,7 @@ function renameSitemap() {
 
 export default defineConfig({
   site: "https://burningtreemma.com",
-  integrations: [sitemap(), renameSitemap()],
+  integrations: [sitemap(), renameSitemap(), siteGuideIndex()],
   output: "static",
   adapter: cloudflare({
     imageService: "compile",

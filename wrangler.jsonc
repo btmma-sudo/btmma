@@ -17,6 +17,10 @@
     "directory": "./dist",
     "binding": "ASSETS"
   },
+  "ai": { "binding": "AI" },
+  "ratelimits": [
+    { "name": "SITE_GUIDE_LIMIT", "namespace_id": "921874", "simple": { "limit": 8, "period": 60 } }
+  ],
   "d1_databases": [
     {
       "binding": "TRIAL_DB",
