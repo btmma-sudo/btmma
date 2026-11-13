@@ -94,7 +94,13 @@ export const POST: APIRoute = async ({ request, locals, url }) => {
         for (const term of new Set(words(content))) passageFrequency.set(term, (passageFrequency.get(term) ?? 0) + 1);
       }
     }
-    const passages = pages.flatMap(page => page.content.map(content => {
+    const topicPage = contextKeywords.length ? pages.find(page => {
+      const slugWords = words(page.url);
+      return slugWords.length >= 2 && slugWords.every(word =>
+        contextKeywords.includes(word) || relatedWords.some(group => group.includes(word) && group.some(term => contextKeywords.includes(term)))
+      );
+    }) : undefined;
+    const passages = (topicPage ? [topicPage] : pages).flatMap(page => page.content.map(content => {
       const terms = new Set(words(content));
       const urlTerms = new Set(words(page.url + " " + (page.title ?? "")));
       const exact = keywords.reduce((total, word) => total +
