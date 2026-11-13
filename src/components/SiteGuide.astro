@@ -12,7 +12,9 @@
       <a href="/private-lessons/">Private lessons</a>
       <a href="/seminars/">Events</a>
     </nav>
-    <div class="conversation" role="log" aria-label="Chat messages" aria-relevant="additions text"></div>
+    <div class="conversation" role="log" aria-label="Chat messages" aria-relevant="additions text">
+      <p class="answer">Hi! I’m Burning Tree’s virtual assistant. What can I help you find today?</p>
+    </div>
     <form>
       <label for="site-guide-question">Ask a question about Burning Tree</label>
       <div class="input-row">
@@ -68,7 +70,7 @@
         addMessage(value, "visitor");
         question.value = "";
         submit.disabled = true;
-        const answer = addMessage("Checking the website…", "answer");
+        const answer = addMessage("One moment…", "answer");
         try {
           const response = await fetch("/api/site-guide", {
             method: "POST",
@@ -78,7 +80,9 @@
           });
           const data = await response.json();
           answer.textContent = data.answer;
-          if (response.ok && !/^(and\b|what about\b|how about\b)|\b(it|that|they|them|there|those)\b/i.test(value)) previousQuestion = value;
+          if (response.ok && /^(?:for (?:a |an )?)?(kids?|child|children|teens?|teenagers?|adults?|me)[?!. ]*$/i.test(value) && previousQuestion) {
+            previousQuestion = (previousQuestion + " " + value).slice(0, 300);
+          } else if (response.ok && !/^(hi|hey|hello|thanks|thank you)[!. ]*$/i.test(value) && !/^(and\b|what about\b|how about\b|(?:on )?(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday)s?[?!. ]*$)|\b(it|that|they|them|there|those)\b/i.test(value)) previousQuestion = value;
           for (const link of data.links) {
             if (!link.url.startsWith("/") || link.url.startsWith("//")) continue;
             const anchor = document.createElement("a");
