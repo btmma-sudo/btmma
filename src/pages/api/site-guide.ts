@@ -83,7 +83,7 @@ export const POST: APIRoute = async ({ request, locals, url }) => {
       return reply("Happy to help you find a good first class. Who’s looking to train, a child, a teen, or an adult?", []);
     }
     if (typeof previousQuestion === "string" && /find a class|what class should|which class is right|where (do|should) i start/i.test(previousQuestion)) {
-      const audience = message.match(/^(?:for (?:a |an )?)?(kids?|child|children|teens?|teenagers?|adults?|me)[?!. ]*$/i)?.[1]?.toLowerCase();
+      const audience = message.match(/^(?:for )?(?:a |an )?(kids?|child|children|teens?|teenagers?|adults?|me)[?!. ]*$/i)?.[1]?.toLowerCase();
       if (audience) {
         const kids = /^(kids?|child|children)$/.test(audience);
         return reply(kids
