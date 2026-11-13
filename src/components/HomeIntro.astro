@@ -1,6 +1,6 @@
 <dialog id="home-intro" aria-label="Welcome to Burning Tree Mixed Martial Arts">
   <div class="sequence" aria-hidden="true">
-    <span>Confidence</span>
+    <span class="first-word">Confidence</span>
     <span>Discipline</span>
     <span>Focus</span>
     <span>One Tree. One Family.</span>
@@ -9,9 +9,9 @@
   <button type="button" autofocus>Skip intro</button>
 </dialog>
 
-<script is:inline>
+<script>
   (() => {
-    const intro = document.getElementById("home-intro");
+    const intro = document.querySelector<HTMLDialogElement>("#home-intro");
     if (!intro?.showModal || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     try {
       if (sessionStorage.getItem("burning-tree-intro")) return;
@@ -21,9 +21,16 @@
     }
     intro.showModal();
     const end = () => { if (intro.open) intro.close(); };
-    const timer = setTimeout(end, 8600);
-    intro.querySelector("button").addEventListener("click", end);
-    intro.addEventListener("close", () => clearTimeout(timer), { once: true });
+    intro.querySelector("button")?.addEventListener("click", end);
+    intro.addEventListener("animationend", event => {
+      if (event.target === intro) end();
+    });
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      if (!intro.open) return;
+      intro.dataset.playing = "";
+      const timer = setTimeout(end, 9400);
+      intro.addEventListener("close", () => clearTimeout(timer), { once: true });
+    }));
     window.addEventListener("pagehide", end, { once: true });
   })();
 </script>
@@ -74,12 +81,14 @@
     object-fit: contain;
   }
 
-  dialog[open] { animation: reveal-home 500ms ease 8100ms both; }
-  dialog[open] .sequence span { animation: intro-word 1550ms ease both; }
-  dialog[open] .sequence span:nth-child(2) { animation-delay: 1550ms; }
-  dialog[open] .sequence span:nth-child(3) { animation-delay: 3100ms; }
-  dialog[open] .sequence span:nth-child(4) { animation-delay: 4650ms; font-size: clamp(2rem, 8.5vw, 7rem); }
-  dialog[open] .sequence img { animation: intro-logo 1900ms cubic-bezier(.2, .65, .3, 1) 6200ms both; }
+  dialog[open][data-playing] { animation: reveal-home 500ms ease 8600ms both; }
+  dialog[open][data-playing] .sequence span { animation: intro-word 1550ms ease both; }
+  .sequence .first-word { font-size: clamp(2rem, 10vw, 10rem); }
+  dialog[open][data-playing] .sequence .first-word { animation-duration: 2050ms; animation-name: intro-first-word; }
+  dialog[open][data-playing] .sequence span:nth-child(2) { animation-delay: 2050ms; }
+  dialog[open][data-playing] .sequence span:nth-child(3) { animation-delay: 3600ms; }
+  dialog[open][data-playing] .sequence span:nth-child(4) { animation-delay: 5150ms; font-size: clamp(2rem, 8.5vw, 7rem); }
+  dialog[open][data-playing] .sequence img { animation: intro-logo 1900ms cubic-bezier(.2, .65, .3, 1) 6700ms both; }
 
   button {
     position: absolute;
@@ -95,6 +104,10 @@
     cursor: pointer;
   }
 
+  @keyframes intro-first-word {
+    0%, 100% { opacity: 0; }
+    16%, 80% { opacity: 1; }
+  }
   @keyframes intro-word {
     0%, 100% { opacity: 0; }
     28%, 70% { opacity: 1; }
