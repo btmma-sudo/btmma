@@ -1,4 +1,5 @@
 import type { APIRoute } from "astro";
+import { formatClassTime, weeklySchedule } from "../../data/schedule";
 import { findGuideUpdate } from "../../lib/site-guide-updates.js";
 import { verifiedGuideAnswer } from "../../lib/site-guide-answers";
 
@@ -103,6 +104,20 @@ export const POST: APIRoute = async ({ request, locals, url }) => {
     }
     const verified = await verifiedGuideAnswer(question, topic, request, locals);
     if (verified) return reply(verified.answer, verified.links);
+    const dayName = message.match(/^(?:on )?(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)s?[?!. ]*$/i)?.[1];
+    if (dayName && /find a class|what class should|which class is right|where (do|should) i start/i.test(topic)) {
+      const kids = /\b(kids?|child|children)\b/i.test(topic);
+      const adults = /\b(teens?|teenagers?|adults?|me)\b/i.test(topic);
+      const day = weeklySchedule.find(item => item.day.toLowerCase() === dayName.toLowerCase());
+      if (day && (kids || adults)) {
+        const slots = day.slots.filter(slot => kids ? slot.cls.startsWith("Jr.") : slot.cls.startsWith("Teens & Adults"));
+        const times = slots.map(slot => slot.cls + " at " + formatClassTime(slot.start, slot.end));
+        const answer = times.length
+          ? "On " + day.day + ", the weekly schedule lists " + times.join(" and ") + " Eastern."
+          : "The weekly schedule doesn’t list a " + (kids ? "junior" : "teen or adult") + " class on " + day.day + ". Is another day an option?";
+        return reply(answer, [{ url: "/#weekly-schedule", label: "Weekly class schedule" }, inquiry]);
+      }
+    }
     if (!env.AI) return reply(unavailable, [inquiry], 503);
 
     const keywords = [...new Set(words(question).filter(word => word.length > 1 && !common.has(word)))];
