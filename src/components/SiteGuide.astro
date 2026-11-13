@@ -78,7 +78,7 @@
           });
           const data = await response.json();
           answer.textContent = data.answer;
-          if (response.ok) previousQuestion = value;
+          if (response.ok && !/^(and\b|what about\b|how about\b)|\b(it|that|they|them|there|those)\b/i.test(value)) previousQuestion = value;
           for (const link of data.links) {
             if (!link.url.startsWith("/") || link.url.startsWith("//")) continue;
             const anchor = document.createElement("a");
