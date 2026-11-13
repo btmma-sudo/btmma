@@ -102,7 +102,7 @@ export const POST: APIRoute = async ({ request, locals, url }) => {
     })).filter(passage => passage.score > 0).sort((a, b) => b.score - a.score);
 
     const seen = new Set<string>();
-    const selected = [];
+    const selected: typeof passages = [];
     for (const passage of passages) {
       if (seen.has(passage.content)) continue;
       seen.add(passage.content);
