@@ -1,5 +1,6 @@
 import { defineConfig } from "astro/config";
 import { siteGuideIndex } from "./scripts/build-site-guide.mjs";
+import { optimizeSiteImages } from "./scripts/optimize-site-images.mjs";
 import sitemap from "@astrojs/sitemap";
 import cloudflare from "@astrojs/cloudflare";
 import fs from "fs";
@@ -33,7 +34,7 @@ export default defineConfig({
   site: "https://burningtreemma.com",
   integrations: [sitemap({
     filter: page => !/(?:^|\/)(?:student-portal|instructor-videos|private-lesson-manager|api|[^/]+-test)(?:\/|$)/.test(new URL(page).pathname),
-  }), renameSitemap(), siteGuideIndex()],
+  }), renameSitemap(), optimizeSiteImages(), siteGuideIndex()],
   output: "static",
   adapter: cloudflare({
     imageService: "compile",
