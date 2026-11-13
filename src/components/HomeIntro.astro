@@ -3,7 +3,7 @@
     <span class="first-word">Confidence</span>
     <span>Discipline</span>
     <span>Focus</span>
-    <span>One Tree. One Family.</span>
+    <span class="motto">One Tree.<br />One Family.</span>
     <img src="/images/logo.png" width="707" height="960" alt="" decoding="async" />
   </div>
   <button type="button" autofocus>Skip intro</button>
@@ -65,8 +65,9 @@
   }
 
   .sequence span {
-    padding-inline: 1rem;
-    font-size: clamp(2.6rem, 12vw, 10rem);
+    padding-inline: .35rem;
+    line-height: 1.05;
+    font-size: clamp(2.6rem, 15vw, 15rem);
     font-weight: 800;
     text-align: center;
     letter-spacing: .025em;
@@ -83,11 +84,12 @@
 
   dialog[open][data-playing] { animation: reveal-home 500ms ease 8600ms both; }
   dialog[open][data-playing] .sequence span { animation: intro-word 1550ms ease both; }
-  .sequence .first-word { font-size: clamp(2rem, 10vw, 10rem); }
+  .sequence span:nth-child(2) { font-size: clamp(2rem, 13.5vw, 14rem); }
+  .sequence .first-word { font-size: clamp(2rem, 12vw, 14rem); }
   dialog[open][data-playing] .sequence .first-word { animation-duration: 2050ms; animation-name: intro-first-word; }
   dialog[open][data-playing] .sequence span:nth-child(2) { animation-delay: 2050ms; }
   dialog[open][data-playing] .sequence span:nth-child(3) { animation-delay: 3600ms; }
-  dialog[open][data-playing] .sequence span:nth-child(4) { animation-delay: 5150ms; font-size: clamp(2rem, 8.5vw, 7rem); }
+  dialog[open][data-playing] .sequence span:nth-child(4) { animation-delay: 5150ms; font-size: clamp(2rem, 13vw, 13rem); }
   dialog[open][data-playing] .sequence img { animation: intro-logo 1900ms cubic-bezier(.2, .65, .3, 1) 6700ms both; }
 
   button {
