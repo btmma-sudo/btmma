@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import HomeConversion from "../components/HomeConversion.astro";
+import HomeIntro from "../components/HomeIntro.astro";
 import ClassSchedule from "../components/ClassSchedule.astro";
 import { homePage, kidsStartingAge, homepagePrograms, site } from "../data/site";
 import { adviceArticles } from "../data/advice";
@@ -13,6 +14,7 @@ import "../styles/advice.css";
   path="/"
   keywords={homePage.seo.keywords}
   image={homePage.hero.image}>
+  <HomeIntro />
   <HomeConversion />
 
   <section class="shell section-divider" aria-labelledby="november-events-heading">

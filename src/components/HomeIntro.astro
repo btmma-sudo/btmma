@@ -1,0 +1,101 @@
+<dialog id="home-intro" aria-label="Welcome to Burning Tree Mixed Martial Arts">
+  <div class="sequence" aria-hidden="true">
+    <span>Confidence</span>
+    <span>Discipline</span>
+    <span>Focus</span>
+    <img src="/images/logo.png" width="707" height="960" alt="" decoding="async" />
+  </div>
+  <button type="button" autofocus>Skip intro</button>
+</dialog>
+
+<script is:inline>
+  (() => {
+    const intro = document.getElementById("home-intro");
+    if (!intro?.showModal || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    try {
+      if (sessionStorage.getItem("burning-tree-intro")) return;
+      sessionStorage.setItem("burning-tree-intro", "1");
+    } catch {
+      return;
+    }
+    intro.showModal();
+    const end = () => { if (intro.open) intro.close(); };
+    const timer = setTimeout(end, 3500);
+    intro.querySelector("button").addEventListener("click", end);
+    intro.addEventListener("close", () => clearTimeout(timer), { once: true });
+    window.addEventListener("pagehide", end, { once: true });
+  })();
+</script>
+
+<style>
+  dialog {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    color: #fffaf7;
+    background: #100e0d;
+  }
+
+  dialog::backdrop { background: transparent; }
+
+  .sequence {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+  }
+
+  .sequence > * {
+    grid-area: 1 / 1;
+    opacity: 0;
+  }
+
+  .sequence span {
+    padding-inline: 1rem;
+    font-size: clamp(2rem, 9vw, 6rem);
+    font-weight: 800;
+    text-align: center;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+
+  .sequence img {
+    width: min(42vw, 12rem);
+    height: auto;
+    max-height: 55dvh;
+    object-fit: contain;
+  }
+
+  dialog[open] { animation: reveal-home 350ms ease 3150ms both; }
+  dialog[open] .sequence span { animation: intro-word 780ms ease both; }
+  dialog[open] .sequence span:nth-child(2) { animation-delay: 780ms; }
+  dialog[open] .sequence span:nth-child(3) { animation-delay: 1560ms; }
+  dialog[open] .sequence img { animation: intro-logo 350ms ease 2340ms both; }
+
+  button {
+    position: absolute;
+    right: max(1rem, env(safe-area-inset-right));
+    bottom: max(1rem, env(safe-area-inset-bottom));
+    min-height: 44px;
+    padding: .5rem 1rem;
+    border: 1px solid #aa8a7f;
+    border-radius: .4rem;
+    background: #211714;
+    color: #fffaf7;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  @keyframes intro-word {
+    0%, 100% { opacity: 0; }
+    28%, 70% { opacity: 1; }
+  }
+  @keyframes intro-logo { to { opacity: 1; } }
+  @keyframes reveal-home { from { opacity: 1; } to { opacity: 0; } }
+</style>
