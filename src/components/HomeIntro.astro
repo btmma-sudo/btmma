@@ -21,7 +21,7 @@
     }
     intro.showModal();
     const end = () => { if (intro.open) intro.close(); };
-    const timer = setTimeout(end, 4280);
+    const timer = setTimeout(end, 8600);
     intro.querySelector("button").addEventListener("click", end);
     intro.addEventListener("close", () => clearTimeout(timer), { once: true });
     window.addEventListener("pagehide", end, { once: true });
@@ -59,26 +59,27 @@
 
   .sequence span {
     padding-inline: 1rem;
-    font-size: clamp(2rem, 9vw, 6rem);
+    font-size: clamp(2.6rem, 12vw, 10rem);
     font-weight: 800;
     text-align: center;
-    letter-spacing: .06em;
+    letter-spacing: .025em;
+    color: #f3473d;
     text-transform: uppercase;
   }
 
   .sequence img {
-    width: min(42vw, 12rem);
+    width: min(92vw, 68dvh);
     height: auto;
-    max-height: 55dvh;
+    max-height: 92dvh;
     object-fit: contain;
   }
 
-  dialog[open] { animation: reveal-home 350ms ease 3930ms both; }
-  dialog[open] .sequence span { animation: intro-word 780ms ease both; }
-  dialog[open] .sequence span:nth-child(2) { animation-delay: 780ms; }
-  dialog[open] .sequence span:nth-child(3) { animation-delay: 1560ms; }
-  dialog[open] .sequence span:nth-child(4) { animation-delay: 2340ms; font-size: clamp(1.35rem, 6.5vw, 4.5rem); }
-  dialog[open] .sequence img { animation: intro-logo 350ms ease 3120ms both; }
+  dialog[open] { animation: reveal-home 500ms ease 8100ms both; }
+  dialog[open] .sequence span { animation: intro-word 1550ms ease both; }
+  dialog[open] .sequence span:nth-child(2) { animation-delay: 1550ms; }
+  dialog[open] .sequence span:nth-child(3) { animation-delay: 3100ms; }
+  dialog[open] .sequence span:nth-child(4) { animation-delay: 4650ms; font-size: clamp(2rem, 8.5vw, 7rem); }
+  dialog[open] .sequence img { animation: intro-logo 1900ms cubic-bezier(.2, .65, .3, 1) 6200ms both; }
 
   button {
     position: absolute;
@@ -98,6 +99,10 @@
     0%, 100% { opacity: 0; }
     28%, 70% { opacity: 1; }
   }
-  @keyframes intro-logo { to { opacity: 1; } }
+  @keyframes intro-logo {
+    from { opacity: 0; transform: scale(.24); }
+    35% { opacity: 1; }
+    to { opacity: 1; transform: scale(1); }
+  }
   @keyframes reveal-home { from { opacity: 1; } to { opacity: 0; } }
 </style>
