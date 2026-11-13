@@ -31,7 +31,9 @@ function renameSitemap() {
 
 export default defineConfig({
   site: "https://burningtreemma.com",
-  integrations: [sitemap(), renameSitemap(), siteGuideIndex()],
+  integrations: [sitemap({
+    filter: page => !/(?:^|\/)(?:student-portal|instructor-videos|private-lesson-manager|api|[^/]+-test)(?:\/|$)/.test(new URL(page).pathname),
+  }), renameSitemap(), siteGuideIndex()],
   output: "static",
   adapter: cloudflare({
     imageService: "compile",
