@@ -14,7 +14,7 @@
     </nav>
     <div class="conversation" role="log" aria-label="Chat messages" aria-relevant="additions text"></div>
     <form>
-      <label for="site-guide-question">Ask about classes, schedules, or signup</label>
+      <label for="site-guide-question">Ask a question about Burning Tree</label>
       <div class="input-row">
         <input id="site-guide-question" name="question" maxlength="300" required placeholder="Do you have classes for kids?" />
         <button type="submit">Send</button>
@@ -60,6 +60,7 @@
         return paragraph;
       };
 
+      let previousQuestion: string | undefined;
       form.addEventListener("submit", async event => {
         event.preventDefault();
         const value = question.value.trim();
@@ -72,11 +73,12 @@
           const response = await fetch("/api/site-guide", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ question: value }),
+            body: JSON.stringify({ question: value, previousQuestion }),
             signal: AbortSignal.timeout(15000),
           });
           const data = await response.json();
           answer.textContent = data.answer;
+          if (response.ok) previousQuestion = value;
           for (const link of data.links) {
             if (!link.url.startsWith("/") || link.url.startsWith("//")) continue;
             const anchor = document.createElement("a");
