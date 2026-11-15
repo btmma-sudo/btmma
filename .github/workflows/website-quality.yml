@@ -31,6 +31,8 @@ jobs:
         run: npm run test:portal
       - name: Test student inquiry acknowledgments and funnel handoffs without payments
         run: node --test tests/student-funnel-handoff.test.mjs
+      - name: Test school push notification encryption and validation (no real sends)
+        run: node --test tests/school-notifications.test.mjs
       - name: Validate Astro and TypeScript
         run: npm run check
       - name: Build website and sitemap

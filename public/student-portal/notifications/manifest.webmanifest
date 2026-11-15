@@ -1,0 +1,17 @@
+{
+  "id": "/student-portal/notifications/",
+  "name": "Burning Tree School Notifications",
+  "short_name": "Burning Tree",
+  "start_url": "/student-portal/notifications/",
+  "scope": "/student-portal/notifications/",
+  "display": "standalone",
+  "background_color": "#121416",
+  "theme_color": "#bd2924",
+  "icons": [
+    {
+      "src": "/images/logo.png",
+      "sizes": "any",
+      "type": "image/png"
+    }
+  ]
+}
