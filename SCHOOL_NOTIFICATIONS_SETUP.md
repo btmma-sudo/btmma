@@ -1,0 +1,17 @@
+# Burning Tree school notifications — staged rollout
+
+**Push notifications, not SMS.** No paid SMS provider, WhatsApp, or new dependency. This feature uses the existing portal's verified login, Cloudflare Workers and LIVE_TRIAL_DB. It remains disabled until explicitly configured. Never include private student or billing details in lock-screen announcements. Free-tier suitability must be checked against actual usage and Worker CPU limits. Keep email as a backup for urgent notices.
+
+## Before launch
+1. Review the PR, run the website checks and `node --test tests/school-notifications.test.mjs`. Verify the new pages render and check there is no production billing or portal regression.
+2. Apply ONLY `db/migrations/0006_school_notifications.sql` to the existing LIVE_TRIAL_DB (not the trial/sandbox database). Back up before making production changes. Example: `npx wrangler d1 execute burningtree-live-payments --remote --file db/migrations/0006_school_notifications.sql`.
+3. Privately generate a VAPID key using `node scripts/generate-school-push-key.mjs`; store the output as the Cloudflare Worker secret SCHOOL_PUSH_VAPID_PRIVATE_JWK. Keep it out of chat, source control and logs; preserve it across releases. Set SCHOOL_NOTIFICATIONS_ENABLED to the string true only after tests. Use the Dashboard if CLI access isn't available.
+4. Deploy the reviewed branch to the existing Worker without changing payment settings. Visit /student-portal/notifications/ using the owner portal login. For iPhone/iPad (16.4+), add this exact page to Home Screen, open the installed app and sign in, then enable push with a click. Test Android too. Verify the icon and installation scope on both.
+5. Choose **Test to my own subscribed devices**. Confirm display on lock screen and tapping the alert opens the portal. Test unsubscribe; test an inactive/non-owner account cannot broadcast; test a duplicate delivery request does not resend; test permission denied and expired subscriptions. Use a test family account before enabling real school alerts.
+6. Invite each parent to opt in. School audience includes only active portal accounts with active students and registered push devices; device count is not household count. The owner must approve each broadcast. No external SMS is sent. Only portal-enrolled households see school announcements.
+7. Deliveries are processed one device per small request in the owner's open page. If interrupted, use Resume pending deliveries. A claimed but interrupted send stays uncertain (do not automatically resend); acceptance means the push provider accepted it, not receipt. Review history for failures; use email for recipients who could not get alerts.
+
+## Scope and limits
+Initial release includes all-school notices and owner-only test notices, opt-in/out per device, owner confirmation, durable queue and delivery history. Program-specific delivery, scheduled sends, Airtable status synchronization and staff roles are follow-on integration work (not included). Never store push endpoint URLs or device keys in the public repository or expose them to other households. No credentials are committed. No automatic broadcast tests or SMS sending are included.
+
+Rollback: set SCHOOL_NOTIFICATIONS_ENABLED=false. Existing school records remain untouched; no other portal functions depend on this flag. If a push key must rotate, users will need to unsubscribe/re-enroll. No private portal content is cached by the service worker.

@@ -1,0 +1,44 @@
+---
+import {notificationSession} from "../../lib/school-notifications.js";
+import {secureHeaders} from "../../lib/student-portal-auth.js";
+export const prerender=false;
+for(const [k,v] of Object.entries(secureHeaders({"Referrer-Policy":"same-origin","Content-Security-Policy":"default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'; manifest-src 'self'; worker-src 'self'; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'"}))) Astro.response.headers.set(k,v);
+let session: any=null, notices: any[]=[], history: any[]=[], devices=0, unavailable=false;
+try{
+ session=await notificationSession(Astro.request,Astro.locals);
+ if(session){
+   notices=(await session.db.prepare("SELECT id,title,body,created_at FROM school_announcements WHERE audience='school' ORDER BY created_at DESC LIMIT 50").all()).results||[];
+   if(session.owner){
+     history=(await session.db.prepare("SELECT n.id,n.title,n.audience,n.created_at,COUNT(d.device_id) AS total, SUM(CASE WHEN d.status='accepted' THEN 1 ELSE 0 END) AS accepted,SUM(CASE WHEN d.status='pending' THEN 1 ELSE 0 END) AS pending,SUM(CASE WHEN d.status='processing' THEN 1 ELSE 0 END) AS processing,SUM(CASE WHEN d.status IN ('failed','expired','skipped') THEN 1 ELSE 0 END) AS other FROM school_announcements n LEFT JOIN school_push_deliveries d ON d.announcement_id=n.id WHERE n.owner_id=? GROUP BY n.id ORDER BY n.created_at DESC LIMIT 50").bind(session.account.id).all()).results||[];
+     devices=(await session.db.prepare("SELECT COUNT(*) AS count FROM school_push_devices d JOIN portal_accounts a ON a.id=d.account_id AND a.active=1 WHERE EXISTS(SELECT 1 FROM portal_students s WHERE s.account_id=d.account_id AND s.active=1)").first())?.count||0;
+   }
+ }
+}catch{ unavailable=true;session=null; }
+---
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>School Notifications | Burning Tree</title><link rel="manifest" href="/student-portal/notifications/manifest.webmanifest"/>
+<link rel="apple-touch-icon" href="/images/logo.png"/>
+</head><body><main>
+<a href="/student-portal/">← Student Portal</a><header><img src="/images/logo.png" alt="Burning Tree"/><div><p class="brand">ONE TREE. ONE FAMILY.</p><h1>School Notifications</h1></div></header>
+{!session ? <section><h2>{unavailable?"Notifications are temporarily unavailable":"Sign in to your student portal"}</h2><p>School notifications are available to active families when enabled by the studio.</p><a class="btn" href="/student-portal/">Return to portal</a></section>: <>
+<section id="device" data-public-key={session.config.publicKey}>
+<h2>Alerts on this phone</h2><p>Receive class changes, school closures and event announcements. On iPhone, open this page in Safari, tap Share, then Add to Home Screen; open the new icon and sign in before enabling notifications. On supported Android browsers, enable notifications here or install the web app.</p>
+<p>Alerts may be visible on your lock screen. Do not enable on a shared device unless appropriate. You can turn them off at any time.</p>
+<button id="enable" disabled>Enable push notifications</button> <button id="disable" class="secondary" disabled>Turn off on this device</button>
+<p id="device-status" role="status" aria-live="polite">Checking device support…</p></section>
+{session.owner&&<section id="owner"><h2>Owner announcement center</h2><p>{devices} eligible opted-in devices. A household can have more than one device.</p>
+<form id="compose"><label>Audience<select name="audience"><option value="test">Test to my own subscribed devices</option><option value="school">All enrolled families (opted-in devices)</option></select></label>
+<label>Title<input name="title" maxlength="65" required placeholder="Class schedule update"/></label><label>Announcement<textarea name="body" maxlength="300" rows="4" required placeholder="Enter your school announcement…"></textarea></label>
+<p>School alerts are also shown in this portal. Never include a child's name, personal, medical or payment information.</p>
+<label class="check"><input name="approve" type="checkbox" required/> I reviewed the message and approve sending it to the selected audience.</label>
+<button type="submit">Review and send</button></form>
+<p id="send-status" role="status" aria-live="polite"></p>
+<h3>Delivery history</h3>{history.map((n:any)=><article><strong>{n.title}</strong><p>{n.audience==="test"?"Owner test":"School"} · {n.created_at} UTC</p><p>{n.accepted}/{n.total} accepted by push services · {n.pending} pending · {n.processing} processing/uncertain · {n.other} failed, expired or skipped</p>{n.pending>0&&<button type="button" class="resume secondary" data-id={n.id}>Resume pending deliveries</button>}</article>)}
+<p class="fine">Accepted does not guarantee received or read. Interrupted in-flight sends are excluded from automatic retries to avoid duplicate alerts.</p></section>}
+<section><h2>Recent school announcements</h2>{notices.length===0&&<p>No announcements yet.</p>}{notices.map((n:any)=><article><strong>{n.title}</strong><p>{n.body}</p><small>{n.created_at} UTC</small></article>)}</section>
+<script is:inline src="/student-portal/notifications/client.js" defer></script></>}
+<footer>Burning Tree Mixed Martial Arts · One Tree. One Family.</footer></main></body></html>
+<style is:inline>
+*{box-sizing:border-box}body{margin:0;background:#121416;color:#f6f6f6;font:16px/1.5 system-ui,sans-serif}main{max-width:760px;margin:auto;padding:24px 18px 60px}a{color:#ffb1a3}header{display:flex;align-items:center;gap:14px;margin:24px 0}header img{width:70px;height:80px;object-fit:contain}.brand{color:#ff8070;font-weight:800;font-size:.75rem;letter-spacing:.09em;margin:0}h1{font-size:clamp(1.7rem,5vw,2.4rem);line-height:1.1;margin:4px 0}section{background:#202427;border:1px solid #41474a;border-radius:16px;padding:20px;margin:16px 0}h2{margin:0 0 12px}p{margin:8px 0 12px}label{display:grid;gap:5px}form{display:grid;gap:12px}input,select,textarea,button{font:inherit}input:not([type=checkbox]),select,textarea{width:100%;padding:11px;border-radius:8px;border:1px solid #888;background:#fff;color:#141414}.check{display:flex;align-items:flex-start;gap:9px}.check input{margin-top:6px}button,.btn{display:inline-block;background:#bd2924;color:white;border:0;border-radius:8px;padding:11px 15px;font-weight:700;cursor:pointer;text-decoration:none;margin:3px 0}button:disabled{opacity:.55;cursor:default}.secondary{background:#41474a}article{border-top:1px solid #474c50;padding:13px 0;overflow-wrap:anywhere}article p{white-space:pre-wrap}small,.fine,footer{color:#c4c7c9;font-size:.85rem}
+</style>
