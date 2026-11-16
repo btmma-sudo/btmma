@@ -1,6 +1,9 @@
 ---
 const images = [
   "/images/kids-martial-arts-group.png",
+  "/images/Gallery/5250D99D-39AE-4592-BDA4-257DABAB7D50.jpeg",
+  "/images/Gallery/33DEAF72-E644-4826-8BBD-DF987DB837B8.png",
+  "/images/Gallery/B3025C66-7ED2-43C7-9E46-4EA7DA59DD44.png",
   "/images/Gallery/gallery10.jpeg",
   "/images/kids-martial-arts-bag-training.png",
   "/images/wing-chun-class-0050.webp",
@@ -28,6 +31,7 @@ const images = [
           <img
             src={src}
             alt={copy === 0 ? "Real Burning Tree Mixed Martial Arts students and instructors at the studio and events" : ""}
+            style={src.includes("/images/Gallery/5250D99D") || src.includes("/images/Gallery/33DEAF72") || src.includes("/images/Gallery/B3025C66") ? "object-fit: contain; background: #111;" : undefined}
             width="360"
             height="260"
             loading="lazy"
