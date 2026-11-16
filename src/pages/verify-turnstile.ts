@@ -115,7 +115,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   if (!env.TURNSTILE_SECRET_KEY || !env.AIRTABLE_API_TOKEN || !env.AIRTABLE_BASE_ID) {
     console.error("Website lead capture is missing server credentials");
-    return json({ success: false, error: "The inquiry service is temporarily unavailable. Please call (202) 368-4395." }, 503);
+    return json({ success: false, error: "The inquiry service is temporarily unavailable. Please call (410) 218-0894." }, 503);
   }
 
   try {
@@ -186,17 +186,17 @@ export const POST: APIRoute = async ({ request, locals }) => {
     );
     if (!response.ok) {
       console.error("Website inquiry Airtable save failed", { status: response.status });
-      return json({ success: false, error: "We couldn't save your request. Please try again or call (202) 368-4395." }, 502);
+      return json({ success: false, error: "We couldn't save your request. Please try again or call (410) 218-0894." }, 502);
     }
     const saved = await response.json() as { id?: string };
     if (!saved.id || !/^rec[A-Za-z0-9]{14}$/.test(saved.id)) {
       console.error("Website inquiry save returned no valid record ID");
-      return json({ success: false, error: "We couldn't confirm your request. Please call (202) 368-4395." }, 502);
+      return json({ success: false, error: "We couldn't confirm your request. Please call (410) 218-0894." }, 502);
     }
     savedRecordId = saved.id;
   } catch {
     console.error("Website inquiry Airtable request failed");
-    return json({ success: false, error: "We couldn't send your request. Please try again or call (202) 368-4395." }, 502);
+    return json({ success: false, error: "We couldn't send your request. Please try again or call (410) 218-0894." }, 502);
   }
 
   // Mirror class-finder inquiries into the dedicated interest tracker while

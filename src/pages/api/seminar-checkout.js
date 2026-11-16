@@ -30,7 +30,7 @@ export async function POST({ request, locals }) {
   if (env.LIVE_CHECKOUT_ENABLED !== "true" ||
       !/^(sk|rk)_live_/.test(String(env.STRIPE_LIVE_SECRET_KEY || "")) ||
       !env.AIRTABLE_API_TOKEN || !env.AIRTABLE_BASE_ID) {
-    return response({ error: "Seminar registration is being configured. Please call (202) 368-4395." }, 503);
+    return response({ error: "Seminar registration is being configured. Please call (410) 218-0894." }, 503);
   }
   if (request.headers.get("origin") &&
       request.headers.get("origin") !== new URL(request.url).origin)
@@ -125,7 +125,7 @@ export async function POST({ request, locals }) {
     if (!stripeResponse.ok) {
       const diagnostic = await stripeResponse.json().catch(() => ({}));
       console.error("Seminar Stripe Checkout error", { status: stripeResponse.status, code: String(diagnostic?.error?.code || "").slice(0, 80) });
-      return response({ error: "Secure checkout is temporarily unavailable. Please contact the studio at (202) 368-4395." }, 503);
+      return response({ error: "Secure checkout is temporarily unavailable. Please contact the studio at (410) 218-0894." }, 503);
     }
     const session = await stripeResponse.json();
     if (session.livemode !== true || !/^cs_live_/.test(session.id || "") || !/^https:\/\/checkout\.stripe\.com\//.test(session.url || ""))

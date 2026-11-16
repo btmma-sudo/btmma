@@ -129,7 +129,7 @@ export async function POST({ request, locals }) {
         "; code: " + code + (param ? "; parameter: " + param : "") +
         (requestId ? "; request: " + requestId : "") +
         "). " + (safeMessage ? "Stripe response: " + safeMessage + ". " : "") +
-        "Please call (202) 368-4395 for assistance.",
+        "Please call (410) 218-0894 for assistance.",
       errorCode: code,
       stripeRequestId: requestId || null
     }, 503);

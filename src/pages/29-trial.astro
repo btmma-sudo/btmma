@@ -159,7 +159,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <p class="fine-print">Before you tap Send, confirm Cash App shows the correct recipient ($BTMMA) and total ($29). If either is different, do not pay; contact the studio.</p>
           <p>Add “BTMMA New Student Special” in the payment note. Once paid, text the student's name and your payment confirmation to <a href="sms:+14102180894">(410) 218-0894</a>.</p>
           <p><strong>Your registration is pending.</strong> We will confirm it only after verifying the $29 payment in our Cash App account. Do not pay again through Stripe.</p>
-          <p>Need to change payment methods? Call <a href="tel:+12023684395">(202) 368-4395</a>.</p>
+          <p>Need to change payment methods? Call <a href="tel:+14102180894">(410) 218-0894</a>.</p>
                     <p class="manual-step3-help">After Coach David verifies your payment, check payment status here to open the goals questionnaire. You can also use the link in your registration email.</p>
           <button type="button" class="check-step-three">CHECK PAYMENT STATUS</button>
 <button type="button" id="cashapp-new-student">REGISTER ANOTHER STUDENT</button>
@@ -188,13 +188,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         <p id="checkout-result-message" role="status">Checking your secure Stripe transaction.</p>
         <p>Please do not make another payment while confirmation is pending.</p>
         <a class="cta" id="step-three-jump" hidden>COMPLETE YOUR GOALS QUESTIONNAIRE</a>
-        <a class="cta" href="tel:+12023684395">QUESTIONS? CALL (202) 368-4395</a>
+        <a class="cta" href="tel:+14102180894">QUESTIONS? CALL (410) 218-0894</a>
       </div>
     </section>
     <section class="registration" id="goals-access" hidden>
       <h2>Enrollment Goals Questionnaire</h2>
       <p id="goals-access-status" role="status">Checking your trial payment…</p>
-      <p>Questions? Call <a href="tel:+12023684395">(202) 368-4395</a>.</p>
+      <p>Questions? Call <a href="tel:+14102180894">(410) 218-0894</a>.</p>
     </section>
     <section class="registration" id="post-payment" hidden aria-labelledby="post-payment-title">
       <h2 id="post-payment-title">Enrollment Goals Questionnaire</h2>
@@ -309,7 +309,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     </div>
     <section class="contact">
       <h2>Questions? We're Here to Help.</h2>
-      <p>Call <a href="tel:+12023684395">(202) 368-4395</a></p>
+      <p>Call <a href="tel:+14102180894">(410) 218-0894</a></p>
       <p>10210 S. Dolfield Road, Suite C · Owings Mills, MD 21117</p>
       <p><strong>One Tree. One Family.</strong></p>
     </section>
@@ -590,9 +590,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           signal: controller.signal
         });
         const result = await response.json().catch(() => ({}));
-        if (!response.ok) throw new Error(result.error || "Secure checkout is temporarily unavailable. Please call (202) 368-4395.");
+        if (!response.ok) throw new Error(result.error || "Secure checkout is temporarily unavailable. Please call (410) 218-0894.");
         if (typeof result.url !== "string" || !/^https:\/\/checkout\.stripe\.com\//.test(result.url))
-          throw new Error("We couldn't confirm a secure Stripe checkout link. Please call (202) 368-4395.");
+          throw new Error("We couldn't confirm a secure Stripe checkout link. Please call (410) 218-0894.");
         // Give customers a clickable, verified Stripe link if their browser prevents navigation.
         if (checkoutFallback) {
           checkoutFallback.href = result.url;
@@ -604,8 +604,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         window.location.assign(result.url);
       } catch (error) {
         notice.textContent = error?.name === "AbortError"
-          ? "Secure checkout took too long to respond. Please try the card button again, or call (202) 368-4395."
-          : error?.message || "Secure checkout is unavailable. Please call (202) 368-4395.";
+          ? "Secure checkout took too long to respond. Please try the card button again, or call (410) 218-0894."
+          : error?.message || "Secure checkout is unavailable. Please call (410) 218-0894.";
         checkoutButton.disabled = false;
         if (applePayButton && liveMode) applePayButton.disabled = false;
         if (cashAppButton && liveMode) cashAppButton.disabled = false;
@@ -664,7 +664,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           window.location.assign(paymentUrl);
         }
       } catch (error) {
-        notice.textContent = error?.message || "Please call (202) 368-4395 for payment assistance.";
+        notice.textContent = error?.message || "Please call (410) 218-0894 for payment assistance.";
         cashAppButton.disabled = false;
         checkoutButton.disabled = false;
         if (applePayButton) applePayButton.disabled = false;
@@ -894,10 +894,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           ? pilotOnly
             ? "Private live payment verification is enabled. A real $29 charge applies after approval."
             : "We'll check the student's eligibility before taking a secure $29 payment."
-           : "Student registration is available. Online payments are not yet enabled. Call (202) 368-4395 or text (410) 218-0894 for assistance.";
+           : "Student registration is available. Online payments are not yet enabled. Call or text (410) 218-0894 for assistance.";
         submit.disabled = false;
       } catch {
-        notice.textContent = "Registration is temporarily unavailable. Please call (202) 368-4395.";
+        notice.textContent = "Registration is temporarily unavailable. Please call (410) 218-0894.";
       }
     })();
     const syncGuardian = () => {
@@ -921,7 +921,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       if (zelleButton) { zelleButton.hidden = true; zelleButton.disabled = true; }
       if (zelleInstructions) zelleInstructions.hidden = true;
       if (liveMode === null) {
-        notice.textContent = "Registration is temporarily unavailable. Please call (202) 368-4395.";
+        notice.textContent = "Registration is temporarily unavailable. Please call (410) 218-0894.";
         return;
       }
       notice.textContent = "Validating registration...";
@@ -994,8 +994,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         }
       } catch (error) {
         notice.textContent = error?.name === "AbortError"
-          ? "Verification timed out. Please try again or call (202) 368-4395."
-          : "Eligibility verification is unavailable. Please call (202) 368-4395.";
+          ? "Verification timed out. Please try again or call (410) 218-0894."
+          : "Eligibility verification is unavailable. Please call (410) 218-0894.";
       } finally {
         clearTimeout(timeout);
         submit.disabled = false;

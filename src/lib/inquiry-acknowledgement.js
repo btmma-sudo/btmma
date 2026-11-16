@@ -13,7 +13,7 @@ export async function sendInquiryAcknowledgement(env, { email, recordId }) {
     "If you are preparing for a first visit, our guide explains what to wear and what to expect:",
     "https://burningtreemma.com/your-first-class/",
     "Submitting an inquiry does not book a class or create a paid membership.",
-    "Questions? Call (202) 368-4395 or reply to this email.",
+    "Questions? Call (410) 218-0894 or reply to this email.",
     "Coach David\nBurning Tree Mixed Martial Arts\nOne Tree. One Family."
   ].join("\n\n");
 
