@@ -768,7 +768,6 @@ export const programPages: ProgramPage[] = [
       ]
     },
     galleryImages: [
-      { src: "/images/womens-defense-gallery-1.jpeg", alt: "Women practicing supervised self-defense techniques at Burning Tree" },
       { src: "/images/burning-tree-muay-thai-female.webp", alt: "Female martial artist practicing striking technique" }
     ],
     leadForm: {
