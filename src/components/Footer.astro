@@ -8,13 +8,19 @@ const { hideTrialOffer = false } = Astro.props;
   <div class="shell footer-grid">
 
     <div>
-      <p class="footer-label">Contact</p>
+      <p class="footer-label">{hideTrialOffer ? "Women’s Self-Defense Contact — Coach Dana" : "Contact"}</p>
       <p>{site.addressLine1}</p>
       <p>
         {site.city}, {site.regionName} {site.postalCode}
       </p>
-      <p><a href={`tel:${site.phoneHref}`}>{site.phone}</a></p>
-      <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
+      {hideTrialOffer ? (
+        <p><strong>Coach Dana Marable II:</strong> <a href="tel:+16673359592">(667) 335-9592</a></p>
+      ) : (
+        <>
+          <p><a href={`tel:${site.phoneHref}`}>{site.phone}</a></p>
+          <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
+        </>
+      )}
     </div>
 
     <div>
