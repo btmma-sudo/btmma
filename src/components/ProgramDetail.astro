@@ -111,7 +111,7 @@ const womensSchedule = program.slug === "womens-defense"
             <p class="schedule-day-label">{day.day}</p>
             <ul class="schedule-slots">
               {day.slots.map(slot => (
-                <li>
+                <li class="schedule-slot womens-schedule-slot">
                   <span class="schedule-time">{formatClassTime(slot.start, slot.end)}</span>
                   <span class="schedule-class">{slot.cls}</span>
                 </li>
@@ -155,6 +155,8 @@ const womensSchedule = program.slug === "womens-defense"
 </section>
 
 <style>
+  .womens-schedule-slot { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 1.1rem; row-gap: .45rem; }
+  .womens-schedule-slot .schedule-time { white-space: nowrap; }
   .womens-schedule-info { margin: 1rem 0; font-size: clamp(1rem, 1.8vw, 1.15rem); line-height: 1.55; font-weight: 600; }
   .womens-schedule-info strong { font-weight: 900; }
   .program-photo-grid {
