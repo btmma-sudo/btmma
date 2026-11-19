@@ -74,6 +74,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
   // Only an explicit, optional, checked website opt-in counts as permission.
   const smsConsent = !isClassHelp && phone.length > 0 && formText(form, "smsConsent", 10) === "yes";
   const program = formText(form, "programInterest", 120);
+  // Women’s Self-Defense is instructor-led enrollment only; do not accept it via a generic form.
+  if (/women(?:\W|$)|sanuces|sanuc[e]?s/i.test(program)) {
+    return json({ success: false, error: "For Women’s Self-Defense, contact Coach Dana at (667) 335-9592 before enrolling." }, 400);
+  }
   const comments = formText(form, "comments", 3000);
   const source = formText(form, "source", 500) || "/";
   const requiresExactAge = isClassHelp && !classHelpSources.includes(source);
