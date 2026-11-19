@@ -56,8 +56,14 @@ const curriculumBlocks = !hasVariants ? program.curriculum.copy.split("\n\n") : 
               </p>
               <h1 id="program-variant-heading">{program.hero.title}</h1>
               <p>{variantDescriptions[program.slug]}</p>
-              <a class="button program-variant-cta" href="/29-trial">Start With 2 Classes for $29</a>
-              <p class="program-variant-offer">Includes a free uniform for new students.</p>
+              {isWomensDefense ? (
+                <a class="button program-variant-cta" href="tel:+16673359592">Questions? Call Coach Dana</a>
+              ) : (
+                <>
+                  <a class="button program-variant-cta" href="/29-trial">Start With 2 Classes for $29</a>
+                  <p class="program-variant-offer">Includes a free uniform for new students.</p>
+                </>
+              )}
             </div>
             <figure class="program-variant-hero-photo">
               <img
@@ -138,8 +144,6 @@ const curriculumBlocks = !hasVariants ? program.curriculum.copy.split("\n\n") : 
               <ul>
                 {program.benefits.items.map((item) => <li>{item}</li>)}
               </ul>
-              <a class="button womens-overview-cta" href="/29-trial">Claim the $29 New Student Special</a>
-              <p class="womens-overview-note">2 beginner classes and a free uniform for new students.</p>
               <div class="womens-overview-contact" aria-label="Questions about the Women's Self-Defense program">
                 <p class="womens-overview-contact-heading">HAVE QUESTIONS?</p>
                 <p class="womens-overview-contact-name">Contact <strong>Coach Dana</strong> directly</p>
@@ -275,8 +279,6 @@ const curriculumBlocks = !hasVariants ? program.curriculum.copy.split("\n\n") : 
     color: #f5f5f5;
   }
   .womens-overview-benefits li { line-height: 1.5; font-size: .95rem; }
-  .womens-overview-cta { width: 100%; text-align: center; }
-  .womens-overview-note { color: #efefef; font-size: .86rem; line-height: 1.5; margin: .65rem 0 0; }
   .womens-overview-contact {
     margin: 1.25rem 0 0;
     padding: clamp(1rem, 2vw, 1.5rem);
