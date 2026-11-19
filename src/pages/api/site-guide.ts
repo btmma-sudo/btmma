@@ -80,9 +80,9 @@ export const POST: APIRoute = async ({ request, locals, url }) => {
     try {
       const sourceUrl = new URL(referringPage || "");
       fromWomensPage = sourceUrl.origin === url.origin &&
-        sourceUrl.pathname.replace(/\\/+$/, "") === "/womens-defense";
+        sourceUrl.pathname.replace(/\/+$/, "") === "/womens-defense";
     } catch { /* Unknown source; match the question itself below. */ }
-    const womensQuestion = /(?:women['’]?s?|womens|ladies|sanuces)[\\s-]*(?:self[\\s-]*)?defen[cs]e|sanuces/i.test(message + " " + (typeof previousQuestion === "string" ? previousQuestion : ""));
+    const womensQuestion = /(?:women['’]?s?|womens|ladies|sanuces)[\s-]*(?:self[\s-]*)?defen[cs]e|sanuces/i.test(message + " " + (typeof previousQuestion === "string" ? previousQuestion : ""));
     if (fromWomensPage || womensQuestion) {
       return reply(
         "Women’s Self-Defense / Sanuces is not available through online enrollment or the introductory trial promotion. You must contact Coach Dana directly at (667) 335-9592 before enrolling.",
