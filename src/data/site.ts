@@ -378,7 +378,7 @@ export const faqPage: SupportingPage & {
     },
     {
       question: "Do you teach women's self-defense?",
-      answer: "Yes. Our Women's Self-Defense / Sanuces program meets on Sundays from 12:00 PM to 2:00 PM. Enrollment requires a conversation with Coach Dana first at (667) 335-9592. This class is not eligible for the $29 promotion or online self-enrollment."
+      answer: "Yes. Our Women's Self-Defense / Sanuces program meets on Sundays from 11:00 AM to 1:00 PM. Enrollment requires a conversation with Coach Dana first at (667) 335-9592. This class is not eligible for the $29 promotion or online self-enrollment."
     },
     {
       question: "Which is better for my child: Kenpo, Muay Thai, or Wing Chun?",
@@ -735,7 +735,7 @@ export const programPages: ProgramPage[] = [
     seo: {
       title: "Women's Self-Defense in Owings Mills, MD | Burning Tree",
     description:
-      "Women’s Self-Defense / Sanuces at Burning Tree MMA in Owings Mills, MD. Sundays 12–2 PM. All questions and enrollment: Coach Dana Marable II, (667) 335-9592. No $29 trial or online enrollment.",
+      "Women’s Self-Defense / Sanuces at Burning Tree MMA in Owings Mills, MD. Sundays 11 AM–1 PM. All questions and enrollment: Coach Dana Marable II, (667) 335-9592. No $29 trial or online enrollment.",
       keywords: [
         ...categoryKeywords,
         "women's self-defense Owings Mills",
