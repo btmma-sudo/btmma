@@ -12,7 +12,11 @@ const { hideTrialOffer = false } = Astro.props;
           {site.addressLine1}, {site.city}, {site.region} {site.postalCode}
         </a>
       </span>
-      <span>Questions? Call us: <a href={`tel:${site.phoneHref}`}>{site.phone}</a></span>
+      {hideTrialOffer ? (
+        <span>Women’s Self-Defense? Call Coach Dana: <a href="tel:+16673359592">(667) 335-9592</a></span>
+      ) : (
+        <span>Questions? Call us: <a href={`tel:${site.phoneHref}`}>{site.phone}</a></span>
+      )}
     </div>
   </div>
   
