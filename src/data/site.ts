@@ -753,6 +753,7 @@ export const programPages: ProgramPage[] = [
       overlay: "strong"
     },
     audience: "Women",
+    showLeadForm: false, // Coach Dana contact-only; never render any auto-inquiry/enrollment form.
     curriculum: {
       title: "Real-world self-defense for real-world situations.",
       copy:
@@ -770,10 +771,9 @@ export const programPages: ProgramPage[] = [
       { src: "/images/burning-tree-muay-thai-female.webp", alt: "Female martial artist practicing striking technique" }
     ],
     leadForm: {
-      title: "Questions About Women's Defense?",
-      intro: "Speak directly with Coach Dana at (667) 335-9592 before joining. No online enrollment or trial promotion applies.",
-      submitLabel: "Submit",
-      defaultProgram: "Women's Defense"
+      title: "Contact Coach Dana",
+      intro: "Enrollment and inquiries are handled directly by phone at (667) 335-9592; no website form is available.",
+      submitLabel: "Call Coach Dana"
     },
     seoCopy: {
       tagline: "The System Built to Protect. Sanuces Ryu Jiu-Jitsu.",
