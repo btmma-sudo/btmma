@@ -24,6 +24,7 @@ const {
 } = Astro.props;
 
 const canonical = new URL(path, site.primaryDomain).toString();
+const hideTrialOffer = path.replace(/\/+$/, "") === "/womens-defense";
 const bodyClass = site.themes[theme].bodyClass;
 const imageUrl = new URL(image, site.primaryDomain).toString();
 const dayUrlMap = {
@@ -206,12 +207,12 @@ src="https://www.facebook.com/tr?id=1531558921681879&ev=PageView&noscript=1"
 <!-- End Meta Pixel Code -->
   </head>
   <body class={bodyClass}>
-    <Header />
+    <Header hideTrialOffer={hideTrialOffer} />
     <main>
       <slot />
     </main>
-    <Footer />
-    <SiteGuide />
+    <Footer hideTrialOffer={hideTrialOffer} />
+    <SiteGuide hideTrialOffer={hideTrialOffer} />
     <script is:inline>
       if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
         const revealSelectors = [
