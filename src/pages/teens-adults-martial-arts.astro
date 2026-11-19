@@ -119,21 +119,6 @@ const serviceSchema = {
   }
 };
 
-const womensServiceSchema = {
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "@id": new URL("/womens-defense/#program", site.primaryDomain).toString(),
-  name: "Women’s Self-Defense / Sanuces at Burning Tree MMA",
-  serviceType: "Women’s Self-Defense / Sanuces Ryu Jujitsu instruction",
-  description: "Sunday Women’s Self-Defense training, 12:00–2:00 PM. All questions and enrollment go directly to Coach Dana Marable II at (667) 335-9592; the $29 offer and online registration do not apply.",
-  url: new URL("/womens-defense/", site.primaryDomain).toString(),
-  provider: { "@id": new URL("/#martial-arts-school", site.primaryDomain).toString() },
-  availableChannel: {
-    "@type": "ServiceChannel",
-    servicePhone: { "@type": "ContactPoint", contactType: "Women’s Self-Defense inquiries and enrollment — Coach Dana", telephone: "+16673359592" }
-  }
-};
-
 const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -156,7 +141,6 @@ const breadcrumbSchema = {
   path="/teens-adults-martial-arts/"
   image="/images/adult-martial-arts-hero.jpg">
   <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
-  <script type="application/ld+json" set:html={JSON.stringify(womensServiceSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
 
   <div class="ta-page">
