@@ -155,6 +155,43 @@ const curriculumBlocks = !hasVariants ? program.curriculum.copy.split("\n\n") : 
         </section>
       )}
 
+      {isWomensDefense && (
+        <section class="shell section-divider womens-photo-gallery" aria-labelledby="womens-gallery-heading">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Training at Burning Tree</p>
+              <h2 id="womens-gallery-heading">Women’s Self-Defense in Action</h2>
+            </div>
+          </div>
+          <div class="womens-gallery-grid">
+            <figure class="womens-gallery-tile">
+              <img src="/images/womens-defense-professional-1.webp"
+                alt="Women's self-defense participant practicing a controlled defense technique with a partner in the studio"
+                loading="lazy" width="1086" height="1448" decoding="async"
+                onerror="this.onerror=null;this.src='/images/womens-defense-gallery-1.jpeg';" />
+            </figure>
+            <figure class="womens-gallery-tile">
+              <img src="/images/womens-defense-professional-2.webp"
+                alt="Woman with a blue belt practicing a controlled self-defense response with a training partner"
+                loading="lazy" width="1086" height="1448" decoding="async"
+                onerror="this.onerror=null;this.src='/images/womens-defense-gallery-2.jpeg';" />
+            </figure>
+            <figure class="womens-gallery-tile">
+              <img src="/images/womens-defense-professional-3.webp"
+                alt="Martial arts instructor guiding a practical self-defense training drill"
+                loading="lazy" width="1086" height="1448" decoding="async"
+                onerror="this.onerror=null;this.src='/images/womens-defense-gallery-3.jpeg';" />
+            </figure>
+            <figure class="womens-gallery-tile">
+              <img src="/images/womens-defense-professional-4.webp"
+                alt="Women’s self-defense partners practicing a technique at Burning Tree Mixed Martial Arts"
+                loading="lazy" width="1086" height="1448" decoding="async"
+                onerror="this.onerror=null;this.src='/images/burning-tree-womens-self-defense-cropped.webp';" />
+            </figure>
+          </div>
+        </section>
+      )}
+
       {hasVariants ? (
         <ProgramDetailVariant program={program} />
       ) : (
@@ -249,6 +286,13 @@ const curriculumBlocks = !hasVariants ? program.curriculum.copy.split("\n\n") : 
     border: 2px solid rgba(255, 255, 255, .65);
     border-radius: 4px;
   }
+  .womens-photo-gallery { padding-top: 1.2rem; padding-bottom: 1.5rem; }
+  .womens-photo-gallery .section-heading { margin-bottom: 1.15rem; }
+  .womens-gallery-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(.6rem, 1.5vw, 1rem); }
+  .womens-gallery-tile { margin: 0; overflow: hidden; background: #1a1a1a; border: 1px solid rgba(255,255,255,.22); border-top: 3px solid #c7222c; border-radius: 6px; }
+  .womens-gallery-tile img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; object-position: center; }
+  @media (max-width: 900px) { .womens-gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 440px) { .womens-gallery-grid { gap: .55rem; } }
   .womens-overview { padding-top: 1.25rem; padding-bottom: 1.35rem; }
   .womens-overview-grid {
     display: grid;
