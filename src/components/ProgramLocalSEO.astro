@@ -95,8 +95,12 @@ const classTimes = block?.scheduleTerm
         {" · "}
         <a href="/faq">Frequently asked questions</a>
       </p>
-      <a class="button" href={program.slug === "birthday-parties" ? "/faq#lead-form" : "/29-trial"}>{program.slug === "birthday-parties" ? "Ask About a Birthday Party" : "See Our $29 New Student Special"}</a>
-      <p><a href={"tel:" + site.phoneHref}>Questions? Call or text {site.phone}</a></p>
+      <a class="button" href={program.slug === "womens-defense" ? "tel:+16673359592" : program.slug === "birthday-parties" ? "/faq#lead-form" : "/29-trial"}>{program.slug === "womens-defense" ? "Questions? Call Coach Dana" : program.slug === "birthday-parties" ? "Ask About a Birthday Party" : "See Our $29 New Student Special"}</a>
+      {program.slug === "womens-defense" ? (
+        <p>Questions about Women's Self-Defense? Call Coach Dana at <a href="tel:+16673359592">(667) 335-9592</a>.</p>
+      ) : (
+        <p><a href={"tel:" + site.phoneHref}>Questions? Call or text {site.phone}</a></p>
+      )}
     </article>
   </section>
 )}
