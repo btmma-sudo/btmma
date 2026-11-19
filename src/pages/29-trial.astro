@@ -20,6 +20,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         <strong class="price">$29</strong>
         <h2>2 Beginner Classes + FREE Uniform</h2>
         <p>One trial per new student. Each sibling registers separately.</p>
+        <p class="trial-exclusion-notice"><strong>Eligible programs: Kenpo Karate, Muay Thai, and Wing Chun only.</strong> Women’s Self-Defense / Sanuces is not included in this promotion and cannot be enrolled in online. Please <a href="tel:+16673359592">contact Coach Dana at (667) 335-9592</a> before enrolling in Women’s Self-Defense.</p>
       </div>
       <div class="trial-actions">
         <a class="cta register-student-cta" href="#registration">Start My $29 Trial</a>
@@ -1049,6 +1050,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
 </script>
 <style>
+  .trial-page .trial-exclusion-notice { margin: 1rem auto .25rem; max-width: 740px; padding: 1rem 1.2rem; background: #211315; color: #fff; border: 2px solid #ff6969; border-radius: 10px; font-size: clamp(.95rem, 2vw, 1.12rem); line-height: 1.55; font-weight: 600; }
+  .trial-page .trial-exclusion-notice strong { font-weight: 900; }
+  .trial-page .trial-exclusion-notice a { color: #fff; font-weight: 900; text-decoration: underline; text-underline-offset: 3px; }
   .upcoming-trial-classes { max-width: 700px; margin: 0 auto 24px; padding: 18px 20px; }
   .upcoming-trial-groups { display: flex; flex-wrap: wrap; gap: 16px 40px; }
   .upcoming-trial-groups ul { padding-inline-start: 20px; }
