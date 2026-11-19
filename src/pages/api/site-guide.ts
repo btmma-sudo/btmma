@@ -74,6 +74,21 @@ export const POST: APIRoute = async ({ request, locals, url }) => {
     }
 
     const message = question.trim();
+    // Keep Women’s Self-Defense inquiries out of all online trial and enrollment funnels.
+    const referringPage = request.headers.get("Referer");
+    let fromWomensPage = false;
+    try {
+      const sourceUrl = new URL(referringPage || "");
+      fromWomensPage = sourceUrl.origin === url.origin &&
+        sourceUrl.pathname.replace(/\\/+$/, "") === "/womens-defense";
+    } catch { /* Unknown source; match the question itself below. */ }
+    const womensQuestion = /(?:women['’]?s?|womens|ladies|sanuces)[\\s-]*(?:self[\\s-]*)?defen[cs]e|sanuces/i.test(message + " " + (typeof previousQuestion === "string" ? previousQuestion : ""));
+    if (fromWomensPage || womensQuestion) {
+      return reply(
+        "Women’s Self-Defense / Sanuces is not available through online enrollment or the introductory trial promotion. You must contact Coach Dana directly at (667) 335-9592 before enrolling.",
+        [{ url: "/womens-defense/", label: "Women’s Self-Defense information" }, { url: "tel:+16673359592", label: "Call Coach Dana" }]
+      );
+    }
     if (/^(hi|hey|hello|good (morning|afternoon|evening))[!. ]*$/i.test(message)) {
       return reply("Hi! Welcome to Burning Tree. What can I help you find?", []);
     }
