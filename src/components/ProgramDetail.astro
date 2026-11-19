@@ -1,6 +1,7 @@
 ---
 import type { ProgramPage } from "../data/site";
 import ClassSchedule from "./ClassSchedule.astro";
+import { weeklySchedule, formatClassTime } from "../data/schedule";
 
 type Props = {
   program: ProgramPage;
@@ -13,6 +14,12 @@ const showSchedule = program.showSchedule !== false;
 const showLeadForm = program.showLeadForm !== false;
 const curriculumBlocks = program.curriculum.copy.split("\n\n");
 const { seoCopy } = program;
+const womensSchedule = program.slug === "womens-defense"
+  ? weeklySchedule.map(day => ({
+      day: day.day,
+      slots: day.slots.filter(slot => slot.cls === "Women's Self-Defense / Sanuces")
+    })).filter(day => day.slots.length > 0)
+  : [];
 
 ---
 
@@ -89,7 +96,39 @@ const { seoCopy } = program;
   </section>
 )}
 
-{showSchedule && <ClassSchedule ctaHref={program.slug === "womens-defense" ? "tel:+16673359592" : "#lead-form"} ctaLabel={program.slug === "womens-defense" ? "Questions? Call Coach Dana" : "Try a Class"} />}
+{showSchedule && (
+  program.slug === "womens-defense" ? (
+    <section id="weekly-schedule" class="shell section-divider" aria-labelledby="womens-class-schedule-heading">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Women’s Self-Defense • Sanuces</p>
+          <h2 id="womens-class-schedule-heading">Women’s Self-Defense Class Schedule</h2>
+        </div>
+      </div>
+      <div class="schedule-grid">
+        {womensSchedule.map(day => (
+          <div class="schedule-day">
+            <p class="schedule-day-label">{day.day}</p>
+            <ul class="schedule-slots">
+              {day.slots.map(slot => (
+                <li>
+                  <span class="schedule-time">{formatClassTime(slot.start, slot.end)}</span>
+                  <span class="schedule-class">{slot.cls}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+      <p class="womens-schedule-info"><strong>Coach Dana must be contacted before attending or enrolling.</strong> This class is not included in online registration or the $29 promotion.</p>
+      <div class="schedule-cta">
+        <a class="button" href="tel:+16673359592">Contact Coach Dana: (667) 335-9592</a>
+      </div>
+    </section>
+  ) : (
+    <ClassSchedule ctaHref="#lead-form" ctaLabel="Try a Class" />
+  )
+)}
 
 <section class="shell section-divider">
   <div class="stack">
@@ -116,6 +155,8 @@ const { seoCopy } = program;
 </section>
 
 <style>
+  .womens-schedule-info { margin: 1rem 0; font-size: clamp(1rem, 1.8vw, 1.15rem); line-height: 1.55; font-weight: 600; }
+  .womens-schedule-info strong { font-weight: 900; }
   .program-photo-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
