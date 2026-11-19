@@ -263,7 +263,7 @@ export const homePage: {
   seo: {
     title: "Martial Arts in Owings Mills, MD | Burning Tree MMA",
     description:
-      "Kids, teens and adults: train Kenpo Karate, Muay Thai, Wing Chun and self-defense in Owings Mills. Start with 2 beginner classes and a free uniform for $29.",
+      "Kids, teens and adults: train Kenpo Karate, Muay Thai or Wing Chun in Owings Mills. New students in these eligible programs start with 2 classes and a uniform for $29.",
     keywords: [
       ...categoryKeywords,
       "MMA Owings Mills",
