@@ -17,6 +17,18 @@ export const POST: APIRoute = async ({ request, locals }) => {
     return json({ error: "Invalid request." }, 400);
   }
 
+  // Keep legacy Make.com webhook forms from creating Women's Self-Defense leads.
+  // Only inspect inquiry/program metadata; do not use names or contact details.
+  if (!body || typeof body !== "object" || Array.isArray(body)) {
+    return json({ error: "Invalid request." }, 400);
+  }
+  const values = Object.entries(body)
+    .filter(([key]) => /^(program|programInterest|class|className|classType|preferredClass|course|inquiry|interest|comments|notes|message|source)$/i.test(key))
+    .map(([, value]) => String(value ?? "")).join(" ");
+  if (/\bsanuces\b|\b(?:women(?:['’]?s)?|womens|ladies)\s*(?:(?:self[\s-]*)?defen[cs]e|classes?|program|training)\b|\/womens-defense\b/i.test(values)) {
+    return json({ error: "Women's Self-Defense inquiries and enrollment must go directly to Coach Dana at (667) 335-9592." }, 400);
+  }
+
   const payload = new URLSearchParams();
   for (const [key, value] of Object.entries(body)) {
     payload.set(key, String(value ?? ""));
