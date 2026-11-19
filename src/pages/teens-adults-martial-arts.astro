@@ -87,9 +87,9 @@ const faqs = [
 const serviceSchema = {
   "@context": "https://schema.org",
   "@type": "Service",
-  name: "Teen and Adult Kenpo, Muay Thai, and Wing Chun Classes in Owings Mills, Maryland",
-  description: "Beginner-friendly American Kenpo Karate, Muay Thai and Wing Chun training at Burning Tree Mixed Martial Arts. The $29 trial does not include Women’s Self-Defense / Sanuces, which is handled separately by Coach Dana at (667) 335-9592.",
-  serviceType: ["Teen and adult Kenpo Karate, Muay Thai, and Wing Chun instruction"],
+  name: "Teen, Adult and Women's Self-Defense Classes in Owings Mills, Maryland",
+  description: "Beginner-friendly American Kenpo Karate, Muay Thai, Wing Chun and women's self-defense / Sanuces training at Burning Tree Mixed Martial Arts.",
+  serviceType: ["Teen and adult martial arts instruction", "Women's self-defense instruction"],
   url: new URL("/teens-adults-martial-arts/", site.primaryDomain).toString(),
   inLanguage: "en-US",
   areaServed: [
@@ -112,7 +112,7 @@ const serviceSchema = {
   },
   offers: {
     "@type": "Offer",
-    name: "New Student Special: Two Beginner Classes and a Free Uniform",
+    name: "New Student Special for Kenpo, Muay Thai, and Wing Chun: Two Beginner Classes and a Free Uniform",
     price: "29",
     priceCurrency: "USD",
     url: new URL("/29-trial", site.primaryDomain).toString()
