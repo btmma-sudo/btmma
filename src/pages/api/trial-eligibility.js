@@ -44,6 +44,11 @@ export async function POST({ request, locals }) {
   let data;
   try { data = await request.json(); } catch { return json({ success: false, error: "Invalid registration." }, 400); }
   const { studentType, studentName, studentDob, guardianName, email, phone, turnstileToken, attribution, preferredClass } = data || {};
+  // Do not allow Women’s Self-Defense / Sanuces enrollment through this promotion, including crafted requests.
+  if (/women(?:\W|$)|sanuces|sanuc[e]?s/i.test(String(data?.programInterest ?? "")) ||
+      /women(?:\W|$)|sanuces|sanuc[e]?s/i.test(String(preferredClass ?? ""))) {
+    return json({ success: false, error: "Women’s Self-Defense is not included in this promotion. Contact Coach Dana at (667) 335-9592 before enrolling." }, 400);
+  }
   // Parse a calendar date strictly; reject impossible and future dates.
   const dobValid = typeof studentDob === "string" && /^\d{4}-\d{2}-\d{2}$/.test(studentDob);
   const dobDate = dobValid ? new Date(studentDob + "T00:00:00Z") : null;
