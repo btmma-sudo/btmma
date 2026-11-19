@@ -68,11 +68,11 @@ const faqs = [
   },
   {
     question: "Do you offer women's self-defense classes as well?",
-    answer: "Yes. Burning Tree offers a separate Women's Self-Defense / Sanuces program taught by Coach Dana Marable II and Coach Devan Young. Classes focus on awareness, escape fundamentals, and practical self-defense skills. Sunday class times appear in the weekly schedule above."
+    answer: "Yes. Burning Tree offers a separate Women’s Self-Defense / Sanuces program taught by Coach Dana Marable II and Coach Devan Young. Classes meet Sundays 12–2 PM. All inquiries and enrollment must go directly to Coach Dana at (667) 335-9592. The $29 offer does not apply."
   },
   {
     question: "Do I need previous training to join women's self-defense?",
-    answer: "No prior martial arts experience is needed to ask about joining. Contact us to discuss class placement, your goals, and any physical limitations before you begin."
+    answer: "No prior martial arts experience is needed. However, to join Women’s Self-Defense / Sanuces, contact Coach Dana directly at (667) 335-9592 before attending; there is no online enrollment."
   },
   {
     question: "What does the women's self-defense class teach?",
@@ -87,9 +87,9 @@ const faqs = [
 const serviceSchema = {
   "@context": "https://schema.org",
   "@type": "Service",
-  name: "Teen, Adult and Women's Self-Defense Classes in Owings Mills, Maryland",
-  description: "Beginner-friendly American Kenpo Karate, Muay Thai, Wing Chun and women's self-defense / Sanuces training at Burning Tree Mixed Martial Arts.",
-  serviceType: ["Teen and adult martial arts instruction", "Women's self-defense instruction"],
+  name: "Teen and Adult Kenpo, Muay Thai, and Wing Chun Classes in Owings Mills, Maryland",
+  description: "Beginner-friendly American Kenpo Karate, Muay Thai and Wing Chun training at Burning Tree Mixed Martial Arts. The $29 trial does not include Women’s Self-Defense / Sanuces, which is handled separately by Coach Dana at (667) 335-9592.",
+  serviceType: ["Teen and adult Kenpo Karate, Muay Thai, and Wing Chun instruction"],
   url: new URL("/teens-adults-martial-arts/", site.primaryDomain).toString(),
   inLanguage: "en-US",
   areaServed: [
@@ -119,6 +119,21 @@ const serviceSchema = {
   }
 };
 
+const womensServiceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "@id": new URL("/womens-defense/#program", site.primaryDomain).toString(),
+  name: "Women’s Self-Defense / Sanuces at Burning Tree MMA",
+  serviceType: "Women’s Self-Defense / Sanuces Ryu Jujitsu instruction",
+  description: "Sunday Women’s Self-Defense training, 12:00–2:00 PM. All questions and enrollment go directly to Coach Dana Marable II at (667) 335-9592; the $29 offer and online registration do not apply.",
+  url: new URL("/womens-defense/", site.primaryDomain).toString(),
+  provider: { "@id": new URL("/#martial-arts-school", site.primaryDomain).toString() },
+  availableChannel: {
+    "@type": "ServiceChannel",
+    servicePhone: { "@type": "ContactPoint", contactType: "Women’s Self-Defense inquiries and enrollment — Coach Dana", telephone: "+16673359592" }
+  }
+};
+
 const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -141,6 +156,7 @@ const breadcrumbSchema = {
   path="/teens-adults-martial-arts/"
   image="/images/adult-martial-arts-hero.jpg">
   <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(womensServiceSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
 
   <div class="ta-page">
@@ -172,7 +188,7 @@ const breadcrumbSchema = {
       <div class="shell">
         <p class="ta-eyebrow">FIND YOUR TRAINING TIME</p>
         <h2 id="ta-schedule-heading" class="class-times-anchor">Teen, adult & women's self-defense class schedule</h2>
-        <p class="ta-intro">Beginner classes for teens and adults run Monday through Thursday. Ask Coach David about Saturday open mat or Sunday women’s self-defense.</p>
+        <p class="ta-intro">Beginner classes for teens and adults run Monday through Thursday. Ask Coach David about Saturday open mat. For Sunday Women’s Self-Defense, call Coach Dana directly at <a href="tel:+16673359592">(667) 335-9592</a>.</p>
         <div class="ta-schedule-grid">
           {adultSchedule.map((day) => (
             <article class="ta-schedule-day">
@@ -185,7 +201,7 @@ const breadcrumbSchema = {
             </article>
           ))}
         </div>
-        <p class="ta-schedule-note">Class placement and attendance may depend on experience and instructor guidance. Contact us with questions about your first class or Saturday open mat.</p>
+        <p class="ta-schedule-note">Class placement and attendance may depend on experience and instructor guidance. The $29 promotion is only for eligible Kenpo, Muay Thai and Wing Chun classes. Women’s Self-Defense / Sanuces is excluded; contact Coach Dana at (667) 335-9592 to discuss that class.</p>
         <a class="ta-button" href="/29-trial/?from=teens-adults">Claim Your $29 New Student Special</a>
       </div>
     </section>
@@ -269,9 +285,9 @@ const breadcrumbSchema = {
           )}
           <div class="ta-womens-actions">
             <a class="ta-button" href="/womens-defense">Explore Women's Self-Defense</a>
-            <a class="ta-text-link" href={"tel:" + site.phoneHref}>Questions? Call {site.phone}</a>
+            <a class="ta-text-link" href="tel:+16673359592">Women’s Self-Defense Questions? Call Coach Dana: (667) 335-9592</a>
           </div>
-          <p class="ta-womens-note">Beginners can contact us about joining; ask about class suitability and current enrollment before attending.</p>
+          <p class="ta-womens-note"><strong>All Women’s Self-Defense inquiries and enrollment must go through Coach Dana at (667) 335-9592.</strong> No online enrollment or $29 introductory offer applies to this class.</p>
         </div>
       </div>
     </section>
