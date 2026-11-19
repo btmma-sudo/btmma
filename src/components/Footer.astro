@@ -1,5 +1,7 @@
 ---
 import { kidsStartingAge, primaryPrograms, secondaryNav, site } from "../data/site";
+type Props = { hideTrialOffer?: boolean };
+const { hideTrialOffer = false } = Astro.props;
 ---
 
 <footer class="site-footer">
@@ -29,7 +31,7 @@ import { kidsStartingAge, primaryPrograms, secondaryNav, site } from "../data/si
     <div>
       <p class="footer-label">Quick Links</p>
       <ul class="footer-list">
-        <li><a href="/29-trial">$29 New Student Special</a></li>
+        {!hideTrialOffer && <li><a href="/29-trial">$29 New Student Special</a></li>}
         <li><a href="/seminars/">Upcoming Seminars — Register Online</a></li>
         <li><a href="/private-lessons/">Private Lessons — Packages &amp; Booking</a></li>
         <li><a href="/corporate-self-defense/">Corporate &amp; Group Self-Defense Workshops</a></li>
@@ -55,7 +57,11 @@ import { kidsStartingAge, primaryPrograms, secondaryNav, site } from "../data/si
       <a href="/wing-chun">Wing Chun</a>
       <a href="/womens-defense">Women's Self-Defense</a>
     </nav>
-    <p>New to martial arts? <a href="/your-first-class">Learn what to expect at your first class</a>, then <a href="/29-trial">see our $29 offer: two beginner classes and a free uniform.</a></p>
+    {hideTrialOffer ? (
+      <p>Have questions about Women's Self-Defense? Contact Coach Dana directly at <a href="tel:+16673359592">(667) 335-9592</a>.</p>
+    ) : (
+      <p>New to martial arts? <a href="/your-first-class">Learn what to expect at your first class</a>, then <a href="/29-trial">see our $29 offer: two beginner classes and a free uniform.</a></p>
+    )}
   </div>
 
   <div class="shell footer-bottom">
