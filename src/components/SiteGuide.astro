@@ -1,3 +1,8 @@
+---
+type Props = { hideTrialOffer?: boolean };
+const { hideTrialOffer = false } = Astro.props;
+---
+
 <site-guide>
   <button type="button" class="launcher" aria-expanded="false" aria-controls="site-guide-panel">Ask Burning Tree</button>
   <section id="site-guide-panel" class="panel" aria-labelledby="site-guide-heading" hidden>
@@ -6,9 +11,9 @@
       <button type="button" class="close" aria-label="Close website chat">×</button>
     </header>
     <nav aria-label="Popular pages">
-      <a href="/29-trial/#help-find-a-class">Find a class</a>
+      {hideTrialOffer ? <a href="tel:+16673359592">Call Coach Dana</a> : <a href="/29-trial/#help-find-a-class">Find a class</a>}
       <a href="/#weekly-schedule">Class schedule</a>
-      <a href="/29-trial/">$29 special</a>
+      {!hideTrialOffer && <a href="/29-trial/">$29 special</a>}
       <a href="/private-lessons/">Private lessons</a>
       <a href="/seminars/">Events</a>
     </nav>
