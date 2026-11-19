@@ -38,6 +38,7 @@ const dayUrlMap = {
 } as const;
 const schoolId = `${site.primaryDomain}/#martial-arts-school`;
 const websiteId = `${site.primaryDomain}/#website`;
+const womensServiceId = `${site.primaryDomain}/womens-defense/#program`;
 // One stable school entity across every page, linked to each page's unique identity.
 const schema = {
   "@context": "https://schema.org",
@@ -49,7 +50,8 @@ const schema = {
       alternateName: site.shortName,
       description: "Beginner-friendly Kenpo Karate, Muay Thai, Wing Chun, and women's self-defense training for kids, teens, and adults in Owings Mills, Maryland.",
       url: `${site.primaryDomain}/`,
-      telephone: site.phoneHref,
+      // The main studio phone applies to other programs; women's self-defense uses a separate contact.
+      ...(!hideTrialOffer ? { telephone: site.phoneHref } : {}),
       email: site.email,
       slogan: "One Tree. One Family.",
       image: new URL("/images/logo.png", site.primaryDomain).toString(),
@@ -99,9 +101,29 @@ const schema = {
       description,
       inLanguage: "en-US",
       isPartOf: { "@id": websiteId },
-      about: { "@id": schoolId },
+      about: { "@id": hideTrialOffer ? womensServiceId : schoolId },
+      ...(hideTrialOffer ? { mainEntity: { "@id": womensServiceId } } : {}),
       primaryImageOfPage: { "@type": "ImageObject", url: imageUrl }
-    }
+    },
+    ...(hideTrialOffer ? [{
+      "@type": "Service",
+      "@id": womensServiceId,
+      name: "Burning Tree MMA Women's Self-Defense / Sanuces",
+      description: "Women’s Self-Defense / Sanuces training on Sundays, 12:00–2:00 PM, in Owings Mills, MD. For all questions and enrollment, contact Coach Dana Marable II at (667) 335-9592. Not eligible for the $29 special or online enrollment.",
+      serviceType: "Women's Self-Defense / Sanuces Ryu Jujitsu instruction",
+      provider: { "@id": schoolId },
+      url: `${site.primaryDomain}/womens-defense/`,
+      areaServed: { "@type": "AdministrativeArea", name: "Baltimore County, Maryland" },
+      availableChannel: {
+        "@type": "ServiceChannel",
+        servicePhone: {
+          "@type": "ContactPoint",
+          contactType: "Women’s Self-Defense questions and enrollment — Coach Dana Marable II",
+          telephone: "+16673359592",
+          availableLanguage: "English"
+        }
+      }
+    }] : [])
   ]
 };
 ---
