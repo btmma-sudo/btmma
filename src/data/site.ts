@@ -182,8 +182,7 @@ export const programInterestOptions = [
   "Muay Thai",
   "Jr. Muay Thai",
   "Wing Chun",
-  "Jr. Wing Chun",
-  "Women's Defense"
+  "Jr. Wing Chun"
 ];
 
 // ─── Navigation ────────────────────────────────────────────────────────────────
@@ -367,7 +366,7 @@ export const faqPage: SupportingPage & {
     },
     {
       question: "What does the $29 new student special include?",
-      answer: "For new students, $29 includes two beginner classes and a free uniform. Register through our $29 New Student Special page; one introductory offer applies per new student."
+      answer: "For new students in Kenpo Karate, Muay Thai, and Wing Chun, $29 includes two beginner classes and a free uniform. Women’s Self-Defense / Sanuces is excluded and requires speaking with Coach Dana at (667) 335-9592 before enrollment."
     },
     {
       question: "When are kids karate classes in Owings Mills?",
@@ -379,7 +378,7 @@ export const faqPage: SupportingPage & {
     },
     {
       question: "Do you teach women's self-defense?",
-      answer: "Yes. Our Women's Self-Defense / Sanuces program meets on Sundays from 12:00 PM to 2:00 PM. Contact us before attending for the first time."
+      answer: "Yes. Our Women's Self-Defense / Sanuces program meets on Sundays from 12:00 PM to 2:00 PM. Enrollment requires a conversation with Coach Dana first at (667) 335-9592. This class is not eligible for the $29 promotion or online self-enrollment."
     },
     {
       question: "Which is better for my child: Kenpo, Muay Thai, or Wing Chun?",
@@ -395,7 +394,7 @@ export const faqPage: SupportingPage & {
     },
     {
       question: "How can I register or ask about my first class?",
-      answer: "Visit the $29 New Student Special registration page or call or text us at 410-218-0894. We'll help you choose a suitable beginner class."
+      answer: "For Kenpo Karate, Muay Thai or Wing Chun, visit the $29 New Student Special registration page or call or text us at 410-218-0894. To join Women's Self-Defense, speak with Coach Dana first at (667) 335-9592; online enrollment is not available for that class."
     }
   ],
   leadForm: {
@@ -771,8 +770,8 @@ export const programPages: ProgramPage[] = [
       { src: "/images/burning-tree-muay-thai-female.webp", alt: "Female martial artist practicing striking technique" }
     ],
     leadForm: {
-      title: "Join a Women's Defense Class",
-      intro: "Take the first step today. We will reach out to follow up with you.",
+      title: "Questions About Women's Defense?",
+      intro: "Speak directly with Coach Dana at (667) 335-9592 before joining. No online enrollment or trial promotion applies.",
       submitLabel: "Submit",
       defaultProgram: "Women's Defense"
     },
