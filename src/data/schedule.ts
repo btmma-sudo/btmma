@@ -51,7 +51,7 @@ export const weeklySchedule: ScheduleDay[] = [
   },
   {
     day: "Sunday",
-    slots: [{ start: "12:00", end: "14:00", cls: "Women's Self-Defense / Sanuces" }],
+    slots: [{ start: "11:00", end: "13:00", cls: "Women's Self-Defense / Sanuces" }],
     note: "Birthday Parties, Seminars & Special Events"
   }
 ];
