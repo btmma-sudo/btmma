@@ -74,12 +74,15 @@ export const POST: APIRoute = async ({ request, locals }) => {
   // Only an explicit, optional, checked website opt-in counts as permission.
   const smsConsent = !isClassHelp && phone.length > 0 && formText(form, "smsConsent", 10) === "yes";
   const program = formText(form, "programInterest", 120);
-  // Women’s Self-Defense is instructor-led enrollment only; do not accept it via a generic form.
-  if (/women(?:\W|$)|sanuces|sanuc[e]?s/i.test(program)) {
-    return json({ success: false, error: "For Women’s Self-Defense, contact Coach Dana at (667) 335-9592 before enrolling." }, 400);
-  }
   const comments = formText(form, "comments", 3000);
   const source = formText(form, "source", 500) || "/";
+  // Reject legacy forms, old cached program selections and free-text inquiries
+  // before any Airtable lead or automated follow-up is created.
+  const womenOnlyProgram = /\b(?:women(?:['’]?s)?|womens|ladies|sanuces)\b/i.test(program);
+  const womenOnlyInquiry = /\bsanuces\b|\b(?:women(?:['’]?s)?|womens|ladies)\s*(?:(?:self[\s-]*)?defen[cs]e|classes?|program|training)\b/i.test(comments);
+  if (womenOnlyProgram || womenOnlyInquiry || /^\/womens-defense(?:\/|#|\?|$)/i.test(source)) {
+    return json({ success: false, error: "Women's Self-Defense is handled directly by Coach Dana. No online inquiry or enrollment is available. Call (667) 335-9592." }, 400);
+  }
   const requiresExactAge = isClassHelp && !classHelpSources.includes(source);
   const isTransfer = isClassHelp && transferSources.includes(source);
   const trainingExperience = formText(form, "trainingExperience", 140);
