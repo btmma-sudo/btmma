@@ -89,7 +89,7 @@ const { seoCopy } = program;
   </section>
 )}
 
-{showSchedule && <ClassSchedule ctaHref="#lead-form" />}
+{showSchedule && <ClassSchedule ctaHref={program.slug === "womens-defense" ? "tel:+16673359592" : "#lead-form"} ctaLabel={program.slug === "womens-defense" ? "Questions? Call Coach Dana" : "Try a Class"} />}
 
 <section class="shell section-divider">
   <div class="stack">
