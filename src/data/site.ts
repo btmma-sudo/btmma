@@ -735,7 +735,7 @@ export const programPages: ProgramPage[] = [
     seo: {
       title: "Women's Self-Defense in Owings Mills, MD | Burning Tree",
     description:
-      "Practical women's self-defense and Sanuces Ryu Jujitsu training in Owings Mills, MD. Explore beginner-friendly Sunday classes and contact our instructors.",
+      "Women’s Self-Defense / Sanuces at Burning Tree MMA in Owings Mills, MD. Sundays 12–2 PM. All questions and enrollment: Coach Dana Marable II, (667) 335-9592. No $29 trial or online enrollment.",
       keywords: [
         ...categoryKeywords,
         "women's self-defense Owings Mills",
