@@ -34,7 +34,7 @@ const localPages: Record<string, { heading: string; intro: string; next: string;
   "womens-defense": {
     heading: "Women's self-defense training in Owings Mills",
     intro: "Burning Tree MMA offers women's self-defense and Sanuces Ryu Jujitsu classes focused on awareness, practical responses, and confidence. Classes include guided work on self-defense principles and controlled technique practice in a supportive setting. Women interested in learning how to respond to real-world situations can ask about joining our Sunday sessions.",
-    next: "Visit our teens and adults martial arts guide to explore additional evening classes, or speak with us about your first women's self-defense session.",
+    next: "For questions about the Sunday Women’s Self-Defense / Sanuces class, contact Coach Dana directly at (667) 335-9592 before enrolling.",
     question: "When are the women's self-defense classes?",
     answer: "Our published Sunday Women's Self-Defense / Sanuces session runs from 12:00 PM to 2:00 PM. Contact us before your first visit.",
     scheduleTerm: "Women's Self-Defense"
@@ -88,13 +88,15 @@ const classTimes = block?.scheduleTerm
         We welcome families and adults from Owings Mills, Reisterstown, Pikesville, Randallstown,
         and surrounding Baltimore County communities at {site.addressLine1}, {site.city}, {site.region} {site.postalCode}.
       </p>
-      <p>
-        <a href="/kids-martial-arts">Kids martial arts</a>
-        {" · "}
-        <a href="/teens-adults-martial-arts">Teens and adults classes</a>
-        {" · "}
-        <a href="/faq">Frequently asked questions</a>
-      </p>
+      {program.slug !== "womens-defense" && (
+        <p>
+          <a href="/kids-martial-arts">Kids martial arts</a>
+          {" · "}
+          <a href="/teens-adults-martial-arts">Teens and adults classes</a>
+          {" · "}
+          <a href="/faq">Frequently asked questions</a>
+        </p>
+      )}
       <a class="button" href={program.slug === "womens-defense" ? "tel:+16673359592" : program.slug === "birthday-parties" ? "/faq#lead-form" : "/29-trial"}>{program.slug === "womens-defense" ? "Questions? Call Coach Dana" : program.slug === "birthday-parties" ? "Ask About a Birthday Party" : "See Our $29 New Student Special"}</a>
       {program.slug === "womens-defense" ? (
         <p>Questions about Women's Self-Defense? Call Coach Dana at <a href="tel:+16673359592">(667) 335-9592</a>.</p>
