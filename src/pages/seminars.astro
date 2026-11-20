@@ -2,7 +2,6 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { SEMINAR_WAIVERS } from "../data/seminar-waivers.js";
 import SeminarDonations from "../components/SeminarDonations.astro";
-import ParentsNightOut from "../components/ParentsNightOut.astro";
 const eventStructuredData = {
   "@context": "https://schema.org",
   "@graph": [
@@ -22,7 +21,7 @@ const eventStructuredData = {
 ---
 <BaseLayout
   title="Upcoming Seminars & Events | Burning Tree Mixed Martial Arts"
-  description="Register and pay online for Burning Tree events in Owings Mills: Parents' Night Out November 20 and Striking a Nerve November 21–22."
+  description="Register online for Striking a Nerve, a two-day martial arts anatomy seminar in Owings Mills on November 21–22."
   path="/seminars/"
   keywords={["martial arts seminar Owings Mills", "Kenpo seminar Maryland", "martial arts workshop Baltimore County", "martial arts anatomy seminar"]}
   image="/images/burning-tree-kenpo-team.webp"
@@ -34,7 +33,7 @@ const eventStructuredData = {
       <div class="shell">
         <p class="seminar-eyebrow">BURNING TREE MIXED MARTIAL ARTS · OWINGS MILLS, MD</p>
         <h1 id="seminar-heading">Upcoming Seminars <span>&amp; Events</span></h1>
-        <p>Join us this November for Striking a Nerve and Parents' Night Out. Register and pay online for the event you choose, or support Burning Tree with a separate donation.</p>
+        <p>Join us this November for Striking a Nerve. Register and pay online, or support Burning Tree with a separate donation.</p>
         <a class="seminar-cta" href="#events">EXPLORE SEMINARS &amp; EVENTS</a>
         <a class="seminar-cta" href="#donate">DONATE WITHOUT ATTENDING</a>
         <p class="seminar-motto">One Tree. One Family.</p>
@@ -62,8 +61,6 @@ const eventStructuredData = {
         </div>
       </article>
     </section>
-
-    <ParentsNightOut />
 
     <SeminarDonations />
 

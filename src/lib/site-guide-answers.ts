@@ -81,7 +81,7 @@ export async function verifiedGuideAnswer(question: string, topic: string, reque
   if (word(combined, /\b(birthday|party|parties)\b/i)) {
     return { answer: "Birthday party dates are confirmed by Coach David after checking the studio calendar and group size. Submit your preferred date and time through the party form.", links: [parties] };
   }
-  if (word(combined, /\b(seminar|event|parents night out)\b/i)) {
+  if (word(combined, /\b(seminar|event)\b/i)) {
     return { answer: "The event page lists current registration options. Coach David can confirm remaining seats or any last-minute changes.", links: [{ url: "/seminars/", label: "Seminars and events" }, coach] };
   }
   if (word(combined, /\b(studio rental|rent the studio|rent the space)\b/i)) {
