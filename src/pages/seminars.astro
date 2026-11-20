@@ -8,17 +8,6 @@ const eventStructuredData = {
   "@graph": [
     {
       "@type": "Event",
-      name: "United by Purpose — Martial Arts Fundraising Seminar",
-      startDate: "2026-11-15T14:00:00-05:00",
-      endDate: "2026-11-15T16:00:00-05:00",
-      eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-      eventStatus: "https://schema.org/EventScheduled",
-      location: { "@type": "Place", name: "Burning Tree Mixed Martial Arts", address: { "@type": "PostalAddress", streetAddress: "10210 South Dolfield Road, Suite C", addressLocality: "Owings Mills", addressRegion: "MD", postalCode: "21117", addressCountry: "US" } },
-      description: "Martial arts fundraising seminar with Master Mike Lambert and Master Lee Epperson, featuring hands-on training, three support levels, and a community mission. All ages and martial arts backgrounds welcome.",
-      offers: { "@type": "AggregateOffer", lowPrice: "50", highPrice: "100", priceCurrency: "USD", url: "https://burningtreemma.com/seminars/?event=united#registration" }
-    },
-    {
-      "@type": "Event",
       name: "Striking a Nerve — Anatomy & Physiology of Martial Arts",
       startDate: "2026-11-21T12:00:00-05:00",
       endDate: "2026-11-22T14:00:00-05:00",
@@ -33,19 +22,19 @@ const eventStructuredData = {
 ---
 <BaseLayout
   title="Upcoming Seminars & Events | Burning Tree Mixed Martial Arts"
-  description="Register and pay online for Burning Tree events in Owings Mills: United by Purpose November 15, Parents Night Out November 20, and Striking a Nerve November 21–22."
+  description="Register and pay online for Burning Tree events in Owings Mills: Parents' Night Out November 20 and Striking a Nerve November 21–22."
   path="/seminars/"
-  keywords={["martial arts seminar Owings Mills", "Kenpo seminar Maryland", "martial arts workshop Baltimore County", "martial arts anatomy seminar", "martial arts fundraiser Maryland"]}
+  keywords={["martial arts seminar Owings Mills", "Kenpo seminar Maryland", "martial arts workshop Baltimore County", "martial arts anatomy seminar"]}
   image="/images/burning-tree-kenpo-team.webp"
 >
   <script type="application/ld+json" set:html={JSON.stringify(eventStructuredData)} />
-  <script type="application/json" id="seminar-waiver-data" set:html={JSON.stringify(SEMINAR_WAIVERS).replace(/</g, "\\u003c")} />
+  <script type="application/json" id="seminar-waiver-data" set:html={JSON.stringify({ nerve: SEMINAR_WAIVERS.nerve }).replace(/</g, "\\u003c")} />
   <div class="seminar-page">
     <section class="seminar-hero" aria-labelledby="seminar-heading">
       <div class="shell">
         <p class="seminar-eyebrow">BURNING TREE MIXED MARTIAL ARTS · OWINGS MILLS, MD</p>
         <h1 id="seminar-heading">Upcoming Seminars <span>&amp; Events</span></h1>
-        <p>Join us this November for martial arts seminars and Parents' Night Out. Register and pay online for the event you choose, or support Burning Tree with a separate donation.</p>
+        <p>Join us this November for Striking a Nerve and Parents' Night Out. Register and pay online for the event you choose, or support Burning Tree with a separate donation.</p>
         <a class="seminar-cta" href="#events">EXPLORE SEMINARS &amp; EVENTS</a>
         <a class="seminar-cta" href="#donate">DONATE WITHOUT ATTENDING</a>
         <p class="seminar-motto">One Tree. One Family.</p>
@@ -53,28 +42,8 @@ const eventStructuredData = {
     </section>
 
     <section class="shell seminar-events" id="events" aria-label="Upcoming martial arts seminars and events">
-      <article class="seminar-card" id="united-by-purpose">
-        <img class="seminar-flyer" src="/images/Gallery/seminar-united-by-purpose-2026.webp" alt="United by Purpose seminar flyer — Sunday November 15, 2026, 2–4 PM; Masters Mike Lambert and Lee Epperson; $50, $75, and $100 participation levels" width="1179" height="1334" loading="eager" decoding="async" onerror="this.onerror=null;this.src='/images/burning-tree-milestones-group-certificates.webp';" />
-        <div class="seminar-card-content">
-          <p class="seminar-eyebrow">SUNDAY · NOVEMBER 15, 2026 · 2–4 PM</p>
-          <h2>United by <span>Purpose</span></h2>
-          <p class="seminar-tagline">Same training. Same experience. A bigger impact.</p>
-          <p>Join the Burning Tree family for two hours of hands-on martial arts training with <strong>Master Mike Lambert and Master Lee Epperson</strong> as we come together to support our school's future and our community.</p>
-          <p><strong>All are welcome!</strong> Open to all skill levels and martial arts backgrounds — youth, teens, and adults.</p>
-          <p><strong>Everyone trains together.</strong> All three ticket levels receive the same seminar instruction; choose how much you would like to support the school.</p>
-          <div class="seminar-prices" aria-label="United by Purpose admission pricing">
-            <div><strong>$50</strong><span>General Admission</span></div>
-            <div><strong>$75</strong><span>Community Supporter</span></div>
-            <div><strong>$100</strong><span>Flame Sponsor</span></div>
-          </div>
-          <p class="seminar-note">All include hands-on instruction and a certificate of participation. Community Supporters receive a special Flame Certificate; Flame Sponsors receive a Sponsor Burning Flame Certificate.</p>
-          <button class="seminar-cta select-seminar" data-event="united" type="button">REGISTER FOR UNITED BY PURPOSE</button>
-          <p class="seminar-note">Can't attend but want to support the school? <a href="#donate">Donate directly online here</a>. Your contribution is separate from event registration.</p>
-        </div>
-      </article>
-
       <article class="seminar-card" id="striking-a-nerve">
-        <img class="seminar-flyer" src="/images/Gallery/striking%20a%20nerve.jpg" alt="Striking a Nerve anatomy and physiology seminar flyer — November 21 and 22, 2026, noon–2 PM; Dr. Frederick Weiss; $100 for one day or $190 for both" width="1024" height="1536" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='/images/burning-tree-adult-striking-drill.webp';" />
+        <img class="seminar-flyer" src="/images/Gallery/striking%20a%20nerve.jpg" alt="Striking a Nerve anatomy and physiology seminar flyer — November 21 and 22, 2026, noon–2 PM; Dr. Frederick Weiss; $100 for one day or $190 for both" width="1024" height="1536" loading="eager" decoding="async" onerror="this.onerror=null;this.src='/images/burning-tree-adult-striking-drill.webp';" />
         <div class="seminar-card-content">
           <p class="seminar-eyebrow">NOVEMBER 21 &amp; 22, 2026 · 12–2 PM EACH DAY</p>
           <h2>Striking <span>a Nerve</span></h2>
@@ -89,7 +58,7 @@ const eventStructuredData = {
             <div><strong>$100</strong><span>One Day</span></div>
             <div><strong>$190</strong><span>Both Days</span></div>
           </div>
-          <button class="seminar-cta select-seminar" data-event="nerve" type="button">REGISTER FOR STRIKING A NERVE</button>
+          <a class="seminar-cta" href="#registration">REGISTER FOR STRIKING A NERVE</a>
         </div>
       </article>
     </section>
@@ -101,19 +70,12 @@ const eventStructuredData = {
     <section class="shell seminar-registration" id="registration" aria-labelledby="registration-heading">
       <div class="seminar-intro">
         <p class="seminar-eyebrow">SAVE YOUR PLACE</p>
-        <h2 id="registration-heading">Register &amp; Pay Online</h2>
-        <p>Choose your seminar and admission option, enter attendee names and contact details, then choose Apple Pay/Apple Cash, credit/debit card, direct Cash App, or Zelle. You can register up to six attendees together.</p>
+        <h2 id="registration-heading">Register for Striking a Nerve</h2>
+        <p>Choose your admission option, enter attendee names and contact details, then choose Apple Pay/Apple Cash, credit/debit card, direct Cash App, or Zelle. You can register up to six attendees together.</p>
         <p class="seminar-note">For multiple attendees, enter one full name per line. The total updates automatically. Your registration is confirmed only after successful payment.</p>
-        <p class="seminar-note"><strong>Signing in person?</strong> Print the <a href="/waivers/united-by-purpose/" target="_blank" rel="noopener noreferrer">United by Purpose waiver</a> or the <a href="/waivers/striking-a-nerve/" target="_blank" rel="noopener noreferrer">Striking a Nerve waiver</a>. One signed form per attendee.</p>
+        <p class="seminar-note"><strong>Signing in person?</strong> Print the <a href="/waivers/striking-a-nerve/" target="_blank" rel="noopener noreferrer">Striking a Nerve waiver</a>. One signed form per attendee.</p>
       </div>
       <form id="seminar-form" class="seminar-form">
-        <div class="seminar-field">
-          <label for="seminar-event">Choose seminar</label>
-          <select id="seminar-event" required>
-            <option value="united">United by Purpose — Nov 15</option>
-            <option value="nerve">Striking a Nerve — Nov 21–22</option>
-          </select>
-        </div>
         <div class="seminar-field">
           <label for="seminar-ticket">Admission option</label>
           <select id="seminar-ticket" required></select>
@@ -152,8 +114,8 @@ const eventStructuredData = {
           </div>
         </section>
         <div class="seminar-total" aria-live="polite">
-          <span id="seminar-total-label">General Admission × 1</span>
-          <strong id="seminar-total-amount">$50.00</strong>
+          <span id="seminar-total-label">Day 1 × 1</span>
+          <strong id="seminar-total-amount">$100.00</strong>
         </div>
         <p class="seminar-note">Review your details, sign the required seminar waiver, and choose how to pay. Apple Pay (including eligible Apple Cash cards) and credit/debit cards use secure Stripe checkout. Direct Cash App and Zelle payments require manual verification.</p>
         <p class="seminar-note">We do not collect or store card numbers on this website. By registering, you agree to our <a href="/terms">Terms</a> and <a href="/privacy">Privacy Policy</a>.</p>
@@ -235,11 +197,6 @@ const eventStructuredData = {
       // These are display amounts only. The dedicated /api/seminar-checkout
       // endpoint independently owns and enforces all Stripe ticket prices.
       const priceLists = {
-        united: [
-          { id: "general", label: "General Admission — $50 per person", name: "General Admission", cents: 5000 },
-          { id: "supporter", label: "Community Supporter — $75 per person", name: "Community Supporter", cents: 7500 },
-          { id: "sponsor", label: "Flame Sponsor — $100 per person", name: "Flame Sponsor", cents: 10000 }
-        ],
         nerve: [
           { id: "day1", label: "Saturday Nov 21 only — $100 per person", name: "Day 1", cents: 10000 },
           { id: "day2", label: "Sunday Nov 22 only — $100 per person", name: "Day 2", cents: 10000 },
@@ -247,12 +204,11 @@ const eventStructuredData = {
         ]
       };
       const closingTimes = {
-        united: { general: "2026-11-15T19:00:00Z", supporter: "2026-11-15T19:00:00Z", sponsor: "2026-11-15T19:00:00Z" },
         nerve: { day1: "2026-11-21T17:00:00Z", day2: "2026-11-22T17:00:00Z", both: "2026-11-21T17:00:00Z" }
       };
       const $ = id => document.getElementById(id);
       const form = $("seminar-form");
-      const eventSelect = $("seminar-event");
+      const eventId = "nerve";
       const ticketSelect = $("seminar-ticket");
       const attendeesInput = $("seminar-attendees");
       const message = $("seminar-form-message");
@@ -299,28 +255,14 @@ const eventStructuredData = {
         message.textContent = "";
       }
 
-      function setEvent(value) {
-        eventSelect.value = value === "nerve" ? "nerve" : "united";
-        ticketSelect.replaceChildren();
-        priceLists[eventSelect.value].forEach(item => {
-          const option = document.createElement("option");
-          option.value = item.id;
-          option.textContent = item.label;
-          ticketSelect.appendChild(option);
-        });
-        resetPaymentChoices();
-        updateTotal();
-      }
-
       function updateTotal() {
-        const tier = ticketFor(eventSelect.value, ticketSelect.value);
+        const tier = ticketFor(eventId, ticketSelect.value);
         if (!tier) return;
         const count = names().length || 1;
         $("seminar-total-label").textContent = tier.name + " × " + count + (count > 6 ? " (maximum 6)" : "");
         $("seminar-total-amount").textContent = dollars(tier.cents * count);
       }
 
-      eventSelect.addEventListener("change", () => setEvent(eventSelect.value));
       ticketSelect.addEventListener("change", () => { resetPaymentChoices(); updateTotal(); });
       form.addEventListener("input", event => {
         // Signing fields must not clear themselves as a signer types their name.
@@ -328,15 +270,15 @@ const eventStructuredData = {
         resetPaymentChoices();
         updateTotal();
       });
-      document.querySelectorAll(".select-seminar").forEach(selectButton => {
-        selectButton.addEventListener("click", () => {
-          setEvent(selectButton.dataset.event);
-          $("registration").scrollIntoView({ behavior: "smooth", block: "start" });
-        });
+      priceLists[eventId].forEach(item => {
+        ticketSelect.add(new Option(item.label, item.id));
       });
+      updateTotal();
 
       const params = new URLSearchParams(location.search);
-      setEvent(params.get("event") === "nerve" ? "nerve" : "united");
+      if (params.get("event") === "united") {
+        message.textContent = "Registration for the past seminar has closed.";
+      }
       if (params.get("checkout") === "cancelled") {
         message.textContent = "Checkout was cancelled. No registration has been confirmed. You can choose another payment method.";
       }
@@ -385,7 +327,7 @@ const eventStructuredData = {
 
 
       function buildWaiverSigners(attendeeNames) {
-        const waiver = waiverDefinitions[eventSelect.value];
+        const waiver = waiverDefinitions[eventId];
         $("seminar-waiver-title").textContent = waiver.heading + " — " + waiver.event;
         $("seminar-waiver-fulltext").textContent = waiver.body;
         waiverSignerFields.replaceChildren();
@@ -481,7 +423,7 @@ const eventStructuredData = {
           attendeesInput.focus();
           return;
         }
-        if (isClosed(eventSelect.value, ticketSelect.value)) {
+        if (isClosed(eventId, ticketSelect.value)) {
           message.textContent = "Registration for this seminar session has closed. Please contact the studio.";
           return;
         }
@@ -515,7 +457,7 @@ const eventStructuredData = {
         verifyButton.textContent = "SAVING ELECTRONIC SIGNATURES...";
         message.textContent = "Saving signed waiver records before payment. No payment has been charged.";
         const payload = {
-          event: eventSelect.value,
+          event: eventId,
           ticket: ticketSelect.value,
           contactName: $("seminar-contact-name").value.trim(),
           email: $("seminar-contact-email").value.trim(),
@@ -534,7 +476,7 @@ const eventStructuredData = {
           if (!res.ok || data.saved !== true || !data.groupId) throw new Error(data.error || "Waivers could not be saved.");
           // If any contact or attendee changes before the response, do not allow
           // payment against a signature set for stale registration information.
-          if (eventSelect.value !== payload.event || ticketSelect.value !== payload.ticket ||
+          if (ticketSelect.value !== payload.ticket ||
               names().join("\n") !== payload.attendees.map(x => x.name).join("\n") ||
               $("seminar-contact-email").value.trim() !== payload.email ||
               $("seminar-contact-name").value.trim() !== payload.contactName ||
@@ -543,9 +485,9 @@ const eventStructuredData = {
             message.textContent = "Registration details changed. Please review and sign the waivers again.";
             return;
           }
-          const tier = ticketFor(eventSelect.value, ticketSelect.value);
+          const tier = ticketFor(eventId, ticketSelect.value);
           reviewed = {
-            event: eventSelect.value,
+            event: eventId,
             ticket: ticketSelect.value,
             contactName: payload.contactName,
             email: payload.email,
@@ -654,7 +596,7 @@ const eventStructuredData = {
           message.textContent = "Please review the current seminar and ticket before paying.";
           return;
         }
-        const eventName = reviewed.event === "united" ? "United by Purpose" : "Striking a Nerve";
+        const eventName = "Striking a Nerve";
         const note = "BTMMA " + eventName + " - " + reviewed.ticketName + " x " + reviewed.count;
         $("seminar-cashapp-amount").textContent = dollars(reviewed.totalCents);
         $("seminar-cashapp-note").textContent = note;
@@ -692,7 +634,7 @@ const eventStructuredData = {
           message.textContent = "Please review the seminar registration and sign the waivers before paying.";
           return;
         }
-        const eventName = reviewed.event === "united" ? "United by Purpose" : "Striking a Nerve";
+        const eventName = "Striking a Nerve";
         const reference = reviewed.waiverGroupId.slice(0, 8);
         const memo = "BTMMA " + reviewed.event.toUpperCase() + " " + reference;
         $("seminar-zelle-amount").textContent = dollars(reviewed.totalCents);

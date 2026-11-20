@@ -7,7 +7,6 @@ const reply = (data, status = 200) => new Response(JSON.stringify(data), {
 });
 const purposes = {
   general: "Support Burning Tree Mixed Martial Arts",
-  united: "Support United by Purpose fundraising",
   nerve: "Support Striking a Nerve seminar"
 };
 const MIN_CENTS = 500;

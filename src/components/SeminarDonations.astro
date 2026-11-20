@@ -7,10 +7,10 @@
 <section class="donate-section" id="donate" aria-labelledby="donate-heading">
   <div class="donate-wrap">
     <div class="donate-intro">
-      <p class="donate-eyebrow">CAN'T MAKE THE SEMINARS? YOU CAN STILL HELP.</p>
+      <p class="donate-eyebrow">CAN'T ATTEND? YOU CAN STILL HELP.</p>
       <h2 id="donate-heading">Support Burning Tree. <span>Make a Donation.</span></h2>
       <p>Help us keep building a strong martial arts community. Whether you can attend a seminar or not, every contribution helps support Burning Tree Mixed Martial Arts.</p>
-      <p class="donate-notice"><strong>Donations are separate from tickets.</strong> Giving does not register you for either seminar, reserve a seat, or include seminar admission. No participation waiver is needed to donate.</p>
+      <p class="donate-notice"><strong>Donations are separate from tickets.</strong> Giving does not register you for an event, reserve a seat, or include admission. No participation waiver is needed to donate.</p>
     </div>
 
     <form id="donate-form" class="donate-form">
@@ -31,7 +31,6 @@
       <label class="donate-field" for="donate-purpose">What would you like to support?</label>
       <select id="donate-purpose">
         <option value="general">Burning Tree school and seminar support</option>
-        <option value="united">United by Purpose fundraising</option>
         <option value="nerve">Striking a Nerve seminar</option>
       </select>
       <div class="donate-fields-row">
@@ -96,7 +95,6 @@
     const money = cents => new Intl.NumberFormat("en-US", {style:"currency", currency:"USD"}).format(cents / 100);
     const purposeLabel = {
       general: "Burning Tree school and seminars",
-      united: "United by Purpose",
       nerve: "Striking a Nerve"
     };
     const amountCents = () => {
