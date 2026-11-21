@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>One Tree. One Family. Invite | Burning Tree MMA</title>
+  <meta property="og:title" content="One Tree. One Family. Invite">
+  <meta property="og:description" content="Train with us at Burning Tree MMA in Owings Mills. Get two beginner classes and a uniform for $29.">
+  <meta name="robots" content="noindex">
+</head>
+<body>
+  <main>
+    <h1>One Tree. One Family. Invite</h1>
+    <p>Train with us at Burning Tree MMA. Get two beginner classes and a uniform for $29.</p>
+    <a href="/29-trial/">Continue to the trial</a>
+  </main>
+  <script>
+    const trial = new URL("/29-trial/", window.location.origin);
+    trial.search = window.location.search;
+    document.querySelector("main a").href = trial.href;
+    window.location.replace(trial.href);
+  </script>
+</body>
+</html>
