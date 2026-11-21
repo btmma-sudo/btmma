@@ -411,9 +411,9 @@ export const programPages: ProgramPage[] = [
   {
     slug: "muay-thai",
     seo: {
-      title: "Muay Thai Classes in Owings Mills, MD | Burning Tree",
+      title: "Muay Thai Classes in Owings Mills, MD | Burning Tree MMA",
     description:
-      "Beginner-friendly Muay Thai for kids, teens and adults in Owings Mills. Learn strikes, footwork and pad work. Try 2 classes and a free uniform for $29.",
+      "Learn Muay Thai in Owings Mills with beginner-friendly striking, pad work and coached technique for kids, teens and adults. Explore classes and schedules.",
       keywords: [
         ...categoryKeywords,
         "Muay Thai Owings Mills",
