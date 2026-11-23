@@ -208,24 +208,24 @@ const curriculumBlocks = !hasVariants ? program.curriculum.copy.split("\n\n") : 
           </div>
           <div class="womens-instructor-gallery-grid">
             {[
-              { file: "instructor-demonstration-01.jpeg", alt: "Two martial artists practicing controlled arm positioning during a training demonstration" },
-              { file: "instructor-demonstration-02.jpeg", alt: "Instructor and partner rehearsing a protective guard and close-range awareness" },
-              { file: "instructor-demonstration-03.jpeg", alt: "Training partners demonstrating close-range body positioning and an elbow movement" },
-              { file: "instructor-demonstration-04.jpeg", alt: "Martial artists practicing a controlled partner-defense movement in the studio" },
-              { file: "instructor-demonstration-05.jpeg", alt: "Partner drill demonstrating defensive positioning and controlled footwork" },
-              { file: "instructor-demonstration-06.jpeg", alt: "Instructor-guided movement drill showing close-range positioning" },
-              { file: "instructor-demonstration-07.jpeg", alt: "Two martial artists working through an arm-positioning exercise" },
-              { file: "instructor-demonstration-08.jpeg", alt: "Training partners practicing a controlled close-range defensive drill" },
-              { file: "instructor-demonstration-09.jpeg", alt: "Martial arts instructor guiding a partner through a protective hand position" }
-            ].map(({ file, alt }) => (
+              { file: "instructor-demonstration-01.jpeg", alt: "Two martial artists practicing controlled arm positioning during a training demonstration", width: 961, height: 1101 },
+              { file: "instructor-demonstration-02.jpeg", alt: "Instructor and partner rehearsing a protective guard and close-range awareness", width: 804, height: 1220 },
+              { file: "instructor-demonstration-03.jpeg", alt: "Training partners demonstrating close-range body positioning and an elbow movement", width: 653, height: 1085 },
+              { file: "instructor-demonstration-04.jpeg", alt: "Martial artists practicing a controlled partner-defense movement in the studio", width: 921, height: 920 },
+              { file: "instructor-demonstration-05.jpeg", alt: "Partner drill demonstrating defensive positioning and controlled footwork", width: 863, height: 885 },
+              { file: "instructor-demonstration-06.jpeg", alt: "Instructor-guided movement drill showing close-range positioning", width: 898, height: 927 },
+              { file: "instructor-demonstration-07.jpeg", alt: "Two martial artists working through an arm-positioning exercise", width: 954, height: 883 },
+              { file: "instructor-demonstration-08.jpeg", alt: "Training partners practicing a controlled close-range defensive drill", width: 955, height: 943 },
+              { file: "instructor-demonstration-09.jpeg", alt: "Martial arts instructor guiding a partner through a protective hand position", width: 812, height: 1248 }
+            ].map(({ file, alt, width, height }) => (
               <figure class="womens-instructor-gallery-tile">
                 <img
                   src={`/images/womens-defense/${file}`}
                   alt={alt}
                   loading="lazy"
                   decoding="async"
-                  width="960"
-                  height="1100"
+                  width={width}
+                  height={height}
                 />
               </figure>
             ))}
