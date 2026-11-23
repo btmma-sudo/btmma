@@ -2,10 +2,10 @@
 export const FLAME_SOURCE = "btmma_build_a_flame_2026_v1";
 export const FLAME_PRICE_CENTS = 5000;
 export const FLAME_CAPACITY = 12;
-export const FLAME_DATE = "2026-12-06";
+export const FLAME_DATE = "2026-12-05";
 export const FLAME_DEADLINE = Date.parse("2026-11-30T05:00:00Z"); // Nov 29, 11:59 PM EST.
 export const FLAME_DURATION_MINUTES = 60;
-export const FLAME_SESSIONS = ["one", "two"];
+export const FLAME_SESSIONS = ["one"];
 
 export function json(data, status = 200) {
   return new Response(JSON.stringify(data), { status, headers: {
@@ -16,27 +16,13 @@ export function json(data, status = 200) {
 const clean = (v, max = 120) => typeof v === "string" ? v.trim().slice(0, max + 1) : "";
 const validEmail = s => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s) && s.length <= 254;
 
-function timeString(s) {
-  if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(s || "")) return null;
-  const n = Number(s.slice(0, 2));
-  const m = s.slice(3);
-  return String(n % 12 || 12) + ":" + m + (n < 12 ? " AM" : " PM");
-}
-export function flameTimes(env) {
-  const a = clean(env.BUILD_A_FLAME_SESSION_1_TIME, 5);
-  const b = clean(env.BUILD_A_FLAME_SESSION_2_TIME, 5);
-  const aLabel = timeString(a), bLabel = timeString(b);
-  if (!aLabel || !bLabel || a === b) return null;
-  const minutes = t => Number(t.slice(0, 2)) * 60 + Number(t.slice(3));
-  if (Math.abs(minutes(a) - minutes(b)) < FLAME_DURATION_MINUTES) return null;
-  return {
-    one: { time: a, label: "Session 1 — " + aLabel + " ET" },
-    two: { time: b, label: "Session 2 — " + bLabel + " ET" }
-  };
+// Confirmed single 60-minute workshop, Saturday December 5, 2026 (Eastern Time).
+export function flameTimes(_env) {
+  return { one: { time: "11:45", label: "Saturday, December 5 • 11:45 AM–12:45 PM ET" } };
 }
 export function checkoutReady(env) {
   return env.BUILD_A_FLAME_REGISTRATION_ENABLED === "true" &&
-    !!flameTimes(env) && !!env.LIVE_TRIAL_DB && !!env.TURNSTILE_SECRET_KEY &&
+    !!env.LIVE_TRIAL_DB && !!env.TURNSTILE_SECRET_KEY &&
     /^(sk|rk)_live_/.test(String(env.STRIPE_LIVE_SECRET_KEY || ""));
 }
 export function normalizeSubmission(data) {
@@ -61,7 +47,7 @@ export function normalizeSubmission(data) {
 }
 
 const SQL = [
-  "CREATE TABLE IF NOT EXISTS flame_workshop_registrations (id TEXT PRIMARY KEY, session_id TEXT NOT NULL CHECK(session_id IN ('one','two')), guardian_name TEXT NOT NULL, email TEXT NOT NULL, phone TEXT NOT NULL, children_json TEXT NOT NULL, qty INTEGER NOT NULL CHECK(qty BETWEEN 1 AND 6), amount_cents INTEGER NOT NULL, status TEXT NOT NULL DEFAULT 'held' CHECK(status IN ('held','checkout_open','paid','released')), stripe_session_id TEXT UNIQUE, stripe_payment_intent_id TEXT, hold_until INTEGER NOT NULL, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, paid_at TEXT, updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)",
+  "CREATE TABLE IF NOT EXISTS flame_workshop_registrations (id TEXT PRIMARY KEY, session_id TEXT NOT NULL CHECK(session_id IN ('one')), guardian_name TEXT NOT NULL, email TEXT NOT NULL, phone TEXT NOT NULL, children_json TEXT NOT NULL, qty INTEGER NOT NULL CHECK(qty BETWEEN 1 AND 6), amount_cents INTEGER NOT NULL, status TEXT NOT NULL DEFAULT 'held' CHECK(status IN ('held','checkout_open','paid','released')), stripe_session_id TEXT UNIQUE, stripe_payment_intent_id TEXT, hold_until INTEGER NOT NULL, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, paid_at TEXT, updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)",
   "CREATE INDEX IF NOT EXISTS idx_flame_session_capacity ON flame_workshop_registrations(session_id,status,hold_until)"
 ];
 export async function ensureFlameSchema(db) {
