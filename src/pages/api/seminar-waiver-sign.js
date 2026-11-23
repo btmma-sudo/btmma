@@ -29,6 +29,7 @@ export async function POST({ request, locals }) {
   let body;
   try { body = await request.json(); } catch { return respond({ error: "Invalid submission." }, 400); }
   const event = body?.event, ticket = body?.ticket;
+  if (event === "nerve") return respond({ error: "Striking a Nerve registration has been removed." }, 410);
   if (!acceptedTicket[event]?.includes(ticket)) return respond({ error: "Choose a valid seminar and ticket." }, 400);
   if (Date.now() >= Date.parse(closedAt[event][ticket])) return respond({ error: "Online registration has closed." }, 409);
   const contact = body?.contactName?.trim(), email = body?.email?.trim(), phone = body?.phone?.trim();

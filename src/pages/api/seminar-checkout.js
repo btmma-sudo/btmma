@@ -14,14 +14,6 @@ const EVENTS = {
       sponsor: { name: "Flame Sponsor", cents: 10000 }
     },
     deadline: "2026-11-15T19:00:00Z" // 2 PM Eastern — matches the official seminar flyer
-  },
-  nerve: {
-    name: "Striking a Nerve — November 21–22, 2026",
-    tickets: {
-      day1: { name: "Day 1 — Kenpo (Nov 21)", cents: 10000, deadline: "2026-11-21T17:00:00Z" },
-      day2: { name: "Day 2 — Martial Arts (Nov 22)", cents: 10000, deadline: "2026-11-22T17:00:00Z" },
-      both: { name: "Both Days (Nov 21–22)", cents: 19000, deadline: "2026-11-21T17:00:00Z" }
-    }
   }
 };
 
@@ -40,6 +32,8 @@ export async function POST({ request, locals }) {
   let input;
   try { input = await request.json(); } catch { return response({ error: "Invalid form submission." }, 400); }
 
+  // Closed event: reject direct legacy checkout submissions even when called without the public form.
+  if (input?.event === "nerve") return response({ error: "Striking a Nerve registration has been removed." }, 410);
   const event = EVENTS[input?.event];
   const ticket = event?.tickets[input?.ticket];
   if (!event || !ticket) return response({ error: "Please select a valid seminar and ticket." }, 400);

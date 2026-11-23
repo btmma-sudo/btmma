@@ -23,6 +23,7 @@ export async function POST({ request, locals }) {
   try { input = await request.json(); }
   catch { return reply({ error: "Invalid test request." }, 400); }
   const eventKey = typeof input?.event === "string" ? input.event : "";
+  if (eventKey === "nerve") return reply({ error: "Striking a Nerve test checkout is retired." }, 410);
   const ticketKey = typeof input?.ticket === "string" ? input.ticket : "";
   const event = SEMINAR_QA_TICKETS[eventKey];
   const ticket = event?.tickets[ticketKey];

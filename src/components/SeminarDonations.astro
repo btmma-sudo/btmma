@@ -31,7 +31,6 @@
       <label class="donate-field" for="donate-purpose">What would you like to support?</label>
       <select id="donate-purpose">
         <option value="general">Burning Tree school and seminar support</option>
-        <option value="nerve">Striking a Nerve seminar</option>
       </select>
       <div class="donate-fields-row">
         <label class="donate-field" for="donate-name">Your name (optional)
@@ -94,8 +93,7 @@
     const selected = () => form.querySelector("input[name='donationPreset']:checked")?.value || "25";
     const money = cents => new Intl.NumberFormat("en-US", {style:"currency", currency:"USD"}).format(cents / 100);
     const purposeLabel = {
-      general: "Burning Tree school and seminars",
-      nerve: "Striking a Nerve"
+      general: "Burning Tree school and seminars"
     };
     const amountCents = () => {
       const option = selected();

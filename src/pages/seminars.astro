@@ -1,33 +1,46 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { SEMINAR_WAIVERS } from "../data/seminar-waivers.js";
 import SeminarDonations from "../components/SeminarDonations.astro";
+
 const eventStructuredData = {
   "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Event",
-      name: "Striking a Nerve — Anatomy & Physiology of Martial Arts",
-      startDate: "2026-11-21T12:00:00-05:00",
-      endDate: "2026-11-22T14:00:00-05:00",
-      eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-      eventStatus: "https://schema.org/EventScheduled",
-      location: { "@type": "Place", name: "Burning Tree Mixed Martial Arts", address: { "@type": "PostalAddress", streetAddress: "10210 South Dolfield Road, Suite C", addressLocality: "Owings Mills", addressRegion: "MD", postalCode: "21117", addressCountry: "US" } },
-      description: "Two-day anatomy and physiology seminar with Dr. Frederick Weiss, MD, DPT. Day 1 focuses on Kenpo; Day 2 covers martial arts more broadly.",
-      offers: { "@type": "AggregateOffer", lowPrice: "100", highPrice: "190", priceCurrency: "USD", url: "https://burningtreemma.com/seminars/?event=nerve#registration" }
+  "@type": "Event",
+  name: "Build a Flame — Confidence & Emotional Strength Workshop",
+  description: "A hands-on confidence and emotional strength workshop for children featuring practical responses to bullying, emotion management, peer pressure and resilience.",
+  startDate: "2026-12-05T11:45:00-05:00",
+  endDate: "2026-12-05T12:45:00-05:00",
+  eventStatus: "https://schema.org/EventScheduled",
+  eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+  location: {
+    "@type": "Place",
+    name: "Burning Tree Mixed Martial Arts",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "10210 S. Dolfield Rd., Suite C",
+      addressLocality: "Owings Mills",
+      addressRegion: "MD",
+      postalCode: "21117",
+      addressCountry: "US"
     }
-  ]
+  },
+  offers: {
+    "@type": "Offer",
+    url: "https://burningtreemma.com/build-a-flame/",
+    price: "50",
+    priceCurrency: "USD",
+    availability: "https://schema.org/InStock",
+    validThrough: "2026-11-29T23:59:00-05:00"
+  }
 };
 ---
 <BaseLayout
   title="Upcoming Seminars & Events | Burning Tree Mixed Martial Arts"
   description="Register for Build a Flame on Saturday, December 5, 2026, from 11:45 AM to 12:45 PM: a hands-on confidence and emotional strength workshop for children in Owings Mills, Maryland."
   path="/seminars/"
-  keywords={["martial arts seminar Owings Mills", "Kenpo seminar Maryland", "martial arts workshop Baltimore County", "martial arts anatomy seminar"]}
-  image="/images/burning-tree-kenpo-team.webp"
+  keywords={["martial arts events Owings Mills", "children confidence workshop Maryland", "bullying awareness workshop Baltimore County", "Burning Tree MMA events"]}
+  image="/images/build-a-flame-workshop-flyer.webp"
 >
   <script type="application/ld+json" set:html={JSON.stringify(eventStructuredData)} />
-  <script type="application/json" id="seminar-waiver-data" set:html={JSON.stringify({ nerve: SEMINAR_WAIVERS.nerve }).replace(/</g, "\\u003c")} />
   <div class="seminar-page">
     <section class="seminar-hero" aria-labelledby="seminar-heading">
       <div class="shell">
@@ -35,680 +48,38 @@ const eventStructuredData = {
         <h1 id="seminar-heading">Upcoming Seminars <span>&amp; Events</span></h1>
         <p>Join us Saturday, December 5, from 11:45 AM to 12:45 PM for Build a Flame, a hands-on confidence and emotional strength workshop for children. Registration is $50 per child, with no fixed attendance limit.</p>
         <a class="seminar-cta" href="/build-a-flame/">EXPLORE BUILD A FLAME</a>
-        <a class="seminar-cta" href="#donate">DONATE WITHOUT ATTENDING</a>
+        <a class="seminar-cta seminar-donate-link" href="#donate">SUPPORT BURNING TREE</a>
         <p class="seminar-motto">One Tree. One Family.</p>
       </div>
     </section>
 
     <section class="shell seminar-events" id="events" aria-label="Upcoming martial arts seminars and events">
       <article class="seminar-card" id="build-a-flame">
-        <a class="flame-flyer-link" href="/build-a-flame/" aria-label="Open Build a Flame registration and payment"><img class="seminar-flyer" src="/images/build-a-flame-workshop-flyer.webp" alt="Build a Flame Confidence and Emotional Strength Workshop flyer — Saturday December 5, 2026, 11:45 AM–12:45 PM, $50 per child, register and pay by November 29" width="1122" height="1402" loading="lazy" decoding="async" /></a>
+        <a class="flame-flyer-link" href="/build-a-flame/" aria-label="Open Build a Flame registration and payment">
+          <img class="seminar-flyer" src="/images/build-a-flame-workshop-flyer.webp" alt="Build a Flame Confidence and Emotional Strength Workshop flyer — Saturday December 5, 2026, 11:45 AM–12:45 PM, $50 per child, register and pay by November 29" width="1122" height="1402" loading="lazy" decoding="async" />
+        </a>
         <div class="seminar-card-content">
           <p class="seminar-eyebrow">SATURDAY, DECEMBER 5, 2026 · 11:45 AM–12:45 PM ET</p>
           <h2>Build <span>a Flame</span></h2>
           <p class="seminar-tagline">Strong children aren't born. They're built.</p>
           <p>Join our hands-on Confidence &amp; Emotional Strength Workshop for children. Learn to manage emotions, respond safely to bullying, handle peer pressure and build resilience and self-respect.</p>
           <p>One interactive 60-minute workshop with no fixed attendance limit. One parent or guardian included with each child's registration.</p>
-          <div class="seminar-prices two"><div><strong>$50</strong><span>Per Child</span></div><div><strong>Nov 29</strong><span>Register &amp; Pay By</span></div></div>
+          <div class="seminar-prices two">
+            <div><strong>$50</strong><span>Per Child</span></div>
+            <div><strong>Nov 29</strong><span>Register &amp; Pay By</span></div>
+          </div>
           <a class="seminar-cta" href="/build-a-flame/">REGISTER FOR BUILD A FLAME</a>
         </div>
       </article>
-      <article class="seminar-card" id="striking-a-nerve">
-        <img class="seminar-flyer" src="/images/Gallery/striking%20a%20nerve.jpg" alt="Striking a Nerve anatomy and physiology seminar flyer — November 21 and 22, 2026, noon–2 PM; Dr. Frederick Weiss; $100 for one day or $190 for both" width="1024" height="1536" loading="eager" decoding="async" onerror="this.onerror=null;this.src='/images/burning-tree-adult-striking-drill.webp';" />
-        <div class="seminar-card-content">
-          <p class="seminar-eyebrow">NOVEMBER 21 &amp; 22, 2026 · 12–2 PM EACH DAY</p>
-          <h2>Striking <span>a Nerve</span></h2>
-          <p class="seminar-tagline">The anatomy and physiology behind martial arts.</p>
-          <p>Join special guest instructor <strong>Dr. Frederick Weiss, MD, DPT</strong>, Assistant Professor of Radiology, for a hands-on exploration of how muscles, joints, the nervous system, structure, timing, and movement apply to Kenpo and other martial arts.</p>
-          <ul class="seminar-topics">
-            <li><strong>Day 1 — Saturday, Nov 21 · 12–2 PM:</strong> The true anatomy and physiology of Kenpo: muscles, joints, nervous system, technique, power, structure, timing, and injury prevention.</li>
-            <li><strong>Day 2 — Sunday, Nov 22 · 12–2 PM:</strong> The true anatomy and physiology of martial arts: striking, grappling, balance, movement, and long-term training.</li>
-          </ul>
-          <p>Open to martial artists of all styles and ranks, including students, coaches, and instructors. <strong>Limited spots available.</strong></p>
-          <div class="seminar-prices two">
-            <div><strong>$100</strong><span>One Day</span></div>
-            <div><strong>$190</strong><span>Both Days</span></div>
-          </div>
-          <a class="seminar-cta" href="#registration">REGISTER FOR STRIKING A NERVE</a>
-        </div>
-      </article>
     </section>
-
     <SeminarDonations />
-
-    <section class="shell seminar-registration" id="registration" aria-labelledby="registration-heading">
-      <div class="seminar-intro">
-        <p class="seminar-eyebrow">SAVE YOUR PLACE</p>
-        <h2 id="registration-heading">Register for Striking a Nerve</h2>
-        <p>Choose your admission option, enter attendee names and contact details, then choose Apple Pay/Apple Cash, credit/debit card, direct Cash App, or Zelle. You can register up to six attendees together.</p>
-        <p class="seminar-note">For multiple attendees, enter one full name per line. The total updates automatically. Your registration is confirmed only after successful payment.</p>
-        <p class="seminar-note"><strong>Signing in person?</strong> Print the <a href="/waivers/striking-a-nerve/" target="_blank" rel="noopener noreferrer">Striking a Nerve waiver</a>. One signed form per attendee.</p>
-      </div>
-      <form id="seminar-form" class="seminar-form">
-        <div class="seminar-field">
-          <label for="seminar-ticket">Admission option</label>
-          <select id="seminar-ticket" required></select>
-        </div>
-        <div class="seminar-fields-row">
-          <div class="seminar-field">
-            <label for="seminar-contact-name">Contact full name</label>
-            <input id="seminar-contact-name" type="text" autocomplete="name" maxlength="120" required />
-          </div>
-          <div class="seminar-field">
-            <label for="seminar-contact-email">Contact email</label>
-            <input id="seminar-contact-email" type="email" autocomplete="email" maxlength="254" required />
-          </div>
-        </div>
-        <div class="seminar-field">
-          <label for="seminar-contact-phone">Contact phone</label>
-          <input id="seminar-contact-phone" type="tel" autocomplete="tel" maxlength="30" required />
-        </div>
-        <div class="seminar-field">
-          <label for="seminar-attendees">Full name of each attendee (one per line)</label>
-          <textarea id="seminar-attendees" rows="4" maxlength="500" placeholder="Your name&#10;Second attendee's name" required></textarea>
-          <p class="seminar-note">Enter 1–6 names. Include yourself if you will be attending. Each name counts as one paid seat.</p>
-        </div>
-        <section id="seminar-waiver-section" class="seminar-waiver-section" hidden aria-labelledby="seminar-waiver-heading">
-          <h3 id="seminar-waiver-heading">Read &amp; Electronically Sign the Seminar Waiver</h3>
-          <p class="seminar-note">A separate signature is required for every attendee. Each adult must sign for themselves; a parent or legal guardian must sign for each minor. Signing is separate from purchasing a ticket.</p>
-          <details open class="seminar-waiver-copy"><summary>Read the full event-specific risk acknowledgment</summary>
-            <h4 id="seminar-waiver-title"></h4>
-            <pre id="seminar-waiver-fulltext"></pre>
-          </details>
-          <p class="seminar-note">You can save or print the text above for your records. To sign electronically, each signer must separately accept the risk acknowledgment and agree to electronic records and signatures.</p>
-          <div id="seminar-waiver-signers"></div>
-          <div class="seminar-security">
-            <p class="seminar-note"><strong>Security check before saving signed waivers</strong></p>
-            <div id="seminar-waiver-turnstile"></div>
-          </div>
-        </section>
-        <div class="seminar-total" aria-live="polite">
-          <span id="seminar-total-label">Day 1 × 1</span>
-          <strong id="seminar-total-amount">$100.00</strong>
-        </div>
-        <p class="seminar-note">Review your details, sign the required seminar waiver, and choose how to pay. Apple Pay (including eligible Apple Cash cards) and credit/debit cards use secure Stripe checkout. Direct Cash App and Zelle payments require manual verification.</p>
-        <p class="seminar-note">We do not collect or store card numbers on this website. By registering, you agree to our <a href="/terms">Terms</a> and <a href="/privacy">Privacy Policy</a>.</p>
-        <p id="seminar-form-message" class="seminar-message" role="status" aria-live="polite"></p>
-        <button id="seminar-submit" class="seminar-cta seminar-checkout" type="submit">REVIEW REGISTRATION &amp; SIGN WAIVERS</button>
-        <div id="seminar-payment-options" class="seminar-payment-options" hidden>
-          <h3>Choose Your Payment Method</h3>
-          <p id="seminar-reviewed-total" class="seminar-reviewed-total" aria-live="polite"></p>
-          <button id="seminar-download-waivers" class="seminar-cta seminar-pay-choice" type="button">DOWNLOAD MY SIGNED WAIVER COPIES</button>
-          <p class="seminar-note">Keep these signed copies for your records. Burning Tree also retains a separate signed record for each attendee.</p>
-          <button id="seminar-applepay" class="seminar-cta seminar-pay-choice" type="button">APPLE PAY / APPLE CASH</button>
-          <button id="seminar-card" class="seminar-cta seminar-pay-choice" type="button">PAY WITH CREDIT / DEBIT CARD</button>
-          <button id="seminar-cashapp" class="seminar-cta seminar-pay-choice" type="button">PAY DIRECTLY WITH CASH APP</button>
-          <button id="seminar-zelle" class="seminar-cta seminar-pay-choice" type="button">PAY DIRECTLY WITH ZELLE</button>
-          <p class="seminar-note">Apple Pay and card payments open the same secure Stripe checkout. Apple Pay appears only on supported devices. To use an eligible Apple Cash balance, select the Apple Cash card in Apple Pay. A credit or debit card remains available as a fallback.</p>
-          <p class="seminar-note">Signed acknowledgments are saved separately in Burning Tree's seminar waiver records before payment is offered.</p>
-        </div>
-        <div id="seminar-cashapp-instructions" class="seminar-cashapp-instructions" hidden aria-live="polite">
-          <h3>Direct Cash App Payment</h3>
-          <p>Send exactly <strong id="seminar-cashapp-amount"></strong> to <strong>$BTMMA</strong> using Cash App.</p>
-          <a class="seminar-cta seminar-cashapp-link" href="https://cash.app/$BTMMA" target="_blank" rel="noopener noreferrer">OPEN CASH APP — $BTMMA</a>
-          <p class="seminar-note"><strong>Check before paying:</strong> The Cash App profile should be $BTMMA. Enter the exact amount shown above; this link does not prefill your ticket total. If the recipient or total is different, do not send the payment.</p>
-          <p><strong>Payment note:</strong> <span id="seminar-cashapp-note"></span></p>
-          <p><strong>After paying:</strong> Text your payment confirmation and the attendee details to <a href="sms:+14102180894">(410) 218-0894</a>.</p>
-          <label for="seminar-cashapp-details" class="seminar-copy-label">Your registration details (copy into your text)</label>
-          <textarea id="seminar-cashapp-details" rows="5" readonly aria-label="Registration details to text to Burning Tree"></textarea>
-          <button type="button" id="seminar-copy-details" class="seminar-cta seminar-pay-choice">COPY REGISTRATION DETAILS</button>
-          <p id="seminar-copy-message" class="seminar-note" role="status"></p>
-          <p class="seminar-cashapp-warning"><strong>Registration pending:</strong> Cash App does not automatically confirm an attendee on this website. Your place is confirmed by Burning Tree after we verify your payment and attendee details. Do not pay a second time through Stripe.</p>
-          <button type="button" id="seminar-back-to-payments" class="seminar-cta seminar-pay-choice">CHANGE PAYMENT METHOD</button>
-        </div>
-        <div id="seminar-zelle-instructions" class="seminar-cashapp-instructions" hidden aria-live="polite">
-          <h3>Direct Zelle Payment</h3>
-          <p><strong>Amount to send:</strong> <strong id="seminar-zelle-amount"></strong></p>
-          <p><strong>Zelle recipient:</strong> Coach David's enrolled <strong>mobile phone number (410) 218-0894</strong>. This is a phone number for payment, <strong>not a studio address</strong>.</p>
-          <button id="seminar-copy-zelle-number" class="seminar-cta seminar-pay-choice" type="button">COPY ZELLE PHONE NUMBER</button>
-          <p id="seminar-zelle-number-message" class="seminar-note" role="status"></p>
-          <ol class="seminar-zelle-steps">
-            <li>Open your bank or credit union app, and choose <strong>Send with Zelle</strong> (if your bank supports it).</li>
-            <li>Enter <strong>410-218-0894</strong> as the recipient's mobile phone number.</li>
-            <li><strong>Check the recipient name displayed by your bank.</strong> If it is not the person you intended to pay, do not send the money. Contact Coach David to confirm first.</li>
-            <li>Enter the exact seminar amount shown above. In the payment memo (if available), enter <strong id="seminar-zelle-memo"></strong>.</li>
-            <li>Once your bank confirms the transfer, text your payment confirmation and the attendee information below to <a href="sms:+14102180894">(410) 218-0894</a>.</li>
-          </ol>
-          <label for="seminar-zelle-details" class="seminar-copy-label">Registration details to send with your Zelle receipt</label>
-          <textarea id="seminar-zelle-details" rows="6" readonly aria-label="Seminar Zelle payment and registration details"></textarea>
-          <button id="seminar-copy-zelle-details" type="button" class="seminar-cta seminar-pay-choice">COPY REGISTRATION DETAILS</button>
-          <p id="seminar-zelle-copy-message" class="seminar-note" role="status"></p>
-          <p class="seminar-cashapp-warning"><strong>Registration pending:</strong> Zelle is not connected to automatic website confirmation. Your place is confirmed only after Burning Tree personally verifies the Zelle payment and attendee details. Do not pay a second time by card or Cash App.</p>
-          <button id="seminar-zelle-back-to-payments" type="button" class="seminar-cta seminar-pay-choice">CHANGE PAYMENT METHOD</button>
-        </div>
-        <p class="seminar-note">Seminar questions? Call or text <a href="tel:+14102180894">(410) 218-0894</a>.</p>
-      </form>
-      <div id="registration-result" class="seminar-confirmation" hidden tabindex="-1" aria-live="polite">
-        <h3 id="registration-result-heading">Checking your payment...</h3>
-        <p id="registration-result-detail">We're verifying your payment directly with Stripe.</p>
-        <p id="registration-result-note"></p>
-        <a href="/seminars/" class="seminar-cta">BACK TO SEMINARS</a>
-      </div>
-    </section>
-
-    <section class="shell seminar-location" aria-label="Location and questions">
-      <div>
-        <h2>Seminars &amp; Events at Burning Tree</h2>
-        <p><strong>10210 South Dolfield Road, Suite C</strong></p>
-        <p>Owings Mills, MD 21117</p>
-        <p>Questions or accessibility needs? Call or text <a href="tel:+14102180894">(410) 218-0894</a>.</p>
-      </div>
-      <div>
-        <p class="seminar-eyebrow">SHARE WITH A TRAINING PARTNER</p>
-        <p>Bring your family, invite another instructor, or share the registration link with someone interested in martial arts. Our seminars are open to the wider martial arts community.</p>
-        <p><strong>One Tree. One Family.</strong></p>
-      </div>
-    </section>
   </div>
-  <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-  <script is:inline>
-    (() => {
-      // These are display amounts only. The dedicated /api/seminar-checkout
-      // endpoint independently owns and enforces all Stripe ticket prices.
-      const priceLists = {
-        nerve: [
-          { id: "day1", label: "Saturday Nov 21 only — $100 per person", name: "Day 1", cents: 10000 },
-          { id: "day2", label: "Sunday Nov 22 only — $100 per person", name: "Day 2", cents: 10000 },
-          { id: "both", label: "Both days — $190 per person", name: "Both Days", cents: 19000 }
-        ]
-      };
-      const closingTimes = {
-        nerve: { day1: "2026-11-21T17:00:00Z", day2: "2026-11-22T17:00:00Z", both: "2026-11-21T17:00:00Z" }
-      };
-      const $ = id => document.getElementById(id);
-      const form = $("seminar-form");
-      const eventId = "nerve";
-      const ticketSelect = $("seminar-ticket");
-      const attendeesInput = $("seminar-attendees");
-      const message = $("seminar-form-message");
-      const verifyButton = $("seminar-submit");
-      const choices = $("seminar-payment-options");
-      const applePayButton = $("seminar-applepay");
-      const cardButton = $("seminar-card");
-      const cashAppButton = $("seminar-cashapp");
-      const cashAppInstructions = $("seminar-cashapp-instructions");
-      const zelleButton = $("seminar-zelle");
-      const zelleInstructions = $("seminar-zelle-instructions");
-      const paymentButtons = [applePayButton, cardButton, cashAppButton, zelleButton];
-      const waiverSection = $("seminar-waiver-section");
-      const waiverSignerFields = $("seminar-waiver-signers");
-      const waiverDefinitions = JSON.parse($("seminar-waiver-data").textContent || "{}");
-      let reviewed = null;
-      let signaturePhase = false;
-      let waiverWidgetId = null;
-      const ensureTurnstile = () => {
-        if (!window.turnstile || waiverWidgetId !== null) return;
-        try { waiverWidgetId = window.turnstile.render("#seminar-waiver-turnstile", {
-          sitekey: "0x4AAAAAAD6Ievu-t0Ll1euh"
-        }); } catch { /* Retry when the service is available. */ }
-      };
-
-      const names = () => attendeesInput.value.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
-      const dollars = cents => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(cents / 100);
-      const ticketFor = (eventId, ticketId) => priceLists[eventId]?.find(item => item.id === ticketId);
-      const isClosed = (eventId, ticketId) => Date.now() >= Date.parse(closingTimes[eventId]?.[ticketId] || "1970-01-01T00:00:00Z");
-
-      function resetPaymentChoices() {
-        reviewed = null;
-        signaturePhase = false;
-        choices.hidden = true;
-        cashAppInstructions.hidden = true;
-        zelleInstructions.hidden = true;
-        waiverSection.hidden = true;
-        waiverSignerFields.replaceChildren();
-        if (waiverWidgetId !== null) window.turnstile?.reset?.(waiverWidgetId);
-        verifyButton.hidden = false;
-        verifyButton.disabled = false;
-        verifyButton.textContent = "REVIEW REGISTRATION & SIGN WAIVERS";
-        paymentButtons.forEach(button => { button.disabled = false; });
-        message.textContent = "";
-      }
-
-      function updateTotal() {
-        const tier = ticketFor(eventId, ticketSelect.value);
-        if (!tier) return;
-        const count = names().length || 1;
-        $("seminar-total-label").textContent = tier.name + " × " + count + (count > 6 ? " (maximum 6)" : "");
-        $("seminar-total-amount").textContent = dollars(tier.cents * count);
-      }
-
-      ticketSelect.addEventListener("change", () => { resetPaymentChoices(); updateTotal(); });
-      form.addEventListener("input", event => {
-        // Signing fields must not clear themselves as a signer types their name.
-        if (event.target.closest("#seminar-waiver-section")) return;
-        resetPaymentChoices();
-        updateTotal();
-      });
-      priceLists[eventId].forEach(item => {
-        ticketSelect.add(new Option(item.label, item.id));
-      });
-      updateTotal();
-
-      const params = new URLSearchParams(location.search);
-      if (params.get("event") === "united") {
-        message.textContent = "Registration for the past seminar has closed.";
-      }
-      if (params.get("checkout") === "cancelled") {
-        message.textContent = "Checkout was cancelled. No registration has been confirmed. You can choose another payment method.";
-      }
-
-      // Do not mark a seminar paid based on a redirect alone.
-      if (params.get("checkout") === "success") {
-        const result = $("registration-result");
-        result.hidden = false;
-        form.hidden = true;
-        const id = params.get("session_id") || "";
-        const show = (heading, detail, note) => {
-          $("registration-result-heading").textContent = heading;
-          $("registration-result-detail").textContent = detail;
-          $("registration-result-note").textContent = note || "";
-        };
-        if (!/^cs_live_[A-Za-z0-9_]{10,180}$/.test(id)) {
-          show("We could not verify your payment", "Please call the studio with your Stripe receipt or checkout reference.", "Do not submit another payment until you have checked your existing charge.");
-        } else {
-          fetch("/api/seminar-checkout-status?session_id=" + encodeURIComponent(id), { cache: "no-store" })
-            .then(async r => {
-              const data = await r.json();
-              if (!r.ok) throw new Error(data.error || "Unable to verify this payment.");
-              return data;
-            })
-            .then(data => {
-              if (data.confirmed) {
-                const seminar = data.event === "united" ? "United by Purpose" : "Striking a Nerve";
-                show("You're registered!", "Stripe confirms payment of " + dollars(data.amount) + " for " + data.quantity + " attendee" + (data.quantity === 1 ? "" : "s") + " at " + seminar + ".", "Keep your Stripe receipt. Questions? Call (410) 218-0894. One Tree. One Family.");
-                try {
-                  const key = "btmma_seminar_ga4_purchase_" + id;
-                  if (window.sessionStorage.getItem(key) !== "sent") {
-                    window.gtag?.("event", "purchase", {
-                      transaction_id: id, currency: "USD", value: data.amount / 100,
-                      items: [{ item_id: "btmma_seminar_" + data.event + "_" + data.ticket, item_name: seminar, quantity: data.quantity, price: data.amount / 100 / data.quantity }]
-                    });
-                    window.sessionStorage.setItem(key, "sent");
-                  }
-                } catch { /* Analytics cannot affect payment verification. */ }
-              } else {
-                show("Payment has not been confirmed", "Your checkout is not marked paid by Stripe yet.", "Do not pay again until checking your receipt or contacting the studio.");
-              }
-            })
-            .catch(error => show("Verification is temporarily unavailable", error.message, "Please check your Stripe payment receipt or contact the studio before paying again."));
-        }
-      }
-
-
-      function buildWaiverSigners(attendeeNames) {
-        const waiver = waiverDefinitions[eventId];
-        $("seminar-waiver-title").textContent = waiver.heading + " — " + waiver.event;
-        $("seminar-waiver-fulltext").textContent = waiver.body;
-        waiverSignerFields.replaceChildren();
-
-        const addField = (fieldset, text, type, value, required = true) => {
-          const label = document.createElement("label");
-          label.className = "seminar-waiver-label";
-          const span = document.createElement("span");
-          span.textContent = text;
-          const input = document.createElement("input");
-          input.type = type;
-          input.required = required;
-          input.maxLength = 120;
-          input.autocomplete = "off";
-          if (value) input.value = value;
-          label.append(span, input);
-          fieldset.appendChild(label);
-          return input;
-        };
-        const addCheck = (fieldset, text) => {
-          const label = document.createElement("label");
-          label.className = "seminar-waiver-check";
-          const input = document.createElement("input");
-          input.type = "checkbox";
-          input.required = true;
-          const span = document.createElement("span");
-          span.textContent = text;
-          label.append(input, span);
-          fieldset.appendChild(label);
-          return input;
-        };
-        attendeeNames.forEach((name, i) => {
-          const fieldset = document.createElement("fieldset");
-          fieldset.className = "seminar-waiver-person";
-          const legend = document.createElement("legend");
-          legend.textContent = "Attendee " + (i + 1) + ": " + name;
-          fieldset.appendChild(legend);
-
-          const label = document.createElement("label");
-          label.className = "seminar-waiver-label";
-          label.appendChild(document.createTextNode("Participant type"));
-          const minor = document.createElement("select");
-          minor.required = true;
-          for (const [value, text] of [["adult", "Adult (18 or older) — sign for yourself"], ["minor", "Minor (under 18) — parent / guardian signs"]]) {
-            const opt = document.createElement("option");
-            opt.value = value;
-            opt.textContent = text;
-            minor.appendChild(opt);
-          }
-          label.appendChild(minor);
-          fieldset.appendChild(label);
-
-          const signer = addField(fieldset, "Legal name of the person signing", "text", name);
-          const signature = addField(fieldset, "Type your full legal name again as your electronic signature", "text", "");
-          const roleHelp = document.createElement("p");
-          roleHelp.className = "seminar-note";
-          roleHelp.textContent = "The adult attendee must personally sign. For a minor, the parent or legal guardian must personally sign. Do not sign for another adult.";
-          fieldset.appendChild(roleHelp);
-          minor.addEventListener("change", () => {
-            signer.value = minor.value === "adult" ? name : "";
-            signature.value = "";
-            signer.focus();
-          });
-          const risks = addCheck(fieldset, "I have read the complete event-specific risk acknowledgment above, understand the inherent risks of martial arts participation, and voluntarily agree to the stated safety conditions.");
-          const electronic = addCheck(fieldset, "I separately agree to use electronic records and signatures for this seminar waiver and intend my typed name above to serve as my legally binding electronic signature.");
-          fieldset._waiverInputs = { name, minor, signer, signature, risks, electronic };
-          waiverSignerFields.appendChild(fieldset);
-        });
-      }
-
-      function signedWaiverEntries() {
-        return Array.from(waiverSignerFields.querySelectorAll("fieldset")).map(fieldset => {
-          const f = fieldset._waiverInputs;
-          return {
-            name: f.name,
-            minor: f.minor.value === "minor",
-            signer: f.signer.value.trim(),
-            signature: f.signature.value.trim(),
-            relationship: f.minor.value === "minor" ? "Parent or legal guardian" : "Adult attendee",
-            acceptedRisks: f.risks.checked,
-            electronicConsent: f.electronic.checked
-          };
-        });
-      }
-
-      form.addEventListener("submit", async event => {
-        event.preventDefault();
-        const attendeeNames = names();
-        if (attendeeNames.length < 1 || attendeeNames.length > 6 ||
-            attendeeNames.some(name => name.length < 2 || name.length > 75 || /[<>\r\n]/.test(name)) ||
-            new Set(attendeeNames.map(s => s.toLowerCase())).size !== attendeeNames.length) {
-          message.textContent = "Enter 1 to 6 distinct attendee names, one per line.";
-          attendeesInput.focus();
-          return;
-        }
-        if (isClosed(eventId, ticketSelect.value)) {
-          message.textContent = "Registration for this seminar session has closed. Please contact the studio.";
-          return;
-        }
-        if (!signaturePhase) {
-          buildWaiverSigners(attendeeNames);
-          signaturePhase = true;
-          waiverSection.hidden = false;
-          ensureTurnstile();
-          verifyButton.textContent = "SAVE SIGNED WAIVERS & CHOOSE PAYMENT";
-          message.textContent = "Read the waiver, then have each attendee (or parent/guardian for a minor) sign. Nothing is charged.";
-          waiverSection.scrollIntoView({ behavior: "smooth", block: "start" });
-          return;
-        }
-        const signatures = signedWaiverEntries();
-        for (const item of signatures) {
-          if (item.signer !== item.signature ||
-              (!item.minor && item.signer.toLowerCase() !== item.name.toLowerCase()) ||
-              !item.acceptedRisks || !item.electronicConsent) {
-            message.textContent = "Each signer must type the same legal name in both fields, sign only for themselves (or a minor), and check both acknowledgment boxes.";
-            return;
-          }
-        }
-        ensureTurnstile();
-        const token = waiverWidgetId !== null ? window.turnstile?.getResponse?.(waiverWidgetId) || "" : "";
-        if (!token) {
-          message.textContent = "Please complete the security check beneath the waiver signatures.";
-          waiverSection.scrollIntoView({ behavior: "smooth", block: "nearest" });
-          return;
-        }
-        verifyButton.disabled = true;
-        verifyButton.textContent = "SAVING ELECTRONIC SIGNATURES...";
-        message.textContent = "Saving signed waiver records before payment. No payment has been charged.";
-        const payload = {
-          event: eventId,
-          ticket: ticketSelect.value,
-          contactName: $("seminar-contact-name").value.trim(),
-          email: $("seminar-contact-email").value.trim(),
-          phone: $("seminar-contact-phone").value.trim(),
-          attendees: signatures,
-          turnstileToken: token
-        };
-        try {
-          const res = await fetch("/api/seminar-waiver-sign", {
-            method: "POST",
-            headers: { "content-type": "application/json" },
-            cache: "no-store",
-            body: JSON.stringify(payload)
-          });
-          const data = await res.json().catch(() => ({}));
-          if (!res.ok || data.saved !== true || !data.groupId) throw new Error(data.error || "Waivers could not be saved.");
-          // If any contact or attendee changes before the response, do not allow
-          // payment against a signature set for stale registration information.
-          if (ticketSelect.value !== payload.ticket ||
-              names().join("\n") !== payload.attendees.map(x => x.name).join("\n") ||
-              $("seminar-contact-email").value.trim() !== payload.email ||
-              $("seminar-contact-name").value.trim() !== payload.contactName ||
-              $("seminar-contact-phone").value.trim() !== payload.phone) {
-            resetPaymentChoices();
-            message.textContent = "Registration details changed. Please review and sign the waivers again.";
-            return;
-          }
-          const tier = ticketFor(eventId, ticketSelect.value);
-          reviewed = {
-            event: eventId,
-            ticket: ticketSelect.value,
-            contactName: payload.contactName,
-            email: payload.email,
-            phone: payload.phone,
-            attendees: payload.attendees.map(x => x.name).join("\n"),
-            count: payload.attendees.length,
-            ticketName: tier.name,
-            totalCents: tier.cents * payload.attendees.length,
-            waiverGroupId: data.groupId,
-            signatures: payload.attendees,
-            signedAt: data.signedAt,
-            waiverVersion: data.waiverVersion
-          };
-          const total = dollars(reviewed.totalCents);
-          $("seminar-reviewed-total").textContent = reviewed.ticketName + " × " + reviewed.count + " = " + total;
-          applePayButton.textContent = "APPLE PAY / APPLE CASH — " + total;
-          cardButton.textContent = "PAY " + total + " WITH CREDIT / DEBIT CARD";
-          cashAppButton.textContent = "PAY " + total + " DIRECTLY WITH CASH APP";
-          zelleButton.textContent = "PAY " + total + " DIRECTLY WITH ZELLE";
-          verifyButton.hidden = true;
-          waiverSection.hidden = true;
-          choices.hidden = false;
-          cashAppInstructions.hidden = true;
-          zelleInstructions.hidden = true;
-          message.textContent = "Signed waiver records saved for all " + reviewed.count +
-            " attendee(s). Choose your payment method. No payment has been charged.";
-          choices.scrollIntoView({ behavior: "smooth", block: "nearest" });
-        } catch (err) {
-          message.textContent = err.message || "Unable to save the signed waiver. No payment has been charged.";
-          if (waiverWidgetId !== null) window.turnstile?.reset?.(waiverWidgetId);
-        } finally {
-          verifyButton.disabled = false;
-          if (!reviewed) verifyButton.textContent = "SAVE SIGNED WAIVERS & CHOOSE PAYMENT";
-        }
-      });
-
-      $("seminar-download-waivers").addEventListener("click", () => {
-        if (!reviewed?.waiverGroupId) return;
-        const waiver = waiverDefinitions[reviewed.event];
-        const title = waiver.heading + "\n" + waiver.event + "\n\n" + waiver.body + "\n\n";
-        const signatures = reviewed.signatures.map((item, i) =>
-          "Attendee " + (i + 1) + ": " + item.name + "\n" +
-          "Signer: " + item.signature + "\n" +
-          "Capacity: " + item.relationship + "\n" +
-          "Risk acknowledgment: Accepted\n" +
-          "Electronic records and signature: Separately consented\n" +
-          "Signed at (UTC): " + reviewed.signedAt + "\n"
-        ).join("\n");
-        const complete = title + signatures +
-          "\nSigned waiver group reference: " + reviewed.waiverGroupId +
-          "\nWaiver version: " + reviewed.waiverVersion + "\n";
-        const blob = new Blob([complete], { type: "text/plain;charset=utf-8" });
-        const href = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = href;
-        a.download = "burning-tree-" + reviewed.event + "-signed-waivers.txt";
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        setTimeout(() => URL.revokeObjectURL(href), 1000);
-      });
-
-      const openStripeCheckout = async () => {
-        if (!reviewed || isClosed(reviewed.event, reviewed.ticket)) {
-          message.textContent = "Please review your registration again before paying.";
-          resetPaymentChoices();
-          message.textContent = "Registration details must be reviewed before paying, or this session has closed.";
-          return;
-        }
-        paymentButtons.forEach(button => { button.disabled = true; });
-        message.textContent = "Connecting to secure Stripe checkout. No charge has been made yet.";
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 20000);
-        try {
-          const r = await fetch("/api/seminar-checkout", {
-            method: "POST", cache: "no-store",
-            headers: { "content-type": "application/json" },
-            signal: controller.signal,
-            body: JSON.stringify({
-              event: reviewed.event,
-              ticket: reviewed.ticket,
-              contactName: reviewed.contactName,
-              email: reviewed.email,
-              phone: reviewed.phone,
-              attendees: reviewed.attendees,
-              waiverGroupId: reviewed.waiverGroupId
-            })
-          });
-          const data = await r.json().catch(() => ({}));
-          if (!r.ok || !/^https:\/\/checkout\.stripe\.com\//.test(data.url || "")) throw new Error(data.error || "Could not open secure checkout.");
-          window.location.assign(data.url);
-        } catch (err) {
-          message.textContent = err.message || "Checkout is unavailable. Please try again.";
-          paymentButtons.forEach(button => { button.disabled = false; });
-          if (waiverWidgetId !== null) window.turnstile?.reset?.(waiverWidgetId);
-        } finally {
-          clearTimeout(timeout);
-        }
-      };
-      applePayButton.addEventListener("click", openStripeCheckout);
-      cardButton.addEventListener("click", openStripeCheckout);
-
-      cashAppButton.addEventListener("click", () => {
-        if (!reviewed || isClosed(reviewed.event, reviewed.ticket)) {
-          resetPaymentChoices();
-          message.textContent = "Please review the current seminar and ticket before paying.";
-          return;
-        }
-        const eventName = "Striking a Nerve";
-        const note = "BTMMA " + eventName + " - " + reviewed.ticketName + " x " + reviewed.count;
-        $("seminar-cashapp-amount").textContent = dollars(reviewed.totalCents);
-        $("seminar-cashapp-note").textContent = note;
-        $("seminar-cashapp-details").value = "Burning Tree seminar - Cash App payment\n" +
-          "Event: " + eventName + "\n" +
-          "Ticket: " + reviewed.ticketName + " x " + reviewed.count + "\n" +
-          "Amount: " + dollars(reviewed.totalCents) + " to $BTMMA\n" +
-          "Contact: " + reviewed.contactName + "\n" +
-          "Email: " + reviewed.email + "\n" +
-          "Phone: " + reviewed.phone + "\n" +
-          "Attendees:\n" + reviewed.attendees + "\n" +
-          "Signed waiver group: " + reviewed.waiverGroupId + "\n" +
-          "Payment confirmation: [attach Cash App receipt after paying]";
-        choices.hidden = true;
-        cashAppInstructions.hidden = false;
-        message.textContent = "Direct Cash App selected. Your registration is pending until Burning Tree verifies payment.";
-        cashAppInstructions.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      });
-
-      $("seminar-copy-details").addEventListener("click", async () => {
-        const details = $("seminar-cashapp-details");
-        try {
-          await navigator.clipboard.writeText(details.value);
-          $("seminar-copy-message").textContent = "Registration details copied. Paste into a text to (410) 218-0894 and attach your payment receipt.";
-        } catch {
-          details.focus();
-          details.select();
-          $("seminar-copy-message").textContent = "Details selected. Copy the text and send it to (410) 218-0894 with your receipt.";
-        }
-      });
-
-      zelleButton.addEventListener("click", () => {
-        if (!reviewed || isClosed(reviewed.event, reviewed.ticket)) {
-          resetPaymentChoices();
-          message.textContent = "Please review the seminar registration and sign the waivers before paying.";
-          return;
-        }
-        const eventName = "Striking a Nerve";
-        const reference = reviewed.waiverGroupId.slice(0, 8);
-        const memo = "BTMMA " + reviewed.event.toUpperCase() + " " + reference;
-        $("seminar-zelle-amount").textContent = dollars(reviewed.totalCents);
-        $("seminar-zelle-memo").textContent = memo;
-        $("seminar-zelle-details").value = "Burning Tree seminar - Zelle payment\n" +
-          "Event: " + eventName + "\n" +
-          "Ticket: " + reviewed.ticketName + " x " + reviewed.count + "\n" +
-          "Amount: " + dollars(reviewed.totalCents) + "\n" +
-          "Zelle recipient mobile: 410-218-0894 (Coach David)\n" +
-          "Payment memo: " + memo + "\n" +
-          "Contact: " + reviewed.contactName + "\n" +
-          "Email: " + reviewed.email + "\n" +
-          "Phone: " + reviewed.phone + "\n" +
-          "Attendees:\n" + reviewed.attendees + "\n" +
-          "Signed waiver group: " + reviewed.waiverGroupId + "\n" +
-          "Payment confirmation: [attach Zelle payment receipt after paying]";
-        choices.hidden = true;
-        zelleInstructions.hidden = false;
-        cashAppInstructions.hidden = true;
-        message.textContent = "Zelle selected. Pay to Coach David's mobile number and send your receipt. Your registration is pending verification.";
-        zelleInstructions.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      });
-
-      $("seminar-copy-zelle-number").addEventListener("click", async () => {
-        try {
-          await navigator.clipboard.writeText("4102180894");
-          $("seminar-zelle-number-message").textContent = "Copied 410-218-0894. Enter it as a mobile number in your bank's Zelle service.";
-        } catch {
-          $("seminar-zelle-number-message").textContent = "Copy this Zelle mobile number: 410-218-0894.";
-        }
-      });
-      $("seminar-copy-zelle-details").addEventListener("click", async () => {
-        const details = $("seminar-zelle-details");
-        try {
-          await navigator.clipboard.writeText(details.value);
-          $("seminar-zelle-copy-message").textContent = "Details copied. Text them with your Zelle receipt to (410) 218-0894.";
-        } catch {
-          details.focus();
-          details.select();
-          $("seminar-zelle-copy-message").textContent = "Details selected. Copy and text them with your receipt to (410) 218-0894.";
-        }
-      });
-      $("seminar-zelle-back-to-payments").addEventListener("click", () => {
-        if (!reviewed) return;
-        zelleInstructions.hidden = true;
-        choices.hidden = false;
-        message.textContent = "If you've already sent a Zelle payment, do not select another method. Contact Coach David first.";
-        choices.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      });
-
-      $("seminar-back-to-payments").addEventListener("click", () => {
-        if (!reviewed) return;
-        cashAppInstructions.hidden = true;
-        choices.hidden = false;
-        message.textContent = "Do not select another payment method if you've already sent a Cash App payment. Contact the studio instead.";
-        choices.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      });
-    })();
-  </script>
 </BaseLayout>
 
 <style>
-  .seminar-page { --seminar-red: #b91c1c; --seminar-ink: #101010; color: #f7f7f7; }
+  .seminar-page { --seminar-red: #b91c1c; color: #f7f7f7; }
   .seminar-page *, .seminar-page *::before, .seminar-page *::after { box-sizing: border-box; }
-  .seminar-hero { padding: 4.5rem 0 3.6rem; background: linear-gradient(110deg, #111 10%, #351010 100%); border-bottom: 4px solid var(--seminar-red); }
+  .seminar-hero { padding: 4rem 0 3.4rem; background: linear-gradient(110deg, #111 10%, #351010 100%); border-bottom: 4px solid var(--seminar-red); }
   .seminar-hero .shell { max-width: 960px; text-align: center; }
   .seminar-eyebrow { color: #ffb7b7; font-size: .85rem; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; }
   .seminar-hero h1 { font-family: 'Black Ops One', 'Open Sans', sans-serif; line-height: 1.13; font-size: clamp(2.3rem, 5vw, 4.4rem); margin: .8rem 0; color: #fff; }
@@ -717,143 +88,38 @@ const eventStructuredData = {
   .seminar-motto { color: #fff; font-weight: 700; margin-top: 1.2rem; }
   .seminar-cta { display: inline-block; appearance: none; border: 2px solid #8e1010; background: #b91c1c; color: #fff; font: 800 .95rem/1.4 'Open Sans', sans-serif; padding: .92rem 1.3rem; text-decoration: none; border-radius: .35rem; cursor: pointer; text-align: center; transition: background .18s ease; }
   .seminar-cta:hover, .seminar-cta:focus-visible { background: #861010; color: #fff; }
-  .seminar-cta:disabled { opacity: .7; cursor: wait; }
-  .seminar-events { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; gap: 1.7rem; padding-top: 3rem; padding-bottom: 2rem; }
+  .seminar-donate-link { margin-left: .5rem; }
+  .seminar-events { display: grid; grid-template-columns: minmax(0, 830px); justify-content: center; gap: 1.7rem; padding-top: 3rem; padding-bottom: 3rem; }
   .seminar-card { background: #1c1c1c; border: 1px solid #65302c; border-radius: .65rem; overflow: hidden; display: flex; flex-direction: column; }
-  .seminar-card > img { width: 100%; height: 255px; object-fit: contain; background: #0c0c0c; display: block; }
-  .seminar-card > img.seminar-flyer { width: 100%; height: auto; max-height: none; object-fit: contain; object-position: center top; background: #fff; }
-  /* Build a Flame is a portrait flyer inside a linked landscape event-card box.
-     Earlier img rules targeted direct children only, missing the wrapping <a>.
-     Contain the *entire* flyer within the frame without stretching or clipping. */
   #build-a-flame > .flame-flyer-link {
-    display: grid;
-    place-items: center;
-    width: 100%;
-    aspect-ratio: 5 / 4;
-    max-height: 490px;
-    padding: 12px;
-    overflow: hidden;
+    display: grid; place-items: center; width: 100%; aspect-ratio: 5 / 4;
+    max-height: 490px; padding: 12px; overflow: hidden;
     background: radial-gradient(ellipse at center, #33110d 0%, #130c0a 76%, #090909 100%);
   }
   #build-a-flame > .flame-flyer-link > img.seminar-flyer {
-    display: block;
-    width: 100%;
-    height: 100%;
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    object-position: center;
-    border-radius: 4px;
-    background: transparent;
+    display: block; width: 100%; height: 100%; max-width: 100%;
+    max-height: 100%; object-fit: contain; object-position: center;
+    border-radius: 4px; background: transparent;
   }
-  #build-a-flame > .flame-flyer-link:focus-visible {
-    outline: 3px solid #ffb65c;
-    outline-offset: -3px;
-  }
+  #build-a-flame > .flame-flyer-link:focus-visible { outline: 3px solid #ffb65c; outline-offset: -3px; }
   .seminar-card-content { padding: 1.5rem 1.5rem 1.8rem; display: flex; flex-direction: column; flex: 1; }
   .seminar-card h2 { margin: .3rem 0 .5rem; font: 900 clamp(1.6rem, 2.7vw, 2.4rem)/1.18 'Black Ops One', 'Open Sans', sans-serif; color: #fff; }
-  .seminar-card p, .seminar-card li { color: #ececec; line-height: 1.65; }
+  .seminar-card p { color: #ececec; line-height: 1.65; }
   .seminar-card .seminar-tagline { color: #fff; font-weight: 800; font-size: 1.1rem; }
   .seminar-card .seminar-eyebrow { color: #ffc6c6; line-height: 1.5; }
-  .seminar-card .seminar-note { color: #d9d9d9; font-size: .88rem; }
   .seminar-card .seminar-cta { margin-top: auto; width: 100%; }
   .seminar-prices { display: flex; flex-wrap: wrap; margin: 1rem 0 1.6rem; gap: .5rem; }
   .seminar-prices > div { flex: 1 1 105px; background: #2c2c2c; border-top: 3px solid #dc3333; padding: .8rem .5rem; text-align: center; border-radius: .25rem; }
   .seminar-prices strong { display: block; font-size: 1.65rem; line-height: 1.25; color: #fff; }
   .seminar-prices span { display: block; color: #eaeaea; font-size: .79rem; font-weight: 700; }
-  .seminar-topics { padding-left: 1.2rem; margin: .1rem 0 1rem; }
-  .seminar-registration { display: grid; grid-template-columns: .75fr 1.25fr; align-items: start; gap: 2rem; padding-top: 3rem; padding-bottom: 4rem; scroll-margin-top: 2rem; }
-  .seminar-intro h2 { color: #fff; font: 900 clamp(1.75rem, 3vw, 2.7rem)/1.2 'Black Ops One', 'Open Sans', sans-serif; }
-  .seminar-intro p { color: #ededed; line-height: 1.65; }
-  .seminar-form, .seminar-confirmation { padding: clamp(1.15rem, 3vw, 2rem); background: #fff; color: #161616; border-radius: .6rem; border-top: 5px solid #b91c1c; box-shadow: 0 6px 28px #0005; }
-  .seminar-field { display: flex; flex-direction: column; gap: .4rem; margin-bottom: 1.1rem; }
-  .seminar-field label { color: #1b1b1b; font-weight: 800; }
-  .seminar-field input, .seminar-field select, .seminar-field textarea { background: #fff; border: 2px solid #666; border-radius: .32rem; padding: .75rem; font: 400 1rem 'Open Sans', sans-serif; color: #111; width: 100%; }
-  .seminar-field input:focus, .seminar-field select:focus, .seminar-field textarea:focus { outline: 3px solid #e58d8d; outline-offset: 1px; }
-  .seminar-fields-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
-  .seminar-form .seminar-note, .seminar-confirmation p { color: #373737; font-size: .88rem; line-height: 1.6; margin: .35rem 0 1.25rem; }
-  .seminar-form a, .seminar-confirmation a:not(.seminar-cta) { color: #8d1111; text-decoration: underline; }
-  .seminar-total { display: flex; justify-content: space-between; align-items: center; gap: 1rem; background: #f2f2f2; padding: 1.1rem; border-left: 5px solid #a91b1b; margin: 1.2rem 0; color: #171717; }
-  .seminar-total strong { font-size: 1.5rem; white-space: nowrap; }
-  .seminar-security { margin: 1.3rem 0; }
-  .seminar-message { color: #991b1b; font-weight: 700; min-height: 1.2rem; }
-  .seminar-checkout { display: block; width: 100%; font-size: 1.02rem; }
-  .seminar-page [hidden] { display: none !important; }
-  .seminar-confirmation[hidden], .seminar-form[hidden] { display: none; }
-  .seminar-confirmation h3 { color: #181818; font-size: 1.65rem; }
-  .seminar-confirmation .seminar-cta { color: #fff; text-decoration: none; }
-  .seminar-location { border-top: 1px solid #5a2626; padding-top: 2rem; padding-bottom: 3rem; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
-  .seminar-location h2 { color: #fff; }
-  .seminar-location p { color: #efefef; line-height: 1.5; }
-  .seminar-location a { color: #ffb9b9; }
   @media (max-width: 860px) {
-    .seminar-events, .seminar-registration { grid-template-columns: 1fr; }
-    .seminar-card > img:not(.seminar-flyer) { height: 220px; }
-    .seminar-card > img.seminar-flyer { height: auto; max-height: none; }
+    .seminar-events { grid-template-columns: minmax(0, 1fr); }
     #build-a-flame > .flame-flyer-link { max-height: none; aspect-ratio: 5 / 4; }
-    .seminar-hero { padding: 3rem 0; }
   }
   @media (max-width: 520px) {
     .seminar-card-content { padding: 1.2rem; }
-    .seminar-fields-row, .seminar-location { grid-template-columns: 1fr; gap: .5rem; }
     .seminar-prices > div { flex-basis: 95px; }
-    .seminar-total { flex-wrap: wrap; }
     .seminar-cta { width: 100%; }
+    .seminar-donate-link { margin-left: 0; margin-top: .6rem; }
   }
-
-  /* Payment choices intentionally match the high-contrast $29 promotion controls,
-     while all selectors remain scoped to seminars only. */
-  .seminar-page .seminar-payment-options, .seminar-page .seminar-cashapp-instructions {
-    margin: 1.1rem 0; border: 2px solid #a91b1b; border-radius: 12px;
-    padding: 1rem; background: #f9f9f9; color: #171717;
-  }
-  .seminar-page .seminar-payment-options h3, .seminar-page .seminar-cashapp-instructions h3 {
-    color: #171717; margin: .4rem 0 .9rem; font-size: 1.28rem;
-  }
-  .seminar-page .seminar-reviewed-total {
-    padding: .8rem; background: #f0e9e9; border-left: 4px solid #a91b1b;
-    font-weight: 800; color: #171717;
-  }
-  .seminar-page .seminar-pay-choice, .seminar-page .seminar-cashapp-link, .seminar-page .seminar-checkout {
-    display: flex; width: 100%; min-height: 52px; align-items: center;
-    justify-content: center; margin: .6rem 0; padding: 14px 18px;
-    background: #781010; border: 2px solid #e08c8c;
-    border-radius: 9px; color: #fff; font: 800 clamp(1rem, 2.6vw, 1.125rem)/1.45 'Open Sans', Arial, sans-serif;
-    text-align: center; text-decoration: none; text-shadow: 0 1px 1px #0007;
-    white-space: normal;
-  }
-  .seminar-page .seminar-pay-choice:not(:disabled):hover, .seminar-page .seminar-cashapp-link:hover,
-  .seminar-page .seminar-checkout:hover { color: #fff; background: #951818; }
-  .seminar-page .seminar-pay-choice:disabled { opacity: .6; cursor: wait; }
-  .seminar-page .seminar-pay-choice:focus-visible, .seminar-page .seminar-cashapp-link:focus-visible {
-    outline: 3px solid #a91b1b; outline-offset: 2px;
-  }
-  .seminar-page .seminar-payment-options .seminar-note { color: #333; }
-  .seminar-page .seminar-security .cf-turnstile { max-width: 100%; min-height: 80px; }
-  .seminar-page .seminar-copy-label { color: #171717; display: block; font-weight: 800; }
-  .seminar-page #seminar-cashapp-details,
-  .seminar-page #seminar-zelle-details {
-    width: 100%; min-height: 150px; margin-top: .5rem; background: #fff;
-    color: #111; font: 400 .9rem/1.55 'Open Sans', Arial, sans-serif;
-    border: 1px solid #777; border-radius: 6px; padding: 12px;
-  }
-  .seminar-page .seminar-zelle-steps { color: #171717; line-height: 1.65; padding-left: 1.35rem; }
-  .seminar-page .seminar-zelle-steps li { margin: .65rem 0; color: #171717; }
-  .seminar-page .seminar-cashapp-warning {
-    background: #fff3f3; color: #671111; border-left: 4px solid #b91c1c;
-    padding: .9rem; line-height: 1.55;
-  }
-
-  .seminar-page .seminar-waiver-section { color: #171717; border: 2px solid #811717; border-radius: 10px; padding: 1rem; background: #fff9f9; margin: 1rem 0; }
-  .seminar-page .seminar-waiver-section h3, .seminar-page .seminar-waiver-section h4 { color: #161616; }
-  .seminar-page .seminar-waiver-copy { padding: .85rem; background: #fff; border: 1px solid #777; border-radius: 6px; }
-  .seminar-page .seminar-waiver-copy summary { color: #861010; font-weight: 800; cursor: pointer; }
-  .seminar-page .seminar-waiver-copy pre { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 330px; overflow-y: auto; margin: .8rem 0; font: 400 .9rem/1.6 'Open Sans', Arial, sans-serif; color: #171717; }
-  .seminar-page .seminar-waiver-person { min-width: 0; border: 1px solid #a8a8a8; border-radius: 8px; margin: 1.2rem 0; padding: 1rem; background: #fff; }
-  .seminar-page .seminar-waiver-person legend { padding: 0 .3rem; color: #181818; font-weight: 800; }
-  .seminar-page .seminar-waiver-label { color: #161616; display: flex; flex-direction: column; gap: .35rem; margin: .8rem 0; font-weight: 700; }
-  .seminar-page .seminar-waiver-label input, .seminar-page .seminar-waiver-label select { background: #fff; color: #171717; width: 100%; font: 400 1rem 'Open Sans', Arial, sans-serif; border: 2px solid #666; border-radius: 6px; padding: .7rem; }
-  .seminar-page .seminar-waiver-check { display: flex; align-items: start; gap: .65rem; font: 600 .95rem/1.5 'Open Sans', Arial, sans-serif; color: #171717; margin: 1.1rem 0; }
-  .seminar-page .seminar-waiver-check input { flex: 0 0 auto; width: 22px; height: 22px; margin-top: .15rem; }
-  .seminar-page .seminar-waiver-person .seminar-note { color: #424242; }
 </style>
