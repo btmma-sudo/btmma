@@ -2,6 +2,7 @@ import { sendTrialConfirmation } from "../../lib/trial-confirmation.js";
 import { sendOwnerSms } from "../../lib/owner-sms.js";
 import { PNO_SOURCE, reconcilePnoPayment } from "../../lib/parents-night-out.js";
 import { SEMINAR_SOURCE, reconcileSeminarPayment } from "../../lib/seminar-payment-reconciliation.js";
+import { FLAME_SOURCE, reconcileFlamePayment } from "../../lib/build-a-flame.js";
 // Isolated live payment webhook. Public live checkout is not enabled.
 // Only reconcile signed, paid, verified checkout sessions tied to LIVE_TRIAL_DB.
 export const prerender = false;
@@ -17,7 +18,7 @@ const constantTimeEqual = (a, b) => {
 };
 export async function POST({ request, locals }) {
   const env = locals?.runtime?.env ?? {};
-  if (!env.STRIPE_LIVE_WEBHOOK_SECRET || !env.LIVE_TRIAL_DB || !env.AIRTABLE_API_TOKEN || !env.AIRTABLE_BASE_ID || !/^((sk|rk)_live_)/.test(String(env.STRIPE_LIVE_SECRET_KEY))) return reply("Webhook not configured", 503);
+  if (!env.STRIPE_LIVE_WEBHOOK_SECRET || !env.LIVE_TRIAL_DB || !/^((sk|rk)_live_)/.test(String(env.STRIPE_LIVE_SECRET_KEY))) return reply("Webhook not configured", 503);
   const signature = request.headers.get("stripe-signature") || "";
   const timestamp = signature.split(",").find((part) => part.startsWith("t="))?.slice(2);
   const signatures = signature.split(",").filter((part) => part.startsWith("v1=")).map((part) => part.slice(3));
@@ -37,6 +38,25 @@ export async function POST({ request, locals }) {
   if (typeof event.id !== "string" || !event.id.startsWith("evt_")) return reply("Invalid event", 400);
   if (!["checkout.session.completed", "checkout.session.async_payment_succeeded", "checkout.session.async_payment_failed"].includes(event.type)) return reply("Ignored", 200);
   if (event.livemode !== true || !/^((sk|rk)_live_)/.test(String(env.STRIPE_LIVE_SECRET_KEY))) return reply("Live key required", 503);
+  // Build a Flame: reserve no more than 12 children per session. Stripe is re-read
+  // and its paid state reconciled against a dedicated D1 registration row.
+  if (event.data?.object?.metadata?.btmma_source === FLAME_SOURCE) {
+    const id = event.data?.object?.id;
+    if (typeof id !== "string" || !/^cs_live_[A-Za-z0-9_]{10,180}$/.test(id))
+      return reply("Invalid Build a Flame checkout reference", 400);
+    try {
+      const verified = await reconcileFlamePayment(env, id);
+      if (!verified.confirmed && event.type !== "checkout.session.async_payment_failed")
+        return reply("Workshop payment verification pending", 503);
+      await env.LIVE_TRIAL_DB.prepare(
+        "INSERT OR IGNORE INTO stripe_webhook_events (event_id,event_type) VALUES (?,?)"
+      ).bind(event.id, event.type).run();
+      return reply(verified.confirmed ? "Build a Flame payment and seats confirmed" : "Workshop payment not completed", 200);
+    } catch (error) {
+      console.error("Build a Flame Stripe reconciliation pending", String(error).slice(0, 160));
+      return reply("Workshop payment requires verification", 503);
+    }
+  }
   // Parents Night Out: isolated guardian registration in Airtable.
   // Stripe is independently re-fetched and verified before marking any payment Paid.
   if (event.data?.object?.metadata?.btmma_source === PNO_SOURCE) {
@@ -103,6 +123,8 @@ export async function POST({ request, locals }) {
       .bind(event.id,event.type).run();
     return reply(session.payment_status === "paid" ? "Birthday party deposit paid" : "Birthday payment not yet completed",200);
   }
+  // The trial fulfillment path still requires the separate Airtable CRM.
+  if (!env.AIRTABLE_API_TOKEN || !env.AIRTABLE_BASE_ID) return reply("Trial CRM is unavailable", 503);
   // Account-level webhook also receives Checkout from unrelated Stripe products.
   // Only this enrollment integration's signed Stripe events are ours.
   if (event.data?.object?.metadata?.btmma_source !== "btmma_29_trial_live_v1")
