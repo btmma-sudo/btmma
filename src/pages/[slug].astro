@@ -163,6 +163,20 @@ const curriculumBlocks = !hasVariants ? program.curriculum.copy.split("\n\n") : 
               <h2 id="womens-gallery-heading">Women’s Self-Defense in Action</h2>
             </div>
           </div>
+          <div class="womens-action-gallery" aria-label="Women’s Self-Defense action photographs">
+            {[
+              { file: "womens-defense-action-01.jpeg", alt: "Yellow-belt participant practicing a floor-based defensive movement" },
+              { file: "womens-defense-action-02.jpeg", alt: "Blue-belt participant practicing ground movement and balance" },
+              { file: "womens-defense-action-03.jpeg", alt: "Two women training controlled footwork and movement in the studio" },
+              { file: "womens-defense-action-04.jpeg", alt: "Yellow-belt participant practicing floor positioning while a blue-belt partner observes" },
+              { file: "womens-defense-action-05.jpeg", alt: "Blue-belt participant guiding a seated yellow-belt participant during training" },
+              { file: "womens-defense-action-06.jpeg", alt: "Instructor demonstrating a controlled movement as two students watch" }
+            ].map(({file, alt}) => (
+              <figure class="womens-action-photo">
+                <img src={`/images/womens-defense/${file}`} alt={alt} loading="lazy" decoding="async" />
+              </figure>
+            ))}
+          </div>
           <div class="womens-gallery-grid">
             <figure class="womens-gallery-tile">
               <img src="/images/womens-defense-professional-1.webp"
@@ -329,6 +343,33 @@ const curriculumBlocks = !hasVariants ? program.curriculum.copy.split("\n\n") : 
   }
   .womens-photo-gallery { padding-top: 1.2rem; padding-bottom: 1.5rem; }
   .womens-photo-gallery .section-heading { margin-bottom: 1.15rem; }
+  .womens-action-gallery {
+    columns: 3;
+    column-gap: clamp(.7rem, 1.7vw, 1.15rem);
+    margin: 0 0 1.25rem;
+  }
+  .womens-action-photo {
+    display: inline-block;
+    width: 100%;
+    overflow: hidden;
+    margin: 0 0 clamp(.7rem, 1.7vw, 1.15rem);
+    break-inside: avoid;
+    background: #161616;
+    border: 1px solid rgba(255,255,255,.22);
+    border-top: 3px solid #c7222c;
+    border-radius: 6px;
+  }
+  .womens-action-photo img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  @media (max-width: 900px) {
+    .womens-action-gallery { columns: 2; }
+  }
+  @media (max-width: 520px) {
+    .womens-action-gallery { columns: 1; }
+  }
   .womens-gallery-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(.6rem, 1.5vw, 1rem); }
   .womens-gallery-tile { margin: 0; overflow: hidden; background: #1a1a1a; border: 1px solid rgba(255,255,255,.22); border-top: 3px solid #c7222c; border-radius: 6px; }
   .womens-gallery-tile img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; object-position: center; }
