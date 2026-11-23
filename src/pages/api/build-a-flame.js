@@ -7,7 +7,9 @@ import {
 
 export const prerender = false;
 const secondsNow = () => Math.floor(Date.now() / 1000);
-const deadlinePassed = () => Date.now() >= FLAME_DEADLINE;
+// Stripe Checkout must stay open at least 30 minutes, so stop new purchases
+// in the final 30 minutes to guarantee payment can't finish after Nov 29.
+const deadlinePassed = () => Date.now() + 30 * 60 * 1000 >= FLAME_DEADLINE;
 
 async function turnstileVerified(env, request, token) {
   const body = new FormData();
@@ -100,7 +102,7 @@ export async function POST({ request, locals }) {
     "line_items[0][quantity]": String(row.qty),
     client_reference_id: id,
     customer_email: row.email,
-    expires_at: String(now + 35 * 60),
+    expires_at: String(Math.min(now + 35 * 60, Math.floor(FLAME_DEADLINE / 1000))),
     "metadata[btmma_source]": FLAME_SOURCE,
     "metadata[registration_id]": id,
     "metadata[event_date]": FLAME_DATE,
