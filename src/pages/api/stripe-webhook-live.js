@@ -38,8 +38,8 @@ export async function POST({ request, locals }) {
   if (typeof event.id !== "string" || !event.id.startsWith("evt_")) return reply("Invalid event", 400);
   if (!["checkout.session.completed", "checkout.session.async_payment_succeeded", "checkout.session.async_payment_failed"].includes(event.type)) return reply("Ignored", 200);
   if (event.livemode !== true || !/^((sk|rk)_live_)/.test(String(env.STRIPE_LIVE_SECRET_KEY))) return reply("Live key required", 503);
-  // Build a Flame: reserve no more than 12 children per session. Stripe is re-read
-  // and its paid state reconciled against a dedicated D1 registration row.
+  // Build a Flame: no overall attendee cap. Stripe is re-read and paid status
+  // reconciled against its dedicated D1 registration record.
   if (event.data?.object?.metadata?.btmma_source === FLAME_SOURCE) {
     const id = event.data?.object?.id;
     if (typeof id !== "string" || !/^cs_live_[A-Za-z0-9_]{10,180}$/.test(id))
@@ -123,12 +123,12 @@ export async function POST({ request, locals }) {
       .bind(event.id,event.type).run();
     return reply(session.payment_status === "paid" ? "Birthday party deposit paid" : "Birthday payment not yet completed",200);
   }
-  // The trial fulfillment path still requires the separate Airtable CRM.
-  if (!env.AIRTABLE_API_TOKEN || !env.AIRTABLE_BASE_ID) return reply("Trial CRM is unavailable", 503);
   // Account-level webhook also receives Checkout from unrelated Stripe products.
   // Only this enrollment integration's signed Stripe events are ours.
   if (event.data?.object?.metadata?.btmma_source !== "btmma_29_trial_live_v1")
     return reply("Ignored unrelated checkout", 200);
+  // The trial fulfillment path still requires the separate Airtable CRM.
+  if (!env.AIRTABLE_API_TOKEN || !env.AIRTABLE_BASE_ID) return reply("Trial CRM is unavailable", 503);
   const sessionId = event.data?.object?.id;
   if (typeof sessionId !== "string" || !sessionId.startsWith("cs_live_")) return reply("Invalid session", 400);
   // Only sessions reserved through the live student-specific checkout flow are eligible.
