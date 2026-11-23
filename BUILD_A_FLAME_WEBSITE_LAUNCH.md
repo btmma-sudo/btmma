@@ -6,7 +6,7 @@ This workshop registration belongs to the Burning Tree public website, not GoHig
 
 - Public registration address, after publication: https://burningtreemma.com/build-a-flame/
 - **Saturday, December 5, 2026 · 11:45 AM–12:45 PM Eastern Time**
-- **One 60-minute session**, with a hard limit of **12 paid or held child seats total**
+- **One 60-minute workshop**, with **no fixed overall attendance limit**. Each child is individually registered and charged.
 - **$50 per child**, with one parent or guardian included at no extra charge
 - **Register and pay by Sunday, November 29, 2026 (11:59 PM Eastern)**
 - Confidence, emotional regulation, safe responses to bullying, peer pressure, resilience and self-respect
@@ -19,7 +19,7 @@ The new workshop registration remains OFF in wrangler.jsonc:
 
 Unlike an earlier draft, **there are no missing or required session-time variables**. The one confirmed Saturday workshop time is set in `src/lib/build-a-flame.js`.
 
-Only after successfully checking the live production infrastructure, seat inventory and the secure checkout flow, flip the flag to `"true"`. Do not expose a chargeable checkout beforehand.
+Only after successfully checking the live production infrastructure, registration storage and the secure checkout flow, flip the flag to `"true"`. Do not expose a chargeable checkout beforehand.
 
 Existing Cloudflare production bindings/secrets required: LIVE_TRIAL_DB, TURNSTILE_SECRET_KEY, STRIPE_LIVE_SECRET_KEY and STRIPE_LIVE_WEBHOOK_SECRET. The existing signed webhook at `/api/stripe-webhook-live` reconciles workshop payments separately from trials, seminars and other products.
 
@@ -27,10 +27,10 @@ Existing Cloudflare production bindings/secrets required: LIVE_TRIAL_DB, TURNSTI
 
 1. Parent or guardian enters name, phone, email, and one to six children's names and ages. All registrations are for the single December 5 workshop.
 2. The server verifies Cloudflare Turnstile and validates the data.
-3. A dedicated Cloudflare D1 table atomically reserves the selected child seats, blocking the thirteenth child even under concurrent demand.
+3. A dedicated Cloudflare D1 table saves each guardian's registration and the registered children's names. No overall capacity or sold-out restriction is imposed.
 4. Stripe Checkout takes **$50 per child** (card and supported wallets), with no card details stored on this website.
 5. A Stripe-signed webhook and the success page independently verify payment directly with Stripe before recording status `paid`.
-6. Abandoned, expired and failed checkouts remain unconfirmed; pending sessions are verified before seats are released.
+6. Abandoned, expired and failed checkouts remain unconfirmed. Paid status is independently verified with Stripe.
 7. New online registration closes automatically at the November 29 deadline.
 
 ## Before activating payments
@@ -38,11 +38,11 @@ Existing Cloudflare production bindings/secrets required: LIVE_TRIAL_DB, TURNSTI
 - [ ] Review mobile and desktop appearance, branding, copy, and Saturday December 5, 11:45–12:45 EST wording.
 - [ ] Confirm Cloudflare Workers production deployment and live D1 and Turnstile secrets are healthy.
 - [ ] Verify Stripe checkout can open and a safe authorized payment test is correctly reconciled in D1.
-- [ ] Test sold-out and competing reservations: a thirteenth seat cannot be issued.
+- [ ] Test multiple unrelated registrations for the same session; there must be no overall attendance cap or sold-out state.
 - [ ] Confirm no interactions with $29 trial, private lessons, women's defense, student portal or seminar checkouts.
 - [ ] Confirm child-safety and participation waiver procedure before children attend.
 - [ ] Review and approve confirmation and reminder copy before enabling sending.
-- [ ] **Correct the earlier flyer: it presently advertises Sunday December 6 and two sessions.** Replace it with Saturday December 5, 11:45–12:45, one session; don't circulate the old QR until the production destination is verified.
+- [ ] **Correct the earlier flyer: it advertises Sunday December 6, two sessions and a 12-child cap.** Replace it with Saturday December 5, 11:45–12:45, one session and no fixed attendance limit; don't circulate the old QR until the production destination is verified.
 
 ## Owner-review notification drafts — NOT enabled
 
@@ -52,8 +52,8 @@ Thank you for registering for Build a Flame at Burning Tree Mixed Martial Arts. 
 
 **24-hour reminder:** Your Build a Flame workshop is tomorrow, Saturday, December 5, from 11:45 AM to 12:45 PM. Please arrive a few minutes early at Burning Tree Mixed Martial Arts. Questions? 410-218-0894.
 
-**Unpaid registration reminder:** The Build a Flame registration and payment deadline is November 29, and only 12 child seats are available. Payment must be verified to confirm a seat. For help, call or text 410-218-0894.
+**Unpaid registration reminder:** The Build a Flame registration and payment deadline is November 29. Payment must be verified to confirm each child's registration. For help, call or text 410-218-0894.
 
 No new automatic emails or text reminders are enabled by this PR. Parent and child details are stored server-side, not exposed in checkout session metadata.
 
-Review the dedicated `flame_workshop_registrations` table in Cloudflare D1. Only rows with `status='paid'` are confirmed.
+Review the dedicated `flame_workshop_registrations` table in Cloudflare D1. Only rows with `status='paid'` are confirmed. Parents can register up to six children in one transaction, but there is no limit on overall registrations.
