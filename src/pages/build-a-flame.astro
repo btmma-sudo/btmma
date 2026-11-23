@@ -3,7 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 <BaseLayout
   title="Build a Flame | Confidence & Emotional Strength Workshop | Burning Tree MMA"
-  description="Build confidence, emotional strength, resilience, and practical responses to bullying. Join the Build a Flame children's workshop December 6, 2026, in Owings Mills, Maryland. Two small-group sessions, $50 per child."
+  description="Build confidence, emotional strength, resilience, and practical responses to bullying. Join the Build a Flame children's workshop Saturday, December 5, 2026, 11:45 AM–12:45 PM in Owings Mills, Maryland. One small-group session, $50 per child."
   path="/build-a-flame/"
   image="/images/logo.png"
   keywords={["children confidence workshop Owings Mills", "anti bullying workshop Maryland", "emotional resilience for kids Baltimore County", "kids self respect and confidence", "Burning Tree MMA Build a Flame"]}
@@ -21,7 +21,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       </div>
       <aside class="flame-hero-aside">
         <img src="/images/logo.png" alt="Burning Tree Mixed Martial Arts logo" width="320" height="320" loading="eager" decoding="async" />
-        <div class="flame-date">SUNDAY <strong>DECEMBER 6, 2026</strong></div>
+        <div class="flame-date">SATURDAY <strong>DECEMBER 5, 2026<br />11:45 AM–12:45 PM ET</strong></div>
         <div class="flame-price"><strong>$50</strong><span>PER CHILD</span></div>
         <p>One parent or guardian included.</p>
       </aside>
@@ -38,16 +38,16 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       <article><span>04</span><h3>Recognize &amp; Respond to Bullying</h3><p>Learn to identify bullying behavior, seek support and respond safely.</p></article>
       <article><span>05</span><h3>Develop Resilience</h3><p>Strengthen decision-making and the ability to keep moving forward through challenges.</p></article>
     </div>
-    <p class="flame-hands-on">HANDS-ON, INTERACTIVE TRAINING • TWO SMALL-GROUP SESSIONS • 12 CHILDREN MAXIMUM PER SESSION</p>
+    <p class="flame-hands-on">HANDS-ON, INTERACTIVE TRAINING • ONE SMALL-GROUP SESSION • 12 CHILDREN MAXIMUM</p>
   </section>
 
   <section class="shell flame-registration" id="registration" aria-labelledby="flame-registration-title">
     <div class="flame-register-intro">
       <p class="flame-kicker">SAVE YOUR CHILD'S SEAT</p>
       <h2 id="flame-registration-title">Register &amp; Pay</h2>
-      <p>Sunday, December 6, 2026. Each session lasts 60 minutes and is limited to 12 children. One parent or guardian may accompany each child at no extra charge.</p>
+      <p>Saturday, December 5, 2026, from 11:45 AM to 12:45 PM Eastern. This 60-minute workshop is limited to 12 children. One parent or guardian may accompany each child at no extra charge.</p>
       <div class="flame-deadline">REGISTRATION &amp; PAYMENT DEADLINE: NOVEMBER 29, 2026</div>
-      <p class="flame-registration-note">Your child's seat is confirmed only after secure payment succeeds. Please review the session time before paying.</p>
+      <p class="flame-registration-note">Your child's seat is confirmed only after secure payment succeeds. Please review the workshop date and time before paying.</p>
     </div>
     <div class="flame-register-card">
       <p id="flame-availability" class="flame-status" role="status" aria-live="polite">Checking registration availability…</p>
@@ -58,7 +58,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </div>
         <div class="flame-field"><label for="flame-email">Parent / guardian email</label><input id="flame-email" type="email" autocomplete="email" required maxlength="254" /></div>
         <div class="flame-fields-row">
-          <div class="flame-field"><label for="flame-session">Choose a session</label><select id="flame-session" required><option value="">Select a session</option></select></div>
+          <div class="flame-field"><label for="flame-session">Workshop date &amp; time</label><select id="flame-session" required><option value="one">Saturday, Dec 5 · 11:45 AM–12:45 PM ET</option></select></div>
           <div class="flame-field"><label for="flame-count">Number of children</label>
             <select id="flame-count" required>
               <option value="1">1 child</option><option value="2">2 children</option><option value="3">3 children</option>
@@ -143,7 +143,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     const slot = availability.sessions.find(s => s.id === sessions.value);
     const tooMany = slot && Number(count.value) > slot.remaining;
     submit.disabled = Boolean(tooMany);
-    error.textContent = tooMany ? "This session has fewer than " + count.value + " seats remaining. Choose fewer children or another session." : "";
+    error.textContent = tooMany ? "This workshop has fewer than " + count.value + " seats remaining. Choose fewer children or call the studio." : "";
     submit.textContent = "CONTINUE TO SECURE " + money(Number(count.value)) + " PAYMENT";
   }
   async function loadAvailability() {
@@ -151,14 +151,15 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       const r = await fetch("/api/build-a-flame", { cache: "no-store" });
       const data = await r.json();
       availability = data;
-      info.textContent = data.message || "Choose your session and register securely. Seats are limited.";
+      info.textContent = data.message || "Register for Saturday, December 5, 11:45 AM–12:45 PM Eastern. Only 12 child seats are available.";
       if (!data.ready) { unavailable.hidden = false; return; }
-      sessions.replaceChildren(new Option("Choose a session", ""));
+      sessions.replaceChildren();
       for (const s of data.sessions) {
         const opt = new Option(s.label + " — " + s.remaining + " seats remaining", s.id);
         opt.disabled = s.remaining < 1;
         sessions.add(opt);
       }
+      if (sessions.options.length === 1 && !sessions.options[0].disabled) sessions.value = sessions.options[0].value;
       form.hidden = false; unavailable.hidden = true;
       childFields();
     } catch {
@@ -218,7 +219,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         const paid = await r.json();
         if (paid.confirmed) {
           $("flame-confirm-title").textContent = "Your workshop registration is confirmed!";
-          $("flame-confirm-detail").textContent = "Stripe payment verified. " + paid.quantity + " child seat(s) confirmed for " + (paid.session === "one" ? "Session 1" : "Session 2") + " on Sunday, December 6. Keep your payment receipt and arrive shortly before your scheduled session.";
+          $("flame-confirm-detail").textContent = "Stripe payment verified. " + paid.quantity + " child seat(s) confirmed for Saturday, December 5, 2026, from 11:45 AM to 12:45 PM Eastern. Keep your payment receipt and arrive shortly before the workshop.";
         } else {
           $("flame-confirm-title").textContent = "Payment confirmation pending";
           $("flame-confirm-detail").textContent = paid.error || "Payment has not yet been verified. Please keep your Stripe receipt; do not pay again.";
