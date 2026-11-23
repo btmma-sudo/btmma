@@ -37,7 +37,7 @@ export async function GET({ request, locals }) {
   const times = flameTimes(env);
   const ready = checkoutReady(env) && !deadlinePassed();
   const sessions = FLAME_SESSIONS.map(id => ({
-    id, label: times?.[id]?.label || (id === "one" ? "Session 1 — time to be confirmed" : "Session 2 — time to be confirmed"),
+    id, label: times?.[id]?.label || "Saturday, December 5 • 11:45 AM–12:45 PM ET",
     remaining: null
   }));
   if (env.LIVE_TRIAL_DB) {
@@ -54,7 +54,7 @@ export async function GET({ request, locals }) {
   return json({ ready, closed: deadlinePassed(), eventDate: FLAME_DATE,
     pricePerChildCents: FLAME_PRICE_CENTS, maxPerSession: FLAME_CAPACITY,
     sessions, message: deadlinePassed() ? "Online registration closed on November 29." :
-      ready ? "" : "Online registration is being prepared. Session times will be announced before payment opens." });
+      ready ? "" : "Online registration is being prepared. Please contact the studio before sending payment." });
 }
 export async function POST({ request, locals }) {
   const env = locals?.runtime?.env ?? {};
@@ -92,7 +92,7 @@ export async function POST({ request, locals }) {
   let held;
   try { held = await holdFlameSeats(env.LIVE_TRIAL_DB, row, id, now); }
   catch { return json({ error: "Could not reserve seats. No payment was started." }, 503); }
-  if (!held) return json({ error: "This session does not have enough open seats for the number of children selected. Try the other session." }, 409);
+  if (!held) return json({ error: "This workshop has fewer available seats than requested. Choose fewer children or call 410-218-0894." }, 409);
 
   const price = row.qty * FLAME_PRICE_CENTS;
   const params = new URLSearchParams({
