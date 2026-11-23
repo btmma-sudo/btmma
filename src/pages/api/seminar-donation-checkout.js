@@ -6,8 +6,7 @@ const reply = (data, status = 200) => new Response(JSON.stringify(data), {
   status, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" }
 });
 const purposes = {
-  general: "Support Burning Tree Mixed Martial Arts",
-  nerve: "Support Striking a Nerve seminar"
+  general: "Support Burning Tree Mixed Martial Arts"
 };
 const MIN_CENTS = 500;
 const MAX_CENTS = 500000;
