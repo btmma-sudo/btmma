@@ -1,7 +1,7 @@
 import {
-  FLAME_SOURCE, FLAME_DATE, FLAME_CAPACITY, FLAME_PRICE_CENTS, FLAME_DEADLINE,
+  FLAME_SOURCE, FLAME_DATE, FLAME_PRICE_CENTS, FLAME_DEADLINE,
   FLAME_SESSIONS, flameTimes, checkoutReady, json, normalizeSubmission,
-  ensureFlameSchema, seatsRemaining, holdFlameSeats, sweepFlameHolds,
+  ensureFlameSchema, createFlameRegistration,
   reconcileFlamePayment
 } from "../../lib/build-a-flame.js";
 
@@ -37,14 +37,11 @@ export async function GET({ request, locals }) {
   const times = flameTimes(env);
   const ready = checkoutReady(env) && !deadlinePassed();
   const sessions = FLAME_SESSIONS.map(id => ({
-    id, label: times?.[id]?.label || "Saturday, December 5 • 11:45 AM–12:45 PM ET",
-    remaining: null
+    id, label: times?.[id]?.label || "Saturday, December 5 • 11:45 AM–12:45 PM ET"
   }));
   if (env.LIVE_TRIAL_DB) {
     try {
       await ensureFlameSchema(env.LIVE_TRIAL_DB);
-      if (ready) await sweepFlameHolds(env);
-      for (const s of sessions) s.remaining = await seatsRemaining(env.LIVE_TRIAL_DB, s.id);
     } catch (error) {
       console.error("Flame inventory unavailable", String(error).slice(0, 160));
       return json({ ready: false, closed: true, sessions,
@@ -52,7 +49,7 @@ export async function GET({ request, locals }) {
     }
   }
   return json({ ready, closed: deadlinePassed(), eventDate: FLAME_DATE,
-    pricePerChildCents: FLAME_PRICE_CENTS, maxPerSession: FLAME_CAPACITY,
+    pricePerChildCents: FLAME_PRICE_CENTS,
     sessions, message: deadlinePassed() ? "Online registration closed on November 29." :
       ready ? "" : "Online registration is being prepared. Please contact the studio before sending payment." });
 }
@@ -82,17 +79,16 @@ export async function POST({ request, locals }) {
 
   try {
     await ensureFlameSchema(env.LIVE_TRIAL_DB);
-    await sweepFlameHolds(env);
   } catch (error) {
     console.error("Flame reservation setup error", String(error).slice(0, 140));
-    return json({ error: "Could not verify available seats. No payment was started. Please call 410-218-0894." }, 503);
+    return json({ error: "Registration is temporarily unavailable. No payment was started. Please call 410-218-0894." }, 503);
   }
   const id = crypto.randomUUID();
   const now = secondsNow();
-  let held;
-  try { held = await holdFlameSeats(env.LIVE_TRIAL_DB, row, id, now); }
-  catch { return json({ error: "Could not reserve seats. No payment was started." }, 503); }
-  if (!held) return json({ error: "This workshop has fewer available seats than requested. Choose fewer children or call 410-218-0894." }, 409);
+  let savedRegistration;
+  try { savedRegistration = await createFlameRegistration(env.LIVE_TRIAL_DB, row, id, now); }
+  catch { return json({ error: "Could not save registration. No payment was started." }, 503); }
+  if (!savedRegistration) return json({ error: "Could not save registration. No payment was started." }, 503);
 
   const price = row.qty * FLAME_PRICE_CENTS;
   const params = new URLSearchParams({
@@ -151,5 +147,5 @@ export async function POST({ request, locals }) {
   ).bind(checkout.id, id).run();
   if (saved.meta?.changes !== 1)
     return json({ error: "Your reservation requires verification. Please contact the studio before trying again." }, 503);
-  return json({ url: checkout.url, reserved: true, quantity: row.qty, session: row.session });
+  return json({ url: checkout.url, registrationSaved: true, quantity: row.qty, session: row.session });
 }
