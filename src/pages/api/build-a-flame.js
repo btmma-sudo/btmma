@@ -104,7 +104,7 @@ export async function POST({ request, locals }) {
     "line_items[0][quantity]": String(row.qty),
     client_reference_id: id,
     customer_email: row.email,
-    expires_at: String(now + 30 * 60),
+    expires_at: String(now + 35 * 60),
     "metadata[btmma_source]": FLAME_SOURCE,
     "metadata[registration_id]": id,
     "metadata[event_date]": FLAME_DATE,
