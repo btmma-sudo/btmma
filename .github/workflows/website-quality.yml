@@ -25,6 +25,8 @@ jobs:
         run: npm ci
       - name: Test Build a Flame workshop checkout without charging cards
         run: node --test tests/build-a-flame-checkout.test.mjs
+      - name: Verify Striking a Nerve registration and funnel are retired
+        run: node --test tests/striking-a-nerve-retirement.test.mjs
       - name: Test seminar payment reconciliation without charging cards
         run: node --test scripts/test-seminar-reconciliation.mjs
       - name: Test sandbox-only payments for both seminars without charging cards
