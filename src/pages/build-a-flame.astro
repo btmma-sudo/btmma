@@ -1,0 +1,296 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+<BaseLayout
+  title="Build a Flame | Confidence & Emotional Strength Workshop | Burning Tree MMA"
+  description="Build confidence, emotional strength, resilience, and practical responses to bullying. Join the Build a Flame children's workshop December 6, 2026, in Owings Mills, Maryland. Two small-group sessions, $50 per child."
+  path="/build-a-flame/"
+  image="/images/logo.png"
+  keywords={["children confidence workshop Owings Mills", "anti bullying workshop Maryland", "emotional resilience for kids Baltimore County", "kids self respect and confidence", "Burning Tree MMA Build a Flame"]}
+>
+<main class="flame-workshop">
+  <section class="flame-hero" aria-labelledby="flame-title">
+    <div class="shell flame-hero-layout">
+      <div class="flame-message">
+        <p class="flame-kicker">BURNING TREE MIXED MARTIAL ARTS • KEEPERS OF THE FLAME</p>
+        <h1 id="flame-title">STRONG CHILDREN <span>AREN'T BORN.</span><br /><em>THEY'RE BUILT.</em></h1>
+        <p class="flame-brand">BUILD A <strong>FLAME</strong></p>
+        <h2>Confidence &amp; Emotional Strength Workshop</h2>
+        <p class="flame-intro">Confidence, self-respect and emotional resilience aren't learned overnight. They're built through the choices we make, the challenges we face, and the support we receive. This hands-on workshop helps children begin building that foundation.</p>
+        <a class="flame-button" href="#registration">REGISTER YOUR CHILD — $50</a>
+      </div>
+      <aside class="flame-hero-aside">
+        <img src="/images/logo.png" alt="Burning Tree Mixed Martial Arts logo" width="320" height="320" loading="eager" decoding="async" />
+        <div class="flame-date">SUNDAY <strong>DECEMBER 6, 2026</strong></div>
+        <div class="flame-price"><strong>$50</strong><span>PER CHILD</span></div>
+        <p>One parent or guardian included.</p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="shell flame-benefits" aria-labelledby="flame-benefits-title">
+    <p class="flame-kicker">REAL TOOLS FOR EVERYDAY CHALLENGES</p>
+    <h2 id="flame-benefits-title">What children will practice</h2>
+    <div class="flame-benefits-grid">
+      <article><span>01</span><h3>Build Confidence &amp; Self-Respect</h3><p>Develop a stronger sense of personal worth and the courage to speak up.</p></article>
+      <article><span>02</span><h3>Manage Strong Emotions</h3><p>Practice responding to frustration, fear and stress with greater control.</p></article>
+      <article><span>03</span><h3>Handle Peer Pressure</h3><p>Recognize pressure and rehearse thoughtful choices instead of simply following others.</p></article>
+      <article><span>04</span><h3>Recognize &amp; Respond to Bullying</h3><p>Learn to identify bullying behavior, seek support and respond safely.</p></article>
+      <article><span>05</span><h3>Develop Resilience</h3><p>Strengthen decision-making and the ability to keep moving forward through challenges.</p></article>
+    </div>
+    <p class="flame-hands-on">HANDS-ON, INTERACTIVE TRAINING • TWO SMALL-GROUP SESSIONS • 12 CHILDREN MAXIMUM PER SESSION</p>
+  </section>
+
+  <section class="shell flame-registration" id="registration" aria-labelledby="flame-registration-title">
+    <div class="flame-register-intro">
+      <p class="flame-kicker">SAVE YOUR CHILD'S SEAT</p>
+      <h2 id="flame-registration-title">Register &amp; Pay</h2>
+      <p>Sunday, December 6, 2026. Each session lasts 60 minutes and is limited to 12 children. One parent or guardian may accompany each child at no extra charge.</p>
+      <div class="flame-deadline">REGISTRATION &amp; PAYMENT DEADLINE: NOVEMBER 29, 2026</div>
+      <p class="flame-registration-note">Your child's seat is confirmed only after secure payment succeeds. Please review the session time before paying.</p>
+    </div>
+    <div class="flame-register-card">
+      <p id="flame-availability" class="flame-status" role="status" aria-live="polite">Checking registration availability…</p>
+      <form id="flame-form" hidden>
+        <div class="flame-fields-row">
+          <div class="flame-field"><label for="flame-parent">Parent / guardian full name</label><input id="flame-parent" type="text" autocomplete="name" required maxlength="120" /></div>
+          <div class="flame-field"><label for="flame-phone">Mobile phone number</label><input id="flame-phone" type="tel" autocomplete="tel" required maxlength="30" /></div>
+        </div>
+        <div class="flame-field"><label for="flame-email">Parent / guardian email</label><input id="flame-email" type="email" autocomplete="email" required maxlength="254" /></div>
+        <div class="flame-fields-row">
+          <div class="flame-field"><label for="flame-session">Choose a session</label><select id="flame-session" required><option value="">Select a session</option></select></div>
+          <div class="flame-field"><label for="flame-count">Number of children</label>
+            <select id="flame-count" required>
+              <option value="1">1 child</option><option value="2">2 children</option><option value="3">3 children</option>
+              <option value="4">4 children</option><option value="5">5 children</option><option value="6">6 children</option>
+            </select>
+          </div>
+        </div>
+        <div id="flame-children" class="flame-child-fields"></div>
+        <label class="flame-consent"><input id="flame-consent" type="checkbox" required /><span>I am a parent or legal guardian of the children listed and agree to the <a href="/terms" target="_blank" rel="noopener noreferrer">Terms of Service</a> and <a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>. I understand that participation may involve supervised physical activities and that a separate participation waiver may be required before the workshop.</span></label>
+        <div class="flame-turnstile"><p>Security check</p><div class="cf-turnstile" data-sitekey="0x4AAAAAAD6Ievu-t0Ll1euh" data-size="compact"></div></div>
+        <div class="flame-total"><span>Total registration</span><strong id="flame-total">$50.00</strong></div>
+        <p id="flame-form-error" class="flame-error" role="alert" aria-live="assertive"></p>
+        <button class="flame-button flame-pay" type="submit" id="flame-submit">CONTINUE TO SECURE $50 PAYMENT</button>
+        <p class="flame-small">You will be redirected to Stripe for secure card or supported wallet payment. This website does not collect or store credit card numbers. No payment is taken until you finish Stripe checkout.</p>
+      </form>
+      <div id="flame-unavailable" class="flame-unavailable" hidden>
+        <p>For registration questions, contact Burning Tree directly. Please do not send payment separately unless the studio confirms a seat.</p>
+        <a href="tel:+14102180894">CALL OR TEXT 410-218-0894</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="shell flame-confirmation" id="confirmation" hidden tabindex="-1" aria-live="polite">
+    <div class="flame-confirmation-card">
+      <h2 id="flame-confirm-title">Verifying your payment…</h2>
+      <p id="flame-confirm-detail">We are checking payment directly with Stripe before confirming the reservation.</p>
+      <p>Keep your Stripe receipt. If verification is delayed, call or text <a href="tel:+14102180894">410-218-0894</a> before submitting another payment.</p>
+    </div>
+  </section>
+
+  <section class="shell flame-location">
+    <div><p class="flame-kicker">WHERE WE GROW STRONGER</p><h2>Burning Tree Mixed Martial Arts</h2><p>10210 S. Dolfield Rd., Suite C<br />Owings Mills, MD 21117</p><p>Questions? <a href="tel:+14102180894">410-218-0894</a></p></div>
+    <p class="flame-motto">One Tree.<br /><strong>One Family.</strong></p>
+  </section>
+</main>
+<script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script is:inline>
+(() => {
+  const $ = id => document.getElementById(id);
+  const form = $("flame-form");
+  const info = $("flame-availability");
+  const unavailable = $("flame-unavailable");
+  const sessions = $("flame-session");
+  const count = $("flame-count");
+  const children = $("flame-children");
+  const error = $("flame-form-error");
+  const submit = $("flame-submit");
+  const money = n => "$" + (n * 50).toFixed(2);
+  let availability = null;
+  function childFields() {
+    const old = Array.from(children.querySelectorAll(".flame-child")).map(div => ({
+      name: div.querySelector(".flame-child-name")?.value || "",
+      age: div.querySelector(".flame-child-age")?.value || ""
+    }));
+    children.replaceChildren();
+    const qty = Number(count.value);
+    for (let i = 0; i < qty; i++) {
+      const box = document.createElement("div");
+      box.className = "flame-child";
+      const title = document.createElement("h3");
+      title.textContent = "Child " + (i + 1);
+      const nameLabel = document.createElement("label");
+      nameLabel.textContent = "Child's full name";
+      const name = document.createElement("input");
+      name.className = "flame-child-name"; name.type = "text"; name.required = true; name.maxLength = 100;
+      name.autocomplete = "off"; name.value = old[i]?.name || "";
+      nameLabel.appendChild(name);
+      const ageLabel = document.createElement("label");
+      ageLabel.textContent = "Child's age";
+      const age = document.createElement("input");
+      age.className = "flame-child-age"; age.type = "number"; age.min = "1"; age.max = "17";
+      age.step = "1"; age.required = true; age.value = old[i]?.age || "";
+      ageLabel.appendChild(age);
+      box.append(title, nameLabel, ageLabel);
+      children.append(box);
+    }
+    $("flame-total").textContent = money(qty);
+    updateCapacity();
+  }
+  function updateCapacity() {
+    if (!availability?.ready) return;
+    const slot = availability.sessions.find(s => s.id === sessions.value);
+    const tooMany = slot && Number(count.value) > slot.remaining;
+    submit.disabled = Boolean(tooMany);
+    error.textContent = tooMany ? "This session has fewer than " + count.value + " seats remaining. Choose fewer children or another session." : "";
+    submit.textContent = "CONTINUE TO SECURE " + money(Number(count.value)) + " PAYMENT";
+  }
+  async function loadAvailability() {
+    try {
+      const r = await fetch("/api/build-a-flame", { cache: "no-store" });
+      const data = await r.json();
+      availability = data;
+      info.textContent = data.message || "Choose your session and register securely. Seats are limited.";
+      if (!data.ready) { unavailable.hidden = false; return; }
+      sessions.replaceChildren(new Option("Choose a session", ""));
+      for (const s of data.sessions) {
+        const opt = new Option(s.label + " — " + s.remaining + " seats remaining", s.id);
+        opt.disabled = s.remaining < 1;
+        sessions.add(opt);
+      }
+      form.hidden = false; unavailable.hidden = true;
+      childFields();
+    } catch {
+      info.textContent = "Online registration could not be loaded.";
+      unavailable.hidden = false;
+    }
+  }
+  count.addEventListener("change", childFields);
+  sessions.addEventListener("change", updateCapacity);
+  form.addEventListener("submit", async ev => {
+    ev.preventDefault();
+    error.textContent = "";
+    if (!form.reportValidity()) return;
+    const token = window.turnstile?.getResponse?.();
+    if (!token) { error.textContent = "Please complete the security check."; return; }
+    const kids = Array.from(children.querySelectorAll(".flame-child")).map(box => ({
+      name: box.querySelector(".flame-child-name").value.trim(),
+      age: Number(box.querySelector(".flame-child-age").value)
+    }));
+    submit.disabled = true; submit.textContent = "RESERVING SEATS…";
+    try {
+      const r = await fetch("/api/build-a-flame", {
+        method: "POST", headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          guardianName: $("flame-parent").value.trim(),
+          phone: $("flame-phone").value.trim(),
+          email: $("flame-email").value.trim(),
+          session: sessions.value,
+          children: kids,
+          guardianConsent: $("flame-consent").checked,
+          turnstileToken: token
+        })
+      });
+      const result = await r.json();
+      if (!r.ok || !/^https:\/\/checkout\.stripe\.com\//.test(result.url || "")) {
+        error.textContent = result.error || "Checkout is unavailable. Please call the studio before trying again.";
+        window.turnstile?.reset?.();
+        await loadAvailability();
+        return;
+      }
+      window.location.assign(result.url);
+    } catch {
+      error.textContent = "Could not reach secure checkout. Please call the studio before trying again.";
+      window.turnstile?.reset?.();
+    } finally {
+      submit.disabled = false;
+      updateCapacity();
+    }
+  });
+  const query = new URLSearchParams(location.search);
+  if (query.get("checkout") === "success" && query.get("session_id")) {
+    const confirmation = $("confirmation");
+    confirmation.hidden = false;
+    (async () => {
+      try {
+        const r = await fetch("/api/build-a-flame?session_id=" + encodeURIComponent(query.get("session_id")), { cache: "no-store" });
+        const paid = await r.json();
+        if (paid.confirmed) {
+          $("flame-confirm-title").textContent = "Your workshop registration is confirmed!";
+          $("flame-confirm-detail").textContent = "Stripe payment verified. " + paid.quantity + " child seat(s) confirmed for " + (paid.session === "one" ? "Session 1" : "Session 2") + " on Sunday, December 6. Keep your payment receipt and arrive shortly before your scheduled session.";
+        } else {
+          $("flame-confirm-title").textContent = "Payment confirmation pending";
+          $("flame-confirm-detail").textContent = paid.error || "Payment has not yet been verified. Please keep your Stripe receipt; do not pay again.";
+        }
+      } catch {
+        $("flame-confirm-title").textContent = "Payment verification unavailable";
+        $("flame-confirm-detail").textContent = "Please keep your Stripe receipt and contact the studio before making another payment.";
+      }
+      confirmation.focus();
+    })();
+  } else if (query.get("checkout") === "cancelled") {
+    info.textContent = "Checkout was cancelled. A seat is not confirmed until payment succeeds.";
+  }
+  loadAvailability();
+})();
+</script>
+<style>
+  .flame-workshop{background:#100d0c;color:#f9f6f0;padding-bottom:2rem}
+  .flame-workshop h1,.flame-workshop h2,.flame-workshop h3{color:#fff;-webkit-text-stroke:0}
+  .flame-hero{position:relative;overflow:hidden;padding:clamp(2.5rem,5vw,5rem) 0;background:radial-gradient(ellipse at 80% 15%,rgba(245,96,15,.47),transparent 42%),radial-gradient(ellipse at 25% 90%,rgba(173,9,9,.48),transparent 50%),linear-gradient(135deg,#15100e,#2e0b0c 58%,#0b0b0b);border-bottom:4px solid #db4019}
+  .flame-hero::before{content:"";pointer-events:none;position:absolute;inset:0;opacity:.16;background:repeating-linear-gradient(120deg,transparent 0 19px,rgba(255,167,26,.2) 20px,transparent 21px 50px)}
+  .flame-hero-layout{position:relative;display:grid;grid-template-columns:1.4fr .6fr;gap:2rem;align-items:center}
+  .flame-kicker{font-size:.76rem;font-weight:900;letter-spacing:.11em;color:#ffc88e;text-transform:uppercase}
+  .flame-message h1{font-size:clamp(2rem,4.4vw,4.65rem);font-weight:1000;line-height:1.07;letter-spacing:-.025em;margin:.8rem 0 1rem}
+  .flame-message h1 span{color:#ffe3ca}.flame-message h1 em{font-style:normal;background:linear-gradient(#fff1a0,#ffb228,#f2450e);background-clip:text;-webkit-background-clip:text;color:transparent}
+  .flame-brand{font-size:clamp(2.7rem,5vw,5.2rem);line-height:1;font-weight:900;letter-spacing:-.04em;margin:.65rem 0;color:#f2ede6}
+  .flame-brand strong{background:linear-gradient(#ffdb4c,#fa5a17,#aa0e14);background-clip:text;-webkit-background-clip:text;color:transparent}
+  .flame-message h2{font-size:clamp(1.2rem,2vw,1.65rem);line-height:1.3;margin:.7rem 0 1rem}
+  .flame-intro{line-height:1.7;max-width:50rem;color:#f2ddcc;font-size:1rem}
+  .flame-button{display:inline-block;background:linear-gradient(180deg,#ffbe49,#eb7220 55%,#c12912);color:#160808!important;text-decoration:none!important;font-size:1rem;font-weight:950;text-align:center;border:2px solid #ffe097;border-radius:7px;padding:1rem 1.45rem;margin-top:1.1rem;box-shadow:0 8px 22px rgba(180,44,9,.24);cursor:pointer}
+  .flame-button:hover,.flame-button:focus-visible{filter:brightness(1.12)}
+  .flame-button:disabled{opacity:.55;cursor:not-allowed}
+  .flame-hero-aside{text-align:center;border:2px solid rgba(255,191,95,.64);border-radius:10px;background:rgba(0,0,0,.38);padding:1.7rem}
+  .flame-hero-aside img{width:min(100%,180px);height:auto;object-fit:contain;filter:drop-shadow(0 0 12px rgba(255,151,28,.45))}
+  .flame-date{font-size:.95rem;margin:1rem 0;line-height:1.6}.flame-date strong{display:block;font-size:1.25rem;color:#ffcc63}
+  .flame-price{display:flex;flex-direction:column;color:#ffd65f}.flame-price strong{font-weight:950;font-size:clamp(3rem,6vw,4.8rem);line-height:1}.flame-price span{font-weight:800}
+  .flame-hero-aside p{color:#e2d4c9;font-size:.87rem}
+  .flame-benefits{padding-top:2.4rem;padding-bottom:2.4rem}
+  .flame-benefits h2,.flame-register-intro h2{font-size:clamp(1.6rem,3vw,2.5rem);margin:.5rem 0 1.1rem}
+  .flame-benefits-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.75rem}
+  .flame-benefits-grid article{background:linear-gradient(165deg,#391514,#181313);border:1px solid #773622;border-top:3px solid #ff9033;border-radius:7px;padding:1.2rem}
+  .flame-benefits-grid span{font-size:.8rem;font-weight:900;color:#ffd17d}
+  .flame-benefits-grid h3{font-size:1.04rem;line-height:1.35;margin:.5rem 0;color:#ffe8cc}
+  .flame-benefits-grid p{font-size:.92rem;line-height:1.5;color:#e7d8cd}
+  .flame-hands-on{font-weight:850;color:#ffca72;text-align:center;font-size:.9rem;margin:1.5rem 0 0}
+  .flame-registration{display:grid;grid-template-columns:.82fr 1.18fr;align-items:start;gap:clamp(1rem,3vw,3rem);padding-top:2.8rem;padding-bottom:2.8rem;border-top:1px solid #663525}
+  .flame-register-intro p:not(.flame-kicker){line-height:1.65;color:#eee1d9}
+  .flame-deadline{font-weight:950;color:#ffe095;background:#4c1713;border-left:4px solid #ffa232;padding:1rem;margin:1rem 0}
+  .flame-register-card{background:#1c1a1a;border:1px solid #86563b;border-top:4px solid #e9772d;border-radius:9px;padding:clamp(1rem,2.2vw,2rem)}
+  .flame-status{font-weight:700;color:#f9cb86;margin:0 0 1rem;line-height:1.5}
+  .flame-fields-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem}
+  .flame-field{margin:.55rem 0 1rem}
+  .flame-field label,.flame-child label{display:block;margin-bottom:.3rem;font-weight:750;font-size:.91rem;color:#ffefdc}
+  .flame-field input,.flame-field select,.flame-child input{width:100%;min-width:0;display:block;background:#2d2a29;color:#fff;border:1px solid #9d8674;border-radius:4px;padding:.8rem;font:inherit}
+  .flame-child-fields{display:grid;gap:1rem}.flame-child{display:grid;grid-template-columns:2fr 1fr;gap:.8rem;border:1px solid #5d4a3f;background:#24201d;padding:1rem;border-radius:6px}
+  .flame-child h3{grid-column:1/-1;font-size:1rem;color:#ffc879;margin:0}.flame-child label{margin:0}
+  .flame-consent{display:flex;gap:.7rem;align-items:start;margin:1.25rem 0;font-size:.87rem;line-height:1.5;color:#f2e8dc}
+  .flame-consent input{flex:none;width:20px;height:20px;margin-top:.15rem}
+  .flame-workshop a:not(.flame-button){color:#ffd293}
+  .flame-turnstile p{font-size:.82rem;color:#ebded3}
+  .flame-total{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:1.15rem 0;border-top:1px solid #695343;margin-top:1rem}
+  .flame-total strong{font-size:2rem;color:#ffe085}
+  .flame-pay{width:100%;margin-top:.3rem}.flame-error{font-weight:750;color:#ffb1a7}
+  .flame-small{font-size:.8rem;line-height:1.6;color:#d7cbc5}
+  .flame-unavailable{border-top:1px solid #604030;padding-top:.6rem}.flame-unavailable a{font-weight:800}
+  .flame-confirmation{padding:2rem 0}.flame-confirmation-card{border:2px solid #ffb94d;border-radius:8px;background:#29201a;padding:1.5rem}
+  .flame-confirmation-card h2{font-size:1.6rem}.flame-confirmation-card p{line-height:1.6}
+  .flame-location{display:flex;justify-content:space-between;gap:1.5rem;padding-top:2rem;border-top:1px solid #603223}
+  .flame-location h2{font-size:1.5rem}.flame-location p{line-height:1.6}
+  .flame-motto{font-style:italic;font-size:clamp(1.7rem,3vw,2.4rem);font-weight:900;text-align:right;color:#f9c656}
+  @media(max-width:1020px){.flame-benefits-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  @media(max-width:760px){.flame-hero-layout,.flame-registration{grid-template-columns:1fr}.flame-hero-aside{max-width:400px;margin:auto;width:100%}.flame-benefits-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.flame-message h1{font-size:clamp(2rem,9vw,3.4rem)}}
+  @media(max-width:480px){.flame-benefits-grid,.flame-fields-row{grid-template-columns:1fr}.flame-child{grid-template-columns:1fr}.flame-location{flex-direction:column}.flame-motto{text-align:left}}
+</style>
+</BaseLayout>
