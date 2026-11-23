@@ -88,11 +88,10 @@ export async function sweepFlameHolds(env) {
   if (!stale.results?.length) return;
   for (const row of stale.results) {
     if (!row.stripe_session_id) {
-      if (row.status === "held") await db.prepare(
-        "UPDATE flame_workshop_registrations SET status='released',updated_at=CURRENT_TIMESTAMP WHERE id=? AND status='held'"
-      ).bind(row.id).run();
-      else throw Error("Unverified checkout hold requires staff review");
-      continue;
+      // A checkout may have been created before a network/database failure.
+      // Without the Stripe reference we cannot prove there was no payment.
+      // Keep checkout closed for owner reconciliation instead of overselling.
+      throw Error("Unverified workshop checkout hold requires staff review");
     }
     const session = await loadStripe(env, row.stripe_session_id);
     if (session.payment_status === "paid") {
