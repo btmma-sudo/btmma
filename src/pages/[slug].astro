@@ -192,6 +192,47 @@ const curriculumBlocks = !hasVariants ? program.curriculum.copy.split("\n\n") : 
         </section>
       )}
 
+      {isWomensDefense && (
+        <section class="shell section-divider womens-instructor-gallery" aria-labelledby="womens-instructor-gallery-heading">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">An Inside Look at Our Training</p>
+              <h2 id="womens-instructor-gallery-heading">Instructor Demonstrations</h2>
+              <p class="womens-instructor-gallery-intro">
+                Controlled partner demonstrations at Burning Tree Martial Arts show
+                close-range awareness, movement, and defensive positioning.
+                Our Women’s Self-Defense classes emphasize practical pad striking,
+                escapes, and building confidence in a supportive environment.
+              </p>
+            </div>
+          </div>
+          <div class="womens-instructor-gallery-grid">
+            {[
+              { file: "instructor-demonstration-01.jpeg", alt: "Two martial artists practicing controlled arm positioning during a training demonstration" },
+              { file: "instructor-demonstration-02.jpeg", alt: "Instructor and partner rehearsing a protective guard and close-range awareness" },
+              { file: "instructor-demonstration-03.jpeg", alt: "Training partners demonstrating close-range body positioning and an elbow movement" },
+              { file: "instructor-demonstration-04.jpeg", alt: "Martial artists practicing a controlled partner-defense movement in the studio" },
+              { file: "instructor-demonstration-05.jpeg", alt: "Partner drill demonstrating defensive positioning and controlled footwork" },
+              { file: "instructor-demonstration-06.jpeg", alt: "Instructor-guided movement drill showing close-range positioning" },
+              { file: "instructor-demonstration-07.jpeg", alt: "Two martial artists working through an arm-positioning exercise" },
+              { file: "instructor-demonstration-08.jpeg", alt: "Training partners practicing a controlled close-range defensive drill" },
+              { file: "instructor-demonstration-09.jpeg", alt: "Martial arts instructor guiding a partner through a protective hand position" }
+            ].map(({ file, alt }) => (
+              <figure class="womens-instructor-gallery-tile">
+                <img
+                  src={`/images/womens-defense/${file}`}
+                  alt={alt}
+                  loading="lazy"
+                  decoding="async"
+                  width="960"
+                  height="1100"
+                />
+              </figure>
+            ))}
+          </div>
+        </section>
+      )}
+
       {hasVariants ? (
         <ProgramDetailVariant program={program} />
       ) : (
@@ -293,6 +334,39 @@ const curriculumBlocks = !hasVariants ? program.curriculum.copy.split("\n\n") : 
   .womens-gallery-tile img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; object-position: center; }
   @media (max-width: 900px) { .womens-gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 440px) { .womens-gallery-grid { gap: .55rem; } }
+  .womens-instructor-gallery { padding-top: 1.2rem; padding-bottom: 1.6rem; }
+  .womens-instructor-gallery .section-heading { margin-bottom: 1rem; }
+  .womens-instructor-gallery-intro {
+    color: #e8e8e8;
+    max-width: 48rem;
+    line-height: 1.65;
+    margin: .7rem 0 0;
+  }
+  .womens-instructor-gallery-grid {
+    columns: 3;
+    column-gap: clamp(.6rem, 1.6vw, 1rem);
+  }
+  .womens-instructor-gallery-tile {
+    display: inline-block;
+    width: 100%;
+    margin: 0 0 clamp(.6rem, 1.6vw, 1rem);
+    break-inside: avoid;
+    overflow: hidden;
+    background: #171717;
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 7px;
+  }
+  .womens-instructor-gallery-tile img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  @media (max-width: 900px) {
+    .womens-instructor-gallery-grid { columns: 2; }
+  }
+  @media (max-width: 520px) {
+    .womens-instructor-gallery-grid { columns: 1; }
+  }
   .womens-overview { padding-top: 1.25rem; padding-bottom: 1.35rem; }
   .womens-overview-grid {
     display: grid;
