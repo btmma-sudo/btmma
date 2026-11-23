@@ -1,7 +1,6 @@
 // Isolated Build a Flame workshop checkout. Never uses trial, seminar or portal rows.
 export const FLAME_SOURCE = "btmma_build_a_flame_2026_v1";
 export const FLAME_PRICE_CENTS = 5000;
-export const FLAME_CAPACITY = 12;
 export const FLAME_DATE = "2026-12-05";
 export const FLAME_DEADLINE = Date.parse("2026-11-30T05:00:00Z"); // Nov 29, 11:59 PM EST.
 export const FLAME_DURATION_MINUTES = 60;
@@ -48,25 +47,21 @@ export function normalizeSubmission(data) {
 
 const SQL = [
   "CREATE TABLE IF NOT EXISTS flame_workshop_registrations (id TEXT PRIMARY KEY, session_id TEXT NOT NULL CHECK(session_id IN ('one')), guardian_name TEXT NOT NULL, email TEXT NOT NULL, phone TEXT NOT NULL, children_json TEXT NOT NULL, qty INTEGER NOT NULL CHECK(qty BETWEEN 1 AND 6), amount_cents INTEGER NOT NULL, status TEXT NOT NULL DEFAULT 'held' CHECK(status IN ('held','checkout_open','paid','released')), stripe_session_id TEXT UNIQUE, stripe_payment_intent_id TEXT, hold_until INTEGER NOT NULL, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, paid_at TEXT, updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)",
-  "CREATE INDEX IF NOT EXISTS idx_flame_session_capacity ON flame_workshop_registrations(session_id,status,hold_until)"
+  "CREATE INDEX IF NOT EXISTS idx_flame_registration_status ON flame_workshop_registrations(status,created_at)"
 ];
 export async function ensureFlameSchema(db) {
   for (const sql of SQL) await db.prepare(sql).run();
 }
-export async function seatsRemaining(db, session, now = Math.floor(Date.now() / 1000)) {
-  const row = await db.prepare("SELECT COALESCE(SUM(qty),0) AS filled FROM flame_workshop_registrations WHERE session_id=? AND (status='paid' OR (status IN ('held','checkout_open') AND hold_until>?))").bind(session, now).first();
-  return Math.max(0, FLAME_CAPACITY - Number(row?.filled || 0));
-}
-// Atomic capacity check and reservation: concurrent requests cannot both claim the same final seat.
-export async function holdFlameSeats(db, registration, id, now) {
-  const qty = registration.qty;
-  const holdUntil = now + 42 * 60;
+// Each guardian receives a distinct registration. There is NO overall workshop
+// attendance cap; the per-checkout child-count limit is only for manageable entry.
+export async function createFlameRegistration(db, registration, id, now) {
   const result = await db.prepare(
     "INSERT INTO flame_workshop_registrations (id,session_id,guardian_name,email,phone,children_json,qty,amount_cents,status,hold_until) " +
-    "SELECT ?,?,?,?,?,?,?,?,'held',? WHERE (SELECT COALESCE(SUM(qty),0) FROM flame_workshop_registrations WHERE session_id=? AND (status='paid' OR (status IN ('held','checkout_open') AND hold_until>?))) + ? <= ?"
-  ).bind(id, registration.session, registration.guardian, registration.email, registration.phone,
-    JSON.stringify(registration.children), qty, qty * FLAME_PRICE_CENTS,
-    holdUntil, registration.session, now, qty, FLAME_CAPACITY).run();
+    "VALUES (?,?,?,?,?,?,?,?,'held',?)"
+  ).bind(id, registration.session, registration.guardian, registration.email,
+    registration.phone, JSON.stringify(registration.children),
+    registration.qty, registration.qty * FLAME_PRICE_CENTS,
+    now + 42 * 60).run();
   return result.meta?.changes === 1;
 }
 async function loadStripe(env, stripeId) {
@@ -79,34 +74,6 @@ async function loadStripe(env, stripeId) {
 }
 // Fail closed if an expired hold might actually have been paid.
 // Only release after Stripe certifies the checkout expired without payment.
-export async function sweepFlameHolds(env) {
-  const db = env.LIVE_TRIAL_DB;
-  const now = Math.floor(Date.now() / 1000);
-  const stale = await db.prepare(
-    "SELECT id,stripe_session_id,status FROM flame_workshop_registrations WHERE status IN ('held','checkout_open') AND hold_until<=? LIMIT 60"
-  ).bind(now).all();
-  if (!stale.results?.length) return;
-  for (const row of stale.results) {
-    if (!row.stripe_session_id) {
-      // A checkout may have been created before a network/database failure.
-      // Without the Stripe reference we cannot prove there was no payment.
-      // Keep checkout closed for owner reconciliation instead of overselling.
-      throw Error("Unverified workshop checkout hold requires staff review");
-    }
-    const session = await loadStripe(env, row.stripe_session_id);
-    if (session.payment_status === "paid") {
-      await reconcileFlamePayment(env, row.stripe_session_id);
-    } else if (session.status === "expired") {
-      await db.prepare(
-        "UPDATE flame_workshop_registrations SET status='released',updated_at=CURRENT_TIMESTAMP WHERE id=? AND status='checkout_open'"
-      ).bind(row.id).run();
-    } else {
-      throw Error("A pending workshop checkout needs verification before reopening seats");
-    }
-  }
-}
-// Called from both Stripe's signed webhook and the user's success page.
-// Never trusts a query parameter alone: Stripe is re-fetched and data is checked.
 export async function reconcileFlamePayment(env, sessionId) {
   if (!env.LIVE_TRIAL_DB || !/^(sk|rk)_live_/.test(String(env.STRIPE_LIVE_SECRET_KEY || "")))
     throw Error("Payment verification is not configured");
@@ -132,6 +99,6 @@ export async function reconcileFlamePayment(env, sessionId) {
   const updated = await env.LIVE_TRIAL_DB.prepare(
     "SELECT status FROM flame_workshop_registrations WHERE id=?"
   ).bind(row.id).first();
-  if (updated?.status !== "paid") throw Error("Paid checkout requires manual seat reconciliation");
+  if (updated?.status !== "paid") throw Error("Paid checkout requires manual registration reconciliation");
   return { confirmed: true, quantity: row.qty, session: row.session_id, amountCents: row.amount_cents };
 }
