@@ -4,7 +4,17 @@ export const FLAME_PRICE_CENTS = 5000;
 export const FLAME_DATE = "2026-12-05";
 export const FLAME_DEADLINE = Date.parse("2026-11-30T05:00:00Z"); // Nov 29, 11:59 PM EST.
 export const FLAME_DURATION_MINUTES = 60;
-export const FLAME_SESSIONS = ["one"];
+const sessions = {
+  one: {
+    date: FLAME_DATE, time: "11:45", endTime: "12:45",
+    label: "Saturday, December 5 • 11:45 AM–12:45 PM ET"
+  },
+  two: {
+    date: "2026-12-06", time: "13:30", endTime: "14:30",
+    label: "Sunday, December 6 • 1:30–2:30 PM ET"
+  }
+};
+export const FLAME_SESSIONS = Object.keys(sessions);
 
 export function json(data, status = 200) {
   return new Response(JSON.stringify(data), { status, headers: {
@@ -15,9 +25,8 @@ export function json(data, status = 200) {
 const clean = (v, max = 120) => typeof v === "string" ? v.trim().slice(0, max + 1) : "";
 const validEmail = s => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s) && s.length <= 254;
 
-// Confirmed single 60-minute workshop, Saturday December 5, 2026 (Eastern Time).
-export function flameTimes(_env) {
-  return { one: { time: "11:45", label: "Saturday, December 5 • 11:45 AM–12:45 PM ET" } };
+export function flameTimes() {
+  return sessions;
 }
 export function checkoutReady(env) {
   return env.BUILD_A_FLAME_REGISTRATION_ENABLED === "true" &&
@@ -45,12 +54,29 @@ export function normalizeSubmission(data) {
   return { guardian, email, phone, session, children, qty: children.length, token };
 }
 
-const SQL = [
-  "CREATE TABLE IF NOT EXISTS flame_workshop_registrations (id TEXT PRIMARY KEY, session_id TEXT NOT NULL CHECK(session_id IN ('one')), guardian_name TEXT NOT NULL, email TEXT NOT NULL, phone TEXT NOT NULL, children_json TEXT NOT NULL, qty INTEGER NOT NULL CHECK(qty BETWEEN 1 AND 6), amount_cents INTEGER NOT NULL, status TEXT NOT NULL DEFAULT 'held' CHECK(status IN ('held','checkout_open','paid','released')), stripe_session_id TEXT UNIQUE, stripe_payment_intent_id TEXT, hold_until INTEGER NOT NULL, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, paid_at TEXT, updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)",
-  "CREATE INDEX IF NOT EXISTS idx_flame_registration_status ON flame_workshop_registrations(status,created_at)"
-];
+const registrationTable = "flame_workshop_registrations";
+const createTable = table => "CREATE TABLE IF NOT EXISTS " + table +
+  " (id TEXT PRIMARY KEY, session_id TEXT NOT NULL CHECK(session_id IN ('one','two')), guardian_name TEXT NOT NULL, email TEXT NOT NULL, phone TEXT NOT NULL, children_json TEXT NOT NULL, qty INTEGER NOT NULL CHECK(qty BETWEEN 1 AND 6), amount_cents INTEGER NOT NULL, status TEXT NOT NULL DEFAULT 'held' CHECK(status IN ('held','checkout_open','paid','released')), stripe_session_id TEXT UNIQUE, stripe_payment_intent_id TEXT, hold_until INTEGER NOT NULL, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, paid_at TEXT, updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)";
+const createIndex = "CREATE INDEX IF NOT EXISTS idx_flame_registration_status ON flame_workshop_registrations(status,created_at)";
+
 export async function ensureFlameSchema(db) {
-  for (const sql of SQL) await db.prepare(sql).run();
+  const table = await db.prepare(
+    "SELECT sql FROM sqlite_master WHERE type='table' AND name=?"
+  ).bind(registrationTable).first();
+  if (!table) {
+    await db.batch([db.prepare(createTable(registrationTable)), db.prepare(createIndex)]);
+  } else if (!table.sql.includes("CHECK(session_id IN ('one','two'))")) {
+    // D1 runs the batch atomically. Copy all rows before replacing the old
+    // Saturday-only constraint, including any checkouts already in progress.
+    const revisedTable = registrationTable + "_with_sunday";
+    await db.batch([
+      db.prepare(createTable(revisedTable)),
+      db.prepare("INSERT INTO " + revisedTable + " SELECT * FROM " + registrationTable),
+      db.prepare("DROP TABLE " + registrationTable),
+      db.prepare("ALTER TABLE " + revisedTable + " RENAME TO " + registrationTable),
+      db.prepare(createIndex)
+    ]);
+  }
 }
 // Each guardian receives a distinct registration. There is NO overall workshop
 // attendance cap; the per-checkout child-count limit is only for manageable entry.
@@ -89,7 +115,7 @@ export async function reconcileFlamePayment(env, sessionId) {
       session.currency !== "usd" || session.client_reference_id !== row.id ||
       session.amount_total !== row.qty * FLAME_PRICE_CENTS ||
       Number(m.child_count) !== row.qty || m.session_id !== row.session_id ||
-      m.event_date !== FLAME_DATE || row.amount_cents !== row.qty * FLAME_PRICE_CENTS)
+      m.event_date !== sessions[row.session_id]?.date || row.amount_cents !== row.qty * FLAME_PRICE_CENTS)
     throw Error("Workshop checkout does not match the saved registration");
   if (session.payment_status !== "paid")
     return { confirmed: false, pending: true, session: row.session_id };
@@ -100,5 +126,5 @@ export async function reconcileFlamePayment(env, sessionId) {
     "SELECT status FROM flame_workshop_registrations WHERE id=?"
   ).bind(row.id).first();
   if (updated?.status !== "paid") throw Error("Paid checkout requires manual registration reconciliation");
-  return { confirmed: true, quantity: row.qty, session: row.session_id, amountCents: row.amount_cents };
+  return { confirmed: true, quantity: row.qty, session: row.session_id, sessionLabel: sessions[row.session_id].label, amountCents: row.amount_cents };
 }

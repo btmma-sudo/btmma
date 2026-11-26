@@ -2,13 +2,16 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import SeminarDonations from "../components/SeminarDonations.astro";
 
-const eventStructuredData = {
+import { flameTimes } from "../lib/build-a-flame.js";
+
+const workshops = Object.values(flameTimes());
+const eventStructuredData = workshops.map(workshop => ({
   "@context": "https://schema.org",
   "@type": "Event",
   name: "Build a Flame — Confidence & Emotional Strength Workshop",
   description: "A hands-on confidence and emotional strength workshop for children featuring practical responses to bullying, emotion management, peer pressure and resilience.",
-  startDate: "2026-12-05T11:45:00-05:00",
-  endDate: "2026-12-05T12:45:00-05:00",
+  startDate: workshop.date + "T" + workshop.time + ":00-05:00",
+  endDate: workshop.date + "T" + workshop.endTime + ":00-05:00",
   eventStatus: "https://schema.org/EventScheduled",
   eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
   location: {
@@ -31,11 +34,11 @@ const eventStructuredData = {
     availability: "https://schema.org/InStock",
     validThrough: "2026-11-29T23:59:00-05:00"
   }
-};
+}));
 ---
 <BaseLayout
   title="Upcoming Seminars & Events | Burning Tree Mixed Martial Arts"
-  description="Register for Build a Flame on Saturday, December 5, 2026, from 11:45 AM to 12:45 PM: a hands-on confidence and emotional strength workshop for children in Owings Mills, Maryland."
+  description="Register for Build a Flame on December 5 or 6, 2026: a hands-on confidence and emotional strength workshop for children in Owings Mills, Maryland."
   path="/seminars/"
   keywords={["martial arts events Owings Mills", "children confidence workshop Maryland", "bullying awareness workshop Baltimore County", "Burning Tree MMA events"]}
   image="/images/build-a-flame-workshop-flyer.webp"
@@ -46,7 +49,7 @@ const eventStructuredData = {
       <div class="shell">
         <p class="seminar-eyebrow">BURNING TREE MIXED MARTIAL ARTS · OWINGS MILLS, MD</p>
         <h1 id="seminar-heading">Upcoming Seminars <span>&amp; Events</span></h1>
-        <p>Join us Saturday, December 5, from 11:45 AM to 12:45 PM for Build a Flame, a hands-on confidence and emotional strength workshop for children. Registration is $50 per child, with no fixed attendance limit.</p>
+        <p>Choose Saturday, December 5, or Sunday, December 6, for Build a Flame, a hands-on confidence and emotional strength workshop for children. Registration is $50 per child, with no fixed attendance limit.</p>
         <a class="seminar-cta" href="/build-a-flame/">EXPLORE BUILD A FLAME</a>
         <a class="seminar-cta seminar-donate-link" href="#donate">SUPPORT BURNING TREE</a>
         <p class="seminar-motto">One Tree. One Family.</p>
@@ -56,10 +59,10 @@ const eventStructuredData = {
     <section class="shell seminar-events" id="events" aria-label="Upcoming martial arts seminars and events">
       <article class="seminar-card" id="build-a-flame">
         <a class="flame-flyer-link" href="/build-a-flame/" aria-label="Open Build a Flame registration and payment">
-          <img class="seminar-flyer" src="/images/build-a-flame-workshop-flyer.webp" alt="Build a Flame Confidence and Emotional Strength Workshop flyer — Saturday December 5, 2026, 11:45 AM–12:45 PM, $50 per child, register and pay by November 29" width="1122" height="1402" loading="lazy" decoding="async" />
+          <img class="seminar-flyer" src="/images/build-a-flame-workshop-flyer.webp" alt="Build a Flame Confidence and Emotional Strength Workshop flyer — December 5 or 6, 2026, $50 per child, register and pay by November 29" width="1122" height="1402" loading="lazy" decoding="async" />
         </a>
         <div class="seminar-card-content">
-          <p class="seminar-eyebrow">SATURDAY, DECEMBER 5, 2026 · 11:45 AM–12:45 PM ET</p>
+          {workshops.map(workshop => <p class="seminar-eyebrow">{workshop.label}</p>)}
           <h2>Build <span>a Flame</span></h2>
           <p class="seminar-tagline">Strong children aren't born. They're built.</p>
           <p>Join our hands-on Confidence &amp; Emotional Strength Workshop for children. Learn to manage emotions, respond safely to bullying, handle peer pressure and build resilience and self-respect.</p>

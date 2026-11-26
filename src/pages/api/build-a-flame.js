@@ -36,10 +36,10 @@ export async function GET({ request, locals }) {
       return json({ confirmed: false, error: "Payment verification is temporarily unavailable. Keep your Stripe receipt; contact 410-218-0894 before paying again." }, 503);
     }
   }
-  const times = flameTimes(env);
+  const times = flameTimes();
   const ready = checkoutReady(env) && !deadlinePassed();
   const sessions = FLAME_SESSIONS.map(id => ({
-    id, label: times?.[id]?.label || "Saturday, December 5 • 11:45 AM–12:45 PM ET"
+    id, label: times[id].label
   }));
   if (env.LIVE_TRIAL_DB) {
     try {
@@ -93,19 +93,20 @@ export async function POST({ request, locals }) {
   if (!savedRegistration) return json({ error: "Could not save registration. No payment was started." }, 503);
 
   const price = row.qty * FLAME_PRICE_CENTS;
+  const workshop = flameTimes()[row.session];
   const params = new URLSearchParams({
     mode: "payment",
     "allowed_payment_method_types[0]": "card",
     "line_items[0][price_data][currency]": "usd",
     "line_items[0][price_data][unit_amount]": String(FLAME_PRICE_CENTS),
-    "line_items[0][price_data][product_data][name]": "Build a Flame — Confidence & Emotional Strength Workshop — " + flameTimes(env)[row.session].label,
+    "line_items[0][price_data][product_data][name]": "Build a Flame — Confidence & Emotional Strength Workshop — " + workshop.label,
     "line_items[0][quantity]": String(row.qty),
     client_reference_id: id,
     customer_email: row.email,
     expires_at: String(Math.min(now + 35 * 60, Math.floor(FLAME_DEADLINE / 1000))),
     "metadata[btmma_source]": FLAME_SOURCE,
     "metadata[registration_id]": id,
-    "metadata[event_date]": FLAME_DATE,
+    "metadata[event_date]": workshop.date,
     "metadata[session_id]": row.session,
     "metadata[child_count]": String(row.qty),
     "payment_intent_data[metadata][btmma_source]": FLAME_SOURCE,

@@ -1,9 +1,11 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { flameTimes } from "../lib/build-a-flame.js";
+const workshops = Object.entries(flameTimes());
 ---
 <BaseLayout
   title="Build a Flame | Confidence & Emotional Strength Workshop | Burning Tree MMA"
-  description="Build confidence, emotional strength, resilience, and practical responses to bullying. Join the Build a Flame children's workshop Saturday, December 5, 2026, 11:45 AM–12:45 PM in Owings Mills, Maryland. One small-group session, $50 per child."
+  description="Build confidence, emotional strength, resilience, and practical responses to bullying. Join the Build a Flame children's workshop December 5 or 6, 2026, in Owings Mills, Maryland. $50 per child."
   path="/build-a-flame/"
   image="/images/logo.png"
   keywords={["children confidence workshop Owings Mills", "anti bullying workshop Maryland", "emotional resilience for kids Baltimore County", "kids self respect and confidence", "Burning Tree MMA Build a Flame"]}
@@ -21,7 +23,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       </div>
       <aside class="flame-hero-aside">
         <img src="/images/logo.png" alt="Burning Tree Mixed Martial Arts logo" width="320" height="320" loading="eager" decoding="async" />
-        <div class="flame-date">SATURDAY <strong>DECEMBER 5, 2026<br />11:45 AM–12:45 PM ET</strong></div>
+        {workshops.map(([, workshop]) => <div class="flame-date"><strong>{workshop.label}</strong></div>)}
         <div class="flame-price"><strong>$50</strong><span>PER CHILD</span></div>
         <p>One parent or guardian included.</p>
       </aside>
@@ -45,7 +47,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <div class="flame-register-intro">
       <p class="flame-kicker">SAVE YOUR CHILD'S SEAT</p>
       <h2 id="flame-registration-title">Register &amp; Pay</h2>
-      <p>Saturday, December 5, 2026, from 11:45 AM to 12:45 PM Eastern. This 60-minute workshop welcomes children of all experience levels. There is no fixed attendance limit. One parent or guardian may accompany each child at no extra charge.</p>
+      <p>Choose either session on December 5 or 6, 2026. This 60-minute workshop welcomes children of all experience levels. There is no fixed attendance limit. One parent or guardian may accompany each child at no extra charge.</p>
       <p class="flame-friend-invite"><strong>INVITE AT LEAST ONE FRIEND!</strong> Encourage your child to bring a friend to learn and grow together. Each participating child is $50, and you can register multiple children in one checkout.</p>
       <div class="flame-deadline">REGISTRATION &amp; PAYMENT DEADLINE: NOVEMBER 29, 2026</div>
       <p class="flame-registration-note">Your child's registration is confirmed only after secure payment succeeds. Please review the workshop date and time before paying.</p>
@@ -59,7 +61,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </div>
         <div class="flame-field"><label for="flame-email">Parent / guardian email</label><input id="flame-email" type="email" autocomplete="email" required maxlength="254" /></div>
         <div class="flame-fields-row">
-          <div class="flame-field"><label for="flame-session">Workshop date &amp; time</label><select id="flame-session" required><option value="one">Saturday, Dec 5 · 11:45 AM–12:45 PM ET</option></select></div>
+          <div class="flame-field"><label for="flame-session">Workshop date &amp; time</label><select id="flame-session" required><option value="" disabled selected>Choose a session</option>{workshops.map(([id, workshop]) => <option value={id}>{workshop.label}</option>)}</select></div>
           <div class="flame-field"><label for="flame-count">Number of children</label>
             <select id="flame-count" required>
               <option value="1">1 child</option><option value="2">2 children</option><option value="3">3 children</option>
@@ -148,14 +150,17 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       const r = await fetch("/api/build-a-flame", { cache: "no-store" });
       const data = await r.json();
       availability = data;
-      info.textContent = data.message || "Register for Saturday, December 5, 11:45 AM–12:45 PM Eastern. All registrations are welcome.";
+      info.textContent = data.message || "Choose Saturday or Sunday below.";
       if (!data.ready) { unavailable.hidden = false; return; }
-      sessions.replaceChildren();
+      const selected = sessions.value;
+      const placeholder = new Option("Choose a session", "");
+      placeholder.disabled = true;
+      sessions.replaceChildren(placeholder);
       for (const s of data.sessions) {
         const opt = new Option(s.label, s.id);
         sessions.add(opt);
       }
-      if (sessions.options.length === 1) sessions.value = sessions.options[0].value;
+      sessions.value = data.sessions.some(s => s.id === selected) ? selected : "";
       form.hidden = false; unavailable.hidden = true;
       childFields();
     } catch {
@@ -215,7 +220,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         const paid = await r.json();
         if (paid.confirmed) {
           $("flame-confirm-title").textContent = "Your workshop registration is confirmed!";
-          $("flame-confirm-detail").textContent = "Stripe payment verified. " + paid.quantity + " child registration(s) confirmed for Saturday, December 5, 2026, from 11:45 AM to 12:45 PM Eastern. Keep your payment receipt and arrive shortly before the workshop.";
+          $("flame-confirm-detail").textContent = "Stripe payment verified. " + paid.quantity + " child registration(s) confirmed for " + paid.sessionLabel + ". Keep your payment receipt and arrive shortly before the workshop.";
         } else {
           $("flame-confirm-title").textContent = "Payment confirmation pending";
           $("flame-confirm-detail").textContent = paid.error || "Payment has not yet been verified. Please keep your Stripe receipt; do not pay again.";

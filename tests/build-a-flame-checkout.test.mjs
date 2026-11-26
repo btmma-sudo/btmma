@@ -2,10 +2,11 @@
 // NO Stripe network traffic, credentials, real cards or customer records are used.
 import test from "node:test";
 import assert from "node:assert/strict";
+import { DatabaseSync } from "node:sqlite";
 import { POST, GET } from "../src/pages/api/build-a-flame.js";
 import {
   FLAME_DATE, FLAME_DEADLINE, FLAME_PRICE_CENTS, FLAME_SESSIONS,
-  FLAME_SOURCE, flameTimes, checkoutReady, normalizeSubmission
+  FLAME_SOURCE, flameTimes, checkoutReady, normalizeSubmission, ensureFlameSchema
 } from "../src/lib/build-a-flame.js";
 
 const ORIGIN = "https://burningtreemma.example";
@@ -21,6 +22,9 @@ const jsonResponse = (obj, status = 200) => new Response(JSON.stringify(obj), {
 
 class FakeD1 {
   constructor() { this.rows = new Map(); }
+  async batch(statements) {
+    return Promise.all(statements.map(statement => statement.run()));
+  }
   prepare(sql) {
     const db = this;
     const query = (...params) => ({
@@ -56,6 +60,7 @@ class FakeD1 {
         throw Error("Unexpected mock D1 SQL run: " + sql);
       },
       async first() {
+        if (sql.includes("FROM sqlite_master")) return null;
         if (sql.includes("SELECT * FROM flame_workshop_registrations")) {
           const [id,stripeId] = params, row=db.rows.get(id);
           return row?.stripe_session_id === stripeId ? row : null;
@@ -90,7 +95,9 @@ function mockWorld() {
       assert.equal(p.get("line_items[0][price_data][unit_amount]"), "5000");
       assert.equal(p.get("line_items[0][price_data][currency]"), "usd");
       assert.equal(p.get("metadata[btmma_source]"), FLAME_SOURCE);
-      assert.equal(p.get("metadata[event_date]"), FLAME_DATE);
+      const workshop = flameTimes()[p.get("metadata[session_id]")];
+      assert.equal(p.get("metadata[event_date]"), workshop.date);
+      assert.ok(p.get("line_items[0][price_data][product_data][name]").endsWith(workshop.label));
       const id = "cs_live_SIMULATED_SESSION_" + String(sessions.size + 1).padStart(4,"0");
       const count = Number(p.get("line_items[0][quantity]"));
       const m = Object.fromEntries([...p].filter(([k])=>k.startsWith("metadata["))
@@ -126,12 +133,14 @@ async function check(env, sessionId) {
   const result = await GET({request,locals:{runtime:{env}}});
   return {status:result.status,body:await result.json()};
 }
-test("workshop price, exact Saturday time, single session, no attendance cap", () => {
+test("workshop price, exact Saturday and Sunday times, no attendance cap", () => {
   assert.equal(FLAME_DATE,"2026-12-05");
   assert.equal(FLAME_PRICE_CENTS,5000);
-  assert.deepEqual(FLAME_SESSIONS,["one"]);
-  assert.match(flameTimes({}).one.label,/11:45 AM.*12:45 PM/);
-  assert.ok(!("FLAME_CAPACITY" in flameTimes({})));
+  assert.deepEqual(FLAME_SESSIONS,["one","two"]);
+  assert.match(flameTimes().one.label,/11:45 AM.*12:45 PM/);
+  assert.equal(flameTimes().two.date,"2026-12-06");
+  assert.match(flameTimes().two.label,/1:30.*2:30 PM/);
+  assert.ok(!("FLAME_CAPACITY" in flameTimes()));
   assert.equal(FLAME_DEADLINE,Date.parse("2026-11-30T05:00:00Z"));
   assert.equal(checkoutReady({}),false);
 });
@@ -139,7 +148,7 @@ test("parent form validation, consent and per-transaction child handling", () =>
   assert.equal(normalizeSubmission(VALID)?.qty,2);
   assert.equal(normalizeSubmission({...VALID,guardianConsent:false}),null);
   assert.equal(normalizeSubmission({...VALID,children:[]}),null);
-  assert.equal(normalizeSubmission({...VALID,session:"two"}),null);
+  assert.equal(normalizeSubmission({...VALID,session:"invalid"}),null);
   assert.equal(normalizeSubmission({...VALID,children:[{name:"A",age:30}]}),null);
   assert.equal(normalizeSubmission({...VALID,children:Array.from({length:7},(_,i)=>({name:"Child "+i,age:8}))}),null);
 });
@@ -154,7 +163,7 @@ test("checkout disabled: cannot contact Stripe or charge anyone", async () => {
     const status=await GET({request:new Request(ORIGIN+"/api/build-a-flame"),locals:{runtime:{env:w.env}}});
     const data=await status.json();
     assert.equal(data.ready,false);
-    assert.equal(data.sessions.length,1);
+    assert.deepEqual(data.sessions.map(s => s.id),["one","two"]);
     assert.equal(data.pricePerChildCents,5000);
     assert.equal("maxPerSession" in data,false);
   } finally { w.restore(); }
@@ -162,7 +171,7 @@ test("checkout disabled: cannot contact Stripe or charge anyone", async () => {
 test("two children: simulated $100 Stripe checkout -> unpaid -> paid confirmation", async () => {
   const w=mockWorld();
   try {
-    const p=await register(w.env);
+    const p=await register(w.env,{...VALID,session:"two"});
     assert.equal(p.status,200,p.body.error);
     assert.equal(w.requests.length,1);
     assert.match(p.body.url,/^https:\/\/checkout\.stripe\.com\/mock/);
@@ -172,6 +181,7 @@ test("two children: simulated $100 Stripe checkout -> unpaid -> paid confirmatio
     assert.equal(w.db.rows.size,1);
     const row=[...w.db.rows.values()][0];
     assert.equal(row.status,"checkout_open");
+    assert.equal(row.session_id,"two");
     assert.equal(row.qty,2);
     assert.equal(row.amount_cents,10000);
     assert.equal(JSON.parse(row.children_json).length,2);
@@ -185,6 +195,7 @@ test("two children: simulated $100 Stripe checkout -> unpaid -> paid confirmatio
     assert.equal(completed.status,200,completed.body.error);
     assert.equal(completed.body.confirmed,true);
     assert.equal(completed.body.quantity,2);
+    assert.equal(completed.body.sessionLabel,flameTimes().two.label);
     assert.equal(completed.body.amountCents,10000);
     assert.equal(w.db.rows.get(row.id).status,"paid");
     const repeated=await check(w.env,id);
@@ -232,4 +243,45 @@ test("registration closes after November 29 Eastern cutoff",async () => {
     assert.equal(p.status,409);
     assert.equal(w.requests.length,0);
   } finally { Date.now=oldNow;w.restore(); }
+});
+
+test("the D1 schema upgrade preserves Saturday registrations and admits Sunday", async () => {
+  const sqlite = new DatabaseSync(":memory:");
+  const db = {
+    prepare(sql) {
+      return {
+        run: () => sqlite.prepare(sql).run(),
+        bind: (...values) => ({ first: () => sqlite.prepare(sql).get(...values) })
+      };
+    },
+    async batch(statements) {
+      sqlite.exec("BEGIN");
+      try {
+        for (const statement of statements) statement.run();
+        sqlite.exec("COMMIT");
+      } catch (error) {
+        sqlite.exec("ROLLBACK");
+        throw error;
+      }
+    }
+  };
+  try {
+    await ensureFlameSchema(db);
+    const table = "flame_workshop_registrations";
+    const { sql } = sqlite.prepare("SELECT sql FROM sqlite_master WHERE name=?").get(table);
+    sqlite.exec("DROP TABLE " + table);
+    sqlite.exec(sql.replace("IN ('one','two')", "IN ('one')"));
+    const insert = sqlite.prepare(
+      "INSERT INTO flame_workshop_registrations (id,session_id,guardian_name,email,phone,children_json,qty,amount_cents,status,stripe_session_id,hold_until) VALUES (?,?,'Example','example@example.test','4105550123','[]',1,5000,'paid',?,0)"
+    );
+    insert.run("saturday","one","example-saturday-stripe");
+    assert.throws(() => insert.run("sunday","two","example-sunday-stripe"), /CHECK constraint/);
+    await ensureFlameSchema(db);
+    assert.equal(sqlite.prepare("SELECT stripe_session_id FROM " + table + " WHERE id='saturday'").get().stripe_session_id, "example-saturday-stripe");
+    insert.run("sunday","two","example-sunday-stripe");
+    await ensureFlameSchema(db);
+    assert.equal(sqlite.prepare("SELECT COUNT(*) AS count FROM " + table + " WHERE status='paid'").get().count, 2);
+  } finally {
+    sqlite.close();
+  }
 });
