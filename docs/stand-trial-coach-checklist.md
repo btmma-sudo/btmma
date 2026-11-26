@@ -1,6 +1,6 @@
 # S.T.A.N.D. — draft coach implementation checklist
 
-Owner approval is required before launch. The five acronym expansions in the page are proposed wording pending confirmation. Confirm the final wording and instructor readiness before publishing or promising delivery.
+Owner approval is required before launch. The page restores the original proposed acronym: Stay calm; Think before reacting; Assert your boundaries; Navigate to safety; Defend and disclose. Confirm instructor readiness before publishing or promising delivery.
 
 ## Every eligible new student trial (Kenpo, Muay Thai, Wing Chun)
 
@@ -11,8 +11,8 @@ Owner approval is required before launch. The five acronym expansions in the pag
 
 ## Ongoing curriculum
 
-Use the six-week framework on the page, then reinforce the themes during regular training. Observe whether a student can explain the method, communicate a boundary, recognize danger, safely disengage and identify trusted support. Record progress as introduced / practicing / demonstrated, with supportive re-practice; never label a child as a failure. For actual reports, follow school safeguarding procedures and involve responsible adults.
+Use the broader six-week framework on the page and the eight dedicated anti-bullying lessons, with 5–10 minutes of regular reinforcement as appropriate. Observe whether a student can explain the method, communicate a boundary, recognize danger, safely disengage and identify trusted support. Record progress as introduced / practicing / demonstrated, with supportive re-practice; never label a child as a failure. For actual reports, follow school safeguarding procedures and involve responsible adults.
 
 ## Launch gate
 
-Approve acronym, train all eligible instructors, confirm lesson delivery and parent information, run the Astro build and review mobile/desktop preview. Merge only with owner approval. Do not alter Women’s Self-Defense / Sanuces eligibility or Cloudflare production resources.
+Train all eligible instructors, confirm lesson delivery and parent information, run the Astro build and review mobile/desktop preview. Merge only with owner approval. Do not alter Women’s Self-Defense / Sanuces eligibility or Cloudflare production resources. Before adding any student photographs or video, confirm explicit consent and owner approval for the exact media. Do not use imagery as evidence of lessons not yet delivered.
