@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { site } from "../data/site";
 
 const steps = [
   { letter: "S", title: "Stay calm", detail: "Take a breath, keep your hands relaxed and give yourself room to think." },
@@ -41,12 +42,49 @@ const faqs = [
   ["Is the program part of the $29 trial?", "New students receive an age-appropriate introduction during their two beginner classes in eligible Kenpo Karate, Muay Thai and Wing Chun programs. The full curriculum is developed through continued training."],
   ["Does martial arts guarantee that bullying stops?", "No. We teach practical skills and encourage adult intervention. Schools, families and other responsible adults must address bullying; a child is never responsible for another person's harmful behavior."]
 ];
+faqs.push(
+  ["Where can I find anti-bullying classes for kids near Owings Mills, MD?", "Burning Tree Mixed Martial Arts is at 10210 S. Dolfield Rd., Suite C, Owings Mills, MD 21117. Our program welcomes families from Owings Mills, Reisterstown, Pikesville, Randallstown and surrounding Baltimore County communities. Call (410) 218-0894 for class placement."],
+  ["What is the S.T.A.N.D. Method for bullying prevention?", "S.T.A.N.D. means Stay calm, Think before reacting, Assert your boundaries, Navigate to safety, and Defend and disclose. The priority is safety, getting away and seeking trusted adult support, not fighting."],
+  ["Can karate or martial arts help children build self-confidence?", "Age-appropriate practice gives children opportunities to set goals, communicate clearly, learn controlled movement and develop confidence through achievable challenges. Progress differs for each child."],
+  ["Does my child need martial arts experience?", "No. Our eligible beginner Kenpo Karate, Muay Thai and Wing Chun classes welcome new students. Coaches adapt exercises to the student's age, ability and comfort."],
+  ["What should a child do if they are bullied at school?", "Move to safety, tell a trusted adult and continue asking for help if the behavior persists. A parent or guardian should contact school staff and work with them on a safety plan. Do not require a child to confront or fight a bully."],
+  ["Do you teach how to handle cyberbullying?", "Our lesson framework covers online bullying: avoid retaliating, save relevant evidence when safe, block or report harmful contact, and tell a trusted adult. Adults can help assess threats and use appropriate reporting channels."],
+  ["How much does it cost to try the program?", "The $29 new student special includes two beginner classes and a free uniform in eligible Kenpo Karate, Muay Thai and Wing Chun classes. The trial introduces S.T.A.N.D.; the full curriculum is developed through continued training."],
+  ["Is this a one-time anti-bullying workshop or ongoing training?", "The eight anti-bullying lessons complement a six-week character-development framework. Short repeated practice during ongoing training helps reinforce safe decision-making, communication and emotional control."],
+  ["Can my child learn how to help a friend who is being bullied?", "Yes. Students practice safe bystander choices such as including a child who is excluded, getting an adult and reporting what they saw. They are not expected to physically intervene."]
+);
+const pageUrl = new URL("/anti-bullying/", site.primaryDomain).toString();
+const schoolId = `${site.primaryDomain}/#martial-arts-school`;
+const serviceId = pageUrl + "#program";
+const breadcrumbId = pageUrl + "#breadcrumbs";
+const pageSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "WebPage", "@id": pageUrl + "#webpage", mainEntity: { "@id": serviceId }, breadcrumb: { "@id": breadcrumbId } },
+    { "@type": "BreadcrumbList", "@id": breadcrumbId, itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: new URL("/", site.primaryDomain).toString() },
+      { "@type": "ListItem", position: 2, name: "Kids Martial Arts", item: new URL("/kids-martial-arts/", site.primaryDomain).toString() },
+      { "@type": "ListItem", position: 3, name: "Anti-Bullying & Confidence", item: pageUrl }
+    ] },
+    { "@type": "Service", "@id": serviceId, url: pageUrl,
+      name: "S.T.A.N.D. Anti-Bullying and Confidence Development",
+      serviceType: "Children's anti-bullying education and martial arts confidence training",
+      description: "Age-appropriate bullying awareness, confident communication, personal boundaries, safe disengagement, trusted adult reporting and character development through martial arts instruction.",
+      provider: { "@id": schoolId },
+      areaServed: ["Owings Mills", "Reisterstown", "Pikesville", "Randallstown"].map(name => ({ "@type": "Place", name: name + ", Maryland" })).concat([{ "@type": "Place", name: "Baltimore County, Maryland" }]),
+      audience: { "@type": "PeopleAudience", audienceType: "Children, teens and families" },
+      availableChannel: { "@type": "ServiceChannel", serviceUrl: new URL("/29-trial/", site.primaryDomain).toString(), servicePhone: { "@type": "ContactPoint", telephone: site.phoneHref, contactType: "New student inquiries" } },
+      offers: { "@type": "Offer", name: "$29 New Student Trial — two beginner classes and free uniform", description: "New students only. Eligible Kenpo Karate, Muay Thai and Wing Chun classes. Includes an introduction to S.T.A.N.D., not the full curriculum.", price: "29.00", priceCurrency: "USD", url: new URL("/29-trial/", site.primaryDomain).toString() }
+    }
+  ]
+};
 const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faqs.map(([q,a]) => ({"@type":"Question",name:q,acceptedAnswer:{"@type":"Answer",text:a}})) };
 ---
-<BaseLayout title="Kids Anti-Bullying & Confidence Training | Burning Tree MMA | Owings Mills"
- description="Explore Burning Tree MMA's S.T.A.N.D. Method, anti-bullying curriculum, confidence exercises and parent involvement in Owings Mills, MD. Start with two classes and a uniform for $29."
+<BaseLayout title="Kids Anti-Bullying Classes in Owings Mills, MD | Burning Tree MMA"
+ description="Help your child practice confidence, bullying prevention and personal safety with our S.T.A.N.D. martial arts curriculum in Owings Mills, MD. Try 2 classes for $29."
  path="/anti-bullying/" image="/images/logo.png"
  keywords={["anti-bullying classes Owings Mills","kids confidence training Baltimore County","bullying prevention martial arts","children's self-defense Owings Mills"]}>
+ <script type="application/ld+json" set:html={JSON.stringify(pageSchema)} />
  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
  <div class="stand-page">
   <section class="stand-hero">
@@ -54,16 +92,32 @@ const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage", mainEn
     <nav aria-label="Breadcrumb"><a href="/">Home</a> / <a href="/kids-martial-arts/">Kids Martial Arts</a> / Anti-Bullying</nav>
     <div class="stand-brand"><img src="/images/logo.png" width="72" height="98" alt="Burning Tree Mixed Martial Arts logo" /><p class="eyebrow">Burning Tree Mixed Martial Arts · Owings Mills, Maryland</p></div>
     <h1>We Don’t Just Teach Martial Arts.<br/><span>We Teach Children How to S.T.A.N.D.</span></h1>
+    <p class="stand-topic">Kids Anti-Bullying &amp; Confidence Classes in Owings Mills, MD</p>
     <p class="stand-lead">We teach children how to recognize bullying, manage their emotions, use their voice, set boundaries and get help. Real strength is knowing how to stay safe without looking for a fight.</p>
     <div class="stand-actions"><a class="button" href="/29-trial/">Start My $29 Trial</a><a class="stand-secondary" href="#method">Explore the S.T.A.N.D. Method</a></div>
     <p class="stand-offer">Two beginner classes + a FREE uniform · New students only · Eligible programs: Kenpo Karate, Muay Thai and Wing Chun</p>
    </div>
   </section>
+  <nav class="shell stand-jump" aria-label="On this page">
+    <a href="#method">S.T.A.N.D. Method</a><a href="#curriculum">Curriculum</a><a href="#exercises">Classroom exercises</a><a href="#age-groups">Age groups</a><a href="#parents">Parent support</a><a href="#local-program">Local classes</a><a href="#questions">Parent FAQs</a><a href="#trial">Try two classes</a>
+  </nav>
   <section class="shell stand-section" aria-labelledby="philosophy">
    <p class="eyebrow">Our teaching philosophy</p>
    <h2 id="philosophy">We teach more than punches and kicks.</h2>
    <p>At Burning Tree, our goal is to help students build confidence, discipline, respect, awareness and emotional strength that they can carry into school, home and everyday life. We teach that martial arts are a responsibility, not a reason to intimidate someone else.</p>
    <p>Every child deserves to feel safe. Our approach emphasizes prevention, verbal boundaries, safe exits and trusted adult support. We do not expect children to resolve bullying alone.</p>
+  </section>
+  <section class="shell stand-section" aria-labelledby="bullying-types">
+   <p class="eyebrow">Bullying prevention education</p>
+   <h2 id="bullying-types">Recognizing bullying at school, in the community and online</h2>
+   <p>Bullying generally involves unwanted aggressive behavior, a power imbalance and repetition or the potential for repetition. A single unsafe incident still deserves adult attention. Our lessons distinguish ordinary disagreements from unsafe patterns and teach students to seek help.</p>
+   <div class="stand-grid">
+    <article class="stand-card"><h3>Verbal bullying</h3><p>Name-calling, threats and hurtful comments. Students practice calm boundaries, moving away and telling an adult.</p></article>
+    <article class="stand-card"><h3>Physical bullying</h3><p>Hitting, pushing or blocking movement. Students practice recognizing danger, creating space, leaving and asking for help.</p></article>
+    <article class="stand-card"><h3>Social bullying</h3><p>Deliberate exclusion, rumors or humiliation. Students discuss inclusion, respectful friendship and safe ways to report concerns.</p></article>
+    <article class="stand-card"><h3>Cyberbullying</h3><p>Harmful messages, posts or group chats. Students learn to avoid retaliation, involve an adult and use reporting tools.</p></article>
+   </div>
+   <p>For more information and reporting guidance, families can visit <a href="https://www.stopbullying.gov/">StopBullying.gov</a>.</p>
   </section>
   <section class="shell stand-section" id="method" aria-labelledby="method-heading">
    <p class="eyebrow">Five steps to remember</p><h2 id="method-heading">The S.T.A.N.D. Method</h2>
@@ -103,6 +157,19 @@ const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage", mainEn
    <p>Ask your child to teach you one S.T.A.N.D. step. Practice a calm boundary phrase together, name trusted adults at school and at home, and talk about how to help someone safely without entering a fight.</p>
    <p>If your child reports bullying, listen, reassure them that reporting is the right thing to do, and contact the appropriate school staff or other responsible adults. Speak privately with your coach about any concerns or accommodations. For immediate danger, seek emergency assistance.</p>
   </section>
+  <section class="shell stand-section" aria-labelledby="local-program">
+   <p class="eyebrow">Serving Baltimore County families</p>
+   <h2 id="local-program">Find kids anti-bullying and self-confidence training near you</h2>
+   <p>Burning Tree Mixed Martial Arts is a local martial arts school in Owings Mills, Maryland. Families in Reisterstown, Pikesville, Randallstown and nearby communities can explore our beginner classes for children and teens. S.T.A.N.D. complements regular martial arts instruction rather than replacing school bullying policies, counseling or adult intervention.</p>
+   <p>Explore <a href="/kids-martial-arts/">kids martial arts classes</a>, <a href="/teens-adults-martial-arts/">teen martial arts training</a> and the three eligible styles:</p>
+   <div class="stand-grid">
+    <article class="stand-card"><h3><a href="/kenpo-karate/">American Kenpo Karate</a></h3><p>Structured techniques, controlled self-defense fundamentals and step-by-step skill development.</p></article>
+    <article class="stand-card"><h3><a href="/muay-thai/">Muay Thai</a></h3><p>Supervised pad work, controlled movement, focus and respect for training partners.</p></article>
+    <article class="stand-card"><h3><a href="/wing-chun/">Wing Chun</a></h3><p>Awareness, balance, coordination and efficient, controlled movement.</p></article>
+   </div>
+   <p>Visit us at <strong>10210 S. Dolfield Rd., Suite C, Owings Mills, MD 21117</strong>. <a href={site.mapUrl}>Get directions to Burning Tree</a> or call <a href={`tel:${site.phoneHref}`}>{site.phone}</a> to discuss your child's needs and the best class to start with.</p>
+   <p>Learn <a href="/your-first-class/">what to expect at your first martial arts class</a> and explore <a href="/advice/">martial arts advice for families</a>.</p>
+  </section>
   <section class="shell stand-section stand-trial" aria-labelledby="trial">
    <p class="eyebrow">New student introduction</p><h2 id="trial">Start learning during your $29 trial.</h2>
    <p><strong>First class:</strong> Meet the coach, learn what S.T.A.N.D. means, practice a confident voice or a calm response, and identify a trusted adult.</p>
@@ -112,7 +179,7 @@ const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage", mainEn
    <p>10210 S. Dolfield Rd., Suite C, Owings Mills, MD 21117</p>
   </section>
   <section class="shell stand-section" aria-labelledby="questions">
-   <h2 id="questions">Questions parents ask</h2>
+   <h2 id="questions">Frequently asked questions about kids anti-bullying classes</h2>
    {faqs.map(([q,a]) => <details class="stand-faq"><summary>{q}</summary><p>{a}</p></details>)}
   </section>
  </div>
@@ -127,6 +194,9 @@ const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage", mainEn
  .stand-brand img{object-fit:contain;width:58px;height:auto}
  .stand-hero h1{font-size:clamp(2.6rem,7vw,5rem);line-height:1.05;letter-spacing:-.045em;margin:0 0 1rem;color:#fff}
  .stand-hero h1 span{color:var(--stand-red)}
+ .stand-topic{font-size:clamp(1.1rem,2.4vw,1.5rem);font-weight:700;color:#fff;margin:.75rem 0}
+ .stand-jump{display:flex;flex-wrap:wrap;gap:.75rem 1.25rem;padding-block:1.3rem;border-bottom:1px solid #8885}
+ .stand-jump a{text-decoration:underline;text-underline-offset:3px}
  .stand-lead{max-width:720px;font-size:clamp(1.1rem,2vw,1.35rem);line-height:1.65;color:#f4f4f4}
  .stand-actions{display:flex;flex-wrap:wrap;gap:.8rem;align-items:center;margin:1.5rem 0}
  .stand-secondary{display:inline-flex;align-items:center;padding:.85rem 1.15rem;border:1px solid currentColor;border-radius:.5rem;font-weight:700;text-decoration:none}
