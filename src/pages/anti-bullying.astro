@@ -3,10 +3,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
 const steps = [
   { letter: "S", title: "Stay calm", detail: "Take a breath, keep your hands relaxed and give yourself room to think." },
-  { letter: "T", title: "Tell them firmly", detail: "When it is safe, use a clear voice: Stop. I don't like that. You can leave without confronting anyone." },
-  { letter: "A", title: "Avoid escalation", detail: "Do not insult, threaten, chase or retaliate. Move toward a safer place." },
-  { letter: "N", title: "Notify a trusted adult", detail: "Tell a parent, teacher, coach or another trusted adult what happened. Keep asking for help until someone responds." },
-  { letter: "D", title: "Do what keeps you safe", detail: "Get away from danger. If physical harm is imminent and escape is blocked, protect yourself only as necessary to get away and seek help." }
+  { letter: "T", title: "Think before reacting", detail: "Pause and assess what is happening. Choose a safe response instead of arguing, threatening or retaliating." },
+  { letter: "A", title: "Assert your boundaries", detail: "When it is safe, use a clear voice: Stop. I don't like that. You do not have to confront someone before leaving." },
+  { letter: "N", title: "Navigate to safety", detail: "Move away from danger toward a safe place or trusted adult. Avoid escalating the situation." },
+  { letter: "D", title: "Defend and disclose", detail: "If immediate physical harm cannot be avoided, protect yourself only as necessary to escape. Tell a trusted adult what happened and keep seeking help until someone responds. You never need to physically defend yourself before reporting bullying." }
 ];
 const weeks = [
   ["Confidence and respect", "Practice confident posture, respectful communication, basic movement and personal goals."],
@@ -15,6 +15,16 @@ const weeks = [
   ["Personal safety", "Practice awareness, boundaries, safe movement, disengagement and getting help."],
   ["Leadership and teamwork", "Cooperate, communicate, solve problems, encourage others and lead by example."],
   ["Goal setting and achievement", "Review the skills, demonstrate the S.T.A.N.D. Method and set a new personal goal."]
+];
+const standLessons = [
+  ["Recognize bullying", "Identify physical, verbal, social and online bullying; distinguish it from ordinary disagreements."],
+  ["Stay calm", "Practice recognizing emotions, breathing and making space."],
+  ["Think before reacting", "Choose a safe response and recognize when to leave immediately."],
+  ["Assert your boundaries", "Rehearse clear, respectful words and confident body language."],
+  ["Navigate to safety", "Identify safe places and trusted adults, and rehearse walking away."],
+  ["Defend and disclose", "Practice safe disengagement, appropriate self-protection and asking for help. Reporting never requires physical confrontation."],
+  ["Support others safely", "Practice inclusion, reporting concerns and getting adult help without entering a fight."],
+  ["Demonstrate and lead", "Explain the five steps, choose safe responses, review progress and set a goal."]
 ];
 const exercises = [
   ["The confident voice", "Students rehearse saying 'Stop. I need space.' with a steady voice and respectful posture."],
@@ -43,7 +53,7 @@ const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage", mainEn
    <div class="shell stand-hero-inner">
     <nav aria-label="Breadcrumb"><a href="/">Home</a> / <a href="/kids-martial-arts/">Kids Martial Arts</a> / Anti-Bullying</nav>
     <div class="stand-brand"><img src="/images/logo.png" width="72" height="98" alt="Burning Tree Mixed Martial Arts logo" /><p class="eyebrow">Burning Tree Mixed Martial Arts · Owings Mills, Maryland</p></div>
-    <h1>Stand Strong.<br/><span>Stand With Confidence.</span></h1>
+    <h1>We Don’t Just Teach Martial Arts.<br/><span>We Teach Children How to S.T.A.N.D.</span></h1>
     <p class="stand-lead">We teach children how to recognize bullying, manage their emotions, use their voice, set boundaries and get help. Real strength is knowing how to stay safe without looking for a fight.</p>
     <div class="stand-actions"><a class="button" href="/29-trial/">Start My $29 Trial</a><a class="stand-secondary" href="#method">Explore the S.T.A.N.D. Method</a></div>
     <p class="stand-offer">Two beginner classes + a FREE uniform · New students only · Eligible programs: Kenpo Karate, Muay Thai and Wing Chun</p>
@@ -65,10 +75,23 @@ const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage", mainEn
    <p>These themes can be adapted to a student's age and ability and reinforced throughout ongoing training.</p>
    <ol class="stand-weeks">{weeks.map(([title,detail],i) => <li><span class="stand-week">Week {i+1}</span><div><h3>{title}</h3><p>{detail}</p></div></li>)}</ol>
   </section>
+  <section class="shell stand-section" aria-labelledby="stand-lessons">
+   <p class="eyebrow">S.T.A.N.D. in action</p><h2 id="stand-lessons">Eight anti-bullying lessons</h2>
+   <p>Our planned anti-bullying lesson sequence complements the broader six-week character-development framework. Short, repeated lessons help students build understanding over time rather than relying on a single workshop.</p>
+   <ol class="stand-weeks">{standLessons.map(([title,detail],i) => <li><span class="stand-week">Lesson {i+1}</span><div><h3>{title}</h3><p>{detail}</p></div></li>)}</ol>
+  </section>
   <section class="shell stand-section" aria-labelledby="exercises">
    <p class="eyebrow">Learning by doing</p><h2 id="exercises">What students practice in class</h2>
    <p>Coaches use age-appropriate, supervised activities and fictional scenarios. Students can opt out of a role-play, and we never single out or shame a child.</p>
    <div class="stand-grid">{exercises.map(([title,detail]) => <article class="stand-card"><h3>{title}</h3><p>{detail}</p></article>)}</div>
+  </section>
+  <section class="shell stand-section" aria-labelledby="age-groups">
+   <p class="eyebrow">Different ages. Shared values.</p><h2 id="age-groups">Teaching at each student’s level</h2>
+   <div class="stand-grid">
+    <article class="stand-card"><h3>Young children</h3><p>Simple words, short activities, safe boundaries and finding a trusted grown-up.</p></article>
+    <article class="stand-card"><h3>School-age children</h3><p>Peer-pressure examples, confident communication, inclusion, emotional control and reporting concerns.</p></article>
+    <article class="stand-card"><h3>Teens</h3><p>Social pressure, online bullying, de-escalation, personal safety, responsibility and leadership.</p></article>
+   </div>
   </section>
   <section class="shell stand-section stand-progress" aria-labelledby="progress">
    <p class="eyebrow">Progress beyond the belt</p><h2 id="progress">How students demonstrate understanding</h2>
