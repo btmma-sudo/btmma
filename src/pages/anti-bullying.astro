@@ -9,24 +9,6 @@ const steps = [
   { letter: "N", title: "Navigate to safety", detail: "Move away from danger toward a safe place or trusted adult. Avoid escalating the situation." },
   { letter: "D", title: "Defend and disclose", detail: "If immediate physical harm cannot be avoided, protect yourself only as necessary to escape. Tell a trusted adult what happened and keep seeking help until someone responds. You never need to physically defend yourself before reporting bullying." }
 ];
-const weeks = [
-  ["Confidence and respect", "Practice confident posture, respectful communication, basic movement and personal goals."],
-  ["Focus and self-discipline", "Practice listening, multi-step directions, controlled movement, patience and accountability."],
-  ["Anti-bullying and emotional strength", "Recognize bullying, practice calm verbal responses, manage emotions and seek adult support."],
-  ["Personal safety", "Practice awareness, boundaries, safe movement, disengagement and getting help."],
-  ["Leadership and teamwork", "Cooperate, communicate, solve problems, encourage others and lead by example."],
-  ["Goal setting and achievement", "Review the skills, demonstrate the S.T.A.N.D. Method and set a new personal goal."]
-];
-const standLessons = [
-  ["Recognize bullying", "Identify physical, verbal, social and online bullying; distinguish it from ordinary disagreements."],
-  ["Stay calm", "Practice recognizing emotions, breathing and making space."],
-  ["Think before reacting", "Choose a safe response and recognize when to leave immediately."],
-  ["Assert your boundaries", "Rehearse clear, respectful words and confident body language."],
-  ["Navigate to safety", "Identify safe places and trusted adults, and rehearse walking away."],
-  ["Defend and disclose", "Practice safe disengagement, appropriate self-protection and asking for help. Reporting never requires physical confrontation."],
-  ["Support others safely", "Practice inclusion, reporting concerns and getting adult help without entering a fight."],
-  ["Demonstrate and lead", "Explain the five steps, choose safe responses, review progress and set a goal."]
-];
 const exercises = [
   ["The confident voice", "Students rehearse saying 'Stop. I need space.' with a steady voice and respectful posture."],
   ["Stop, breathe, choose", "Students pause, take a breath and choose a safe response to a coach-led fictional scenario."],
@@ -50,7 +32,7 @@ faqs.push(
   ["What should a child do if they are bullied at school?", "Move to safety, tell a trusted adult and continue asking for help if the behavior persists. A parent or guardian should contact school staff and work with them on a safety plan. Do not require a child to confront or fight a bully."],
   ["Do you teach how to handle cyberbullying?", "Our lesson framework covers online bullying: avoid retaliating, save relevant evidence when safe, block or report harmful contact, and tell a trusted adult. Adults can help assess threats and use appropriate reporting channels."],
   ["How much does it cost to try the program?", "The $29 new student special includes two beginner classes and a free uniform in eligible Kenpo Karate, Muay Thai and Wing Chun classes. The trial introduces S.T.A.N.D.; the full curriculum is developed through continued training."],
-  ["Is this a one-time anti-bullying workshop or ongoing training?", "The eight anti-bullying lessons complement a six-week character-development framework. Short repeated practice during ongoing training helps reinforce safe decision-making, communication and emotional control."],
+  ["Is this a one-time anti-bullying workshop or ongoing training?", "S.T.A.N.D. is reinforced throughout ongoing martial arts training. Repeated practice helps students develop safe decision-making, communication and emotional control."],
   ["Can my child learn how to help a friend who is being bullied?", "Yes. Students practice safe bystander choices such as including a child who is excluded, getting an adult and reporting what they saw. They are not expected to physically intervene."]
 );
 const pageUrl = new URL("/anti-bullying/", site.primaryDomain).toString();
@@ -125,14 +107,9 @@ const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage", mainEn
    <div class="stand-grid">{steps.map(step => <article class="stand-card"><span class="stand-letter" aria-hidden="true">{step.letter}</span><h3>{step.title}</h3><p>{step.detail}</p></article>)}</div>
   </section>
   <section class="shell stand-section" aria-labelledby="curriculum">
-   <p class="eyebrow">Structured learning</p><h2 id="curriculum">Our six-week learning framework</h2>
-   <p>These themes can be adapted to a student's age and ability and reinforced throughout ongoing training.</p>
-   <ol class="stand-weeks">{weeks.map(([title,detail],i) => <li><span class="stand-week">Week {i+1}</span><div><h3>{title}</h3><p>{detail}</p></div></li>)}</ol>
-  </section>
-  <section class="shell stand-section" aria-labelledby="stand-lessons">
-   <p class="eyebrow">S.T.A.N.D. in action</p><h2 id="stand-lessons">Eight anti-bullying lessons</h2>
-   <p>Our planned anti-bullying lesson sequence complements the broader six-week character-development framework. Short, repeated lessons help students build understanding over time rather than relying on a single workshop.</p>
-   <ol class="stand-weeks">{standLessons.map(([title,detail],i) => <li><span class="stand-week">Lesson {i+1}</span><div><h3>{title}</h3><p>{detail}</p></div></li>)}</ol>
+   <p class="eyebrow">Ongoing character development</p><h2 id="curriculum">Building skills that extend beyond the mats</h2>
+   <p>Our structured anti-bullying and confidence program helps students develop emotional control, respectful communication, personal safety, leadership and sound judgment through age-appropriate martial arts instruction. Coaches reinforce these skills during ongoing training and provide supportive feedback as students progress.</p>
+   <p>Families can speak with their instructor about their child's individual development and how to reinforce these skills at home.</p>
   </section>
   <section class="shell stand-section" aria-labelledby="exercises">
    <p class="eyebrow">Learning by doing</p><h2 id="exercises">What students practice in class</h2>
@@ -207,16 +184,13 @@ const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage", mainEn
  .stand-section p{max-width:82ch;line-height:1.65}
  .stand-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:1rem;margin-top:1.5rem}
  .stand-card{padding:1.25rem;border:1px solid #8886;border-radius:.8rem;background:#8881}
- .stand-card h3,.stand-weeks h3{margin:.25rem 0 .5rem;font-size:1.2rem}
- .stand-card p,.stand-weeks p{margin:0}
+ .stand-card h3{margin:.25rem 0 .5rem;font-size:1.2rem}
+ .stand-card p{margin:0}
  .stand-letter{display:block;font-size:2.6rem;line-height:1;font-weight:900;color:var(--stand-red);margin-bottom:.6rem}
- .stand-weeks{list-style:none;padding:0;margin:1.5rem 0 0;display:grid;gap:.8rem}
- .stand-weeks li{display:flex;align-items:flex-start;gap:1rem;border:1px solid #8886;border-radius:.7rem;padding:1rem}
- .stand-week{font-weight:800;white-space:nowrap;color:inherit}
  .stand-trial{background:#211616;color:#fff;border:1px solid #743635;border-radius:1rem;padding-inline:clamp(1rem,4vw,3rem);margin-block:2rem}
  .stand-trial h2,.stand-trial p{color:#fff}
  .stand-faq{padding:1rem 0;border-bottom:1px solid #8884}
  .stand-faq summary{cursor:pointer;font-weight:700}
  .stand-page a:focus-visible,.stand-faq summary:focus-visible{outline:3px solid var(--stand-red);outline-offset:4px}
- @media(max-width:480px){.stand-actions>*{width:100%;justify-content:center;text-align:center}.stand-weeks li{flex-direction:column;gap:.2rem}}
+ @media(max-width:480px){.stand-actions>*{width:100%;justify-content:center;text-align:center}}
 </style>
