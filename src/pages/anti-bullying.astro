@@ -32,7 +32,7 @@ faqs.push(
   ["What should a child do if they are bullied at school?", "Move to safety, tell a trusted adult and continue asking for help if the behavior persists. A parent or guardian should contact school staff and work with them on a safety plan. Do not require a child to confront or fight a bully."],
   ["Do you teach how to handle cyberbullying?", "Our lesson framework covers online bullying: avoid retaliating, save relevant evidence when safe, block or report harmful contact, and tell a trusted adult. Adults can help assess threats and use appropriate reporting channels."],
   ["How much does it cost to try the program?", "The $29 new student special includes two beginner classes and a free uniform in eligible Kenpo Karate, Muay Thai and Wing Chun classes. The trial introduces S.T.A.N.D.; the full curriculum is developed through continued training."],
-  ["Is this a one-time anti-bullying workshop or ongoing training?", "S.T.A.N.D. is reinforced throughout ongoing martial arts training. Repeated practice helps students develop safe decision-making, communication and emotional control."],
+  ["Is this a one-time anti-bullying workshop or ongoing training?", "We offer structured six-week and eight-week programs, with S.T.A.N.D. reinforced throughout ongoing martial arts training. Contact us to learn which program is appropriate for your child."],
   ["Can my child learn how to help a friend who is being bullied?", "Yes. Students practice safe bystander choices such as including a child who is excluded, getting an adult and reporting what they saw. They are not expected to physically intervene."]
 );
 const pageUrl = new URL("/anti-bullying/", site.primaryDomain).toString();
@@ -51,7 +51,7 @@ const pageSchema = {
     { "@type": "Service", "@id": serviceId, url: pageUrl,
       name: "S.T.A.N.D. Anti-Bullying and Confidence Development",
       serviceType: "Children's anti-bullying education and martial arts confidence training",
-      description: "Age-appropriate bullying awareness, confident communication, personal boundaries, safe disengagement, trusted adult reporting and character development through martial arts instruction.",
+      description: "Six-week and eight-week anti-bullying and confidence development programs with age-appropriate bullying awareness, confident communication, personal boundaries, safe disengagement, trusted adult reporting and character development through martial arts instruction.",
       provider: { "@id": schoolId },
       areaServed: ["Owings Mills", "Reisterstown", "Pikesville", "Randallstown"].map(name => ({ "@type": "Place", name: name + ", Maryland" })).concat([{ "@type": "Place", name: "Baltimore County, Maryland" }]),
       audience: { "@type": "PeopleAudience", audienceType: "Children, teens and families" },
@@ -108,7 +108,7 @@ const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage", mainEn
   </section>
   <section class="shell stand-section" aria-labelledby="curriculum">
    <p class="eyebrow">Ongoing character development</p><h2 id="curriculum">Building skills that extend beyond the mats</h2>
-   <p>Our structured anti-bullying and confidence program helps students develop emotional control, respectful communication, personal safety, leadership and sound judgment through age-appropriate martial arts instruction. Coaches reinforce these skills during ongoing training and provide supportive feedback as students progress.</p>
+   <p>Burning Tree offers structured six-week and eight-week anti-bullying and confidence development programs. Through age-appropriate martial arts instruction, students build emotional control, respectful communication, personal safety, leadership and sound judgment. Coaches reinforce these skills through guided practice and supportive feedback as students progress.</p>
    <p>Families can speak with their instructor about their child's individual development and how to reinforce these skills at home.</p>
   </section>
   <section class="shell stand-section" aria-labelledby="exercises">
