@@ -1,0 +1,129 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const steps = [
+  { letter: "S", title: "Stay calm", detail: "Take a breath, keep your hands relaxed and give yourself room to think." },
+  { letter: "T", title: "Tell them firmly", detail: "When it is safe, use a clear voice: Stop. I don't like that. You can leave without confronting anyone." },
+  { letter: "A", title: "Avoid escalation", detail: "Do not insult, threaten, chase or retaliate. Move toward a safer place." },
+  { letter: "N", title: "Notify a trusted adult", detail: "Tell a parent, teacher, coach or another trusted adult what happened. Keep asking for help until someone responds." },
+  { letter: "D", title: "Do what keeps you safe", detail: "Get away from danger. If physical harm is imminent and escape is blocked, protect yourself only as necessary to get away and seek help." }
+];
+const weeks = [
+  ["Confidence and respect", "Practice confident posture, respectful communication, basic movement and personal goals."],
+  ["Focus and self-discipline", "Practice listening, multi-step directions, controlled movement, patience and accountability."],
+  ["Anti-bullying and emotional strength", "Recognize bullying, practice calm verbal responses, manage emotions and seek adult support."],
+  ["Personal safety", "Practice awareness, boundaries, safe movement, disengagement and getting help."],
+  ["Leadership and teamwork", "Cooperate, communicate, solve problems, encourage others and lead by example."],
+  ["Goal setting and achievement", "Review the skills, demonstrate the S.T.A.N.D. Method and set a new personal goal."]
+];
+const exercises = [
+  ["The confident voice", "Students rehearse saying 'Stop. I need space.' with a steady voice and respectful posture."],
+  ["Stop, breathe, choose", "Students pause, take a breath and choose a safe response to a coach-led fictional scenario."],
+  ["Safe exit practice", "Students practice moving away from a simulated conflict toward a designated safe area or trusted adult."],
+  ["Recognize and report", "Students discuss the difference between disagreement, repeated bullying and immediate danger, and practice explaining what happened to an adult."],
+  ["Teamwork and inclusion", "Partner activities teach encouragement, taking turns and safely supporting someone who is being excluded."],
+  ["Control on the mats", "Supervised, age-appropriate movement and pad exercises reinforce self-control. Physical defense is a last resort to escape danger, never a punishment."]
+];
+const faqs = [
+  ["Will my child learn to fight a bully?", "No. We teach awareness, boundaries, de-escalation, leaving and getting adult help first. Physical self-protection is for immediate safety, not retaliation."],
+  ["What if my child is shy or nervous?", "Students can observe, practice with a coach and build confidence at their own pace. Nobody has to disclose personal experiences or reenact actual bullying."],
+  ["Can parents participate?", "Yes. We encourage parents to reinforce the language at home, listen without blame and work with teachers or school staff when concerns arise."],
+  ["Is the program part of the $29 trial?", "New students receive an age-appropriate introduction during their two beginner classes in eligible Kenpo Karate, Muay Thai and Wing Chun programs. The full curriculum is developed through continued training."],
+  ["Does martial arts guarantee that bullying stops?", "No. We teach practical skills and encourage adult intervention. Schools, families and other responsible adults must address bullying; a child is never responsible for another person's harmful behavior."]
+];
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faqs.map(([q,a]) => ({"@type":"Question",name:q,acceptedAnswer:{"@type":"Answer",text:a}})) };
+---
+<BaseLayout title="Kids Anti-Bullying & Confidence Training | Burning Tree MMA | Owings Mills"
+ description="Explore Burning Tree MMA's S.T.A.N.D. Method, anti-bullying curriculum, confidence exercises and parent involvement in Owings Mills, MD. Start with two classes and a uniform for $29."
+ path="/anti-bullying/" image="/images/logo.png"
+ keywords={["anti-bullying classes Owings Mills","kids confidence training Baltimore County","bullying prevention martial arts","children's self-defense Owings Mills"]}>
+ <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+ <div class="stand-page">
+  <section class="stand-hero">
+   <div class="shell stand-hero-inner">
+    <nav aria-label="Breadcrumb"><a href="/">Home</a> / <a href="/kids-martial-arts/">Kids Martial Arts</a> / Anti-Bullying</nav>
+    <div class="stand-brand"><img src="/images/logo.png" width="72" height="98" alt="Burning Tree Mixed Martial Arts logo" /><p class="eyebrow">Burning Tree Mixed Martial Arts · Owings Mills, Maryland</p></div>
+    <h1>Stand Strong.<br/><span>Stand With Confidence.</span></h1>
+    <p class="stand-lead">We teach children how to recognize bullying, manage their emotions, use their voice, set boundaries and get help. Real strength is knowing how to stay safe without looking for a fight.</p>
+    <div class="stand-actions"><a class="button" href="/29-trial/">Start My $29 Trial</a><a class="stand-secondary" href="#method">Explore the S.T.A.N.D. Method</a></div>
+    <p class="stand-offer">Two beginner classes + a FREE uniform · New students only · Eligible programs: Kenpo Karate, Muay Thai and Wing Chun</p>
+   </div>
+  </section>
+  <section class="shell stand-section" aria-labelledby="philosophy">
+   <p class="eyebrow">Our teaching philosophy</p>
+   <h2 id="philosophy">We teach more than punches and kicks.</h2>
+   <p>At Burning Tree, our goal is to help students build confidence, discipline, respect, awareness and emotional strength that they can carry into school, home and everyday life. We teach that martial arts are a responsibility, not a reason to intimidate someone else.</p>
+   <p>Every child deserves to feel safe. Our approach emphasizes prevention, verbal boundaries, safe exits and trusted adult support. We do not expect children to resolve bullying alone.</p>
+  </section>
+  <section class="shell stand-section" id="method" aria-labelledby="method-heading">
+   <p class="eyebrow">Five steps to remember</p><h2 id="method-heading">The S.T.A.N.D. Method</h2>
+   <p>A simple framework to practice in class and reinforce at home. If a situation is immediately dangerous, get to safety and seek help first; the steps do not have to be followed in order.</p>
+   <div class="stand-grid">{steps.map(step => <article class="stand-card"><span class="stand-letter" aria-hidden="true">{step.letter}</span><h3>{step.title}</h3><p>{step.detail}</p></article>)}</div>
+  </section>
+  <section class="shell stand-section" aria-labelledby="curriculum">
+   <p class="eyebrow">Structured learning</p><h2 id="curriculum">Our six-week learning framework</h2>
+   <p>These themes can be adapted to a student's age and ability and reinforced throughout ongoing training.</p>
+   <ol class="stand-weeks">{weeks.map(([title,detail],i) => <li><span class="stand-week">Week {i+1}</span><div><h3>{title}</h3><p>{detail}</p></div></li>)}</ol>
+  </section>
+  <section class="shell stand-section" aria-labelledby="exercises">
+   <p class="eyebrow">Learning by doing</p><h2 id="exercises">What students practice in class</h2>
+   <p>Coaches use age-appropriate, supervised activities and fictional scenarios. Students can opt out of a role-play, and we never single out or shame a child.</p>
+   <div class="stand-grid">{exercises.map(([title,detail]) => <article class="stand-card"><h3>{title}</h3><p>{detail}</p></article>)}</div>
+  </section>
+  <section class="shell stand-section stand-progress" aria-labelledby="progress">
+   <p class="eyebrow">Progress beyond the belt</p><h2 id="progress">How students demonstrate understanding</h2>
+   <p>As students develop, coaches look for the ability to explain each S.T.A.N.D. step in their own words, choose a safe response to an example situation, use a clear voice, demonstrate controlled disengagement and identify trusted adults.</p>
+   <p>Students receive supportive feedback and opportunities to practice again. We recognize effort, judgment and progress, not aggression or a child's ability to endure bullying.</p>
+  </section>
+  <section class="shell stand-section" aria-labelledby="parents">
+   <p class="eyebrow">One Tree. One Family.</p><h2 id="parents">Parents are part of the process.</h2>
+   <p>Ask your child to teach you one S.T.A.N.D. step. Practice a calm boundary phrase together, name trusted adults at school and at home, and talk about how to help someone safely without entering a fight.</p>
+   <p>If your child reports bullying, listen, reassure them that reporting is the right thing to do, and contact the appropriate school staff or other responsible adults. Speak privately with your coach about any concerns or accommodations. For immediate danger, seek emergency assistance.</p>
+  </section>
+  <section class="shell stand-section stand-trial" aria-labelledby="trial">
+   <p class="eyebrow">New student introduction</p><h2 id="trial">Start learning during your $29 trial.</h2>
+   <p><strong>First class:</strong> Meet the coach, learn what S.T.A.N.D. means, practice a confident voice or a calm response, and identify a trusted adult.</p>
+   <p><strong>Second class:</strong> Review the steps, try a supervised age-appropriate scenario and talk with the coach about continued training. Adults and teens receive examples appropriate to their age.</p>
+   <p>For new students in Kenpo Karate, Muay Thai and Wing Chun, the trial includes two beginner classes and a FREE uniform. Continued training develops the full curriculum.</p>
+   <div class="stand-actions"><a class="button" href="/29-trial/">Start My $29 Trial</a><a class="stand-secondary" href="tel:+14102180894">Call (410) 218-0894</a></div>
+   <p>10210 S. Dolfield Rd., Suite C, Owings Mills, MD 21117</p>
+  </section>
+  <section class="shell stand-section" aria-labelledby="questions">
+   <h2 id="questions">Questions parents ask</h2>
+   {faqs.map(([q,a]) => <details class="stand-faq"><summary>{q}</summary><p>{a}</p></details>)}
+  </section>
+ </div>
+</BaseLayout>
+<style>
+ .stand-page{--stand-red:#ff534b;--stand-ink:#fff;--stand-muted:#dedede}
+ .stand-hero{background:radial-gradient(ellipse at 85% 20%,#572323 0%,#1a1415 40%,#111 75%);color:var(--stand-ink);padding:clamp(2rem,6vw,5rem) 0;border-bottom:1px solid #70302e}
+ .stand-hero-inner{max-width:1100px;margin-inline:auto}
+ .stand-hero nav{font-size:.9rem;margin-bottom:1.5rem;color:var(--stand-muted)}
+ .stand-hero nav a{color:#fff}
+ .stand-brand{display:flex;align-items:center;gap:1rem;margin-bottom:1rem}
+ .stand-brand img{object-fit:contain;width:58px;height:auto}
+ .stand-hero h1{font-size:clamp(2.6rem,7vw,5rem);line-height:1.05;letter-spacing:-.045em;margin:0 0 1rem;color:#fff}
+ .stand-hero h1 span{color:var(--stand-red)}
+ .stand-lead{max-width:720px;font-size:clamp(1.1rem,2vw,1.35rem);line-height:1.65;color:#f4f4f4}
+ .stand-actions{display:flex;flex-wrap:wrap;gap:.8rem;align-items:center;margin:1.5rem 0}
+ .stand-secondary{display:inline-flex;align-items:center;padding:.85rem 1.15rem;border:1px solid currentColor;border-radius:.5rem;font-weight:700;text-decoration:none}
+ .stand-hero .stand-secondary,.stand-trial .stand-secondary{color:#fff}
+ .stand-offer{font-size:.9rem;color:var(--stand-muted)}
+ .stand-section{padding-block:clamp(2rem,5vw,4rem);border-bottom:1px solid #8884}
+ .stand-section h2{font-size:clamp(1.8rem,4vw,2.7rem);line-height:1.15;margin:.5rem 0 1rem}
+ .stand-section p{max-width:82ch;line-height:1.65}
+ .stand-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:1rem;margin-top:1.5rem}
+ .stand-card{padding:1.25rem;border:1px solid #8886;border-radius:.8rem;background:#8881}
+ .stand-card h3,.stand-weeks h3{margin:.25rem 0 .5rem;font-size:1.2rem}
+ .stand-card p,.stand-weeks p{margin:0}
+ .stand-letter{display:block;font-size:2.6rem;line-height:1;font-weight:900;color:var(--stand-red);margin-bottom:.6rem}
+ .stand-weeks{list-style:none;padding:0;margin:1.5rem 0 0;display:grid;gap:.8rem}
+ .stand-weeks li{display:flex;align-items:flex-start;gap:1rem;border:1px solid #8886;border-radius:.7rem;padding:1rem}
+ .stand-week{font-weight:800;white-space:nowrap;color:inherit}
+ .stand-trial{background:#211616;color:#fff;border:1px solid #743635;border-radius:1rem;padding-inline:clamp(1rem,4vw,3rem);margin-block:2rem}
+ .stand-trial h2,.stand-trial p{color:#fff}
+ .stand-faq{padding:1rem 0;border-bottom:1px solid #8884}
+ .stand-faq summary{cursor:pointer;font-weight:700}
+ .stand-page a:focus-visible,.stand-faq summary:focus-visible{outline:3px solid var(--stand-red);outline-offset:4px}
+ @media(max-width:480px){.stand-actions>*{width:100%;justify-content:center;text-align:center}.stand-weeks li{flex-direction:column;gap:.2rem}}
+</style>
